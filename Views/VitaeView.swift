@@ -22,6 +22,7 @@ struct VitaeView: View {
                     .vampireFont()
             }
             .padding(.vertical, 4)
+            .padding(.horizontal)
             
             // Max Vitae
             HStack {
@@ -32,6 +33,7 @@ struct VitaeView: View {
                     .vampireFont()
             }
             .padding(.vertical, 4)
+            .padding(.horizontal)
             
             // Current Vitae with plus and minus buttons
             HStack {
@@ -67,7 +69,9 @@ struct VitaeView: View {
                 }
             }
             .padding(.vertical, 4)
+            .padding(.horizontal)
         }
         .padding(.vertical, 4)
+        .padding(.horizontal)
     }
 }

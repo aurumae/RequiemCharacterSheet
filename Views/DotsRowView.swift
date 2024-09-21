@@ -12,7 +12,7 @@ struct DotsRowView: View {
     var rowIndex: Int
     var maxRating: Int
     var dotsPerRow: Int = 5
-    var isInteractive: Bool = false
+    var isInteractive: Bool = true
     
     var body: some View {
         let startIndex = rowIndex * dotsPerRow + 1

@@ -12,7 +12,7 @@ struct SkillRowView: View {
     @State private var showingPicker = false
     @State private var isEditingSpecialty = false
     @FocusState private var specialtyFieldIsFocused: Bool
-
+    
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
             VStack(alignment: .leading, spacing: 4) {
@@ -27,7 +27,7 @@ struct SkillRowView: View {
                 .actionSheet(isPresented: $showingPicker) {
                     ActionSheet(title: Text("Set \(skill.name)"), message: nil, buttons: actionSheetButtons())
                 }
-
+                
                 // Specialty Field or Prompt
                 if isEditingSpecialty {
                     TextField("Specialty", text: $skill.specialty, onCommit: {
@@ -61,10 +61,10 @@ struct SkillRowView: View {
                     }
                 }
             }
-
+            
             Spacer()
-
-            // Dots Rating View
+            
+            
             DotsRatingView(rating: $skill.rating, maxRating: skill.rating > 5 ? skill.rating : 5)
                 .frame(width: 100)
         }
@@ -77,7 +77,7 @@ struct SkillRowView: View {
             }
         }
     }
-
+    
     func actionSheetButtons() -> [ActionSheet.Button] {
         var buttons: [ActionSheet.Button] = []
         for value in 0...10 {

@@ -10,7 +10,7 @@ import SwiftUI
 struct DotView: View {
     var index: Int
     var isFilled: Bool
-    var isInteractive: Bool = false // leaving in the possibility of making the dots interactive by setting this to true
+    var isInteractive: Bool = true // leaving in the possibility of making the dots interactive by setting this to true
     var action: ((Int) -> Void)?
     
     var body: some View {
