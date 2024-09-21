@@ -46,7 +46,6 @@
 		BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */; };
 		BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36EA2C9E0087008D03F7 /* BanesView.swift */; };
 		BCB158CE2C986811003B6A8F /* RequiemCharacterSheetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */; };
-		BCB158D02C986811003B6A8F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158CF2C986811003B6A8F /* ContentView.swift */; };
 		BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCB158D12C986812003B6A8F /* Assets.xcassets */; };
 		BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCB158D42C986812003B6A8F /* Preview Assets.xcassets */; };
 		BCB158DF2C986812003B6A8F /* RequiemCharacterSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158DE2C986812003B6A8F /* RequiemCharacterSheetTests.swift */; };
@@ -126,7 +125,6 @@
 		BC6D36EC2C9E457F008D03F7 /* RequiemCharacterSheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RequiemCharacterSheet.entitlements; sourceTree = "<group>"; };
 		BCB158CA2C986811003B6A8F /* RequiemCharacterSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RequiemCharacterSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCharacterSheetApp.swift; sourceTree = "<group>"; };
-		BCB158CF2C986811003B6A8F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BCB158D12C986812003B6A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BCB158D42C986812003B6A8F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BCB158DA2C986812003B6A8F /* RequiemCharacterSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RequiemCharacterSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -206,7 +204,6 @@
 				BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */,
 				BCB159002C986E22003B6A8F /* Info.plist */,
 				BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */,
-				BCB158CF2C986811003B6A8F /* ContentView.swift */,
 				BCB158D12C986812003B6A8F /* Assets.xcassets */,
 				BCB158D32C986812003B6A8F /* Preview Content */,
 				BCB159012C986F7A003B6A8F /* FontTest.swift */,
@@ -447,7 +444,6 @@
 				BC6D36D72C9DE680008D03F7 /* DisciplinesView.swift in Sources */,
 				BC6D36DF2C9DF3FC008D03F7 /* Extensions.swift in Sources */,
 				BC6D36D12C9DE643008D03F7 /* Merit.swift in Sources */,
-				BCB158D02C986811003B6A8F /* ContentView.swift in Sources */,
 				BCB1590E2C9872D6003B6A8F /* DotsRowView.swift in Sources */,
 				BCB159102C9872FD003B6A8F /* DotView.swift in Sources */,
 				BC6D36CA2C9DD3F9008D03F7 /* HumanityRowView.swift in Sources */,

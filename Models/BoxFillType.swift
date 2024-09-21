@@ -8,7 +8,7 @@
 
 import Foundation
 
-/*
+/* Commenting out as I broke this into a separate HealthBox and WillpowerBox
 enum BoxFillType: String, Codable {
     case none
     case willpower

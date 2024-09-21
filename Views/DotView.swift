@@ -10,7 +10,7 @@ import SwiftUI
 struct DotView: View {
     var index: Int
     var isFilled: Bool
-    var isInteractive: Bool = true // leaving in the possibility of making the dots interactive by setting this to true
+    var isInteractive: Bool = true // I ended up setting this to true. This is not as clean as having a single approach to all the dots on the sheet, but it works for now
     var action: ((Int) -> Void)?
     
     var body: some View {

@@ -160,9 +160,10 @@ class Character: ObservableObject, Codable {
         ]
         
         // Compute stamina using the local attributes variable
+        // Need to intialize values with let before I can reference them with self below
         let stamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
         
-        let size = 5 // Assuming size is constant for now
+        let size = 5 // Size is a var now. Need to think of a way to handle this for variable size later
         //let armor = 0
         
         let totalHealth = stamina + size
@@ -230,7 +231,6 @@ class Character: ObservableObject, Codable {
         self.bloodline = ""
         self.covenant = ""
         
-        // Now you can safely use self
         // Initialize Vitae based on initial Blood Potency
         updateVitaeData()
         
@@ -245,7 +245,6 @@ class Character: ObservableObject, Codable {
     // Derived attributes
     var health: Int {
         //let stamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
-        // Assuming size is constant for now
         return adjustedStamina + size
     }
     
@@ -303,7 +302,6 @@ class Character: ObservableObject, Codable {
     
     private func setupSkillObservers() {
         // Clear previous subscriptions related to skills
-        // If you have a separate Set<AnyCancellable> for skills, clear it here
         for skill in skills {
             skill.objectWillChange
                 .receive(on: DispatchQueue.main) // Ensure updates happen on the main thread
@@ -360,7 +358,6 @@ class Character: ObservableObject, Codable {
         // Trigger necessary updates
         updateHealthBoxes()
         updateWillpowerBoxes()
-        // If you have other updates, call them here
         objectWillChange.send()
     }
     
@@ -387,7 +384,7 @@ class Character: ObservableObject, Codable {
     }
     
     private func updateVitaeData() {
-        // Mapping based on the table provided
+        // Mapping based on Blood Potency table
         let (newMaxVitae, newVitaePerTurn) = getVitaeData(for: bloodPotency)
         maxVitae = newMaxVitae
         vitaePerTurn = newVitaePerTurn

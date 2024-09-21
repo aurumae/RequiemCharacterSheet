@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// A nice struct to apply the font, size, and color all at once
 struct VampireFontModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
