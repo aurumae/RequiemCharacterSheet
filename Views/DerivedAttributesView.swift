@@ -145,6 +145,40 @@ struct DerivedAttributesView: View {
                 }
             }
             .padding(.vertical, 4)
+            
+            // Combat Dice Pools section
+            
+            HStack {
+                Text("COMBAT DICE POOLS").font(.custom("CaslonAntique", size: 24))
+            }
+            .padding(.vertical, 4)
+            
+            HStack {
+                Text("Brawl Pool:")
+                    .vampireFont()
+                Spacer()
+                Text("\(character.brawlDicePool)")
+                    .vampireFont()
+            }
+            .padding(.vertical, 4)
+            
+            HStack {
+                Text("Firearms Pool:")
+                    .vampireFont()
+                Spacer()
+                Text("\(character.firearmsDicePool)")
+                    .vampireFont()
+            }
+            .padding(.vertical, 4)
+            
+            HStack {
+                Text("Weaponry Pool:")
+                    .vampireFont()
+                Spacer()
+                Text("\(character.weaponryDicePool)")
+                    .vampireFont()
+            }
+            .padding(.vertical, 4)
         }
     }
 }

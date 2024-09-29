@@ -47,6 +47,10 @@ class Character: ObservableObject, Codable {
     @Published var beats: Int
     @Published var experiences: Int
     
+    //@Published var brawlDicePool: Int
+    //@Published var weaponryDicePool: Int
+    //@Published var firearmsDicePool: Int
+    
     private var cancellables = Set<AnyCancellable>()
     
     enum CodingKeys: CodingKey {
@@ -95,6 +99,10 @@ class Character: ObservableObject, Codable {
         
         try container.encode(beats, forKey: .beats)
         try container.encode(experiences, forKey: .experiences)
+        
+        //try container.encode(brawlDicePool, forKey: .brawlDicePool)
+        //try container.encode(weaponryDicePool, forKey: .weaponryDicePool)
+        //try container.encode(firearmsDicePool, forKey: .firearmsDicePool)
     }
     
     // Decoding
@@ -137,6 +145,12 @@ class Character: ObservableObject, Codable {
         beats = try container.decode(Int.self, forKey: .beats)
         experiences = try container.decode(Int.self, forKey: .experiences)
         
+        //brawlDicePool = try container.decode(Int.self, forKey: .brawlDicePool)
+        //firearmsDicePool = try container.decode(Int.self, forKey: .firearmsDicePool)
+        //weaponryDicePool = try container.decode(Int.self, forKey: .weaponryDicePool)
+        
+        
+        
         self.cancellables = Set<AnyCancellable>()
         // Re-establish observers
         setupAttributeObservers() // Keep this one at the top
@@ -175,6 +189,13 @@ class Character: ObservableObject, Codable {
         let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
         let willpower = resolve + composure
         let willpowerBoxes = (0..<willpower).map { _ in WillpowerBox() }
+        
+        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
+        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
+        
+        //let brawlDicePool = 0
+        //let firearmsDicePool = 0
+        //let weaponryDicePool = 0
         
         // Now assign to self after all computations
         self.attributes = attributes
@@ -220,6 +241,7 @@ class Character: ObservableObject, Codable {
         let allSkills = (mentalSkills + physicalSkills + socialSkills).map { Skill(name: $0) }
         self.skills = allSkills
         
+        
         // Initialize character detail properties
         self.name = ""
         self.player = ""
@@ -230,6 +252,10 @@ class Character: ObservableObject, Codable {
         self.clan = ""
         self.bloodline = ""
         self.covenant = ""
+        
+        //self.brawlDicePool = strength + brawl
+        //self.firearmsDicePool = dexterity + firearms
+        //self.weaponryDicePool = strength + weaponry
         
         // Initialize Vitae based on initial Blood Potency
         updateVitaeData()
@@ -281,6 +307,27 @@ class Character: ObservableObject, Codable {
         let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
         let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
         return dexterity + composure
+    }
+    
+    var brawlDicePool: Int {
+        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
+        let brawl = skills.first { $0.name == "Brawl" }?.rating ?? 0
+        let vigor = disciplines.first { $0.name.lowercased() == "vigor" }?.rating ?? 0
+        return strength + brawl + vigor
+    }
+    
+    var firearmsDicePool: Int {
+        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
+        let firearms = skills.first { $0.name == "Firearms" }?.rating ?? 0
+        let praestantia = disciplines.first { $0.name.lowercased() == "praestantia" }?.rating ?? 0
+        return dexterity + firearms + praestantia
+    }
+    
+    var weaponryDicePool: Int {
+        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
+        let weaponry = skills.first { $0.name == "Weaponry" }?.rating ?? 0
+        let vigor = disciplines.first { $0.name.lowercased() == "vigor" }?.rating ?? 0
+        return strength + weaponry + vigor
     }
     
     private func setupAttributeObservers() {
