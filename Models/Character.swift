@@ -306,7 +306,8 @@ class Character: ObservableObject, Codable {
     var initiativeMod: Int {
         let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
         let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
-        return dexterity + composure
+        let praestantia = disciplines.first { $0.name.lowercased() == "praestantia" }?.rating ?? 0
+        return dexterity + composure + praestantia
     }
     
     var brawlDicePool: Int {
