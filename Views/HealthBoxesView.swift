@@ -5,37 +5,6 @@
 //  Created by Oisín McColgan on 17/09/2024.
 //
 
-/*
-import SwiftUI
-
-struct HealthBoxesView: View {
-    @ObservedObject var character: Character
-
-    var body: some View {
-        HStack(spacing: 4) {
-            ForEach(Array(character.healthBoxes.enumerated()), id: \.1.id) { index, box in
-                HealthBoxView(box: box, isPenalty: index >= character.healthBoxes.count - 3)
-                    .onTapGesture {
-                        box.damageType = nextDamageType(current: box.damageType)
-                    }
-            }
-        }
-    }
-
-    func nextDamageType(current: HealthBoxFillType) -> HealthBoxFillType {
-        switch current {
-        case .none:
-            return .bashing
-        case .bashing:
-            return .lethal
-        case .lethal:
-            return .aggravated
-        case .aggravated:
-            return .none
-        }
-    }
-}
-*/
 
 import SwiftUI
 

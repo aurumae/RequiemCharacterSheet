@@ -5,21 +5,6 @@
 //  Created by Oisín McColgan on 17/09/2024.
 //
 
-/*
-import SwiftUI
-
-struct WillpowerBoxesView: View {
-    @ObservedObject var character: Character
-
-    var body: some View {
-        HStack(spacing: 4) {
-            ForEach(character.willpowerBoxes) { box in
-                WillpowerBoxView(box: box)
-            }
-        }
-    }
-}
-*/
 
 import SwiftUI
 

@@ -5,6 +5,7 @@
 //  Created by Oisín McColgan on 16/09/2024.
 //
 
+
 import Foundation
 import Combine
 
@@ -190,8 +191,8 @@ class Character: ObservableObject, Codable {
         let willpower = resolve + composure
         let willpowerBoxes = (0..<willpower).map { _ in WillpowerBox() }
         
-        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
-        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
+        //let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
+        //let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
         
         //let brawlDicePool = 0
         //let firearmsDicePool = 0

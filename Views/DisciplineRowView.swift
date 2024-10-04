@@ -16,14 +16,6 @@ struct DisciplineRowView: View {
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
             
-            /*
-             // Name TextField
-             TextField("Discipline Name", text: $discipline.name)
-             .textFieldStyle(RoundedBorderTextFieldStyle())
-             .submitLabel(.done)
-             .frame(maxWidth: .infinity)
-             */
-            
             // Name TextField
             if isEditingDiscipline {
                 TextField("Discipline Name", text: $discipline.name, onCommit: {
@@ -66,38 +58,3 @@ struct DisciplineRowView: View {
         .padding(.vertical, 4)
     }
 }
-
-/*
- // Name TextField
- if isEditingDiscipline {
- TextField("Discipline Name", text: $discipline.name, onCommit: {
- isEditingDiscipline = false
- })
- .textFieldStyle(RoundedBorderTextFieldStyle())
- .submitLabel(.done)
- .focused($disciplineFieldIsFocused)
- .frame(maxWidth: .infinity)
- } else {
- if discipline.name.isEmpty {
- Button(action: {
- isEditingDiscipline = true
- specialtyFieldIsFocused = true
- }) {
- Text("Discipline Name")
- .foregroundColor(.gray)
- }
- .buttonStyle(PlainButtonStyle())
- } else {
- // Display discipline name, tap to edit
- Button(action: {
- isEditingDiscipline = true
- disciplineFieldIsFocused = true
- }) {
- Text(discipline.name)
- .font(.custom("CaslonAntique", size: 22))
- .foregroundColor(.vampireRed)
- }
- .buttonStyle(PlainButtonStyle())
- }
- }
- */

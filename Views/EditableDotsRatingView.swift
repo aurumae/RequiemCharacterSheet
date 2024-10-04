@@ -5,6 +5,7 @@
 //  Created by Oisín McColgan on 20/09/2024.
 //
 
+
 import SwiftUI
 
 struct EditableDotsRatingView: View {
@@ -26,17 +27,3 @@ struct EditableDotsRatingView: View {
         }
     }
 }
-
-/*
- var body: some View {
-     Circle()
-         .fill(isFilled ? Color.vampireRed : Color.clear)
-         .overlay(Circle().stroke(Color.black, lineWidth: 1))
-         .frame(width: 20, height: 20)
-         .onTapGesture {
-             if isInteractive, let action = action {
-                 action(index)
-             }
-         }
- }
- */
