@@ -53,6 +53,10 @@ class Character: ObservableObject, Codable {
     //@Published var firearmsDicePool: Int
     
     private var cancellables = Set<AnyCancellable>()
+    private var attributeCancellables = Set<AnyCancellable>()
+    private var skillCancellables = Set<AnyCancellable>()
+    private var disciplineCancellables = Set<AnyCancellable>()
+    private var disciplineObjectCancellables = Set<AnyCancellable>()
     
     enum CodingKeys: CodingKey {
         case attributes, bloodPotency, healthDamage, willpowerSpent, healthBoxes, willpowerBoxes, skills,
@@ -280,61 +284,100 @@ class Character: ObservableObject, Codable {
         let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
         return resolve + composure
     }
+
+    var baseRatingCap: Int {
+        baseRatingCap(for: bloodPotency)
+    }
+
+    var attributeRatingRange: ClosedRange<Int> {
+        1...baseRatingCap
+    }
+
+    var skillRatingRange: ClosedRange<Int> {
+        0...baseRatingCap
+    }
     
     // Computed properties for derived attributes
     var adjustedStamina: Int {
-        let baseStamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
-        let resilienceRating = disciplines.first { $0.name.lowercased() == "resilience" }?.rating ?? 0
-        return baseStamina + resilienceRating
+        totalAttributeRating(named: "Stamina")
     }
     
     var defense: Int {
-        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
-        let wits = attributes.first { $0.name == "Wits" }?.rating ?? 0
+        let dexterity = totalAttributeRating(named: "Dexterity")
+        let wits = totalAttributeRating(named: "Wits")
         let athletics = skills.first { $0.name == "Athletics" }?.rating ?? 0
-        let celerityRating = disciplines.first { $0.name.lowercased() == "celerity" }?.rating ?? 0
+        let celerityRating = disciplineRating(named: "celerity")
         let lowerAttribute = min(dexterity, wits)
         return lowerAttribute + athletics + celerityRating
     }
     
     var speed: Int {
-        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
-        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
-        let vigorRating = disciplines.first { $0.name.lowercased() == "vigor" }?.rating ?? 0
-        return 5 + strength + dexterity + vigorRating
+        let strength = totalAttributeRating(named: "Strength")
+        let dexterity = totalAttributeRating(named: "Dexterity")
+        return 5 + strength + dexterity
     }
     
     var initiativeMod: Int {
-        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
-        let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
-        let praestantia = disciplines.first { $0.name.lowercased() == "praestantia" }?.rating ?? 0
-        return dexterity + composure + praestantia
+        let dexterity = totalAttributeRating(named: "Dexterity")
+        let composure = totalAttributeRating(named: "Composure")
+        return dexterity + composure
     }
     
     var brawlDicePool: Int {
-        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
-        let brawl = skills.first { $0.name == "Brawl" }?.rating ?? 0
-        let vigor = disciplines.first { $0.name.lowercased() == "vigor" }?.rating ?? 0
-        return strength + brawl + vigor
+        let strength = totalAttributeRating(named: "Strength")
+        let brawl = skillDiceContribution(named: "Brawl")
+        return strength + brawl
     }
     
     var firearmsDicePool: Int {
-        let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
-        let firearms = skills.first { $0.name == "Firearms" }?.rating ?? 0
-        let praestantia = disciplines.first { $0.name.lowercased() == "praestantia" }?.rating ?? 0
-        return dexterity + firearms + praestantia
+        let dexterity = totalAttributeRating(named: "Dexterity")
+        let firearms = skillDiceContribution(named: "Firearms")
+        return dexterity + firearms
     }
     
     var weaponryDicePool: Int {
-        let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
-        let weaponry = skills.first { $0.name == "Weaponry" }?.rating ?? 0
-        let vigor = disciplines.first { $0.name.lowercased() == "vigor" }?.rating ?? 0
-        return strength + weaponry + vigor
+        let strength = totalAttributeRating(named: "Strength")
+        let weaponry = skillDiceContribution(named: "Weaponry")
+        return strength + weaponry
+    }
+
+    func totalAttributeRating(for attribute: Attribute) -> Int {
+        attribute.rating + disciplineBonus(forAttributeName: attribute.name)
+    }
+
+    func totalAttributeRating(named name: String) -> Int {
+        let baseRating = attributes.first { $0.name == name }?.rating ?? 0
+        return baseRating + disciplineBonus(forAttributeName: name)
+    }
+
+    func disciplineBonus(forAttributeName name: String) -> Int {
+        switch name {
+        case "Strength":
+            return disciplineRating(named: "vigor")
+        case "Stamina":
+            return disciplineRating(named: "resilience")
+        case "Dexterity":
+            return disciplineRating(named: "praestantia")
+        default:
+            return 0
+        }
+    }
+
+    func disciplineRating(named name: String) -> Int {
+        let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return disciplines.first {
+            $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == normalizedName
+        }?.rating ?? 0
+    }
+
+    func skillDiceContribution(named name: String) -> Int {
+        let rating = skills.first { $0.name == name }?.rating ?? 0
+        return rating == 0 ? -1 : rating
     }
     
     private func setupAttributeObservers() {
         // Clear previous subscriptions if any
-        cancellables.removeAll()
+        attributeCancellables.removeAll()
         
         // Observe each attribute's objectWillChange publisher
         for attribute in attributes {
@@ -345,12 +388,14 @@ class Character: ObservableObject, Codable {
                     self?.updateWillpowerBoxes()
                     self?.objectWillChange.send()
                 }
-                .store(in: &cancellables)
+                .store(in: &attributeCancellables)
         }
     }
     
     private func setupSkillObservers() {
         // Clear previous subscriptions related to skills
+        skillCancellables.removeAll()
+
         for skill in skills {
             skill.objectWillChange
                 .receive(on: DispatchQueue.main) // Ensure updates happen on the main thread
@@ -360,15 +405,16 @@ class Character: ObservableObject, Codable {
                     self?.updateWillpowerBoxes()
                     self?.objectWillChange.send()
                 }
-                .store(in: &cancellables)
+                .store(in: &skillCancellables)
         }
     }
     
     private func setupBloodPotencyObserver() {
         $bloodPotency
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.updateVitaeData()
+            .sink { [weak self] bloodPotency in
+                self?.updateVitaeData(for: bloodPotency)
+                self?.clampBaseRatingsToBloodPotency(bloodPotency)
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
@@ -382,9 +428,23 @@ class Character: ObservableObject, Codable {
             .sink { [weak self] disciplines in
                 self?.observeDisciplines(disciplines)
             }
-            .store(in: &cancellables)
+            .store(in: &disciplineCancellables)
     }
     
+    private func observeDisciplines(_ disciplines: [Discipline]) {
+        disciplineObjectCancellables.removeAll()
+
+        for discipline in disciplines {
+            discipline.objectWillChange
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.updateDerivedAttributes()
+                }
+                .store(in: &disciplineObjectCancellables)
+        }
+    }
+    
+    /* Old version
     private func observeDisciplines(_ disciplines: [Discipline]) {
         // Cancel existing subscriptions to avoid duplicates
         // cancellables.forEach { $0.cancel() }
@@ -401,6 +461,7 @@ class Character: ObservableObject, Codable {
                 .store(in: &cancellables)
         }
     }
+     */
     
     private func updateDerivedAttributes() {
         // This method will be called when a discipline changes
@@ -432,15 +493,31 @@ class Character: ObservableObject, Codable {
         self.willpowerBoxes = newWillpowerBoxes
     }
     
-    private func updateVitaeData() {
+    private func updateVitaeData(for bloodPotency: Int? = nil) {
         // Mapping based on Blood Potency table
-        let (newMaxVitae, newVitaePerTurn) = getVitaeData(for: bloodPotency)
+        let (newMaxVitae, newVitaePerTurn) = getVitaeData(for: bloodPotency ?? self.bloodPotency)
         maxVitae = newMaxVitae
         vitaePerTurn = newVitaePerTurn
         
         // Adjust currentVitae if necessary
         if currentVitae > maxVitae {
             currentVitae = maxVitae
+        }
+    }
+
+    private func baseRatingCap(for bloodPotency: Int) -> Int {
+        max(5, min(bloodPotency, 10))
+    }
+
+    private func clampBaseRatingsToBloodPotency(_ bloodPotency: Int) {
+        let cap = baseRatingCap(for: bloodPotency)
+
+        for attribute in attributes {
+            attribute.rating = min(max(attribute.rating, 1), cap)
+        }
+
+        for skill in skills {
+            skill.rating = min(max(skill.rating, 0), cap)
         }
     }
     

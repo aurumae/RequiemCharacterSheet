@@ -11,12 +11,13 @@ import SwiftUI
 struct DotView: View {
     var index: Int
     var isFilled: Bool
+    var fillColor: Color = .vampireRed
     var isInteractive: Bool = true // I ended up setting this to true. This is not as clean as having a single approach to all the dots on the sheet, but it works for now
     var action: ((Int) -> Void)?
     
     var body: some View {
         Circle()
-            .fill(isFilled ? Color.vampireRed : Color.clear)
+            .fill(isFilled ? fillColor : Color.clear)
             .overlay(Circle().stroke(Color.black, lineWidth: 1))
             .frame(width: 20, height: 20)
             .onTapGesture {

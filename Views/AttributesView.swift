@@ -35,21 +35,21 @@ struct AttributesView: View {
                         // MENTAL ATTRIBUTES
                         Section(header: Text("MENTAL").font(.custom("CaslonAntique", size: 20))) {
                             ForEach(character.attributes.filter { mentalAttributes.contains($0.name) }) { attribute in
-                                AttributeRowView(attribute: attribute)
+                                AttributeRowView(character: character, attribute: attribute)
                             }
                         }
                         
                         // PHYSICAL ATTRIBUTES
                         Section(header: Text("PHYSICAL").font(.custom("CaslonAntique", size: 20))) {
                             ForEach(character.attributes.filter { physicalAttributes.contains($0.name) }) { attribute in
-                                AttributeRowView(attribute: attribute)
+                                AttributeRowView(character: character, attribute: attribute)
                             }
                         }
                         
                         // SOCIAL ATTRIBUTES
                         Section(header: Text("SOCIAL").font(.custom("CaslonAntique", size: 20))) {
                             ForEach(character.attributes.filter { socialAttributes.contains($0.name) }) { attribute in
-                                AttributeRowView(attribute: attribute)
+                                AttributeRowView(character: character, attribute: attribute)
                             }
                         }
                     }

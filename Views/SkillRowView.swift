@@ -9,10 +9,15 @@
 import SwiftUI
 
 struct SkillRowView: View {
+    @ObservedObject var character: Character
     @ObservedObject var skill: Skill
     @State private var showingPicker = false
     @State private var isEditingSpecialty = false
     @FocusState private var specialtyFieldIsFocused: Bool
+
+    private var maximumVisibleRating: Int {
+        character.baseRatingCap >= 6 || skill.rating >= 6 ? 10 : 5
+    }
     
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
@@ -66,8 +71,17 @@ struct SkillRowView: View {
             Spacer()
             
             
-            DotsRatingView(rating: $skill.rating, maxRating: skill.rating > 5 ? skill.rating : 5)
-                .frame(width: 100)
+            DotsRatingView(
+                rating: $skill.rating,
+                maxRating: maximumVisibleRating,
+                maxEditableRating: character.baseRatingCap,
+                showsOverflowTotal: true,
+                allowsResetToZero: true,
+                onOverflowTap: {
+                    showingPicker = true
+                }
+            )
+                .frame(width: 116)
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
@@ -81,7 +95,7 @@ struct SkillRowView: View {
     
     func actionSheetButtons() -> [ActionSheet.Button] {
         var buttons: [ActionSheet.Button] = []
-        for value in 0...10 {
+        for value in character.skillRatingRange {
             buttons.append(.default(Text("\(value)")) {
                 skill.rating = value
             })

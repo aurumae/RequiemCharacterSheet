@@ -127,7 +127,7 @@ struct DerivedAttributesView: View {
                             .foregroundColor(.vampireRed)
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    .disabled(character.beats <= 0)
+                    .disabled(character.experiences <= 0)
                     
                     Text("\(character.experiences)")
                         .vampireFont()
@@ -141,7 +141,7 @@ struct DerivedAttributesView: View {
                             .foregroundColor(.vampireRed)
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    .disabled(character.experiences <= 0)
+                    //.disabled(character.experiences <= 0)
                 }
             }
             .padding(.vertical, 4)

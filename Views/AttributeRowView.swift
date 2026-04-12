@@ -9,8 +9,17 @@
 import SwiftUI
 
 struct AttributeRowView: View {
+    @ObservedObject var character: Character
     @ObservedObject var attribute: Attribute
     @State private var showingPicker = false
+
+    private var totalRating: Int {
+        character.totalAttributeRating(for: attribute)
+    }
+
+    private var maximumVisibleRating: Int {
+        character.baseRatingCap >= 6 || totalRating >= 6 ? 10 : 5
+    }
     
     var body: some View {
         HStack {
@@ -26,14 +35,23 @@ struct AttributeRowView: View {
                 ActionSheet(title: Text("Set \(attribute.name)"), message: nil, buttons: actionSheetButtons())
             }
             Spacer()
-            DotsRatingView(rating: $attribute.rating, maxRating: attribute.rating > 5 ? attribute.rating : 5)
+            DotsRatingView(
+                rating: $attribute.rating,
+                totalRating: totalRating,
+                maxRating: maximumVisibleRating,
+                maxEditableRating: character.baseRatingCap,
+                showsOverflowTotal: true,
+                onOverflowTap: {
+                    showingPicker = true
+                }
+            )
         }
         .padding(.vertical, 4)
     }
     
     func actionSheetButtons() -> [ActionSheet.Button] {
         var buttons: [ActionSheet.Button] = []
-        for value in 1...10 {
+        for value in character.attributeRatingRange {
             buttons.append(.default(Text("\(value)")) {
                 attribute.rating = value
             })

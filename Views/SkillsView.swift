@@ -16,21 +16,21 @@ struct SkillsView: View {
             // MENTAL
             Section(header: SkillsSectionHeader(title: "MENTAL", subtitle: "(-3 unskilled)")) {
                 ForEach(character.skills.filter { mentalSkills.contains($0.name) }) { skill in
-                    SkillRowView(skill: skill)
+                    SkillRowView(character: character, skill: skill)
                 }
             }
 
             // PHYSICAL
             Section(header: SkillsSectionHeader(title: "PHYSICAL", subtitle: "(-1 unskilled)")) {
                 ForEach(character.skills.filter { physicalSkills.contains($0.name) }) { skill in
-                    SkillRowView(skill: skill)
+                    SkillRowView(character: character, skill: skill)
                 }
             }
 
             // SOCIAL
             Section(header: SkillsSectionHeader(title: "SOCIAL", subtitle: "(-1 unskilled)")) {
                 ForEach(character.skills.filter { socialSkills.contains($0.name) }) { skill in
-                    SkillRowView(skill: skill)
+                    SkillRowView(character: character, skill: skill)
                 }
             }
         }
