@@ -133,6 +133,44 @@ final class RequiemCharacterSheetTests: XCTestCase {
         XCTAssertEqual(character.weaponryDicePool, 6)
     }
 
+    func testDefensiveCombatBrawlAddsAlternativeDefense() {
+        let character = Character()
+        let dexterity = attribute(named: "Dexterity", in: character)
+        let wits = attribute(named: "Wits", in: character)
+        let athletics = skill(named: "Athletics", in: character)
+        let brawl = skill(named: "Brawl", in: character)
+
+        dexterity.rating = 4
+        wits.rating = 3
+        athletics.rating = 1
+        brawl.rating = 4
+        character.merits = [Merit(name: "Defensive Combat (Brawl)", rating: 1)]
+
+        XCTAssertTrue(character.hasDefensiveCombatBrawl)
+        XCTAssertFalse(character.hasDefensiveCombatWeaponry)
+        XCTAssertEqual(character.defense, 4)
+        XCTAssertEqual(character.defenseUsingBrawl, 7)
+    }
+
+    func testDefensiveCombatWeaponryAddsAlternativeDefense() {
+        let character = Character()
+        let dexterity = attribute(named: "Dexterity", in: character)
+        let wits = attribute(named: "Wits", in: character)
+        let athletics = skill(named: "Athletics", in: character)
+        let weaponry = skill(named: "Weaponry", in: character)
+
+        dexterity.rating = 4
+        wits.rating = 3
+        athletics.rating = 1
+        weaponry.rating = 5
+        character.merits = [Merit(name: "Defensive Combat (Weaponry)", rating: 1)]
+
+        XCTAssertFalse(character.hasDefensiveCombatBrawl)
+        XCTAssertTrue(character.hasDefensiveCombatWeaponry)
+        XCTAssertEqual(character.defense, 4)
+        XCTAssertEqual(character.defenseUsingWeaponry, 8)
+    }
+
     private func attribute(named name: String, in character: Character) -> Attribute {
         guard let attribute = character.attributes.first(where: { $0.name == name }) else {
             XCTFail("Missing attribute named \(name)")

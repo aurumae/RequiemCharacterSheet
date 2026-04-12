@@ -32,13 +32,35 @@ struct DerivedAttributesView: View {
             .padding(.vertical, 4)
             
             HStack {
-                Text("Defense:")
+                Text("Defense (Athletics):")
                     .vampireFont()
                 Spacer()
                 Text("\(character.defense)")
                     .vampireFont()
             }
             .padding(.vertical, 4)
+
+            if character.hasDefensiveCombatBrawl {
+                HStack {
+                    Text("Defense (Brawl):")
+                        .vampireFont()
+                    Spacer()
+                    Text("\(character.defenseUsingBrawl)")
+                        .vampireFont()
+                }
+                .padding(.vertical, 4)
+            }
+
+            if character.hasDefensiveCombatWeaponry {
+                HStack {
+                    Text("Defense (Weaponry):")
+                        .vampireFont()
+                    Spacer()
+                    Text("\(character.defenseUsingWeaponry)")
+                        .vampireFont()
+                }
+                .padding(.vertical, 4)
+            }
             
             HStack {
                 Text("Armor:")

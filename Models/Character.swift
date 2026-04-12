@@ -57,6 +57,8 @@ class Character: ObservableObject, Codable {
     private var skillCancellables = Set<AnyCancellable>()
     private var disciplineCancellables = Set<AnyCancellable>()
     private var disciplineObjectCancellables = Set<AnyCancellable>()
+    private var meritCancellables = Set<AnyCancellable>()
+    private var meritObjectCancellables = Set<AnyCancellable>()
     
     enum CodingKeys: CodingKey {
         case attributes, bloodPotency, healthDamage, willpowerSpent, healthBoxes, willpowerBoxes, skills,
@@ -162,6 +164,7 @@ class Character: ObservableObject, Codable {
         setupSkillObservers()
         setupBloodPotencyObserver()
         setupDisciplineObservers()
+        setupMeritObservers()
     }
     
     init() {
@@ -270,6 +273,7 @@ class Character: ObservableObject, Codable {
         setupSkillObservers()
         setupBloodPotencyObserver()
         setupDisciplineObservers()
+        setupMeritObservers()
         
     }
     
@@ -303,12 +307,23 @@ class Character: ObservableObject, Codable {
     }
     
     var defense: Int {
-        let dexterity = totalAttributeRating(named: "Dexterity")
-        let wits = totalAttributeRating(named: "Wits")
-        let athletics = skills.first { $0.name == "Athletics" }?.rating ?? 0
-        let celerityRating = disciplineRating(named: "celerity")
-        let lowerAttribute = min(dexterity, wits)
-        return lowerAttribute + athletics + celerityRating
+        defense(usingSkillNamed: "Athletics")
+    }
+
+    var defenseUsingBrawl: Int {
+        defense(usingSkillNamed: "Brawl")
+    }
+
+    var defenseUsingWeaponry: Int {
+        defense(usingSkillNamed: "Weaponry")
+    }
+
+    var hasDefensiveCombatBrawl: Bool {
+        hasDefensiveCombatMerit(for: "brawl")
+    }
+
+    var hasDefensiveCombatWeaponry: Bool {
+        hasDefensiveCombatMerit(for: "weaponry")
     }
     
     var speed: Int {
@@ -374,6 +389,33 @@ class Character: ObservableObject, Codable {
         let rating = skills.first { $0.name == name }?.rating ?? 0
         return rating == 0 ? -1 : rating
     }
+
+    func defense(usingSkillNamed skillName: String) -> Int {
+        let dexterity = totalAttributeRating(named: "Dexterity")
+        let wits = totalAttributeRating(named: "Wits")
+        let skillRating = skills.first { $0.name == skillName }?.rating ?? 0
+        let celerityRating = disciplineRating(named: "celerity")
+        return min(dexterity, wits) + skillRating + celerityRating
+    }
+
+    func hasDefensiveCombatMerit(for skillName: String) -> Bool {
+        let normalizedSkillName = normalizedRulesText(skillName)
+
+        return merits.contains { merit in
+            let normalizedMeritName = normalizedRulesText(merit.name)
+            return normalizedMeritName.contains("defensive combat")
+                && normalizedMeritName.contains(normalizedSkillName)
+        }
+    }
+
+    private func normalizedRulesText(_ text: String) -> String {
+        text.trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+            .replacingOccurrences(of: "(", with: " ")
+            .replacingOccurrences(of: ")", with: " ")
+            .split(separator: " ")
+            .joined(separator: " ")
+    }
     
     private func setupAttributeObservers() {
         // Clear previous subscriptions if any
@@ -430,6 +472,16 @@ class Character: ObservableObject, Codable {
             }
             .store(in: &disciplineCancellables)
     }
+
+    private func setupMeritObservers() {
+        $merits
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] merits in
+                self?.observeMerits(merits)
+                self?.objectWillChange.send()
+            }
+            .store(in: &meritCancellables)
+    }
     
     private func observeDisciplines(_ disciplines: [Discipline]) {
         disciplineObjectCancellables.removeAll()
@@ -441,6 +493,19 @@ class Character: ObservableObject, Codable {
                     self?.updateDerivedAttributes()
                 }
                 .store(in: &disciplineObjectCancellables)
+        }
+    }
+
+    private func observeMerits(_ merits: [Merit]) {
+        meritObjectCancellables.removeAll()
+
+        for merit in merits {
+            merit.objectWillChange
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &meritObjectCancellables)
         }
     }
     
