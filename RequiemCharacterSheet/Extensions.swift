@@ -17,3 +17,11 @@ extension Array {
         return chunks
     }
 }
+
+extension KeyedDecodingContainer {
+    /// Decodes the value for `key`, or returns `defaultValue` when the key is missing or null.
+    /// Lets saves written before a field existed still load.
+    func decode<T: Decodable>(_ key: Key, default defaultValue: @autoclosure () -> T) throws -> T {
+        try decodeIfPresent(T.self, forKey: key) ?? defaultValue()
+    }
+}

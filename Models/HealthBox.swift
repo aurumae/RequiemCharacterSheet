@@ -26,8 +26,8 @@ class HealthBox: ObservableObject, Identifiable, Codable {
     // Decoding
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        damageType = try container.decode(HealthBoxFillType.self, forKey: .damageType)
+        id = try container.decode(.id, default: UUID())
+        damageType = try container.decode(.damageType, default: HealthBoxFillType.none)
     }
 
     // Default initializer

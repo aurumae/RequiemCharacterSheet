@@ -27,9 +27,9 @@ class Attribute: ObservableObject, Identifiable, Codable {
     // Decoding
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
+        id = try container.decode(.id, default: UUID())
         name = try container.decode(String.self, forKey: .name)
-        rating = try container.decode(Int.self, forKey: .rating)
+        rating = try container.decode(.rating, default: 1)
     }
 
     init(name: String, rating: Int) {

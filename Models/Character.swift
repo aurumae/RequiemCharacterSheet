@@ -10,6 +10,13 @@ import Foundation
 import Combine
 
 class Character: ObservableObject, Codable {
+    /// Version of the saved format. Version 1 saves predate this key and have no `id` or timestamps.
+    static let currentSchemaVersion = 2
+
+    let id: UUID
+    let createdAt: Date
+    var modifiedAt: Date
+
     @Published var attributes: [Attribute]
     @Published var healthBoxes: [HealthBox]
     @Published var willpowerBoxes: [WillpowerBox]
@@ -55,7 +62,8 @@ class Character: ObservableObject, Codable {
     private var meritObjectCancellables = Set<AnyCancellable>()
     
     enum CodingKeys: CodingKey {
-        case attributes, bloodPotency, healthBoxes, willpowerBoxes, skills,
+        case schemaVersion, id, createdAt, modifiedAt,
+             attributes, bloodPotency, healthBoxes, willpowerBoxes, skills,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              maxVitae, vitaePerTurn, currentVitae, humanity, touchstones, disciplines, merits,
              aspirations, banes, size, armor, beats, experiences
@@ -64,6 +72,11 @@ class Character: ObservableObject, Codable {
     // Encoding
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(Character.currentSchemaVersion, forKey: .schemaVersion)
+        try container.encode(id, forKey: .id)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(modifiedAt, forKey: .modifiedAt)
+
         try container.encode(attributes, forKey: .attributes)
         try container.encode(healthBoxes, forKey: .healthBoxes)
         try container.encode(willpowerBoxes, forKey: .willpowerBoxes)
@@ -100,45 +113,61 @@ class Character: ObservableObject, Codable {
         try container.encode(experiences, forKey: .experiences)
     }
     
-    // Decoding
+    // Decoding. Every field falls back to its default when missing, so saves written
+    // before a field existed still load instead of being replaced by a blank character.
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        attributes = try container.decode([Attribute].self, forKey: .attributes)
-        healthBoxes = try container.decode([HealthBox].self, forKey: .healthBoxes)
-        willpowerBoxes = try container.decode([WillpowerBox].self, forKey: .willpowerBoxes)
-        skills = try container.decode([Skill].self, forKey: .skills)
-        
-        name = try container.decode(String.self, forKey: .name)
-        player = try container.decode(String.self, forKey: .player)
-        chronicle = try container.decode(String.self, forKey: .chronicle)
-        mask = try container.decode(String.self, forKey: .mask)
-        dirge = try container.decode(String.self, forKey: .dirge)
-        concept = try container.decode(String.self, forKey: .concept)
-        clan = try container.decode(String.self, forKey: .clan)
-        bloodline = try container.decode(String.self, forKey: .bloodline)
-        covenant = try container.decode(String.self, forKey: .covenant)
-        
-        bloodPotency = try container.decode(Int.self, forKey: .bloodPotency)
-        maxVitae = try container.decode(Int.self, forKey: .maxVitae)
-        vitaePerTurn = try container.decode(Int.self, forKey: .vitaePerTurn)
-        currentVitae = try container.decode(Int.self, forKey: .currentVitae)
-        
-        humanity = try container.decode(Int.self, forKey: .humanity)
-        touchstones = try container.decode([Touchstone].self, forKey: .touchstones)
-        
-        disciplines = try container.decode([Discipline].self, forKey: .disciplines)
-        merits = try container.decode([Merit].self, forKey: .merits)
-        
-        aspirations = try container.decode([Aspiration].self, forKey: .aspirations)
-        banes = try container.decode([Bane].self, forKey: .banes)
-        
-        size = try container.decode(Int.self, forKey: .size)
-        armor = try container.decode(Int.self, forKey: .armor)
-        
-        beats = try container.decode(Int.self, forKey: .beats)
-        experiences = try container.decode(Int.self, forKey: .experiences)
+        let now = Date()
+        id = try container.decode(.id, default: UUID())
+        createdAt = try container.decode(.createdAt, default: now)
+        modifiedAt = try container.decode(.modifiedAt, default: now)
 
-        self.cancellables = Set<AnyCancellable>()
+        let savedAttributes: [Attribute] = try container.decode(.attributes, default: [])
+        let savedSkills: [Skill] = try container.decode(.skills, default: [])
+        let savedTouchstones: [Touchstone] = try container.decode(.touchstones, default: [])
+        attributes = Character.merge(saved: savedAttributes, into: Character.defaultAttributes(), by: \.name)
+        skills = Character.merge(saved: savedSkills, into: Character.defaultSkills(), by: \.name)
+        touchstones = Character.merge(saved: savedTouchstones, into: Character.defaultTouchstones(), by: \.level)
+
+        // Box counts are rebuilt from the derived totals below; these carry the existing marks
+        healthBoxes = try container.decode(.healthBoxes, default: [])
+        willpowerBoxes = try container.decode(.willpowerBoxes, default: [])
+        
+        name = try container.decode(.name, default: "")
+        player = try container.decode(.player, default: "")
+        chronicle = try container.decode(.chronicle, default: "")
+        mask = try container.decode(.mask, default: "")
+        dirge = try container.decode(.dirge, default: "")
+        concept = try container.decode(.concept, default: "")
+        clan = try container.decode(.clan, default: "")
+        bloodline = try container.decode(.bloodline, default: "")
+        covenant = try container.decode(.covenant, default: "")
+        
+        bloodPotency = try container.decode(.bloodPotency, default: 1)
+        // Max Vitae and Vitae per turn are recalculated from Blood Potency below
+        maxVitae = try container.decode(.maxVitae, default: 0)
+        vitaePerTurn = try container.decode(.vitaePerTurn, default: 1)
+        currentVitae = try container.decode(.currentVitae, default: 0)
+        
+        humanity = try container.decode(.humanity, default: 7)
+        
+        disciplines = try container.decode(.disciplines, default: [Discipline()])
+        merits = try container.decode(.merits, default: [Merit()])
+        
+        aspirations = try container.decode(.aspirations, default: [Aspiration()])
+        banes = try container.decode(.banes, default: [Bane()])
+        
+        size = try container.decode(.size, default: 5)
+        armor = try container.decode(.armor, default: 0)
+        
+        beats = try container.decode(.beats, default: 0)
+        experiences = try container.decode(.experiences, default: 0)
+
+        // Bring derived values back in line with the loaded ratings
+        updateVitaeData()
+        updateHealthBoxes()
+        updateWillpowerBoxes()
+
         // Re-establish observers
         setupAttributeObservers() // Keep this one at the top
         setupSkillObservers()
@@ -148,63 +177,71 @@ class Character: ObservableObject, Codable {
     }
     
     init() {
-        // Initialize attributes as a local variable
-        let attributes = [
-            Attribute(name: "Intelligence", rating: 1),
-            Attribute(name: "Wits", rating: 1),
-            Attribute(name: "Resolve", rating: 1),
-            Attribute(name: "Strength", rating: 1),
-            Attribute(name: "Dexterity", rating: 1),
-            Attribute(name: "Stamina", rating: 1),
-            Attribute(name: "Presence", rating: 1),
-            Attribute(name: "Manipulation", rating: 1),
-            Attribute(name: "Composure", rating: 1)
-        ]
-        
-        // Compute stamina using the local attributes variable
-        // Need to intialize values with let before I can reference them with self below
-        let stamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
-        
-        let size = 5 // Size is a var now. Need to think of a way to handle this for variable size later
+        id = UUID()
+        createdAt = Date()
+        modifiedAt = createdAt
 
-        let totalHealth = stamina + size
-        let healthBoxes = (0..<totalHealth).map { _ in HealthBox() }
-        
-        // Compute resolve and composure using the local attributes variable
-        let resolve = attributes.first { $0.name == "Resolve" }?.rating ?? 0
-        let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
-        let willpower = resolve + composure
-        let willpowerBoxes = (0..<willpower).map { _ in WillpowerBox() }
+        attributes = Character.defaultAttributes()
+        skills = Character.defaultSkills()
 
-        // Now assign to self after all computations
-        self.attributes = attributes
-        
-        self.bloodPotency = 1
-        self.maxVitae = 0
-        self.vitaePerTurn = 1
-        self.currentVitae = 0
-        
-        self.healthBoxes = healthBoxes
-        self.willpowerBoxes = willpowerBoxes
-        
-        self.humanity = 7
-        self.touchstones = (1...10).map { Touchstone(level: $0) }
-        
-        self.disciplines = [Discipline()] // Start with one empty Discipline
-        self.merits = [Merit()] // Start with one empty Merit
-        
-        self.aspirations = [Aspiration()] // Start with one empty Aspiration
-        self.banes = [Bane()] // Start with one empty Bane
-        
-        self.size = 5
-        self.armor = 0
-        
-        self.beats = 0
-        self.experiences = 0
-        
-        self.cancellables = Set<AnyCancellable>()
-        
-        // Initialize skills
+        // Sized from the derived totals below
+        healthBoxes = []
+        willpowerBoxes = []
+
+        name = ""
+        player = ""
+        chronicle = ""
+        mask = ""
+        dirge = ""
+        concept = ""
+        clan = ""
+        bloodline = ""
+        covenant = ""
+
+        bloodPotency = 1
+        maxVitae = 0
+        vitaePerTurn = 1
+        currentVitae = 0
+
+        humanity = 7
+        touchstones = Character.defaultTouchstones()
+
+        disciplines = [Discipline()] // Start with one empty Discipline
+        merits = [Merit()] // Start with one empty Merit
+
+        aspirations = [Aspiration()] // Start with one empty Aspiration
+        banes = [Bane()] // Start with one empty Bane
+
+        size = 5
+        armor = 0
+
+        beats = 0
+        experiences = 0
+
+        // Initialize derived values based on the starting ratings
+        updateVitaeData()
+        updateHealthBoxes()
+        updateWillpowerBoxes()
+
+        // Re-establish observers
+        setupAttributeObservers() // Keep this one at the top
+        setupSkillObservers()
+        setupBloodPotencyObserver()
+        setupDisciplineObservers()
+        setupMeritObservers()
+    }
+
+    // MARK: - Defaults
+
+    static func defaultAttributes() -> [Attribute] {
+        [
+            "Intelligence", "Wits", "Resolve",
+            "Strength", "Dexterity", "Stamina",
+            "Presence", "Manipulation", "Composure"
+        ].map { Attribute(name: $0, rating: 1) }
+    }
+
+    static func defaultSkills() -> [Skill] {
         let mentalSkills = [
             "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science"
         ]
@@ -214,32 +251,21 @@ class Character: ObservableObject, Codable {
         let socialSkills = [
             "Animal Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge"
         ]
-        
-        let allSkills = (mentalSkills + physicalSkills + socialSkills).map { Skill(name: $0) }
-        self.skills = allSkills
-        
-        
-        // Initialize character detail properties
-        self.name = ""
-        self.player = ""
-        self.chronicle = ""
-        self.mask = ""
-        self.dirge = ""
-        self.concept = ""
-        self.clan = ""
-        self.bloodline = ""
-        self.covenant = ""
+        return (mentalSkills + physicalSkills + socialSkills).map { Skill(name: $0) }
+    }
 
-        // Initialize Vitae based on initial Blood Potency
-        updateVitaeData()
-        
-        // Re-establish observers
-        setupAttributeObservers() // Keep this one at the top
-        setupSkillObservers()
-        setupBloodPotencyObserver()
-        setupDisciplineObservers()
-        setupMeritObservers()
-        
+    static func defaultTouchstones() -> [Touchstone] {
+        (1...10).map { Touchstone(level: $0) }
+    }
+
+    /// Returns the default entries in their standard order, substituting the saved entry wherever
+    /// one matches, so entries added since the save was written are filled in.
+    /// Saved entries that don't match any default are kept at the end.
+    private static func merge<T, Key: Hashable>(saved: [T], into defaults: [T], by key: KeyPath<T, Key>) -> [T] {
+        let savedByKey = Dictionary(saved.map { ($0[keyPath: key], $0) }, uniquingKeysWith: { first, _ in first })
+        let defaultKeys = Set(defaults.map { $0[keyPath: key] })
+        return defaults.map { savedByKey[$0[keyPath: key]] ?? $0 }
+            + saved.filter { !defaultKeys.contains($0[keyPath: key]) }
     }
     
     // Derived attributes
@@ -595,6 +621,7 @@ class Character: ObservableObject, Codable {
 // Extension for saving and loading
 extension Character {
     func save() {
+        modifiedAt = Date()
         if let encoded = try? JSONEncoder().encode(self) {
             UserDefaults.standard.set(encoded, forKey: "SavedCharacter")
             print("Character saved.")

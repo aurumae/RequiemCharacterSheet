@@ -34,8 +34,8 @@ class Discipline: ObservableObject, Identifiable, Codable {
     // Decoding
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        rating = try container.decode(Int.self, forKey: .rating)
+        id = try container.decode(.id, default: UUID())
+        name = try container.decode(.name, default: "")
+        rating = try container.decode(.rating, default: 0)
     }
 }

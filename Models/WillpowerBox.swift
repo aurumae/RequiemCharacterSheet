@@ -26,8 +26,8 @@ class WillpowerBox: ObservableObject, Identifiable, Codable {
     // Decoding
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        state = try container.decode(WillpowerBoxFillType.self, forKey: .state)
+        id = try container.decode(.id, default: UUID())
+        state = try container.decode(.state, default: WillpowerBoxFillType.none)
     }
     
     // Default initializer

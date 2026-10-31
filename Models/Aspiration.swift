@@ -31,7 +31,7 @@ class Aspiration: ObservableObject, Identifiable, Codable {
     // Decoding
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        text = try container.decode(String.self, forKey: .text)
+        id = try container.decode(.id, default: UUID())
+        text = try container.decode(.text, default: "")
     }
 }
