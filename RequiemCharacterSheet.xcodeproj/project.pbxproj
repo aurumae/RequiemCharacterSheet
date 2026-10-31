@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
+		BC2B44263096609600720F0C /* CharacterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B44253096609600720F0C /* CharacterStore.swift */; };
+		BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4427309660A900720F0C /* CharacterStoreTests.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -82,7 +84,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */ = {isa = PBXFileReference; path = CharacterDecodingTests.swift; sourceTree = "<group>"; };
+		BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDecodingTests.swift; sourceTree = "<group>"; };
+		BC2B44253096609600720F0C /* CharacterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStore.swift; sourceTree = "<group>"; };
+		BC2B4427309660A900720F0C /* CharacterStoreTests.swift */ = {isa = PBXFileReference; path = CharacterStoreTests.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -219,6 +223,7 @@
 			children = (
 				BCB158DE2C986812003B6A8F /* RequiemCharacterSheetTests.swift */,
 				BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */,
+				BC2B4427309660A900720F0C /* CharacterStoreTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -257,6 +262,7 @@
 				BC6D36A52C9A5EFA008D03F7 /* HealthBox.swift */,
 				BCB159042C987143003B6A8F /* Attribute.swift */,
 				BCB159062C987161003B6A8F /* Character.swift */,
+				BC2B44253096609600720F0C /* CharacterStore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -438,6 +444,7 @@
 				BC6D36D72C9DE680008D03F7 /* DisciplinesView.swift in Sources */,
 				BC6D36DF2C9DF3FC008D03F7 /* Extensions.swift in Sources */,
 				BC6D36D12C9DE643008D03F7 /* Merit.swift in Sources */,
+				BC2B44263096609600720F0C /* CharacterStore.swift in Sources */,
 				BCB1590E2C9872D6003B6A8F /* DotsRowView.swift in Sources */,
 				BCB159102C9872FD003B6A8F /* DotView.swift in Sources */,
 				BC6D36CA2C9DD3F9008D03F7 /* HumanityRowView.swift in Sources */,
@@ -486,6 +493,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
+				BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */,
 				BCB158DF2C986812003B6A8F /* RequiemCharacterSheetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
