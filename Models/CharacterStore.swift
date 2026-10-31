@@ -76,12 +76,25 @@ final class CharacterStore {
         return try decodeCharacter(from: data)
     }
 
-    func save(_ character: Character, at date: Date = .now) throws {
+    /// Writes the character to disk and stamps it as edited at `date`, unless nothing has changed
+    /// since it was last saved, in which case the file and its edited date are left as they are.
+    /// Returns whether the file was written.
+    @discardableResult
+    func save(_ character: Character, at date: Date = .now) throws -> Bool {
+        let url = fileURL(for: character.id)
+        if let savedData = try? Data(contentsOf: url),
+           let savedContent = try? Self.comparableContent(of: savedData),
+           let currentContent = try? Self.comparableContent(of: JSONEncoder().encode(character)),
+           savedContent == currentContent {
+            return false
+        }
+
         character.modifiedAt = date
         let data = try JSONEncoder().encode(character)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try data.write(to: fileURL(for: character.id), options: .atomic)
+        try data.write(to: url, options: .atomic)
         reload()
+        return true
     }
 
     func delete(_ id: UUID) throws {
@@ -111,6 +124,21 @@ final class CharacterStore {
             throw CharacterStoreError.newerFormat(version: version)
         }
         return try JSONDecoder().decode(Character.self, from: data)
+    }
+
+    /// The parts of a save that count as the character's content: everything except the edited date
+    /// and the health/willpower box ids, which are regenerated whenever the boxes are rebuilt (including on every load).
+    private static func comparableContent(of data: Data) throws -> Data {
+        guard var object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return data
+        }
+        object["modifiedAt"] = nil
+        for key in ["healthBoxes", "willpowerBoxes"] {
+            if let boxes = object[key] as? [[String: Any]] {
+                object[key] = boxes.map { $0.filter { $0.key != "id" } }
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: object, options: .sortedKeys)
     }
 
     private struct SchemaVersionProbe: Decodable {

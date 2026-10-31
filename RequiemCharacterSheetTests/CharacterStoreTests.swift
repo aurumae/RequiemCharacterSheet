@@ -94,6 +94,52 @@ final class CharacterStoreTests {
         #expect(store.summaries.map(\.name) == ["Renamed"])
     }
 
+    @Test func openingAndSavingWithoutChangesKeepsEditedDate() throws {
+        let store = makeStore()
+        let firstSave = Date(timeIntervalSinceReferenceDate: 1_000)
+        let character = Character()
+        character.name = "Marcus Vale"
+        try store.save(character, at: firstSave)
+
+        let reopened = try store.load(character.id)
+        // Box ids are regenerated whenever the boxes are rebuilt, which isn't a real edit
+        reopened.healthBoxes = reopened.healthBoxes.map { HealthBox(damageType: $0.damageType) }
+        reopened.willpowerBoxes = reopened.willpowerBoxes.map { WillpowerBox(state: $0.state) }
+        let didWrite = try store.save(reopened, at: Date(timeIntervalSinceReferenceDate: 2_000))
+
+        #expect(!didWrite)
+        #expect(reopened.modifiedAt == firstSave)
+        #expect(store.summaries.first?.modifiedAt == firstSave)
+    }
+
+    @Test func changedCharacterGetsNewEditedDate() throws {
+        let store = makeStore()
+        let character = Character()
+        try store.save(character, at: Date(timeIntervalSinceReferenceDate: 1_000))
+
+        let reopened = try store.load(character.id)
+        reopened.name = "Marcus Vale"
+        let secondSave = Date(timeIntervalSinceReferenceDate: 2_000)
+        let didWrite = try store.save(reopened, at: secondSave)
+
+        #expect(didWrite)
+        #expect(store.summaries.first?.modifiedAt == secondSave)
+        #expect(store.summaries.first?.name == "Marcus Vale")
+    }
+
+    @Test func damageMarkCountsAsChange() throws {
+        let store = makeStore()
+        let character = Character()
+        try store.save(character, at: Date(timeIntervalSinceReferenceDate: 1_000))
+
+        let reopened = try store.load(character.id)
+        reopened.healthBoxes.first?.damageType = .lethal
+        let didWrite = try store.save(reopened, at: Date(timeIntervalSinceReferenceDate: 2_000))
+
+        #expect(didWrite)
+        #expect(try store.load(character.id).healthBoxes.first?.damageType == .lethal)
+    }
+
     @Test func newStoreSeesPreviouslySavedCharacters() throws {
         let character = Character()
         character.name = "Persisted"
