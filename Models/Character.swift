@@ -11,9 +11,7 @@ import Combine
 
 class Character: ObservableObject, Codable {
     @Published var attributes: [Attribute]
-    @Published var healthDamage: Int = 0
     @Published var healthBoxes: [HealthBox]
-    @Published var willpowerSpent: Int = 0
     @Published var willpowerBoxes: [WillpowerBox]
     @Published var skills: [Skill]
     
@@ -47,11 +45,7 @@ class Character: ObservableObject, Codable {
     
     @Published var beats: Int
     @Published var experiences: Int
-    
-    //@Published var brawlDicePool: Int
-    //@Published var weaponryDicePool: Int
-    //@Published var firearmsDicePool: Int
-    
+
     private var cancellables = Set<AnyCancellable>()
     private var attributeCancellables = Set<AnyCancellable>()
     private var skillCancellables = Set<AnyCancellable>()
@@ -61,7 +55,7 @@ class Character: ObservableObject, Codable {
     private var meritObjectCancellables = Set<AnyCancellable>()
     
     enum CodingKeys: CodingKey {
-        case attributes, bloodPotency, healthDamage, willpowerSpent, healthBoxes, willpowerBoxes, skills,
+        case attributes, bloodPotency, healthBoxes, willpowerBoxes, skills,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              maxVitae, vitaePerTurn, currentVitae, humanity, touchstones, disciplines, merits,
              aspirations, banes, size, armor, beats, experiences
@@ -71,8 +65,6 @@ class Character: ObservableObject, Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(attributes, forKey: .attributes)
-        try container.encode(healthDamage, forKey: .healthDamage)
-        try container.encode(willpowerSpent, forKey: .willpowerSpent)
         try container.encode(healthBoxes, forKey: .healthBoxes)
         try container.encode(willpowerBoxes, forKey: .willpowerBoxes)
         try container.encode(skills, forKey: .skills)
@@ -106,18 +98,12 @@ class Character: ObservableObject, Codable {
         
         try container.encode(beats, forKey: .beats)
         try container.encode(experiences, forKey: .experiences)
-        
-        //try container.encode(brawlDicePool, forKey: .brawlDicePool)
-        //try container.encode(weaponryDicePool, forKey: .weaponryDicePool)
-        //try container.encode(firearmsDicePool, forKey: .firearmsDicePool)
     }
     
     // Decoding
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         attributes = try container.decode([Attribute].self, forKey: .attributes)
-        healthDamage = try container.decode(Int.self, forKey: .healthDamage)
-        willpowerSpent = try container.decode(Int.self, forKey: .willpowerSpent)
         healthBoxes = try container.decode([HealthBox].self, forKey: .healthBoxes)
         willpowerBoxes = try container.decode([WillpowerBox].self, forKey: .willpowerBoxes)
         skills = try container.decode([Skill].self, forKey: .skills)
@@ -151,13 +137,7 @@ class Character: ObservableObject, Codable {
         
         beats = try container.decode(Int.self, forKey: .beats)
         experiences = try container.decode(Int.self, forKey: .experiences)
-        
-        //brawlDicePool = try container.decode(Int.self, forKey: .brawlDicePool)
-        //firearmsDicePool = try container.decode(Int.self, forKey: .firearmsDicePool)
-        //weaponryDicePool = try container.decode(Int.self, forKey: .weaponryDicePool)
-        
-        
-        
+
         self.cancellables = Set<AnyCancellable>()
         // Re-establish observers
         setupAttributeObservers() // Keep this one at the top
@@ -186,10 +166,8 @@ class Character: ObservableObject, Codable {
         let stamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
         
         let size = 5 // Size is a var now. Need to think of a way to handle this for variable size later
-        //let armor = 0
-        
+
         let totalHealth = stamina + size
-        //let healthBoxes = Array(repeating: HealthBox(), count: totalHealth)
         let healthBoxes = (0..<totalHealth).map { _ in HealthBox() }
         
         // Compute resolve and composure using the local attributes variable
@@ -197,14 +175,7 @@ class Character: ObservableObject, Codable {
         let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
         let willpower = resolve + composure
         let willpowerBoxes = (0..<willpower).map { _ in WillpowerBox() }
-        
-        //let strength = attributes.first { $0.name == "Strength" }?.rating ?? 0
-        //let dexterity = attributes.first { $0.name == "Dexterity" }?.rating ?? 0
-        
-        //let brawlDicePool = 0
-        //let firearmsDicePool = 0
-        //let weaponryDicePool = 0
-        
+
         // Now assign to self after all computations
         self.attributes = attributes
         
@@ -214,8 +185,6 @@ class Character: ObservableObject, Codable {
         self.currentVitae = 0
         
         self.healthBoxes = healthBoxes
-        self.healthDamage = 0
-        self.willpowerSpent = 0
         self.willpowerBoxes = willpowerBoxes
         
         self.humanity = 7
@@ -260,11 +229,7 @@ class Character: ObservableObject, Codable {
         self.clan = ""
         self.bloodline = ""
         self.covenant = ""
-        
-        //self.brawlDicePool = strength + brawl
-        //self.firearmsDicePool = dexterity + firearms
-        //self.weaponryDicePool = strength + weaponry
-        
+
         // Initialize Vitae based on initial Blood Potency
         updateVitaeData()
         
@@ -279,7 +244,6 @@ class Character: ObservableObject, Codable {
     
     // Derived attributes
     var health: Int {
-        //let stamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
         return adjustedStamina + size
     }
     
@@ -509,25 +473,6 @@ class Character: ObservableObject, Codable {
         }
     }
     
-    /* Old version
-    private func observeDisciplines(_ disciplines: [Discipline]) {
-        // Cancel existing subscriptions to avoid duplicates
-        // cancellables.forEach { $0.cancel() }
-        // cancellables.removeAll()
-        
-        for discipline in disciplines {
-            // Observe changes to each discipline's name and rating
-            discipline.objectWillChange
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    self?.updateDerivedAttributes()
-                    self?.objectWillChange.send()
-                }
-                .store(in: &cancellables)
-        }
-    }
-     */
-    
     private func updateDerivedAttributes() {
         // This method will be called when a discipline changes
         // Trigger necessary updates
@@ -645,47 +590,6 @@ class Character: ObservableObject, Codable {
             experiences -= 1
         }
     }
-}
-
-extension Character {
-    func sufferDamage(_ damageType: HealthBoxFillType) {
-        switch damageType {
-        case .bashing:
-            applyBashingDamage()
-        case .lethal:
-            applyLethalDamage()
-        case .aggravated:
-            applyAggravatedDamage()
-        case .none:
-            break
-        }
-    }
-    
-    private func applyBashingDamage() {
-        if let index = healthBoxes.firstIndex(where: { $0.damageType == .none }) {
-            healthBoxes[index].damageType = .bashing
-        } else {
-            // Handle overflow or upgrades
-        }
-    }
-    
-    private func applyLethalDamage() {
-        if let index = healthBoxes.firstIndex(where: { $0.damageType == .none }) {
-            healthBoxes[index].damageType = .lethal
-        } else {
-            // Handle overflow or upgrades
-        }
-    }
-    
-    private func applyAggravatedDamage() {
-        if let index = healthBoxes.firstIndex(where: { $0.damageType == .none }) {
-            healthBoxes[index].damageType = .aggravated
-        } else {
-            // Handle overflow or upgrades
-        }
-    }
-    
-    // Similarly update applyLethalDamage() and applyAggravatedDamage()
 }
 
 // Extension for saving and loading

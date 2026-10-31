@@ -23,8 +23,6 @@
 		BC6D36BA2C9CF543008D03F7 /* SkillsSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */; };
 		BC6D36BC2C9D0792008D03F7 /* CharacterInfoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */; };
 		BC6D36BE2C9D07A8008D03F7 /* CharacterInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */; };
-		BC6D36C02C9D0E3C008D03F7 /* VitaeBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BF2C9D0E3C008D03F7 /* VitaeBox.swift */; };
-		BC6D36C22C9D0E84008D03F7 /* VitaeBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C12C9D0E84008D03F7 /* VitaeBoxView.swift */; };
 		BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */; };
 		BC6D36C62C9D1866008D03F7 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */; };
 		BC6D36C82C9DD3D6008D03F7 /* Touchstone.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C72C9DD3D6008D03F7 /* Touchstone.swift */; };
@@ -54,7 +52,6 @@
 		BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158F82C986A67003B6A8F /* MrsEavesSmallCaps.otf */; };
 		BCB158FC2C986A67003B6A8F /* cas_antn.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158F92C986A67003B6A8F /* cas_antn.ttf */; };
 		BCB158FD2C986A67003B6A8F /* MrsEavesRoman.otf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */; };
-		BCB159022C986F7A003B6A8F /* FontTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159012C986F7A003B6A8F /* FontTest.swift */; };
 		BCB159052C987143003B6A8F /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159042C987143003B6A8F /* Attribute.swift */; };
 		BCB159072C987161003B6A8F /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159062C987161003B6A8F /* Character.swift */; };
 		BCB1590A2C987230003B6A8F /* AttributeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159092C987230003B6A8F /* AttributeRowView.swift */; };
@@ -100,8 +97,6 @@
 		BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillsSectionHeader.swift; sourceTree = "<group>"; };
 		BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterInfoRowView.swift; sourceTree = "<group>"; };
 		BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterInfoView.swift; sourceTree = "<group>"; };
-		BC6D36BF2C9D0E3C008D03F7 /* VitaeBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaeBox.swift; sourceTree = "<group>"; };
-		BC6D36C12C9D0E84008D03F7 /* VitaeBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaeBoxView.swift; sourceTree = "<group>"; };
 		BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaeView.swift; sourceTree = "<group>"; };
 		BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		BC6D36C72C9DD3D6008D03F7 /* Touchstone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Touchstone.swift; sourceTree = "<group>"; };
@@ -136,7 +131,6 @@
 		BCB158F92C986A67003B6A8F /* cas_antn.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = cas_antn.ttf; sourceTree = "<group>"; };
 		BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrsEavesRoman.otf; sourceTree = "<group>"; };
 		BCB159002C986E22003B6A8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		BCB159012C986F7A003B6A8F /* FontTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontTest.swift; sourceTree = "<group>"; };
 		BCB159042C987143003B6A8F /* Attribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		BCB159062C987161003B6A8F /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		BCB159092C987230003B6A8F /* AttributeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRowView.swift; sourceTree = "<group>"; };
@@ -206,7 +200,6 @@
 				BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */,
 				BCB158D12C986812003B6A8F /* Assets.xcassets */,
 				BCB158D32C986812003B6A8F /* Preview Content */,
-				BCB159012C986F7A003B6A8F /* FontTest.swift */,
 			);
 			path = RequiemCharacterSheet;
 			sourceTree = "<group>";
@@ -254,7 +247,6 @@
 				BC6D36D02C9DE643008D03F7 /* Merit.swift */,
 				BC6D36CE2C9DE637008D03F7 /* Discipline.swift */,
 				BC6D36C72C9DD3D6008D03F7 /* Touchstone.swift */,
-				BC6D36BF2C9D0E3C008D03F7 /* VitaeBox.swift */,
 				BC6D36B32C9CF418008D03F7 /* Skill.swift */,
 				BC6D36B12C9CF096008D03F7 /* VampireFontModifier.swift */,
 				BC6D36AB2C9B441C008D03F7 /* WillpowerBox.swift */,
@@ -282,7 +274,6 @@
 				BC6D36CC2C9DD41C008D03F7 /* HumanityView.swift */,
 				BC6D36C92C9DD3F9008D03F7 /* HumanityRowView.swift */,
 				BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */,
-				BC6D36C12C9D0E84008D03F7 /* VitaeBoxView.swift */,
 				BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */,
 				BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */,
 				BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */,
@@ -450,7 +441,6 @@
 				BCB158CE2C986811003B6A8F /* RequiemCharacterSheetApp.swift in Sources */,
 				BC6D36C82C9DD3D6008D03F7 /* Touchstone.swift in Sources */,
 				BC6D36B22C9CF096008D03F7 /* VampireFontModifier.swift in Sources */,
-				BC6D36C22C9D0E84008D03F7 /* VitaeBoxView.swift in Sources */,
 				BCB1590A2C987230003B6A8F /* AttributeRowView.swift in Sources */,
 				BC6D36CF2C9DE637008D03F7 /* Discipline.swift in Sources */,
 				BC6D36E32C9E003B008D03F7 /* Bane.swift in Sources */,
@@ -462,7 +452,6 @@
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
 				BC6D36AC2C9B441C008D03F7 /* WillpowerBox.swift in Sources */,
 				BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */,
-				BC6D36C02C9D0E3C008D03F7 /* VitaeBox.swift in Sources */,
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,
 				BC6D36DD2C9DEA33008D03F7 /* EditableDotsRatingView.swift in Sources */,
 				BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */,
@@ -484,7 +473,6 @@
 				BC6D36A22C9A3261008D03F7 /* HealthBoxesView.swift in Sources */,
 				BC6D36B42C9CF418008D03F7 /* Skill.swift in Sources */,
 				BC6D36BC2C9D0792008D03F7 /* CharacterInfoRowView.swift in Sources */,
-				BCB159022C986F7A003B6A8F /* FontTest.swift in Sources */,
 				BCB1590C2C9872AC003B6A8F /* DotsRatingView.swift in Sources */,
 				BCB159122C9873A6003B6A8F /* AttributesView.swift in Sources */,
 			);

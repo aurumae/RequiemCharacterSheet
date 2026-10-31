@@ -8,16 +8,6 @@
 
 import Foundation
 
-/* Commenting out as I broke this into a separate HealthBox and WillpowerBox
-enum BoxFillType: String, Codable {
-    case none
-    case willpower
-    case bashing
-    case lethal
-    case aggravated
-}
- */
-
 enum HealthBoxFillType: String, Codable {
     case none
     case bashing

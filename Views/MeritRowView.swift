@@ -15,15 +15,6 @@ struct MeritRowView: View {
 
     var body: some View {
         HStack {
-            
-            /*
-            // Name TextField
-            TextField("Merit Name", text: $merit.name)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .submitLabel(.done)
-                .frame(maxWidth: .infinity)
-             */
-            
             if isEditingMerit {
                 TextField("Merit Name", text: $merit.name, onCommit: {
                     isEditingMerit = false
