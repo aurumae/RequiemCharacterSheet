@@ -617,30 +617,3 @@ class Character: ObservableObject, Codable {
         }
     }
 }
-
-// Extension for saving and loading
-extension Character {
-    func save() {
-        modifiedAt = Date()
-        if let encoded = try? JSONEncoder().encode(self) {
-            UserDefaults.standard.set(encoded, forKey: "SavedCharacter")
-            print("Character saved.")
-        } else {
-            print("Failed to encode character.")
-        }
-    }
-    
-    static func load() -> Character {
-        if let savedData = UserDefaults.standard.data(forKey: "SavedCharacter") {
-            if let decodedCharacter = try? JSONDecoder().decode(Character.self, from: savedData) {
-                print("Character loaded.")
-                return decodedCharacter
-            } else {
-                print("Failed to decode character.")
-            }
-        } else {
-            print("No saved character found.")
-        }
-        return Character()
-    }
-}

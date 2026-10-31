@@ -1,5 +1,5 @@
 //
-//  AttributesView.swift
+//  CharacterSheetView.swift
 //  RequiemCharacterSheet
 //
 //  Created by Oisín McColgan on 16/09/2024.
@@ -8,9 +8,14 @@
 
 import SwiftUI
 
-struct AttributesView: View {
+struct CharacterSheetView: View {
     @ObservedObject var character: Character
-    
+    let store: CharacterStore
+
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var showsSavedConfirmation = false
+    @State private var saveErrorMessage: String?
+
     // Attribute categories
     let mentalAttributes = ["Intelligence", "Wits", "Resolve"]
     let physicalAttributes = ["Strength", "Dexterity", "Stamina"]
@@ -109,8 +114,50 @@ struct AttributesView: View {
                 .background(Color.clear)
             }
             .padding(.horizontal)
-            .padding(.top, 40)
-            .padding(.bottom, 60)
+            // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border
+            .padding(.bottom, 26)
+        }
+        // Let the parchment border show behind the navigation bar
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(showsSavedConfirmation ? "Saved" : "Save") {
+                    save(showingConfirmation: true)
+                }
+                .disabled(showsSavedConfirmation)
+            }
+        }
+        // Keep changes if the app is backgrounded or closed while the sheet is open
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase != .active {
+                save(showingConfirmation: false)
+            }
+        }
+        .alert(
+            "Couldn't Save Character",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(saveErrorMessage ?? "")
+        }
+    }
+
+    private func save(showingConfirmation: Bool) {
+        do {
+            try store.save(character)
+        } catch {
+            saveErrorMessage = error.localizedDescription
+            return
+        }
+        guard showingConfirmation else { return }
+        showsSavedConfirmation = true
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            showsSavedConfirmation = false
         }
     }
 }

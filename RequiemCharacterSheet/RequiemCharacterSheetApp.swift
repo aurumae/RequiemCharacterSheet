@@ -6,30 +6,32 @@
 //
 
 import SwiftUI
-import UIKit
 
 @main
 struct RequiemCharacterSheetApp: App {
     @State private var splashOpacity = 1.0
     @State private var mainOpacity = 0.0
-    @StateObject var character = Character.load()
+    @State private var store = CharacterStore()
 
     var body: some Scene {
         WindowGroup {
             ZStack {
                 // Main App View
-                AttributesView(character: character)
+                CharacterListView(store: store)
                     .opacity(mainOpacity)
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                        character.save()
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-                        character.save()
-                    }
 
                 // Splash Screen View
                 SplashScreenView()
                     .opacity(splashOpacity)
+            }
+            .task {
+                // Earlier versions saved a single character in UserDefaults; move it into the store.
+                // If it can't be read it's left where it is, so nothing is lost.
+                do {
+                    try store.migrateLegacySaveIfNeeded()
+                } catch {
+                    print("Couldn't move the previously saved character: \(error)")
+                }
             }
             .onAppear {
                 // Keep the splash screen visible for 5 seconds

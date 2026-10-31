@@ -10,6 +10,7 @@
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
 		BC2B44263096609600720F0C /* CharacterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B44253096609600720F0C /* CharacterStore.swift */; };
 		BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4427309660A900720F0C /* CharacterStoreTests.swift */; };
+		BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4429309662A300720F0C /* CharacterListView.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -61,7 +62,7 @@
 		BCB1590C2C9872AC003B6A8F /* DotsRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590B2C9872AC003B6A8F /* DotsRatingView.swift */; };
 		BCB1590E2C9872D6003B6A8F /* DotsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */; };
 		BCB159102C9872FD003B6A8F /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590F2C9872FD003B6A8F /* DotView.swift */; };
-		BCB159122C9873A6003B6A8F /* AttributesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159112C9873A6003B6A8F /* AttributesView.swift */; };
+		BCB159122C9873A6003B6A8F /* CharacterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */; };
 		BCB159142C9873D3003B6A8F /* HealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159132C9873D3003B6A8F /* HealthView.swift */; };
 		BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159152C9874A5003B6A8F /* BackgroundView.swift */; };
 /* End PBXBuildFile section */
@@ -86,7 +87,8 @@
 /* Begin PBXFileReference section */
 		BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDecodingTests.swift; sourceTree = "<group>"; };
 		BC2B44253096609600720F0C /* CharacterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStore.swift; sourceTree = "<group>"; };
-		BC2B4427309660A900720F0C /* CharacterStoreTests.swift */ = {isa = PBXFileReference; path = CharacterStoreTests.swift; sourceTree = "<group>"; };
+		BC2B4427309660A900720F0C /* CharacterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStoreTests.swift; sourceTree = "<group>"; };
+		BC2B4429309662A300720F0C /* CharacterListView.swift */ = {isa = PBXFileReference; path = CharacterListView.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -143,7 +145,7 @@
 		BCB1590B2C9872AC003B6A8F /* DotsRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotsRatingView.swift; sourceTree = "<group>"; };
 		BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotsRowView.swift; sourceTree = "<group>"; };
 		BCB1590F2C9872FD003B6A8F /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotView.swift; sourceTree = "<group>"; };
-		BCB159112C9873A6003B6A8F /* AttributesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributesView.swift; sourceTree = "<group>"; };
+		BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSheetView.swift; sourceTree = "<group>"; };
 		BCB159132C9873D3003B6A8F /* HealthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthView.swift; sourceTree = "<group>"; };
 		BCB159152C9874A5003B6A8F /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -297,10 +299,11 @@
 				BCB1590F2C9872FD003B6A8F /* DotView.swift */,
 				BCB1590B2C9872AC003B6A8F /* DotsRatingView.swift */,
 				BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */,
-				BCB159112C9873A6003B6A8F /* AttributesView.swift */,
+				BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */,
 				BCB159092C987230003B6A8F /* AttributeRowView.swift */,
 				BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */,
 				BCB159152C9874A5003B6A8F /* BackgroundView.swift */,
+				BC2B4429309662A300720F0C /* CharacterListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				BC6D36D72C9DE680008D03F7 /* DisciplinesView.swift in Sources */,
 				BC6D36DF2C9DF3FC008D03F7 /* Extensions.swift in Sources */,
 				BC6D36D12C9DE643008D03F7 /* Merit.swift in Sources */,
+				BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */,
 				BC2B44263096609600720F0C /* CharacterStore.swift in Sources */,
 				BCB1590E2C9872D6003B6A8F /* DotsRowView.swift in Sources */,
 				BCB159102C9872FD003B6A8F /* DotView.swift in Sources */,
@@ -484,7 +488,7 @@
 				BC6D36B42C9CF418008D03F7 /* Skill.swift in Sources */,
 				BC6D36BC2C9D0792008D03F7 /* CharacterInfoRowView.swift in Sources */,
 				BCB1590C2C9872AC003B6A8F /* DotsRatingView.swift in Sources */,
-				BCB159122C9873A6003B6A8F /* AttributesView.swift in Sources */,
+				BCB159122C9873A6003B6A8F /* CharacterSheetView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
