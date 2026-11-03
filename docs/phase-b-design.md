@@ -255,7 +255,7 @@ Import uses the system document picker (`fileImporter`), and the file is checked
 
 B1 and B2 change no behaviour (apart from the Praestantia correction) and are covered by tests, so the risky part (data model and migration) lands first.
 
-**Progress:** B1–B4, the Chronicles of Darkness Merits catalog, and the clan bane flag are done. Next is B5.
+**Progress:** B1–B5, the Chronicles of Darkness Merits catalog, and the clan bane flag are done. Next is B6.
 
 ## Open questions
 
