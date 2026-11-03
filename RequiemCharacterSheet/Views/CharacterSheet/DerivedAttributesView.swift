@@ -11,8 +11,8 @@ import SwiftUI
 struct DerivedAttributesView: View {
     @Bindable var character: Character
 
-    /// Armor can't go below 0; the upper limit just keeps the counter sensible.
-    private let armorRange = 0...32
+    /// Armor can't go below 0; entries above 99 are capped.
+    private let armorRange = 0...99
 
     var body: some View {
         Section(header: Text("ADVANTAGES").themedText(.sectionHeader)) {
@@ -28,7 +28,7 @@ struct DerivedAttributesView: View {
                 LabeledValueRow("Defense (Weaponry):", value: character.defenseUsingWeaponry)
             }
 
-            CounterRow("Armor:", value: $character.armor, in: armorRange)
+            TapToEditNumberRow("Armor:", value: $character.armor, in: armorRange)
 
             LabeledValueRow("Initiative Mod:", value: character.initiativeMod)
 

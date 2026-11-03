@@ -138,6 +138,94 @@ struct CounterRow: View {
     }
 }
 
+/// A label with a number that becomes a number field when tapped, e.g. "Armor: 2".
+/// The value is right-aligned like `LabeledValueRow`, and is kept within `range` when editing ends.
+struct TapToEditNumberRow: View {
+    let label: String
+    @Binding var value: Int
+    let range: ClosedRange<Int>
+
+    @State private var isEditing = false
+    @State private var draft = ""
+    @FocusState private var isFocused: Bool
+
+    init(_ label: String, value: Binding<Int>, in range: ClosedRange<Int>) {
+        self.label = label
+        self._value = value
+        self.range = range
+    }
+
+    var body: some View {
+        if isEditing {
+            HStack {
+                Text(label)
+                    .themedText(.label)
+                Spacer()
+                TextField(label.trimmingCharacters(in: CharacterSet(charactersIn: ":")), text: $draft)
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .themedText(.label)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(maxWidth: 80)
+                    .focused($isFocused)
+                    .onAppear {
+                        draft = "\(value)"
+                        isFocused = true
+                    }
+                    .onChange(of: isFocused) { _, focused in
+                        if !focused { commit() }
+                    }
+                    // The number pad has no return key
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Done") { isFocused = false }
+                        }
+                    }
+            }
+            // The bordered field is taller than the plain value, so no extra padding keeps the row height steady
+        } else {
+            Button {
+                isEditing = true
+            } label: {
+                HStack {
+                    Text(label)
+                        .themedText(.label)
+                    Spacer()
+                    Text("\(value)")
+                        .themedText(.label)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .padding(.vertical, 4)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(label.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
+            .accessibilityValue("\(value)")
+            .accessibilityHint("Double-tap to edit")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment:
+                    value = min(value + 1, range.upperBound)
+                case .decrement:
+                    value = max(value - 1, range.lowerBound)
+                @unknown default:
+                    break
+                }
+            }
+        }
+    }
+
+    /// Saves the entered number, kept within `range`. Anything that isn't a number leaves the value unchanged.
+    private func commit() {
+        if let entered = Int(draft.trimmingCharacters(in: .whitespaces)) {
+            value = min(max(entered, range.lowerBound), range.upperBound)
+        }
+        isEditing = false
+    }
+}
+
 /// Text that becomes a text field when tapped. Editing ends on Done or when the field loses focus.
 struct TapToEditText<Display: View>: View {
     @Environment(\.theme) private var theme
