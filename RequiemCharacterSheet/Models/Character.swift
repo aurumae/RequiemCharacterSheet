@@ -202,7 +202,7 @@ final class Character: Codable {
         let savedClanBaneActive = try container.decodeIfPresent(Bool.self, forKey: .clanBaneActive)
         clanBaneActive = false
 
-        disciplines = try container.decode(.disciplines, default: [Discipline()])
+        disciplines = try container.decode(.disciplines, default: [])
         merits = try container.decode(.merits, default: [Merit()])
 
         aspirations = try container.decode(.aspirations, default: [Aspiration()])
@@ -251,7 +251,7 @@ final class Character: Codable {
         clanBaneActive = false
         touchstones = Character.defaultTouchstones()
 
-        disciplines = [Discipline()] // Start with one empty Discipline
+        disciplines = [] // Added through the Discipline picker
         merits = [Merit()] // Start with one empty Merit
 
         aspirations = [Aspiration()] // Start with one empty Aspiration

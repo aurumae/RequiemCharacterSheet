@@ -10,12 +10,29 @@ import SwiftUI
 
 struct DisciplineRowView: View {
     @Bindable var discipline: Discipline
+    let character: Character
+    @State private var showingDetail = false
 
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
-            TapToEditText(placeholder: "Discipline Name", text: $discipline.name) { name in
-                Text(name)
-                    .themedText(.traitName)
+            if let entry = discipline.entry {
+                // Catalog Disciplines open their powers; to change one, delete it and add another
+                Button {
+                    showingDetail = true
+                } label: {
+                    Text(entry.name)
+                        .themedText(.traitName)
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Shows its powers")
+                .sheet(isPresented: $showingDetail) {
+                    DisciplineDetailView(entry: entry, rating: discipline.rating, character: character)
+                }
+            } else {
+                TapToEditText(placeholder: "Discipline Name", text: $discipline.name) { name in
+                    Text(name)
+                        .themedText(.traitName)
+                }
             }
 
             Spacer()

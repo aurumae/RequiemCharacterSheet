@@ -24,6 +24,10 @@
 		BC2B444A309A3C3500720F0C /* cofd-core.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4449309A3C3500720F0C /* cofd-core.json */; };
 		BC2B444C309A3E1B00720F0C /* EffectsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B444B309A3E1B00720F0C /* EffectsTests.swift */; };
 		BC2B444E309A3F3000720F0C /* ClanBaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B444D309A3F3000720F0C /* ClanBaneTests.swift */; };
+		BC2B4450309A452F00720F0C /* CatalogFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B444F309A452F00720F0C /* CatalogFormatting.swift */; };
+		BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4451309A454200720F0C /* DisciplineDetailView.swift */; };
+		BC2B4454309A454C00720F0C /* DisciplinePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4453309A454C00720F0C /* DisciplinePickerView.swift */; };
+		BC2B4456309A457C00720F0C /* CatalogFormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4455309A457C00720F0C /* CatalogFormattingTests.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -109,7 +113,11 @@
 		BC2B4447309A316800720F0C /* CatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogTests.swift; sourceTree = "<group>"; };
 		BC2B4449309A3C3500720F0C /* cofd-core.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cofd-core.json"; sourceTree = "<group>"; };
 		BC2B444B309A3E1B00720F0C /* EffectsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsTests.swift; sourceTree = "<group>"; };
-		BC2B444D309A3F3000720F0C /* ClanBaneTests.swift */ = {isa = PBXFileReference; path = ClanBaneTests.swift; sourceTree = "<group>"; };
+		BC2B444D309A3F3000720F0C /* ClanBaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClanBaneTests.swift; sourceTree = "<group>"; };
+		BC2B444F309A452F00720F0C /* CatalogFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogFormatting.swift; sourceTree = "<group>"; };
+		BC2B4451309A454200720F0C /* DisciplineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisciplineDetailView.swift; sourceTree = "<group>"; };
+		BC2B4453309A454C00720F0C /* DisciplinePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisciplinePickerView.swift; sourceTree = "<group>"; };
+		BC2B4455309A457C00720F0C /* CatalogFormattingTests.swift */ = {isa = PBXFileReference; path = CatalogFormattingTests.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -247,6 +255,8 @@
 				BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */,
 				BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */,
 				BC6D36992C9A0929008D03F7 /* WillpowerView.swift */,
+				BC2B4451309A454200720F0C /* DisciplineDetailView.swift */,
+				BC2B4453309A454C00720F0C /* DisciplinePickerView.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -340,6 +350,7 @@
 				BC2B4447309A316800720F0C /* CatalogTests.swift */,
 				BC2B444B309A3E1B00720F0C /* EffectsTests.swift */,
 				BC2B444D309A3F3000720F0C /* ClanBaneTests.swift */,
+				BC2B4455309A457C00720F0C /* CatalogFormattingTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -378,6 +389,7 @@
 				BC2B4441309A30EC00720F0C /* CatalogEntries.swift */,
 				BC2B4443309A30F600720F0C /* TraitSource.swift */,
 				BC2B4445309A310200720F0C /* Catalog.swift */,
+				BC2B444F309A452F00720F0C /* CatalogFormatting.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -556,6 +568,7 @@
 				BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */,
 				BC6D36D32C9DE65C008D03F7 /* DisciplineRowView.swift in Sources */,
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
+				BC2B4454309A454C00720F0C /* DisciplinePickerView.swift in Sources */,
 				BC2B4446309A310200720F0C /* Catalog.swift in Sources */,
 				BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */,
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,
@@ -574,9 +587,11 @@
 				BC6D36C62C9D1866008D03F7 /* SplashScreenView.swift in Sources */,
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
 				BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */,
+				BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */,
 				BC6D36A82C9A600C008D03F7 /* BoxFillType.swift in Sources */,
 				BC2B442E3099806A00720F0C /* TraitDefinitions.swift in Sources */,
 				BC6D36A22C9A3261008D03F7 /* HealthBoxesView.swift in Sources */,
+				BC2B4450309A452F00720F0C /* CatalogFormatting.swift in Sources */,
 				BC6D36B42C9CF418008D03F7 /* Skill.swift in Sources */,
 				BC6D36BC2C9D0792008D03F7 /* CharacterInfoRowView.swift in Sources */,
 				BCB1590C2C9872AC003B6A8F /* DotsRatingView.swift in Sources */,
@@ -588,6 +603,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC2B4456309A457C00720F0C /* CatalogFormattingTests.swift in Sources */,
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
 				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
 				BC2B444C309A3E1B00720F0C /* EffectsTests.swift in Sources */,
