@@ -206,7 +206,7 @@ final class Character: Codable {
         merits = try container.decode(.merits, default: [])
 
         aspirations = try container.decode(.aspirations, default: [Aspiration()])
-        banes = try container.decode(.banes, default: [Bane()])
+        banes = try container.decode(.banes, default: [])
 
         size = try container.decode(.size, default: 5)
         armor = try container.decode(.armor, default: 0)
@@ -255,7 +255,7 @@ final class Character: Codable {
         merits = [] // Added through the Merit picker
 
         aspirations = [Aspiration()] // Start with one empty Aspiration
-        banes = [Bane()] // Start with one empty Bane
+        banes = [] // Added through the Bane picker
 
         size = 5
         armor = 0

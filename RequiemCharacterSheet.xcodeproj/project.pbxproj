@@ -32,6 +32,7 @@
 		BC2B445A309A4DDC00720F0C /* MeritPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4459309A4DDC00720F0C /* MeritPickerView.swift */; };
 		BC2B445C309A4DE600720F0C /* MeritDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B445B309A4DE600720F0C /* MeritDetailView.swift */; };
 		BC2B445E309A4E1F00720F0C /* MeritRulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B445D309A4E1F00720F0C /* MeritRulesTests.swift */; };
+		BC2B4460309A851B00720F0C /* BanePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B445F309A851B00720F0C /* BanePickerView.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -125,7 +126,8 @@
 		BC2B4457309A4DC400720F0C /* MeritRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeritRules.swift; sourceTree = "<group>"; };
 		BC2B4459309A4DDC00720F0C /* MeritPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeritPickerView.swift; sourceTree = "<group>"; };
 		BC2B445B309A4DE600720F0C /* MeritDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeritDetailView.swift; sourceTree = "<group>"; };
-		BC2B445D309A4E1F00720F0C /* MeritRulesTests.swift */ = {isa = PBXFileReference; path = MeritRulesTests.swift; sourceTree = "<group>"; };
+		BC2B445D309A4E1F00720F0C /* MeritRulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeritRulesTests.swift; sourceTree = "<group>"; };
+		BC2B445F309A851B00720F0C /* BanePickerView.swift */ = {isa = PBXFileReference; path = BanePickerView.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				BC2B4453309A454C00720F0C /* DisciplinePickerView.swift */,
 				BC2B4459309A4DDC00720F0C /* MeritPickerView.swift */,
 				BC2B445B309A4DE600720F0C /* MeritDetailView.swift */,
+				BC2B445F309A851B00720F0C /* BanePickerView.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -591,6 +594,7 @@
 				BC6D36BE2C9D07A8008D03F7 /* CharacterInfoView.swift in Sources */,
 				BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */,
 				BC6D36E12C9E002A008D03F7 /* Aspiration.swift in Sources */,
+				BC2B4460309A851B00720F0C /* BanePickerView.swift in Sources */,
 				BC6D36BA2C9CF543008D03F7 /* SkillsSectionHeader.swift in Sources */,
 				BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */,
 				BC2B4458309A4DC400720F0C /* MeritRules.swift in Sources */,

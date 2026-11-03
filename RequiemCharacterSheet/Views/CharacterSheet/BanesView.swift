@@ -11,6 +11,12 @@ import SwiftUI
 struct BanesView: View {
     @Environment(\.theme) private var theme
     @Bindable var character: Character
+    @State private var showingPicker = false
+    /// A custom Bane that was just added, whose text opens for typing.
+    @State private var newCustomBaneID: UUID?
+    /// Set when "Custom Bane" is chosen; the row is added once the picker has closed,
+    /// so its text can take keyboard focus from the picker's search field.
+    @State private var addsCustomBaneOnDismiss = false
 
     var body: some View {
         Section(header: Text("BANES").themedText(.sectionHeader)) {
@@ -24,13 +30,22 @@ struct BanesView: View {
             }
 
             ForEach(character.banes) { bane in
-                BaneRowView(bane: bane)
+                BaneRowView(bane: bane, beginsEditing: bane.id == newCustomBaneID)
             }
             .onDelete(perform: deleteBane)
 
             if character.canAddBane {
                 AddRowButton("Add Bane") {
-                    character.banes.append(Bane())
+                    showingPicker = true
+                }
+                .sheet(isPresented: $showingPicker, onDismiss: addCustomBaneIfChosen) {
+                    BanePickerView(character: character) { entry in
+                        if let entry {
+                            character.banes.append(Bane(source: .catalog(entry.id)))
+                        } else {
+                            addsCustomBaneOnDismiss = true
+                        }
+                    }
                 }
             } else {
                 Text("A vampire can have at most \(Character.maxBanes) Banes.")
@@ -38,6 +53,14 @@ struct BanesView: View {
                     .foregroundStyle(theme.muted)
             }
         }
+    }
+
+    private func addCustomBaneIfChosen() {
+        guard addsCustomBaneOnDismiss else { return }
+        addsCustomBaneOnDismiss = false
+        let bane = Bane(source: .custom(""))
+        newCustomBaneID = bane.id
+        character.banes.append(bane)
     }
 
     func deleteBane(at offsets: IndexSet) {

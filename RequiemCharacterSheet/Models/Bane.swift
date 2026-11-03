@@ -20,10 +20,11 @@ final class Bane: Identifiable, Codable {
         source.catalogID.flatMap { Catalog.bundled.banes.entry($0) }
     }
 
-    /// The text shown on the sheet. Setting it links to the catalog Bane with that name, if there is one.
+    /// The text shown on the sheet. Setting it makes the Bane custom text; a custom Bane whose text is
+    /// exactly a catalog Bane's name is linked to it when the character is next loaded.
     var text: String {
         get { Catalog.bundled.banes.name(of: source) }
-        set { source = Catalog.bundled.banes.source(named: newValue) }
+        set { source = .custom(newValue) }
     }
 
     enum CodingKeys: CodingKey {

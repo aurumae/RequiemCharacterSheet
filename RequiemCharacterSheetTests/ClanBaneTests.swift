@@ -108,6 +108,29 @@ struct ClanBaneTests {
         #expect(Catalog.bundled.clans.entry("daeva")?.bane.grantsExtraBane == false)
     }
 
+    @Test func typedBaneTextStaysCustom() {
+        let bane = Bane(source: .custom(""))
+
+        // Typing a catalog name doesn't turn the free-text row into a catalog Bane mid-sentence
+        bane.text = "Bells"
+        #expect(bane.source == .custom("Bells"))
+        bane.text = "Bells at midnight"
+        #expect(bane.source == .custom("Bells at midnight"))
+    }
+
+    @Test func customBaneMatchingACatalogNameLinksOnLoad() throws {
+        let character = Character()
+        character.banes = [Bane(source: .custom("Bells"))]
+
+        let reloaded = try JSONDecoder().decode(Character.self, from: JSONEncoder().encode(character))
+
+        #expect(reloaded.banes.first?.source == .catalog("bells"))
+    }
+
+    @Test func newCharactersStartWithoutBanes() {
+        #expect(Character().banes.isEmpty)
+    }
+
     @Test func banesAreCappedAtThree() {
         let character = Character()
         character.banes = [Bane(text: "Bells"), Bane(text: "Webs")]

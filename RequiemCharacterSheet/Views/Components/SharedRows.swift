@@ -226,7 +226,8 @@ struct TapToEditNumberRow: View {
     }
 }
 
-/// Text that becomes a text field when tapped. Editing ends on Done or when the field loses focus.
+/// Text that becomes a text field when tapped. The text is saved when editing ends (Done, or the field
+/// losing focus), not on every keystroke, so names that link to the catalog don't change mid-word.
 struct TapToEditText<Display: View>: View {
     @Environment(\.theme) private var theme
     let placeholder: String
@@ -237,6 +238,7 @@ struct TapToEditText<Display: View>: View {
     @ViewBuilder let display: (String) -> Display
 
     @State private var isEditing: Bool
+    @State private var draft = ""
     @FocusState private var isFocused: Bool
 
     /// - Parameter beginsEditing: Start with the field open, e.g. for a row that was just added.
@@ -251,15 +253,18 @@ struct TapToEditText<Display: View>: View {
 
     var body: some View {
         if isEditing {
-            TextField(placeholder, text: $text)
+            TextField(placeholder, text: $draft)
                 .font(theme.font(font))
                 .textFieldStyle(.roundedBorder)
                 .submitLabel(.done)
                 .focused($isFocused)
-                .onSubmit { isEditing = false }
-                .onAppear { isFocused = true }
+                .onSubmit(finishEditing)
+                .onAppear {
+                    draft = text
+                    isFocused = true
+                }
                 .onChange(of: isFocused) { _, focused in
-                    if !focused { isEditing = false }
+                    if !focused { finishEditing() }
                 }
         } else {
             Button {
@@ -276,6 +281,12 @@ struct TapToEditText<Display: View>: View {
             .buttonStyle(.plain)
             .accessibilityHint("Double-tap to edit")
         }
+    }
+
+    private func finishEditing() {
+        guard isEditing else { return }
+        text = draft
+        isEditing = false
     }
 }
 
