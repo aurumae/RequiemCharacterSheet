@@ -17,7 +17,9 @@ final class Character: Codable {
     /// - 3: health and willpower marks saved as `healthTrack`/`willpowerTrack` instead of box objects.
     /// - 4: attributes and skills saved by id instead of display name; skills have a list of specialties;
     ///   adds `skillList`.
-    static let currentSchemaVersion = 4
+    /// - 5: Disciplines, Merits, Banes, clan and covenant saved as a catalog id or custom text (`TraitSource`)
+    ///   instead of a name; Merits gain a qualifier.
+    static let currentSchemaVersion = 5
 
     let id: UUID
     let createdAt: Date
@@ -44,9 +46,11 @@ final class Character: Codable {
     var mask: String
     var dirge: String
     var concept: String
-    var clan: String
+    /// The clan: a catalog entry or custom text.
+    var clanSource: TraitSource
     var bloodline: String
-    var covenant: String
+    /// The covenant: a catalog entry or custom text.
+    var covenantSource: TraitSource
 
     var bloodPotency: Int {
         didSet {
@@ -103,9 +107,9 @@ final class Character: Codable {
         try container.encode(mask, forKey: .mask)
         try container.encode(dirge, forKey: .dirge)
         try container.encode(concept, forKey: .concept)
-        try container.encode(clan, forKey: .clan)
+        try container.encode(clanSource, forKey: .clan)
         try container.encode(bloodline, forKey: .bloodline)
-        try container.encode(covenant, forKey: .covenant)
+        try container.encode(covenantSource, forKey: .covenant)
 
         try container.encode(bloodPotency, forKey: .bloodPotency)
         try container.encode(currentVitae, forKey: .currentVitae)
@@ -165,9 +169,9 @@ final class Character: Codable {
         mask = try container.decode(.mask, default: "")
         dirge = try container.decode(.dirge, default: "")
         concept = try container.decode(.concept, default: "")
-        clan = try container.decode(.clan, default: "")
+        clanSource = try container.decodeTraitSource(.clan, in: Catalog.bundled.clans)
         bloodline = try container.decode(.bloodline, default: "")
-        covenant = try container.decode(.covenant, default: "")
+        covenantSource = try container.decodeTraitSource(.covenant, in: Catalog.bundled.covenants)
 
         bloodPotency = try container.decode(.bloodPotency, default: 1)
         currentVitae = try container.decode(.currentVitae, default: 0)
@@ -209,9 +213,9 @@ final class Character: Codable {
         mask = ""
         dirge = ""
         concept = ""
-        clan = ""
+        clanSource = .custom("")
         bloodline = ""
-        covenant = ""
+        covenantSource = .custom("")
 
         bloodPotency = 1
         currentVitae = 0
@@ -280,6 +284,28 @@ final class Character: Codable {
             willpowerTrack += Array(repeating: .none, count: index - willpowerTrack.count + 1)
         }
         willpowerTrack[index] = state
+    }
+
+    // MARK: - Clan and covenant
+
+    /// The clan's name as shown on the sheet. Setting it links to the catalog clan with that name, if there is one.
+    var clan: String {
+        get { Catalog.bundled.clans.name(of: clanSource) }
+        set { clanSource = Catalog.bundled.clans.source(named: newValue) }
+    }
+
+    /// The covenant's name as shown on the sheet. Setting it links to the catalog covenant with that name, if there is one.
+    var covenant: String {
+        get { Catalog.bundled.covenants.name(of: covenantSource) }
+        set { covenantSource = Catalog.bundled.covenants.source(named: newValue) }
+    }
+
+    var clanEntry: ClanEntry? {
+        clanSource.catalogID.flatMap { Catalog.bundled.clans.entry($0) }
+    }
+
+    var covenantEntry: CovenantEntry? {
+        covenantSource.catalogID.flatMap { Catalog.bundled.covenants.entry($0) }
     }
 
     // MARK: - Lookups

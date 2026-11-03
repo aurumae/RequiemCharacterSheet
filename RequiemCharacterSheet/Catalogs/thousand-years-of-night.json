@@ -1,0 +1,68 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "thousand-years-of-night",
+    "name": "A Thousand Years of Night"
+  },
+  "disciplines": [
+    {
+      "id": "praestantia",
+      "name": "Praestantia",
+      "kind": "scaling",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 29
+      },
+      "summary": "Akhud combat instinct drawn from stolen Kindred experience, boosting Dexterity and attacks.",
+      "powers": [
+        {
+          "id": "praestantia",
+          "name": "Praestantia",
+          "dots": [
+            1,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": true,
+            "note": "Persistent effects are free; each active effect costs 1 Vitae"
+          },
+          "action": "reflexive",
+          "duration": "Permanent (persistent effects); one turn (active effects)",
+          "summary": "Persistent Dexterity and Initiative bonus; spend Vitae for attack bonuses or redoing failures.",
+          "page": 29
+        }
+      ]
+    }
+  ],
+  "clans": [
+    {
+      "id": "akhud",
+      "name": "Akhud",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 28
+      },
+      "favoredAttributes": [
+        "strength",
+        "wits"
+      ],
+      "disciplines": [
+        "celerity",
+        "praestantia",
+        "obfuscate"
+      ],
+      "bane": {
+        "name": "The Curse of Five",
+        "summary": "Knowingly harming another Akhud costs dice equal to half (10 - Humanity), rounded up; at chance die it dramatically fails. Cannot be compelled.",
+        "humanityThreshold": null,
+        "page": 28
+      },
+      "summary": "A near-extinct Babylonian lost clan steeped in diablerie, bound by an oath of kinship."
+    }
+  ]
+}

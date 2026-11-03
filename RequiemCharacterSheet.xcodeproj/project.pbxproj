@@ -15,6 +15,12 @@
 		BC2B4430309980E600720F0C /* TraitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442F309980E600720F0C /* TraitTests.swift */; };
 		BC2B4432309982A300720F0C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4431309982A300720F0C /* Theme.swift */; };
 		BC2B4434309982B500720F0C /* SharedRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4433309982B500720F0C /* SharedRows.swift */; };
+		BC2B443E309A30A500720F0C /* vtr2e-core.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B443D309A30A500720F0C /* vtr2e-core.json */; };
+		BC2B4440309A30A600720F0C /* thousand-years-of-night.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B443F309A30A600720F0C /* thousand-years-of-night.json */; };
+		BC2B4442309A30EC00720F0C /* CatalogEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4441309A30EC00720F0C /* CatalogEntries.swift */; };
+		BC2B4444309A30F600720F0C /* TraitSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4443309A30F600720F0C /* TraitSource.swift */; };
+		BC2B4446309A310200720F0C /* Catalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4445309A310200720F0C /* Catalog.swift */; };
+		BC2B4448309A316800720F0C /* CatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4447309A316800720F0C /* CatalogTests.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -92,6 +98,12 @@
 		BC2B442F309980E600720F0C /* TraitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitTests.swift; sourceTree = "<group>"; };
 		BC2B4431309982A300720F0C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		BC2B4433309982B500720F0C /* SharedRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedRows.swift; sourceTree = "<group>"; };
+		BC2B443D309A30A500720F0C /* vtr2e-core.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "vtr2e-core.json"; sourceTree = "<group>"; };
+		BC2B443F309A30A600720F0C /* thousand-years-of-night.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "thousand-years-of-night.json"; sourceTree = "<group>"; };
+		BC2B4441309A30EC00720F0C /* CatalogEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogEntries.swift; sourceTree = "<group>"; };
+		BC2B4443309A30F600720F0C /* TraitSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitSource.swift; sourceTree = "<group>"; };
+		BC2B4445309A310200720F0C /* Catalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catalog.swift; sourceTree = "<group>"; };
+		BC2B4447309A316800720F0C /* CatalogTests.swift */ = {isa = PBXFileReference; path = CatalogTests.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -255,6 +267,15 @@
 			path = Theme;
 			sourceTree = "<group>";
 		};
+		BC2B443C309A30A500720F0C /* Catalogs */ = {
+			isa = PBXGroup;
+			children = (
+				BC2B443D309A30A500720F0C /* vtr2e-core.json */,
+				BC2B443F309A30A600720F0C /* thousand-years-of-night.json */,
+			);
+			path = Catalogs;
+			sourceTree = "<group>";
+		};
 		BCB158C12C986811003B6A8F = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +309,7 @@
 				BCB159082C987213003B6A8F /* Views */,
 				BC2B4436309A09CF00720F0C /* App */,
 				BC2B4437309A09CF00720F0C /* Utilities */,
+				BC2B443C309A30A500720F0C /* Catalogs */,
 			);
 			path = RequiemCharacterSheet;
 			sourceTree = "<group>";
@@ -308,6 +330,7 @@
 				BC2B4427309660A900720F0C /* CharacterStoreTests.swift */,
 				BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */,
 				BC2B442F309980E600720F0C /* TraitTests.swift */,
+				BC2B4447309A316800720F0C /* CatalogTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -343,6 +366,9 @@
 				BCB159042C987143003B6A8F /* Attribute.swift */,
 				BCB159062C987161003B6A8F /* Character.swift */,
 				BC2B442D3099806A00720F0C /* TraitDefinitions.swift */,
+				BC2B4441309A30EC00720F0C /* CatalogEntries.swift */,
+				BC2B4443309A30F600720F0C /* TraitSource.swift */,
+				BC2B4445309A310200720F0C /* Catalog.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -469,6 +495,8 @@
 				BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */,
 				BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */,
 				BCB158FD2C986A67003B6A8F /* MrsEavesRoman.otf in Resources */,
+				BC2B4440309A30A600720F0C /* thousand-years-of-night.json in Resources */,
+				BC2B443E309A30A500720F0C /* vtr2e-core.json in Resources */,
 				BCB158FC2C986A67003B6A8F /* cas_antn.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -508,6 +536,7 @@
 				BC6D36CA2C9DD3F9008D03F7 /* HumanityRowView.swift in Sources */,
 				BCB158CE2C986811003B6A8F /* RequiemCharacterSheetApp.swift in Sources */,
 				BC6D36C82C9DD3D6008D03F7 /* Touchstone.swift in Sources */,
+				BC2B4444309A30F600720F0C /* TraitSource.swift in Sources */,
 				BCB1590A2C987230003B6A8F /* AttributeRowView.swift in Sources */,
 				BC6D36CF2C9DE637008D03F7 /* Discipline.swift in Sources */,
 				BC6D36E32C9E003B008D03F7 /* Bane.swift in Sources */,
@@ -517,6 +546,7 @@
 				BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */,
 				BC6D36D32C9DE65C008D03F7 /* DisciplineRowView.swift in Sources */,
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
+				BC2B4446309A310200720F0C /* Catalog.swift in Sources */,
 				BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */,
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,
 				BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */,
@@ -529,6 +559,7 @@
 				BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */,
 				BC6D36DB2C9DE940008D03F7 /* DerivedAttributesView.swift in Sources */,
 				BC6D36B62C9CF4F6008D03F7 /* SkillRowView.swift in Sources */,
+				BC2B4442309A30EC00720F0C /* CatalogEntries.swift in Sources */,
 				BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */,
 				BC6D36C62C9D1866008D03F7 /* SplashScreenView.swift in Sources */,
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
@@ -550,6 +581,7 @@
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
 				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
 				BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */,
+				BC2B4448309A316800720F0C /* CatalogTests.swift in Sources */,
 				BCB158DF2C986812003B6A8F /* CharacterRulesTests.swift in Sources */,
 				BC2B4430309980E600720F0C /* TraitTests.swift in Sources */,
 			);

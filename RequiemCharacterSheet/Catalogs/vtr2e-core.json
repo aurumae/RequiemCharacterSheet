@@ -1,0 +1,3318 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "vtr2e-core",
+    "name": "Vampire: The Requiem Second Edition"
+  },
+  "disciplines": [
+    {
+      "id": "animalism",
+      "name": "Animalism",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 126
+      },
+      "summary": "Bend animals to the vampire's will by asserting the Beast's dominance.",
+      "powers": [
+        {
+          "id": "animalism-feral-whispers",
+          "name": "Feral Whispers",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "duration": "Scene; a command can last up to one night",
+          "dicePool": {
+            "attribute": "manipulation",
+            "skill": "animal-ken",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Talk with animals, question them, and give simple orders.",
+          "page": 126
+        },
+        {
+          "id": "animalism-raise-the-familiar",
+          "name": "Raise the Familiar",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "The 1 Vitae is fed to the animal corpse"
+          },
+          "action": "instant",
+          "duration": "(Blood Potency × animal's Stamina) nights",
+          "summary": "Revive a dead animal as a Vitae-sustained servant linked to the vampire.",
+          "page": 126
+        },
+        {
+          "id": "animalism-summon-the-hunt",
+          "name": "Summon the Hunt",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Includes 1 Vitae spilled on the target"
+          },
+          "action": "instant",
+          "duration": "One night, or until the blood-marked item is destroyed",
+          "dicePool": {
+            "attribute": "presence",
+            "skill": "animal-ken",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Spilled Vitae draws nearby predators and scavengers, who obey one command.",
+          "page": 127
+        },
+        {
+          "id": "animalism-feral-infection",
+          "name": "Feral Infection",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Includes 1 Vitae spilled on the ground"
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "dicePool": {
+            "attribute": "presence",
+            "skill": "intimidation",
+            "includesDiscipline": true,
+            "resistance": "Resolve + Composure − vampire's successes (reflexive roll by humans and supernatural victims)",
+            "text": null
+          },
+          "summary": "Send animals and people nearby into a directed, frenzied rage.",
+          "page": 127
+        },
+        {
+          "id": "animalism-lord-of-the-land",
+          "name": "Lord of the Land",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "range": [
+                3,
+                9
+              ]
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "optional": false,
+            "note": "3 Vitae for a house, 6 for a city block, 9 for a castle"
+          },
+          "action": "instant",
+          "duration": "One week per dot of Blood Potency; longer while the vampire stays inside",
+          "summary": "Claim a Vitae-marked territory that repels intruders and reveals all within it.",
+          "page": 127
+        }
+      ]
+    },
+    {
+      "id": "auspex",
+      "name": "Auspex",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 128
+      },
+      "summary": "Heightened predatory senses that uncover secrets, weaknesses and hidden things.",
+      "powers": [
+        {
+          "id": "auspex-beasts-hackles",
+          "name": "Beast's Hackles",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": {
+              "range": [
+                0,
+                1
+              ]
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "First use in a scene free; later uses that scene 1 Vitae each"
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Sense immediate danger or weakness; ask the Storyteller a question.",
+          "page": 128
+        },
+        {
+          "id": "auspex-uncanny-perception",
+          "name": "Uncanny Perception",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "range": [
+                0,
+                1
+              ]
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "First use per scene free; later uses on the same target that scene 1 Vitae each"
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Ask one question per success about a single person's secrets.",
+          "page": 129
+        },
+        {
+          "id": "auspex-the-spirits-touch",
+          "name": "The Spirit's Touch",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "occult",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Read the history and emotions tied to an object or place.",
+          "page": 129
+        },
+        {
+          "id": "auspex-lay-open-the-mind",
+          "name": "Lay Open the Mind",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Each extra memory uncovered costs 1 more Vitae"
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "socialize",
+            "includesDiscipline": true,
+            "resistance": "Resolve + Blood Potency",
+            "text": null
+          },
+          "summary": "Hear a target's thoughts, send thoughts, and pull up memories.",
+          "page": 130
+        },
+        {
+          "id": "auspex-twilight-projection",
+          "name": "Twilight Projection",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "occult",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Leave the body as an intangible, fast-moving astral form.",
+          "page": 130
+        }
+      ]
+    },
+    {
+      "id": "celerity",
+      "name": "Celerity",
+      "kind": "scaling",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 130
+      },
+      "summary": "Supernatural speed that improves defense and allows bursts of action.",
+      "powers": [
+        {
+          "id": "celerity",
+          "name": "Celerity",
+          "dots": [
+            1,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": true,
+            "note": "Persistent effects are free; each active effect costs 1 Vitae"
+          },
+          "action": "reflexive",
+          "duration": "Permanent (persistent effects); one turn (active effects)",
+          "summary": "Persistent Defense bonus; spend Vitae for initiative, interrupts or extreme speed.",
+          "page": 130
+        }
+      ]
+    },
+    {
+      "id": "dominate",
+      "name": "Dominate",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 131
+      },
+      "summary": "Command and reshape minds through eye contact and the Beast's authority.",
+      "powers": [
+        {
+          "id": "dominate-mesmerize",
+          "name": "Mesmerize",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "expression",
+            "includesDiscipline": true,
+            "resistance": "Resolve + Blood Potency",
+            "text": null
+          },
+          "summary": "Catch a victim's gaze, then give short direct commands or plant a memory.",
+          "page": 131
+        },
+        {
+          "id": "dominate-iron-edict",
+          "name": "Iron Edict",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Free if the victim is in Vinculum with the vampire"
+          },
+          "action": "instant",
+          "duration": "Until the task is done or sunrise",
+          "targetCondition": "Mesmerized",
+          "summary": "Give a Mesmerized victim a command of up to three sentences.",
+          "page": 131
+        },
+        {
+          "id": "dominate-entombed-command",
+          "name": "Entombed Command",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": "No cost itself; Dominate powers attached to triggers cost Vitae as normal"
+          },
+          "action": "instant",
+          "duration": "One week per success, or one month per success if in Vinculum",
+          "targetCondition": "Mesmerized",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "subterfuge",
+            "includesDiscipline": true,
+            "resistance": "− victim's Resolve",
+            "text": null
+          },
+          "summary": "Plant subconscious triggers that fire other Dominate effects later.",
+          "page": 132
+        },
+        {
+          "id": "dominate-the-lying-mind",
+          "name": "The Lying Mind",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Includes 1 Vitae fed to or dripped on the victim"
+          },
+          "action": "instant",
+          "duration": "Permanent",
+          "targetCondition": "Mesmerized",
+          "summary": "Create, erase or rewrite a victim's memories permanently.",
+          "page": 132
+        },
+        {
+          "id": "dominate-possession",
+          "name": "Possession",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "optional": false,
+            "note": null
+          },
+          "action": "reflexive",
+          "duration": "1 night per success",
+          "targetCondition": "Mesmerized",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "intimidation",
+            "includesDiscipline": true,
+            "resistance": "− victim's Resolve",
+            "text": null
+          },
+          "summary": "Move the vampire's mind into a victim and control his body.",
+          "page": 133
+        }
+      ]
+    },
+    {
+      "id": "majesty",
+      "name": "Majesty",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 133
+      },
+      "summary": "Supernatural charisma that draws attention, affection and devotion.",
+      "powers": [
+        {
+          "id": "majesty-awe",
+          "name": "Awe",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "summary": "Become the centre of attention, ignoring social penalties and boosting Presence.",
+          "page": 133
+        },
+        {
+          "id": "majesty-confidant",
+          "name": "Confidant",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": "Requires having used Awe on the victim"
+          },
+          "action": "contested",
+          "dicePool": {
+            "attribute": "presence",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": "Resolve + Blood Potency",
+            "text": null
+          },
+          "summary": "Charm one person already under Awe.",
+          "page": 133
+        },
+        {
+          "id": "majesty-green-eyes",
+          "name": "Green Eyes",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Each emotional shift costs 1 Vitae, can hit many victims at once"
+          },
+          "action": "reflexive",
+          "duration": "Scene",
+          "targetCondition": "Charmed or Enthralled",
+          "summary": "Manipulate the emotions and obsessions of charmed followers.",
+          "page": 134
+        },
+        {
+          "id": "majesty-loyalty",
+          "name": "Loyalty",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "contested",
+          "targetCondition": "Charmed",
+          "dicePool": {
+            "attribute": "manipulation",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": "Resolve + Blood Potency",
+            "text": null
+          },
+          "summary": "Turn a charmed victim into a fanatically loyal, Enthralled follower.",
+          "page": 134
+        },
+        {
+          "id": "majesty-idol",
+          "name": "Idol",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "optional": false,
+            "note": null
+          },
+          "action": "reflexive",
+          "duration": "Scene",
+          "summary": "Amplify Awe so onlookers struggle to act against the vampire.",
+          "page": 135
+        }
+      ]
+    },
+    {
+      "id": "nightmare",
+      "name": "Nightmare",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 135
+      },
+      "summary": "Project the Beast's horror to frighten, delude and traumatize victims.",
+      "powers": [
+        {
+          "id": "nightmare-dread-presence",
+          "name": "Dread Presence",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "summary": "Unsettling aura boosts Intimidation, blocks offensive Willpower, allows tiny illusions.",
+          "page": 135
+        },
+        {
+          "id": "nightmare-face-of-the-beast",
+          "name": "Face of the Beast",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "contested",
+          "dicePool": {
+            "attribute": "presence",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": "Composure + Blood Potency",
+            "text": null
+          },
+          "summary": "Magnify a victim's fear so he flees, Frightened.",
+          "page": 135
+        },
+        {
+          "id": "nightmare-the-grand-delusion",
+          "name": "The Grand Delusion",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "contested",
+          "duration": "1 night",
+          "dicePool": {
+            "attribute": "manipulation",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": "Composure + Blood Potency",
+            "text": null
+          },
+          "summary": "Implant a false belief, inflicting the Delusional Condition.",
+          "page": 136
+        },
+        {
+          "id": "nightmare-waking-nightmare",
+          "name": "Waking Nightmare",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "contested",
+          "duration": "Scene",
+          "dicePool": {
+            "attribute": "presence",
+            "skill": "empathy",
+            "includesDiscipline": true,
+            "resistance": "highest Composure + Blood Potency in group",
+            "text": null
+          },
+          "summary": "Create a single all-senses nightmarish hallucination.",
+          "page": 136
+        },
+        {
+          "id": "nightmare-mortal-terror",
+          "name": "Mortal Terror",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "targetCondition": "Frightened or Delusional",
+          "dicePool": {
+            "attribute": "presence",
+            "skill": "intimidation",
+            "includesDiscipline": true,
+            "resistance": "− victim's Composure",
+            "text": null
+          },
+          "summary": "Terror deals lethal damage per success and leaves the victim Broken.",
+          "page": 136
+        }
+      ]
+    },
+    {
+      "id": "obfuscate",
+      "name": "Obfuscate",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 137
+      },
+      "summary": "Hide the vampire, objects or places from others' minds and perceptions.",
+      "powers": [
+        {
+          "id": "obfuscate-face-in-the-crowd",
+          "name": "Face in the Crowd",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": null,
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "summary": "Go unnoticed and unremembered while not drawing attention.",
+          "page": 137
+        },
+        {
+          "id": "obfuscate-touch-of-shadow",
+          "name": "Touch of Shadow",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Must touch the subject; Size up to the vampire's own"
+          },
+          "action": "reflexive",
+          "duration": "Scene",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "larceny",
+            "includesDiscipline": true,
+            "resistance": null,
+            "text": null
+          },
+          "summary": "Make a touched object or animal go unnoticed.",
+          "page": 137
+        },
+        {
+          "id": "obfuscate-cloak-of-night",
+          "name": "Cloak of Night",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "none",
+          "summary": "Vanish entirely from perception; Touch of Shadow can now hide people.",
+          "page": 138
+        },
+        {
+          "id": "obfuscate-the-familiar-stranger",
+          "name": "The Familiar Stranger",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "none",
+          "summary": "Appear as a chosen type of person or specific individual; disguise objects.",
+          "page": 138
+        },
+        {
+          "id": "obfuscate-oubliette",
+          "name": "Oubliette",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "range": [
+                3,
+                9
+              ]
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "optional": false,
+            "note": "3 Vitae for an apartment, 6 for a brownstone, 9 for a mansion; must also sleep a day there"
+          },
+          "action": "instant",
+          "duration": "1 week per dot of Blood Potency",
+          "summary": "Turn a Vitae-marked haven into a controllable illusory domain.",
+          "page": 138
+        }
+      ]
+    },
+    {
+      "id": "protean",
+      "name": "Protean",
+      "kind": "powers",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 139
+      },
+      "summary": "Reshape the vampire's body, from sinking into earth to becoming mist.",
+      "powers": [
+        {
+          "id": "protean-unmarked-grave",
+          "name": "Unmarked Grave",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": "varies",
+            "willpower": null,
+            "optional": false,
+            "note": "Free for soil or earth; otherwise Vitae equal to the material's Durability"
+          },
+          "action": "instant",
+          "duration": "Indefinite",
+          "summary": "Merge into the ground and rest there, nearly immune to harm.",
+          "page": 139
+        },
+        {
+          "id": "protean-predatory-aspect",
+          "name": "Predatory Aspect",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "reflexive",
+          "duration": "Scene",
+          "summary": "Manifest chosen bestial adaptations such as claws or wall crawling.",
+          "page": 139
+        },
+        {
+          "id": "protean-beasts-skin",
+          "name": "Beast's Skin",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "duration": "Indefinite",
+          "summary": "Transform into a predatory animal the vampire has killed by feeding.",
+          "page": 140
+        },
+        {
+          "id": "protean-unnatural-aspect",
+          "name": "Unnatural Aspect",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": false,
+            "note": "Paid on top of Predatory Aspect"
+          },
+          "action": "none",
+          "duration": "Scene",
+          "summary": "Add a monstrous fourth adaptation such as wings or horrid talons.",
+          "page": 140
+        },
+        {
+          "id": "protean-primeval-miasma",
+          "name": "Primeval Miasma",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 3
+            },
+            "willpower": null,
+            "optional": false,
+            "note": null
+          },
+          "action": "instant",
+          "summary": "Become a cloud of smoke immune to most harm.",
+          "page": 140
+        }
+      ]
+    },
+    {
+      "id": "resilience",
+      "name": "Resilience",
+      "kind": "scaling",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 141
+      },
+      "summary": "Unnatural toughness that raises Stamina and shrugs off severe damage.",
+      "powers": [
+        {
+          "id": "resilience",
+          "name": "Resilience",
+          "dots": [
+            1,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": true,
+            "note": "Persistent effects are free; each active effect costs 1 Vitae"
+          },
+          "action": "reflexive",
+          "duration": "Permanent (persistent effects); one turn (active effects)",
+          "summary": "Persistent Stamina bonus and aggravated downgrade; spend Vitae to reduce damage.",
+          "page": 141
+        }
+      ]
+    },
+    {
+      "id": "vigor",
+      "name": "Vigor",
+      "kind": "scaling",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 141
+      },
+      "summary": "Supernatural strength for crushing blows, huge jumps and hurling heavy objects.",
+      "powers": [
+        {
+          "id": "vigor",
+          "name": "Vigor",
+          "dots": [
+            1,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": true,
+            "note": "Persistent effects are free; each active effect costs 1 Vitae"
+          },
+          "action": "reflexive",
+          "duration": "Permanent (persistent effects); one turn (active effects)",
+          "summary": "Persistent Strength bonus and jumping; spend Vitae for heavy strikes or hurling objects.",
+          "page": 141
+        }
+      ]
+    }
+  ],
+  "merits": [
+    {
+      "id": "acute-senses",
+      "name": "Acute Senses",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 109
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Senses twice as sharp as a mortal's; sees in total darkness."
+    },
+    {
+      "id": "altar",
+      "name": "Altar",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 109
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "circle-of-the-crone",
+          "minimum": 1
+        }
+      ],
+      "summary": "Shared ritual altar letting a group use teamwork on Crúac rituals."
+    },
+    {
+      "id": "anointed",
+      "name": "Anointed",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 109
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "lancea-et-sanctum",
+          "minimum": 1
+        }
+      ],
+      "summary": "Preach once per chapter to give a crowd the Raptured Condition."
+    },
+    {
+      "id": "atrocious",
+      "name": "Atrocious",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot also have the Cutthroat or Enticing Merit"
+        }
+      ],
+      "summary": "Monstrous Beast: 8-again to invoke it, no 10-again with the other Beasts."
+    },
+    {
+      "id": "attache",
+      "name": "Attaché",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 1
+        }
+      ],
+      "summary": "Each Retainer also brings Contacts, Resources or Safe Place dots."
+    },
+    {
+      "id": "bloodhound",
+      "name": "Bloodhound",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 110
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        }
+      ],
+      "summary": "Reads and tracks blood by scent alone, without tasting it."
+    },
+    {
+      "id": "cacophony-savvy",
+      "name": "Cacophony Savvy",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "city-status",
+          "minimum": 1
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Gettin' Up",
+          "summary": "Intelligence + Streetwise to decode Cacophony signs; extra details cost -1 die each."
+        },
+        {
+          "dots": 2,
+          "name": "Backpacker",
+          "summary": "Learns newcomers' feeding grounds and aliases within a week."
+        },
+        {
+          "dots": 3,
+          "name": "Wearing a Hat",
+          "summary": "Once per chapter, Wits + Politics; ask one city-gossip question per success."
+        }
+      ],
+      "summary": "Reads and spreads the hidden Kindred message network; each dot adds a power."
+    },
+    {
+      "id": "carthian-pull",
+      "name": "Carthian Pull",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 1
+        }
+      ],
+      "summary": "Monthly borrowed Allies, Contacts, Haven and Herd dots from the Movement."
+    },
+    {
+      "id": "claws-of-the-unholy",
+      "name": "Claws of the Unholy",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 4
+        }
+      ],
+      "summary": "Frenzied Unnatural Aspect claws deal aggravated damage, bypassing most armor."
+    },
+    {
+      "id": "close-family",
+      "name": "Close Family",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Stronger blood sympathy: +1 bonus, 8-again, relations count one step closer."
+    },
+    {
+      "id": "cutthroat",
+      "name": "Cutthroat",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot also have the Atrocious or Enticing Merit"
+        }
+      ],
+      "summary": "Competitive Beast: 8-again to invoke it, no 10-again with the other Beasts."
+    },
+    {
+      "id": "distinguished-palate",
+      "name": "Distinguished Palate",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Taste of Blood rolls are exceptional on one success; has a preferred vessel type."
+    },
+    {
+      "id": "dream-visions",
+      "name": "Dream Visions",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "clan",
+          "id": "mekhet"
+        }
+      ],
+      "summary": "Nightly Blood Potency roll for a yes/no insight about someone or somewhere new."
+    },
+    {
+      "id": "dynasty-membership",
+      "name": "Dynasty Membership",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Dynasty",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "clan-status",
+          "minimum": 1
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "New Kid",
+          "summary": "Once per chapter, use the eldest member's Clan Status on a Social pool."
+        },
+        {
+          "dots": 2,
+          "name": "Exemplar",
+          "summary": "Skip the first Door against those who respect or fear the dynasty."
+        },
+        {
+          "dots": 3,
+          "name": "Patriarch/Matriarch",
+          "summary": "Once per chapter, give a member the Tasked Condition."
+        }
+      ],
+      "summary": "Belongs to a known Kindred dynasty; higher dots grant more pull."
+    },
+    {
+      "id": "enticing",
+      "name": "Enticing",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot also have the Atrocious or Cutthroat Merit"
+        }
+      ],
+      "summary": "Seductive Beast: 8-again to invoke it, no 10-again with the other Beasts."
+    },
+    {
+      "id": "feeding-grounds",
+      "name": "Feeding Grounds",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Productive hunting territory boosting hunting and predatory aura rolls."
+    },
+    {
+      "id": "friends-in-high-places",
+      "name": "Friends in High Places",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 1
+        }
+      ],
+      "summary": "Each month, open Doors equal to Status with people acting for an organization."
+    },
+    {
+      "id": "haven",
+      "name": "Haven",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "safe-place",
+          "minimum": 1
+        }
+      ],
+      "summary": "A secure, familiar daytime resting place tied to a Safe Place."
+    },
+    {
+      "id": "herd",
+      "name": "Herd",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Willing mortals supplying blood each week without a hunting roll."
+    },
+    {
+      "id": "honey-trap",
+      "name": "Honey Trap",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Vampires who drink your Vitae regain Willpower; new or deeper bonds give a Beat."
+    },
+    {
+      "id": "invested",
+      "name": "Invested",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 1
+        }
+      ],
+      "summary": "Gain Herd, Mentor, Resources or Retainer dots equal to Invictus Status."
+    },
+    {
+      "id": "city-status",
+      "name": "City Status",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Standing in the city's Kindred society; works like Status within the city."
+    },
+    {
+      "id": "clan-status",
+      "name": "Clan Status",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Clan",
+        "options": [
+          "Daeva",
+          "Gangrel",
+          "Mekhet",
+          "Nosferatu",
+          "Ventrue"
+        ]
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Only for the character's own clan"
+        }
+      ],
+      "summary": "Recognition within your own clan; works like Status within the clan."
+    },
+    {
+      "id": "covenant-status",
+      "name": "Covenant Status",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Covenant",
+        "options": [
+          "Carthian Movement",
+          "Circle of the Crone",
+          "Invictus",
+          "Lancea et Sanctum",
+          "Ordo Dracul"
+        ]
+      },
+      "repeatable": true,
+      "summary": "Rank within a covenant; works like Status there and unlocks covenant Merits."
+    },
+    {
+      "id": "kiss-of-the-succubus",
+      "name": "Kiss of the Succubus",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "clan",
+          "id": "daeva"
+        }
+      ],
+      "summary": "Bite leaves mortals Addicted as well as Swooning."
+    },
+    {
+      "id": "lineage",
+      "name": "Lineage",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "clan-status",
+          "minimum": 1
+        }
+      ],
+      "summary": "Once per chapter, the sire's name stands in for one dot of a social Merit."
+    },
+    {
+      "id": "lorekeeper",
+      "name": "Lorekeeper",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "lancea-et-sanctum",
+          "minimum": 1
+        }
+      ],
+      "summary": "Buying Library also yields Retainer and Herd dots."
+    },
+    {
+      "id": "mother-daughter-bond",
+      "name": "The Mother-Daughter Bond",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "circle-of-the-crone",
+          "minimum": 1
+        }
+      ],
+      "summary": "Your Mentor gains True Friend protection for free."
+    },
+    {
+      "id": "night-doctor-surgery",
+      "name": "Night Doctor Surgery",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 113
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 2
+        }
+      ],
+      "summary": "Hour-long Intelligence + Medicine treatment downgrades a vampire's wounds."
+    },
+    {
+      "id": "speaker-for-the-silent",
+      "name": "Speaker for the Silent",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 114
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "dynasty-membership",
+          "minimum": 1
+        },
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 1
+        }
+      ],
+      "summary": "Lets a torpid elder take over and speak through your body."
+    },
+    {
+      "id": "pack-alpha",
+      "name": "Pack Alpha",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 114
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "clan",
+          "id": "gangrel"
+        }
+      ],
+      "summary": "Designated pack members get 8-again when assisting in teamwork."
+    },
+    {
+      "id": "unnatural-affinity",
+      "name": "Unnatural Affinity",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 114
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Creature type",
+        "options": null
+      },
+      "repeatable": false,
+      "summary": "Each dot lets you feed on one type of supernatural creature."
+    },
+    {
+      "id": "swarm-form",
+      "name": "Swarm Form",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 114
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 3
+        }
+      ],
+      "summary": "Beast's Skin can become a swarm of tiny animals."
+    },
+    {
+      "id": "secret-society-junkie",
+      "name": "Secret Society Junkie",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 114
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "ordo-dracul",
+          "minimum": 1
+        }
+      ],
+      "summary": "Status or Mystery Cult Initiation in outside groups also grants Herd dots."
+    },
+    {
+      "id": "sworn",
+      "name": "Sworn",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 114
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Order",
+        "options": [
+          "Axe",
+          "Dying Light",
+          "Mysteries"
+        ]
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "ordo-dracul",
+          "minimum": 1
+        }
+      ],
+      "summary": "Sworn to an Ordo Dracul branch; gain Mentor and Retainer dots equal to Status."
+    },
+    {
+      "id": "i-know-a-guy",
+      "name": "I Know a Guy",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 115
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 1
+        }
+      ],
+      "summary": "Once per story, temporary Retainer dots equal to your Allies."
+    },
+    {
+      "id": "touchstone",
+      "name": "Touchstone",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 115
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Extra Touchstones anchored to lower Humanity dots."
+    },
+    {
+      "id": "undead-menses",
+      "name": "Undead Menses",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 115
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Character identifies as female"
+        }
+      ],
+      "summary": "Once nightly blood that aids Crúac and weakens resistance to Disciplines."
+    },
+    {
+      "id": "unsettling-gaze",
+      "name": "Unsettling Gaze",
+      "category": "vampire",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 115
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "clan",
+          "id": "nosferatu"
+        }
+      ],
+      "summary": "Exceptional Bestial infliction can force a breaking point on the victim."
+    },
+    {
+      "id": "where-the-bodies-are-buried",
+      "name": "Where the Bodies Are Buried",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 115
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 2
+        }
+      ],
+      "summary": "Ask secret questions about known vampires, uses equal to Status per story."
+    },
+    {
+      "id": "lex-terrae",
+      "name": "Lex Terrae",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 116
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 2
+        },
+        {
+          "kind": "merit",
+          "id": "feeding-grounds",
+          "minimum": 1
+        }
+      ],
+      "summary": "Blood poached from your feeding ground sickens and marks the poacher."
+    },
+    {
+      "id": "mandate-from-the-masses",
+      "name": "Mandate from the Masses",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 116
+      },
+      "ratings": [
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 5
+        }
+      ],
+      "summary": "A Movement vote strips Blood Potency from an enemy."
+    },
+    {
+      "id": "right-of-return",
+      "name": "Right of Return",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 116
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 2
+        },
+        {
+          "kind": "merit",
+          "id": "city-status",
+          "minimum": 1
+        }
+      ],
+      "summary": "Carthian Status doesn't count against holding other Covenant Status."
+    },
+    {
+      "id": "strength-of-resolution",
+      "name": "Strength of Resolution",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 116
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 1
+        }
+      ],
+      "summary": "Add Carthian Status to resist powers pushing you to break city law."
+    },
+    {
+      "id": "plausible-deniability",
+      "name": "Plausible Deniability",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 116
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 3
+        }
+      ],
+      "summary": "Supernatural attempts to prove your guilt in breaking city law fail."
+    },
+    {
+      "id": "notary",
+      "name": "Notary",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 116
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 3
+        }
+      ],
+      "summary": "Officiates Invictus Oaths; immune to others' Invictus Status in rolls."
+    },
+    {
+      "id": "oath-of-action",
+      "name": "Oath of Action",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 117
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "summary": "Vassal borrows a liege's Discipline to perform a set task."
+    },
+    {
+      "id": "oath-of-fealty",
+      "name": "Oath of Fealty",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 117
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "invictus",
+          "minimum": 1
+        }
+      ],
+      "summary": "Vassal may draw weekly Vitae from the liege at any distance."
+    },
+    {
+      "id": "oath-of-penance",
+      "name": "Oath of Penance",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 117
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Liege receives every tenth Vitae the vassal drinks; vassal immune to liege's Disciplines."
+    },
+    {
+      "id": "oath-of-serfdom",
+      "name": "Oath of Serfdom",
+      "category": "covenant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 117
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Landlord-tenant Oath granting a physical Discipline dot within the granted land."
+    },
+    {
+      "id": "kindred-dueling",
+      "name": "Kindred Dueling",
+      "category": "fighting",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 117
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Hamstring",
+          "summary": "A targeted limb strike denies that limb Physical Intensity for a turn."
+        },
+        {
+          "dots": 2,
+          "name": "Taunt",
+          "summary": "Drop dice up to Weaponry; a hit forces a frenzy check penalized by that amount."
+        },
+        {
+          "dots": 3,
+          "name": "Carving",
+          "summary": "Weapon damage counts as lethal against Kindred."
+        },
+        {
+          "dots": 4,
+          "name": "Pincushion",
+          "summary": "Leave the blade in; the wound can't be healed with Vitae until removed."
+        },
+        {
+          "dots": 5,
+          "name": "Spray",
+          "summary": "Give up Defense for the turn; damage can drain Vitae instead of Health."
+        }
+      ],
+      "summary": "Bladed fighting style exploiting vampire weaknesses."
+    },
+    {
+      "id": "riding-the-wave",
+      "name": "Riding the Wave",
+      "category": "fighting",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 118
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Ravage",
+          "summary": "Bite attacks become a 1L weapon."
+        },
+        {
+          "dots": 2,
+          "name": "Primal Strength",
+          "summary": "Frenzy Strength bonus doubles for lifting, jumping and breaking."
+        },
+        {
+          "dots": 3,
+          "name": "In the Zone",
+          "summary": "Willpower spent to ride the wave also adds +3 dice to that turn's action."
+        },
+        {
+          "dots": 4,
+          "name": "Unyielding",
+          "summary": "Get back Willpower spent to ride the wave after a successful scene."
+        },
+        {
+          "dots": 5,
+          "name": "Animal Grace",
+          "summary": "Willpower on attack or defense gives both: +2 Defense and +3 to attack."
+        }
+      ],
+      "summary": "Style usable only while riding the wave with the Beast."
+    },
+    {
+      "id": "allies",
+      "name": "Allies",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 118
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Group",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "An organization or group that does favors for you."
+    },
+    {
+      "id": "alternate-identity",
+      "name": "Alternate Identity",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 118
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Identity",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "A false identity that holds up to more scrutiny at higher dots."
+    },
+    {
+      "id": "anonymity",
+      "name": "Anonymity",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 118
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot have the Fame Merit"
+        }
+      ],
+      "summary": "Lives off the grid; paper-trail searches are penalized."
+    },
+    {
+      "id": "area-of-expertise",
+      "name": "Area of Expertise",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 119
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Specialty",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 2
+        },
+        {
+          "kind": "other",
+          "text": "At least one Skill Specialty"
+        }
+      ],
+      "summary": "One chosen Specialty gives +2 dice instead of +1."
+    },
+    {
+      "id": "barfly",
+      "name": "Barfly",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 119
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "socialize",
+          "minimum": 2
+        }
+      ],
+      "summary": "Fits in at any social gathering without needing a roll."
+    },
+    {
+      "id": "contacts",
+      "name": "Contacts",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 119
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Sphere",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "One sphere of information sources per dot."
+    },
+    {
+      "id": "double-jointed",
+      "name": "Double Jointed",
+      "category": "physical",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 119
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        }
+      ],
+      "summary": "Slips mundane bonds automatically and resists being overpowered in grapples."
+    },
+    {
+      "id": "etiquette",
+      "name": "Etiquette",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 120
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "socialize",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Bless His Heart",
+          "summary": "Use Socialize rather than lower of Resolve/Composure for starting Doors."
+        },
+        {
+          "dots": 2,
+          "name": "Losing Your Religion",
+          "summary": "Insults get 8-again and +2 dice, but worsen the impression a step."
+        },
+        {
+          "dots": 3,
+          "name": "In High Cotton",
+          "summary": "Add one relevant Status or Fame Merit to contest Social rolls."
+        },
+        {
+          "dots": 4,
+          "name": "Half-Cocked",
+          "summary": "With a good or better impression, first roll ignores target's Resolve and Composure."
+        },
+        {
+          "dots": 5,
+          "name": "Grace Under Fire",
+          "summary": "When forced to concede, pick from three Conditions the other side offers."
+        }
+      ],
+      "summary": "Social style for poise, insults and reputation in Social Maneuvering."
+    },
+    {
+      "id": "fame",
+      "name": "Fame",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 120
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Known for",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot have the Anonymity Merit"
+        }
+      ],
+      "summary": "Known for something; bonus with admirers but easier to find."
+    },
+    {
+      "id": "fast-talking",
+      "name": "Fast-Talking",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 120
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "manipulation",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "subterfuge",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Always Be Closing",
+          "summary": "Mark's Resolve or Composure is reduced by 1 when resisting you."
+        },
+        {
+          "dots": 2,
+          "name": "Jargon",
+          "summary": "Apply one relevant Specialty to any Social roll."
+        },
+        {
+          "dots": 3,
+          "name": "Devil's Advocacy",
+          "summary": "Reroll one failed Subterfuge roll per scene."
+        },
+        {
+          "dots": 4,
+          "name": "Salting",
+          "summary": "Spend Willpower after opening a Door to open a second."
+        },
+        {
+          "dots": 5,
+          "name": "Patron's Privilege",
+          "summary": "When the mark regains Willpower from Vice/Dirge, roll to open a Door at once."
+        }
+      ],
+      "summary": "Style of rapid, confusing persuasion."
+    },
+    {
+      "id": "fleet-of-foot",
+      "name": "Fleet of Foot",
+      "category": "physical",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 120
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        }
+      ],
+      "summary": "Runs much faster than expected and is hard to chase down."
+    },
+    {
+      "id": "hobbyist-clique",
+      "name": "Hobbyist Clique",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 120
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Skill",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Member of a clique whose members all have this Merit and the chosen Skill at 2+"
+        }
+      ],
+      "summary": "Membership in a hobby group built around one Skill."
+    },
+    {
+      "id": "indomitable",
+      "name": "Indomitable",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        }
+      ],
+      "summary": "Strong resistance to supernatural mind and emotion control."
+    },
+    {
+      "id": "inspiring",
+      "name": "Inspiring",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "presence",
+          "minimum": 3
+        }
+      ],
+      "summary": "Rousing speech gives listeners the Inspired Condition."
+    },
+    {
+      "id": "interdisciplinary-specialty",
+      "name": "Interdisciplinary Specialty",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Specialty",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "A Skill at 3 or more with a Specialty in it"
+        }
+      ],
+      "summary": "One Specialty's bonus applies to other Skills when it fits."
+    },
+    {
+      "id": "iron-will",
+      "name": "Iron Will",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 4
+        }
+      ],
+      "summary": "Willpower spent resisting socially can use Resolve instead."
+    },
+    {
+      "id": "language",
+      "name": "Language",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Language",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "Speaks, reads and writes an additional language."
+    },
+    {
+      "id": "library",
+      "name": "Library",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Mental Skill",
+        "options": [
+          "Academics",
+          "Computer",
+          "Crafts",
+          "Investigation",
+          "Medicine",
+          "Occult",
+          "Politics",
+          "Science"
+        ]
+      },
+      "repeatable": true,
+      "summary": "Research resources for one Mental Skill."
+    },
+    {
+      "id": "mentor",
+      "name": "Mentor",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Mentor",
+        "options": null
+      },
+      "repeatable": false,
+      "summary": "A teacher who grants favors in three Skills, for a price."
+    },
+    {
+      "id": "mystery-cult-initiation",
+      "name": "Mystery Cult Initiation",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 121
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Cult",
+        "options": null
+      },
+      "repeatable": false,
+      "summary": "Rank in a mystery cult with benefits at each level."
+    },
+    {
+      "id": "parkour",
+      "name": "Parkour",
+      "category": "physical",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 122
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Flow",
+          "summary": "Lowers foot-chase successes needed and ignores some Athletics penalties."
+        },
+        {
+          "dots": 2,
+          "name": "Cat Leap",
+          "summary": "Better fall-damage reduction, even for lethal falls."
+        },
+        {
+          "dots": 3,
+          "name": "Wall Run",
+          "summary": "Climb 10 feet plus 5 per Athletics dot as an instant action, no roll."
+        },
+        {
+          "dots": 4,
+          "name": "Expert Traceur",
+          "summary": "Spend Willpower to make one run/jump/climb roll a rote action."
+        },
+        {
+          "dots": 5,
+          "name": "Freeflow",
+          "summary": "After a minute of running, Athletics actions reflexively; Willpower gives 3 successes."
+        }
+      ],
+      "summary": "Free-running style for chases, falls and climbing."
+    },
+    {
+      "id": "resources",
+      "name": "Resources",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 123
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Disposable income for acquiring items."
+    },
+    {
+      "id": "retainer",
+      "name": "Retainer",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 123
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Retainer",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "A loyal assistant or follower."
+    },
+    {
+      "id": "safe-place",
+      "name": "Safe Place",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 123
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "A secure location, optionally trapped; dots can be pooled by a group."
+    },
+    {
+      "id": "sleight-of-hand",
+      "name": "Sleight of Hand",
+      "category": "physical",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 123
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "larceny",
+          "minimum": 3
+        }
+      ],
+      "summary": "One Larceny instant action per turn becomes reflexive and unnoticed."
+    },
+    {
+      "id": "staff",
+      "name": "Staff",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 123
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Workers who automatically get one success on routine tasks."
+    },
+    {
+      "id": "status",
+      "name": "Status",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 123
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Group",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "Standing within a particular group or organization."
+    },
+    {
+      "id": "striking-looks",
+      "name": "Striking Looks",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 124
+      },
+      "ratings": [
+        1,
+        2
+      ],
+      "repeatable": false,
+      "summary": "Eye-catching appearance boosts Social rolls but draws attention."
+    },
+    {
+      "id": "sympathetic",
+      "name": "Sympathetic",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 124
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Accept a Condition to remove two Doors at the start of maneuvering."
+    },
+    {
+      "id": "taste",
+      "name": "Taste",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 124
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "crafts",
+          "minimum": 2
+        },
+        {
+          "kind": "other",
+          "text": "A Specialty in Crafts or Expression"
+        }
+      ],
+      "summary": "Expert appraiser of art and craft details."
+    },
+    {
+      "id": "trained-observer",
+      "name": "Trained Observer",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 124
+      },
+      "ratings": [
+        1,
+        3
+      ],
+      "repeatable": false,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "wits",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "attribute",
+            "id": "composure",
+            "minimum": 3
+          }
+        ]
+      ],
+      "summary": "Perception rolls gain 9-again, or 8-again at three dots."
+    },
+    {
+      "id": "true-friend",
+      "name": "True Friend",
+      "category": "social",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 124
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "A friend who won't betray you and restores Willpower."
+    },
+    {
+      "id": "unseen-sense",
+      "name": "Unseen Sense",
+      "category": "mental",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 124
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Creature type",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Human character only (not Kindred)"
+        }
+      ],
+      "summary": "Senses the nearby presence of one supernatural creature type."
+    }
+  ],
+  "banes": [
+    {
+      "id": "bells",
+      "name": "Bells",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Hearing real bells (or hymns, for some) deals (10 - Humanity) bashing dice per minute and provokes frenzy."
+    },
+    {
+      "id": "blood-of-the-unwilling",
+      "name": "Blood of the Unwilling",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "When feeding on an unwilling vessel, the first (10 - Humanity) Vitae taken give no nourishment."
+    },
+    {
+      "id": "crossroads",
+      "name": "Crossroads",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "After knowingly crossing a crossroads, all dice pools are capped at Humanity for the scene."
+    },
+    {
+      "id": "face-of-hunger",
+      "name": "Face of Hunger",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Below 5 Vitae, looks corpse-like: Humanity caps Social actions and pools to resist hunger frenzy."
+    },
+    {
+      "id": "grave-soil",
+      "name": "Grave Soil",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Sleeping without soil from the region of death caps all dice pools at Humanity the next night."
+    },
+    {
+      "id": "hated-by-beasts",
+      "name": "Hated by Beasts",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Animals are hostile; Animal Ken and Animalism attempts take a (10 - Humanity) penalty."
+    },
+    {
+      "id": "holy-day",
+      "name": "Holy Day",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "On one chosen weekday, cannot resist daysleep or wake unless the body takes damage equal to 10 - Humanity."
+    },
+    {
+      "id": "invitation",
+      "name": "Invitation",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Entering a private home uninvited deals (10 - Humanity) bashing damage, unhealable while still inside."
+    },
+    {
+      "id": "open-wounds",
+      "name": "Open Wounds",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Vitae can heal Health, but wounds stay visibly open until the vampire has slept through the day."
+    },
+    {
+      "id": "plague-of-purity",
+      "name": "Plague of Purity",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Touch from a human with Integrity 8+ deals (10 - Humanity) bashing damage."
+    },
+    {
+      "id": "rat-king-queen",
+      "name": "Rat King/Queen",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 108
+      },
+      "summary": "Constantly accompanied by vermin; non-Intimidation Social rolls fail. A Willpower point dismisses them for Humanity minutes."
+    },
+    {
+      "id": "repulsion",
+      "name": "Repulsion",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 109
+      },
+      "summary": "Pick a common substance; approaching within (10 - Humanity) feet costs Willpower, and it deals (10 - Humanity) bashing dice in a wound."
+    },
+    {
+      "id": "symbols",
+      "name": "Symbols",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 109
+      },
+      "summary": "Touched by, or acting against someone holding, a faith symbol: dice pools capped at Humanity."
+    },
+    {
+      "id": "webs",
+      "name": "Webs",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 109
+      },
+      "summary": "Touching a spider web traps the vampire; the web has Durability (10 - Humanity) to break."
+    }
+  ],
+  "clans": [
+    {
+      "id": "daeva",
+      "name": "Daeva",
+      "nickname": "Serpents",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 14
+      },
+      "favoredAttributes": [
+        "dexterity",
+        "manipulation"
+      ],
+      "disciplines": [
+        "celerity",
+        "majesty",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Wanton Curse",
+        "summary": "From the second feeding on one mortal onward, roll Humanity; on failure gain Persistent Dependent toward them until they die.",
+        "humanityThreshold": 6,
+        "page": 15
+      },
+      "summary": "Seductive predators who exploit mortal desire and beauty to feed and manipulate."
+    },
+    {
+      "id": "gangrel",
+      "name": "Gangrel",
+      "nickname": "Savages",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 17
+      },
+      "favoredAttributes": [
+        "composure",
+        "stamina"
+      ],
+      "disciplines": [
+        "animalism",
+        "protean",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Feral Curse",
+        "summary": "Dice pools to resist frenzy cannot exceed Humanity dots; riding the wave is unaffected.",
+        "humanityThreshold": 6,
+        "page": 19
+      },
+      "summary": "Primal, hard-to-kill survivors who embrace their Beast and take animal forms."
+    },
+    {
+      "id": "mekhet",
+      "name": "Mekhet",
+      "nickname": "Shadows",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 20
+      },
+      "favoredAttributes": [
+        "intelligence",
+        "wits"
+      ],
+      "disciplines": [
+        "auspex",
+        "celerity",
+        "obfuscate"
+      ],
+      "bane": {
+        "name": "The Tenebrous Curse",
+        "summary": "Gains one extra bane (no breaking point, counts toward the limit of three); Humanity counts one lower for Humanity-based banes, sunlight and torpor.",
+        "humanityThreshold": 6,
+        "page": 22
+      },
+      "summary": "Secretive spies and seers who hunt hidden knowledge and move unseen."
+    },
+    {
+      "id": "nosferatu",
+      "name": "Nosferatu",
+      "nickname": "Haunts",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 23
+      },
+      "favoredAttributes": [
+        "composure",
+        "strength"
+      ],
+      "disciplines": [
+        "nightmare",
+        "obfuscate",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Lonely Curse",
+        "summary": "With humans, Humanity counts two lower for Social penalties and Presence or Manipulation failures become dramatic; not with Touchstones or Kindred.",
+        "humanityThreshold": 6,
+        "page": 25
+      },
+      "summary": "Unsettling, often deformed lurkers who wield fear and dwell apart from society."
+    },
+    {
+      "id": "ventrue",
+      "name": "Ventrue",
+      "nickname": "Lords",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 26
+      },
+      "favoredAttributes": [
+        "presence",
+        "resolve"
+      ],
+      "disciplines": [
+        "animalism",
+        "dominate",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Aloof Curse",
+        "summary": "First Touchstone sits on Humanity 7, so the first Humanity loss detaches it; others go on dots 6 down to 2.",
+        "humanityThreshold": null,
+        "page": 28
+      },
+      "summary": "Domineering aristocrats who seek control over people, wealth and institutions."
+    }
+  ],
+  "covenants": [
+    {
+      "id": "carthian-movement",
+      "name": "Carthian Movement",
+      "source": {
+        "book": "vtr2e-core"
+      },
+      "summary": "Revolutionaries who test new forms of Kindred government."
+    },
+    {
+      "id": "circle-of-the-crone",
+      "name": "Circle of the Crone",
+      "source": {
+        "book": "vtr2e-core"
+      },
+      "summary": "Pagans who revere the Crone and practise the blood sorcery Crúac."
+    },
+    {
+      "id": "invictus",
+      "name": "Invictus",
+      "source": {
+        "book": "vtr2e-core"
+      },
+      "summary": "An aristocracy of elders that rules through tradition, oaths and wealth."
+    },
+    {
+      "id": "lancea-et-sanctum",
+      "name": "Lancea et Sanctum",
+      "source": {
+        "book": "vtr2e-core"
+      },
+      "summary": "A church that sees the Kindred as God's appointed predators, wielding Theban Sorcery."
+    },
+    {
+      "id": "ordo-dracul",
+      "name": "Ordo Dracul",
+      "source": {
+        "book": "vtr2e-core"
+      },
+      "summary": "Scholars of Dracula's teachings who seek to transcend the vampiric curse."
+    }
+  ]
+}
