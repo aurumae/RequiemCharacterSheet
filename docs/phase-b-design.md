@@ -255,7 +255,20 @@ Import uses the system document picker (`fileImporter`), and the file is checked
 
 B1 and B2 change no behaviour (apart from the Praestantia correction) and are covered by tests, so the risky part (data model and migration) lands first.
 
-**Progress:** B1–B5, the Chronicles of Darkness Merits catalog, and the clan bane flag are done. Next is B6.
+**Progress:** B1–B5, the Chronicles of Darkness Merits catalog, and the clan bane flag are done. B6 is on the back burner.
+
+## Blood sorcery, Devotions, Coils and Scales (S1)
+
+Added ahead of XP tracking and guided creation, which need their costs and rules. Facts come from Vampire: The Requiem pp. 142–159; summaries are our own words.
+
+- **Ritual Disciplines.** Crúac and Theban Sorcery are Disciplines of a new kind, `ritual`, with no powers of their own. `ritualRules` records the teaching covenant, the Status needed, the casting cost and pool, and the Humanity rule: Crúac caps Humanity at 10 − dots, and Theban needs Humanity at least equal to the miracle's dots.
+- **Rituals** (`rituals`): 10 Crúac rites and 9 Theban miracles, each with its Discipline, dots, target successes, contested or resisted pool, and sacrament.
+- **Devotions** (`devotions`): 28 entries. Each has its Discipline prerequisites (`prerequisitesAnyOf` for Summoning), cost, pool and the book's own Experience cost. Several printed costs differ from the "half the prerequisite dots" guideline; we keep the printed values.
+- **Mysteries** (`mysteries`): Ascendant, Wyrm and Voivode, each a Coil of five named tiers.
+- **Scales** (`scales`): 10 entries, each naming its prerequisite Coil tier, which decides whether it costs 1 or 2 Experiences.
+- **Character schema v7** adds `rituals`, `devotions`, `mystery` (the Mystery followed), `coils` (dots per Mystery) and `scales`. These are additive, so older saves load with none. A custom Discipline typed as "Crúac" or "Theban Sorcery" links to the new entry.
+
+Next: S2, the sheet UI and rules for these. Then X1–X2 for XP tracking and C1–C2 for guided creation.
 
 ## Open questions
 

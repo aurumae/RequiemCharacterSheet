@@ -16,12 +16,16 @@ struct CatalogTests {
 
     @Test func bundledCatalogsLoad() {
         #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night"])
-        #expect(catalog.disciplines.all.count == 11)
+        #expect(catalog.disciplines.all.count == 13)
         // 85 from Vampire: The Requiem, plus 72 from Chronicles of Darkness that Requiem doesn't reprint
         #expect(catalog.merits.all.count == 157)
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 6)
         #expect(catalog.covenants.all.count == 5)
+        #expect(catalog.rituals.all.count == 19)
+        #expect(catalog.devotions.all.count == 28)
+        #expect(catalog.mysteries.all.count == 3)
+        #expect(catalog.scales.all.count == 10)
     }
 
     @Test func requiemEntriesTakePrecedenceOverReprints() {
@@ -42,6 +46,8 @@ struct CatalogTests {
         let books = Set(catalog.books.map(\.id))
         let sources = catalog.disciplines.all.map(\.source) + catalog.merits.all.map(\.source)
             + catalog.banes.all.map(\.source) + catalog.clans.all.map(\.source) + catalog.covenants.all.map(\.source)
+            + catalog.rituals.all.map(\.source) + catalog.devotions.all.map(\.source)
+            + catalog.mysteries.all.map(\.source) + catalog.scales.all.map(\.source)
         #expect(sources.allSatisfy { books.contains($0.book) })
     }
 
@@ -52,6 +58,9 @@ struct CatalogTests {
                 #expect(discipline.powers.map(\.dots) == (1...5).map { $0...$0 }, "\(discipline.name)")
             case .scaling:
                 #expect(discipline.powers.map(\.dots) == [1...5], "\(discipline.name)")
+            case .ritual:
+                #expect(discipline.powers.isEmpty, "\(discipline.name)")
+                #expect(discipline.ritualRules != nil, "\(discipline.name)")
             }
         }
     }

@@ -8,7 +8,7 @@ import Foundation
 /// Identifies a catalog entry within its kind, e.g. "vigor" or "defensive-combat". Stable across versions.
 typealias CatalogEntryID = String
 
-/// Anything listed in a catalog: a Discipline, Merit, Bane, Clan or Covenant.
+/// Anything listed in a catalog: a Discipline, Merit, Bane, Clan, Covenant, ritual, Devotion, Mystery or Scale.
 protocol CatalogEntry: Identifiable, Decodable where ID == CatalogEntryID {
     var name: String { get }
     var source: SourceReference { get }
@@ -40,9 +40,14 @@ struct CatalogFile: Decodable {
     let banes: [BaneEntry]
     let clans: [ClanEntry]
     let covenants: [CovenantEntry]
+    let rituals: [RitualEntry]
+    let devotions: [DevotionEntry]
+    let mysteries: [MysteryEntry]
+    let scales: [ScaleEntry]
 
     enum CodingKeys: CodingKey {
         case format, version, book, disciplines, merits, banes, clans, covenants
+        case rituals, devotions, mysteries, scales
     }
 
     init(from decoder: Decoder) throws {
@@ -56,6 +61,10 @@ struct CatalogFile: Decodable {
         banes = try container.decode(.banes, default: [])
         clans = try container.decode(.clans, default: [])
         covenants = try container.decode(.covenants, default: [])
+        rituals = try container.decode(.rituals, default: [])
+        devotions = try container.decode(.devotions, default: [])
+        mysteries = try container.decode(.mysteries, default: [])
+        scales = try container.decode(.scales, default: [])
     }
 }
 
@@ -70,9 +79,11 @@ struct DisciplineEntry: CatalogEntry {
     let powers: [DisciplinePower]
     /// Always-on effects on the sheet, e.g. Vigor adding its dots to Strength.
     let effects: [Effect]
+    /// For Ritual Disciplines (Crúac, Theban Sorcery): who may learn it and how its rituals work.
+    let ritualRules: RitualRules?
 
     enum CodingKeys: CodingKey {
-        case id, name, kind, source, summary, powers, effects
+        case id, name, kind, source, summary, powers, effects, ritualRules
     }
 
     init(from decoder: Decoder) throws {
@@ -82,8 +93,9 @@ struct DisciplineEntry: CatalogEntry {
         kind = try container.decode(Kind.self, forKey: .kind)
         source = try container.decode(SourceReference.self, forKey: .source)
         summary = try container.decode(String.self, forKey: .summary)
-        powers = try container.decode([DisciplinePower].self, forKey: .powers)
+        powers = try container.decode(.powers, default: [])
         effects = try container.decodeEffects(.effects)
+        ritualRules = try container.decodeIfPresent(RitualRules.self, forKey: .ritualRules)
     }
 
     enum Kind: String, Decodable {
@@ -91,6 +103,29 @@ struct DisciplineEntry: CatalogEntry {
         case powers
         /// One entry whose effect grows with dots, e.g. Vigor.
         case scaling
+        /// No powers of its own; its dots let the vampire learn and cast rituals. Crúac, Theban Sorcery.
+        case ritual
+    }
+}
+
+/// How a Ritual Discipline is learned and cast (Vampire: The Requiem pp. 150–152).
+struct RitualRules: Decodable {
+    /// The covenant that teaches it.
+    let covenant: CatalogEntryID
+    /// The Status in that covenant needed to learn new rituals.
+    let covenantStatusMinimum: Int
+    /// How the Discipline limits Humanity.
+    let humanity: HumanityRule
+    /// What casting a ritual costs.
+    let castingCost: Cost
+    let castingPool: DicePool
+
+    enum HumanityRule: String, Decodable {
+        /// Humanity can't rise above 10 minus the Discipline's dots, and learning a dot is a breaking point
+        /// at Humanity 4 or higher. Crúac.
+        case capAtTenMinusDots
+        /// Casting a ritual needs Humanity at least equal to its dots. Theban Sorcery.
+        case atLeastRitualDots
     }
 }
 
@@ -139,6 +174,20 @@ struct Cost: Decodable {
     /// Paying is optional, e.g. to boost a scaling Discipline.
     var optional: Bool = false
     var note: String?
+
+    enum CodingKeys: CodingKey {
+        case vitae, willpower, optional, note
+    }
+
+    init() {}
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        vitae = try container.decodeIfPresent(CostAmount.self, forKey: .vitae)
+        willpower = try container.decodeIfPresent(CostAmount.self, forKey: .willpower)
+        optional = try container.decode(.optional, default: false)
+        note = try container.decodeIfPresent(String.self, forKey: .note)
+    }
 }
 
 enum CostAmount: Decodable, Equatable {
@@ -173,11 +222,28 @@ enum CostAmount: Decodable, Equatable {
 struct DicePool: Decodable {
     let attribute: AttributeKind?
     let skill: SkillID?
+    /// Adds the dots of the Discipline the power belongs to.
     let includesDiscipline: Bool
+    /// Adds the dots of this Discipline, for powers that don't belong to one, e.g. a Devotion.
+    let discipline: CatalogEntryID?
     /// How the target resists, as the book states it.
     let resistance: String?
     /// For pools that don't fit the usual shape.
     let text: String?
+
+    enum CodingKeys: CodingKey {
+        case attribute, skill, includesDiscipline, discipline, resistance, text
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        attribute = try container.decodeIfPresent(AttributeKind.self, forKey: .attribute)
+        skill = try container.decodeIfPresent(SkillID.self, forKey: .skill)
+        includesDiscipline = try container.decode(.includesDiscipline, default: false)
+        discipline = try container.decodeIfPresent(CatalogEntryID.self, forKey: .discipline)
+        resistance = try container.decodeIfPresent(String.self, forKey: .resistance)
+        text = try container.decodeIfPresent(String.self, forKey: .text)
+    }
 }
 
 // MARK: - Merits
@@ -304,6 +370,137 @@ struct CovenantEntry: CatalogEntry {
     let nickname: String?
     let source: SourceReference
     let summary: String
+}
+
+// MARK: - Blood sorcery, Devotions, Coils and Scales
+
+/// A Crúac rite or Theban miracle.
+struct RitualEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    /// The Ritual Discipline that casts it, e.g. "cruac".
+    let discipline: CatalogEntryID
+    let dots: Int
+    let source: SourceReference
+    let targetSuccesses: Int
+    /// The victim's contesting pool, if the ritual is contested.
+    let contestedBy: String?
+    /// The victim's resistance, if the ritual is resisted.
+    let resistedBy: String?
+    /// The object a Theban miracle consumes.
+    let sacrament: String?
+    let summary: String
+}
+
+/// A power that combines Disciplines, learned for a set number of Experiences.
+struct DevotionEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    let source: SourceReference
+    /// The Discipline dots needed to learn it.
+    let prerequisites: [Prerequisite]
+    /// Alternative sets of prerequisites, any one of which is enough.
+    let prerequisitesAnyOf: [[Prerequisite]]
+    let cost: Cost
+    let dicePool: DicePool?
+    let action: String?
+    let duration: String?
+    /// Anything else needed to use it, in brief.
+    let requirement: String?
+    let experienceCost: Int
+    let summary: String
+
+    enum CodingKeys: CodingKey {
+        case id, name, source, prerequisites, prerequisitesAnyOf, cost, dicePool
+        case action, duration, requirement, experienceCost, summary
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        prerequisites = try container.decode(.prerequisites, default: [])
+        prerequisitesAnyOf = try container.decode(.prerequisitesAnyOf, default: [])
+        cost = try container.decode(.cost, default: Cost())
+        dicePool = try container.decodeIfPresent(DicePool.self, forKey: .dicePool)
+        action = try container.decodeIfPresent(String.self, forKey: .action)
+        duration = try container.decodeIfPresent(String.self, forKey: .duration)
+        requirement = try container.decodeIfPresent(String.self, forKey: .requirement)
+        experienceCost = try container.decode(Int.self, forKey: .experienceCost)
+        summary = try container.decode(String.self, forKey: .summary)
+    }
+}
+
+/// An Ordo Dracul Mystery and its Coil, a ladder of five tiers.
+struct MysteryEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    let source: SourceReference
+    let summary: String
+    let coil: CoilInfo
+    /// One per dot, in order.
+    let tiers: [CoilTier]
+
+    func tier(_ dots: Int) -> CoilTier? {
+        tiers.first { $0.dots == dots }
+    }
+}
+
+struct CoilInfo: Decodable {
+    /// e.g. "Coil of the Ascendant".
+    let name: String
+    let summary: String
+}
+
+struct CoilTier: Decodable, Identifiable {
+    let id: CatalogEntryID
+    let dots: Int
+    let name: String
+    let page: Int?
+    let summary: String
+}
+
+/// An Ordo Dracul technique that shares a Coil's insight with others.
+struct ScaleEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    /// The Mystery it belongs to.
+    let mystery: CatalogEntryID
+    let source: SourceReference
+    /// The Coil tiers it resonates with. Learning it costs less with one of them.
+    let prerequisiteCoils: [CoilPrerequisite]
+    let cost: Cost
+    let dicePool: DicePool?
+    let action: String?
+    let duration: String?
+    let summary: String
+
+    enum CodingKeys: CodingKey {
+        case id, name, mystery, source, prerequisiteCoils, cost, dicePool, action, duration, summary
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        mystery = try container.decode(String.self, forKey: .mystery)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        prerequisiteCoils = try container.decode(.prerequisiteCoils, default: [])
+        cost = try container.decode(.cost, default: Cost())
+        dicePool = try container.decodeIfPresent(DicePool.self, forKey: .dicePool)
+        action = try container.decodeIfPresent(String.self, forKey: .action)
+        duration = try container.decodeIfPresent(String.self, forKey: .duration)
+        summary = try container.decode(String.self, forKey: .summary)
+    }
+}
+
+/// A Coil tier, e.g. the Mystery of the Ascendant's first tier.
+struct CoilPrerequisite: Decodable, Equatable {
+    let mystery: CatalogEntryID
+    /// The tier's id, for reference.
+    let tier: CatalogEntryID
+    let dots: Int
 }
 
 // MARK: - Effects

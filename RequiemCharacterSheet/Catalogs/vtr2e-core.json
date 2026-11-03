@@ -1030,6 +1030,58 @@
           "amount": "rating"
         }
       ]
+    },
+    {
+      "id": "cruac",
+      "name": "Crúac",
+      "kind": "ritual",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 150
+      },
+      "summary": "Circle of the Crone blood magic fuelled by the Beast and spilled Vitae.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "circle-of-the-crone",
+        "covenantStatusMinimum": 1,
+        "humanity": "capAtTenMinusDots",
+        "castingCost": {
+          "vitae": "varies",
+          "note": "1 Vitae per dot of the rite"
+        },
+        "castingPool": {
+          "attribute": "manipulation",
+          "skill": "occult",
+          "includesDiscipline": true
+        }
+      }
+    },
+    {
+      "id": "theban-sorcery",
+      "name": "Theban Sorcery",
+      "kind": "ritual",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 150
+      },
+      "summary": "Lancea et Sanctum miracles invoking God's Curse through faith and sacrament.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "lancea-et-sanctum",
+        "covenantStatusMinimum": 1,
+        "humanity": "atLeastRitualDots",
+        "castingCost": {
+          "willpower": {
+            "fixed": 1
+          },
+          "note": "Plus the miracle's sacrament"
+        },
+        "castingPool": {
+          "attribute": "intelligence",
+          "skill": "academics",
+          "includesDiscipline": true
+        }
+      }
     }
   ],
   "merits": [
@@ -3350,6 +3402,1562 @@
         "page": 44
       },
       "summary": "Occult seekers following Dracula's example, studying the supernatural to transcend the vampiric curse."
+    }
+  ],
+  "rituals": [
+    {
+      "id": "pangs-of-proserpina",
+      "name": "Pangs of Proserpina",
+      "discipline": "cruac",
+      "dots": 1,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 152
+      },
+      "targetSuccesses": 6,
+      "contestedBy": "Composure + Blood Potency",
+      "summary": "Inflicts ravenous hunger on a target up to a mile away, risking frenzy."
+    },
+    {
+      "id": "rigor-mortis",
+      "name": "Rigor Mortis",
+      "discipline": "cruac",
+      "dots": 1,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 152
+      },
+      "targetSuccesses": 5,
+      "resistedBy": "Composure",
+      "summary": "Stiffens a nearby vampire; their next physical action takes a -3 penalty."
+    },
+    {
+      "id": "cheval",
+      "name": "Cheval",
+      "discipline": "cruac",
+      "dots": 2,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 152
+      },
+      "targetSuccesses": 5,
+      "resistedBy": "Composure",
+      "summary": "Touched subject becomes the caster's eyes and ears for the night."
+    },
+    {
+      "id": "the-hydras-vitae",
+      "name": "The Hydra’s Vitae",
+      "discipline": "cruac",
+      "dots": 2,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 152
+      },
+      "targetSuccesses": 5,
+      "summary": "Caster's blood turns poisonous to anyone drinking it until sunrise."
+    },
+    {
+      "id": "deflection-of-wooden-doom",
+      "name": "Deflection of Wooden Doom",
+      "discipline": "cruac",
+      "dots": 3,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 6,
+      "summary": "Staking attempts against the caster fail until sunrise."
+    },
+    {
+      "id": "touch-of-the-morrigan",
+      "name": "Touch of the Morrigan",
+      "discipline": "cruac",
+      "dots": 3,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 6,
+      "summary": "Charged palm strike deals lethal damage equal to Potency, once."
+    },
+    {
+      "id": "blood-price",
+      "name": "Blood Price",
+      "discipline": "cruac",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 8,
+      "contestedBy": "Composure + Blood Potency",
+      "summary": "Caster siphons Vitae the present subject drinks, up to Potency, until sunrise."
+    },
+    {
+      "id": "willful-vitae",
+      "name": "Willful Vitae",
+      "discipline": "cruac",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 7,
+      "summary": "Caster is immune to new blood bonds and addiction tonight."
+    },
+    {
+      "id": "blood-blight",
+      "name": "Blood Blight",
+      "discipline": "cruac",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 8,
+      "contestedBy": "Stamina + Blood Potency",
+      "summary": "Destroys target's blood: lethal damage to mortals, Vitae loss to undead."
+    },
+    {
+      "id": "feeding-the-crone",
+      "name": "Feeding the Crone",
+      "discipline": "cruac",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 10,
+      "summary": "Fangs become a vicious maw: +2 aggravated bite, but no Vitae gained."
+    },
+    {
+      "id": "blood-scourge",
+      "name": "Blood Scourge",
+      "discipline": "theban-sorcery",
+      "dots": 1,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 6,
+      "sacrament": "The ritualist's own blood (at least one Vitae)",
+      "summary": "Caster can form a 2L whip from his Vitae before sunrise."
+    },
+    {
+      "id": "vitae-reliquary",
+      "name": "Vitae Reliquary",
+      "discipline": "theban-sorcery",
+      "dots": 1,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 5,
+      "sacrament": "Any object up to Size 3",
+      "summary": "Stores up to Potency Vitae in an object for a lunar month."
+    },
+    {
+      "id": "blandishment-of-sin",
+      "name": "Blandishment of Sin",
+      "discipline": "theban-sorcery",
+      "dots": 1,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 5,
+      "contestedBy": "Resolve + Blood Potency",
+      "sacrament": "Paper bearing the victim's name",
+      "summary": "Next bashing damage the named victim takes becomes lethal."
+    },
+    {
+      "id": "curse-of-babel",
+      "name": "Curse of Babel",
+      "discipline": "theban-sorcery",
+      "dots": 2,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 6,
+      "resistedBy": "Resolve",
+      "sacrament": "An animal or human tongue",
+      "summary": "Target within a mile cannot speak or write until sunrise."
+    },
+    {
+      "id": "liars-plague",
+      "name": "Liar’s Plague",
+      "discipline": "theban-sorcery",
+      "dots": 2,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 5,
+      "contestedBy": "Resolve + Blood Potency",
+      "sacrament": "An insect carapace",
+      "summary": "Present victim who lies during the next scene coughs up beetles."
+    },
+    {
+      "id": "malediction-of-despair",
+      "name": "Malediction of Despair",
+      "discipline": "theban-sorcery",
+      "dots": 3,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 154
+      },
+      "targetSuccesses": 13,
+      "contestedBy": "Resolve + Blood Potency",
+      "sacrament": "A lock of the victim's hair",
+      "summary": "Victim's next attempt at a chosen action suffers -5 dice, once."
+    },
+    {
+      "id": "stigmata",
+      "name": "Stigmata",
+      "discipline": "theban-sorcery",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 154
+      },
+      "targetSuccesses": 5,
+      "resistedBy": "Stamina",
+      "sacrament": "A crucifix",
+      "summary": "Victim bleeds for Potency turns: lethal damage or Vitae loss each turn."
+    },
+    {
+      "id": "gift-of-lazarus",
+      "name": "Gift of Lazarus",
+      "discipline": "theban-sorcery",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 154
+      },
+      "targetSuccesses": 8,
+      "sacrament": "A communion wafer under the corpse's tongue",
+      "summary": "Animates a corpse as a Willpower-less servant for up to a month."
+    },
+    {
+      "id": "transubstantiation",
+      "name": "Transubstantiation",
+      "discipline": "theban-sorcery",
+      "dots": 5,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 154
+      },
+      "targetSuccesses": 8,
+      "contestedBy": "Stamina + Blood Potency",
+      "sacrament": "A drop of liquid gold",
+      "summary": "Changes a present thing no bigger than the caster into another substance until sunrise."
+    }
+  ],
+  "devotions": [
+    {
+      "id": "body-of-will",
+      "name": "Body of Will",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 142
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "stamina",
+        "skill": "survival",
+        "discipline": "resilience"
+      },
+      "action": "reflexive",
+      "experienceCost": 2,
+      "summary": "Ignore wound penalties briefly; taking damage fuels one free Vigor effect."
+    },
+    {
+      "id": "chain-of-command",
+      "name": "Chain of Command",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 142
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        }
+      },
+      "dicePool": {
+        "attribute": "intelligence",
+        "skill": "persuasion",
+        "discipline": "dominate",
+        "resistance": "Resolve + Blood Potency"
+      },
+      "action": "contested",
+      "experienceCost": 2,
+      "summary": "Plant a stored Dominate command in someone, to be used on a chosen target later."
+    },
+    {
+      "id": "cloak-the-gathering",
+      "name": "Cloak the Gathering",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 142
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        },
+        "note": "Paid on top of Touch of Shadow; Cloak of Night extra cost also applies"
+      },
+      "dicePool": null,
+      "action": "none",
+      "experienceCost": 2,
+      "summary": "Extend Touch of Shadow and Cloak of Night to hide a group alongside you."
+    },
+    {
+      "id": "conditioning",
+      "name": "Conditioning",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 4
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {},
+      "dicePool": {
+        "attribute": "wits",
+        "skill": "subterfuge",
+        "discipline": "dominate",
+        "resistance": "Resolve + Blood Potency"
+      },
+      "action": "instant",
+      "requirement": "Target must already be Mesmerized by the vampire; usable on the same target once every two nights.",
+      "experienceCost": 2,
+      "summary": "Gradually wear down a Mesmerized victim into Subservience, then Enslavement."
+    },
+    {
+      "id": "cross-contamination",
+      "name": "Cross-Contamination",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 1
+        },
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {},
+      "dicePool": {
+        "text": "Presence + Empathy + Lower of Majesty or Nightmare"
+      },
+      "action": "instant",
+      "experienceCost": 1,
+      "summary": "Mixed aura of awe and dread disorients onlookers and draws every eye."
+    },
+    {
+      "id": "cult-of-personality",
+      "name": "Cult of Personality",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 10
+        }
+      },
+      "dicePool": {
+        "attribute": "presence",
+        "skill": "socialize",
+        "discipline": "majesty"
+      },
+      "action": "instant",
+      "experienceCost": 4,
+      "summary": "Apply Loyalty to a whole crowd, Enthralling everyone weaker-willed."
+    },
+    {
+      "id": "enchantment",
+      "name": "Enchantment",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "manipulation",
+        "skill": "empathy",
+        "discipline": "majesty",
+        "resistance": "Composure + Blood Potency"
+      },
+      "action": "contested",
+      "experienceCost": 2,
+      "summary": "Loyalty that binds the victim's devotion to another person, place or object."
+    },
+    {
+      "id": "enfeebling-aura",
+      "name": "Enfeebling Aura",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 1
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "presence",
+        "skill": "intimidation",
+        "discipline": "majesty",
+        "resistance": "Composure + Blood Potency"
+      },
+      "action": "contested",
+      "experienceCost": 3,
+      "summary": "Trade your own Majesty dots to strip a foe's physical Disciplines for the scene."
+    },
+    {
+      "id": "foul-grave",
+      "name": "Foul Grave",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 144
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 1
+        },
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 1,
+      "summary": "Sense nearby beings and use predatory aura while buried in Unmarked Grave."
+    },
+    {
+      "id": "force-of-nature",
+      "name": "Force of Nature",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 144
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 8
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 5,
+      "summary": "Freely mix Protean aspect benefits and reshuffle Physical Attributes for a scene."
+    },
+    {
+      "id": "gargoyles-vigilance",
+      "name": "Gargoyle’s Vigilance",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 144
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 1
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "note": "Use while asleep costs 1 Willpower"
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 1,
+      "summary": "Stay still in your haven to watch all of it and pounce on intruders."
+    },
+    {
+      "id": "hint-of-fear",
+      "name": "Hint of Fear",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 144
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "celerity",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "note": "Plus Face of the Beast's own cost"
+      },
+      "dicePool": {
+        "text": "None, roll normally for Face of the Beast"
+      },
+      "action": "reflexive",
+      "experienceCost": 2,
+      "summary": "Use Face of the Beast reflexively with a fleeting, unnoticed glance."
+    },
+    {
+      "id": "juggernauts-gait",
+      "name": "Juggernaut’s Gait",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 145
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 5
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 5
+        },
+        "note": "Per turn"
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 4,
+      "summary": "Become totally immune to damage for each turn you pay for."
+    },
+    {
+      "id": "quicken-sight",
+      "name": "Quicken Sight",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 145
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 1
+        },
+        {
+          "kind": "discipline",
+          "id": "celerity",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 1,
+      "summary": "For one turn perceive in slow motion; Defense applies against ranged attacks."
+    },
+    {
+      "id": "reasons-salon",
+      "name": "Reason’s Salon",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 146
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "animalism",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 5
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 3,
+      "summary": "Anoint a venue so vampires there struggle with predatory aura and resist frenzy."
+    },
+    {
+      "id": "riot",
+      "name": "Riot",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 146
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "animalism",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 10
+        }
+      },
+      "dicePool": {
+        "attribute": "presence",
+        "skill": "animal-ken",
+        "discipline": "majesty"
+      },
+      "action": "instant",
+      "experienceCost": 5,
+      "summary": "Drive a whole neighbourhood into violent chaos; a severe Humanity breaking point."
+    },
+    {
+      "id": "shared-sight",
+      "name": "Shared Sight",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 146
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        }
+      },
+      "dicePool": {
+        "attribute": "intelligence",
+        "skill": "empathy",
+        "discipline": "auspex"
+      },
+      "action": "instant",
+      "experienceCost": 2,
+      "summary": "Lend some of your Auspex dots to another for the scene."
+    },
+    {
+      "id": "shatter-the-shroud",
+      "name": "Shatter the Shroud",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 146
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 2,
+      "summary": "After beating a concealment power, end it outright for the target."
+    },
+    {
+      "id": "stalwart-servant",
+      "name": "Stalwart Servant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 146
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 2,
+      "summary": "A servant who drinks your blood borrows your Resilience for a night."
+    },
+    {
+      "id": "subsume-the-lesser-beast",
+      "name": "Subsume the Lesser Beast",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 147
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "animalism",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "manipulation",
+        "skill": "animal-ken",
+        "discipline": "animalism",
+        "resistance": "− animal’s Resolve"
+      },
+      "action": "reflexive",
+      "requirement": "Feed the animal 1 Vitae (included in the cost).",
+      "experienceCost": 3,
+      "summary": "Possess a predator or vermin animal while your own body lies dormant."
+    },
+    {
+      "id": "summoning",
+      "name": "Summoning",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 147
+      },
+      "prerequisites": [],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "discipline",
+            "id": "dominate",
+            "minimum": 4
+          }
+        ],
+        [
+          {
+            "kind": "discipline",
+            "id": "majesty",
+            "minimum": 4
+          }
+        ]
+      ],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "text": "Manipulation + Persuasion + (Dominate or Majesty) vs. Composure + Blood Potency"
+      },
+      "action": "contested",
+      "duration": "1 night",
+      "requirement": "Dominate version: target Mesmerized by the vampire within the past year. Majesty version: target affected by Awe within the past year.",
+      "experienceCost": 2,
+      "summary": "Compel someone you know, anywhere, to journey to you. Learned via one Discipline."
+    },
+    {
+      "id": "suns-brutal-dreamscape",
+      "name": "Sun’s Brutal Dreamscape",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 148
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 5
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "manipulation",
+        "skill": "empathy",
+        "discipline": "nightmare",
+        "resistance": "Composure + Blood Potency"
+      },
+      "action": "contested",
+      "experienceCost": 4,
+      "summary": "A touched sleeping vampire also suffers any sunlight burns you take."
+    },
+    {
+      "id": "touch-of-deprivation",
+      "name": "Touch of Deprivation",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 148
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "intelligence",
+        "skill": "medicine",
+        "discipline": "auspex",
+        "resistance": "Resolve + Blood Potency"
+      },
+      "action": "instant",
+      "experienceCost": 3,
+      "summary": "A touch shuts off one of the victim's senses for the scene."
+    },
+    {
+      "id": "undying-familiar",
+      "name": "Undying Familiar",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 148
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "animalism",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 1,
+      "summary": "A ghouled animal rises as a long-lasting undead familiar when it dies."
+    },
+    {
+      "id": "wet-dream",
+      "name": "Wet Dream",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 148
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "manipulation",
+        "skill": "empathy",
+        "discipline": "majesty",
+        "resistance": "Composure + Blood Potency"
+      },
+      "action": "contested",
+      "experienceCost": 2,
+      "summary": "Haunt the target's next sleep, leaving them both Spooked and Swooning."
+    },
+    {
+      "id": "the-wish",
+      "name": "The Wish",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 148
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "celerity",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 5
+        }
+      },
+      "dicePool": {
+        "attribute": "manipulation",
+        "skill": "persuasion",
+        "discipline": "majesty"
+      },
+      "action": "instant",
+      "experienceCost": 2,
+      "summary": "A consenting mortal gets three nights of borrowed power, then belongs to you."
+    },
+    {
+      "id": "vermin-flood",
+      "name": "Vermin Flood",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 149
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "animalism",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "celerity",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 10
+        }
+      },
+      "dicePool": {
+        "attribute": "presence",
+        "skill": "animal-ken",
+        "discipline": "animalism"
+      },
+      "action": "instant",
+      "experienceCost": 4,
+      "summary": "Call a devouring swarm of small creatures to scour a small area."
+    },
+    {
+      "id": "wraiths-presence",
+      "name": "Wraith’s Presence",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 149
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "wits",
+        "skill": "subterfuge",
+        "discipline": "obfuscate"
+      },
+      "action": "instant",
+      "experienceCost": 2,
+      "summary": "While cloaked, project a silent decoy image of something elsewhere."
+    }
+  ],
+  "mysteries": [
+    {
+      "id": "mystery-of-the-ascendant",
+      "name": "Mystery of the Ascendant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 155
+      },
+      "summary": "Seeks to overcome sunlight and fire so a Dragon can walk by day.",
+      "coil": {
+        "name": "Coil of the Ascendant",
+        "summary": "Gradually loosens the banes of daysleep, fire and sunlight."
+      },
+      "tiers": [
+        {
+          "dots": 1,
+          "id": "surmounting-the-daysleep",
+          "name": "Surmounting the Daysleep",
+          "page": 155,
+          "summary": "With blush of life active, no daysleep roll and no Lethargic Condition by day."
+        },
+        {
+          "dots": 2,
+          "id": "the-warm-face",
+          "name": "The Warm Face",
+          "page": 156,
+          "summary": "Blush of life lasts 24 hours instead of one scene."
+        },
+        {
+          "dots": 3,
+          "id": "conquer-the-red-fear",
+          "name": "Conquer the Red Fear",
+          "page": 156,
+          "summary": "No longer risks fear frenzy from fire or sunlight."
+        },
+        {
+          "dots": 4,
+          "id": "peace-with-the-flame",
+          "name": "Peace with the Flame",
+          "page": 156,
+          "summary": "With blush of life, fire deals lethal; each Resilience dot downgrades one to bashing."
+        },
+        {
+          "dots": 5,
+          "id": "suns-forgotten-kiss",
+          "name": "Sun's Forgotten Kiss",
+          "page": 156,
+          "summary": "Extra Vitae on blush of life lowers effective Blood Potency for sunlight intervals."
+        }
+      ]
+    },
+    {
+      "id": "mystery-of-the-wyrm",
+      "name": "Mystery of the Wyrm",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 157
+      },
+      "summary": "Treats the Requiem as a gift and trains the Beast to obey.",
+      "coil": {
+        "name": "Coil of the Wyrm",
+        "summary": "Lets the Dragon wake, harness and ride frenzy for power."
+      },
+      "tiers": [
+        {
+          "dots": 1,
+          "id": "stir-the-beast",
+          "name": "Stir the Beast",
+          "page": 157,
+          "summary": "Spend 1 Willpower, reflexively frenzy toward a chosen goal; escape rolls at -2 until met."
+        },
+        {
+          "dots": 2,
+          "id": "beasts-hunger",
+          "name": "Beast's Hunger",
+          "page": 157,
+          "summary": "In frenzy, add Wyrm Coil dots to Blood Potency for senses and predatory aura."
+        },
+        {
+          "dots": 3,
+          "id": "leash-the-beast",
+          "name": "Leash the Beast",
+          "page": 157,
+          "summary": "Riding the wave costs no Willpower; add Wyrm Coil dots to the roll."
+        },
+        {
+          "dots": 4,
+          "id": "beasts-power",
+          "name": "Beast's Power",
+          "page": 157,
+          "summary": "Abandon resistance in frenzy to add Blood Potency to Defense, Health and Speed."
+        },
+        {
+          "dots": 5,
+          "id": "eternal-frenzy",
+          "name": "Eternal Frenzy",
+          "page": 157,
+          "summary": "No torpor from full lethal while frenzied; frenzy may persist across scenes."
+        }
+      ]
+    },
+    {
+      "id": "mystery-of-the-voivode",
+      "name": "Mystery of the Voivode",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 158
+      },
+      "summary": "Masters the blood bond to rule others while answering to no one.",
+      "coil": {
+        "name": "Coil of the Voivode",
+        "summary": "Strengthens addiction, bonds and Embrace while shielding the Dragon from control."
+      },
+      "tiers": [
+        {
+          "dots": 1,
+          "id": "taste-of-fealty",
+          "name": "Taste of Fealty",
+          "page": 158,
+          "summary": "Vitae counts double for addiction; addicts can only sate Deprived on Coil-holder Vitae."
+        },
+        {
+          "dots": 2,
+          "id": "into-the-fold",
+          "name": "Into the Fold",
+          "page": 158,
+          "summary": "Gains blood sympathy with bound subjects; closer bond stage means nearer kinship."
+        },
+        {
+          "dots": 3,
+          "id": "call-to-serve",
+          "name": "Call to Serve",
+          "page": 158,
+          "summary": "Extra Vitae jumps a bond: three for stage two, five for stage three."
+        },
+        {
+          "dots": 4,
+          "id": "voivode-undisputed",
+          "name": "Voivode Undisputed",
+          "page": 158,
+          "summary": "Blood sympathy gives no Discipline bonus against her; adds it to resist bonds and aura."
+        },
+        {
+          "dots": 5,
+          "id": "the-vast-dynasty",
+          "name": "The Vast Dynasty",
+          "page": 158,
+          "summary": "Embrace becomes a Humanity 3 breaking point with +1 die, not automatic loss."
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "day-wake-conditioning",
+      "name": "Day-Wake Conditioning",
+      "mystery": "mystery-of-the-ascendant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 156
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-ascendant",
+          "tier": "surmounting-the-daysleep",
+          "dots": 1
+        }
+      ],
+      "cost": {},
+      "dicePool": null,
+      "duration": "Indefinite while the subject sleeps in bright light nightly; lapses after more than two days without",
+      "summary": "Reverses a vampire subject's sleep cycle: awake by day, asleep at night."
+    },
+    {
+      "id": "epidermal-shielding-bath",
+      "name": "Epidermal Shielding Bath",
+      "mystery": "mystery-of-the-ascendant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 156
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-ascendant",
+          "tier": "suns-forgotten-kiss",
+          "dots": 5
+        }
+      ],
+      "cost": {
+        "vitae": "varies",
+        "note": "Dragon bleeds Vitae into the bath; each point gives +1 effective Humanity vs sunlight"
+      },
+      "dicePool": null,
+      "duration": "24 hours",
+      "summary": "Hour-long alchemical bath raises a Kindred's effective Humanity against sunlight damage."
+    },
+    {
+      "id": "flesh-graft-treatment",
+      "name": "Flesh Graft Treatment",
+      "mystery": "mystery-of-the-ascendant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 156
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-ascendant",
+          "tier": "peace-with-the-flame",
+          "dots": 4
+        }
+      ],
+      "cost": {
+        "note": "Mortal subjects need Dragon's Vitae in the injection, causing a stage-two blood bond (may make a ghoul)"
+      },
+      "dicePool": null,
+      "summary": "Blood-soaked grafts let Kindred heal aggravated as lethal; mortals heal lethal with Vitae."
+    },
+    {
+      "id": "augmented-vitae-draught",
+      "name": "Augmented Vitae Draught",
+      "mystery": "mystery-of-the-wyrm",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 157
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-wyrm",
+          "tier": "beasts-power",
+          "dots": 4
+        }
+      ],
+      "cost": {
+        "vitae": "varies",
+        "note": "Vitae spent as for Physical Intensity is drained into a container instead"
+      },
+      "dicePool": null,
+      "duration": "Stored Vitae lasts hours equal to Blood Potency; boost lasts one scene in a mortal",
+      "summary": "Bottled Vitae gives a mortal a scene-long physical boost, then bashing damage and addiction."
+    },
+    {
+      "id": "kindred-sense-endowment",
+      "name": "Kindred Sense Endowment",
+      "mystery": "mystery-of-the-wyrm",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 157
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-wyrm",
+          "tier": "beasts-hunger",
+          "dots": 2
+        }
+      ],
+      "cost": {},
+      "dicePool": null,
+      "duration": "About 24 hours",
+      "summary": "Mortal gains Blood Potency 2 blood senses plus a sickening thirst for blood."
+    },
+    {
+      "id": "surgical-heart-removal",
+      "name": "Surgical Heart Removal",
+      "mystery": "mystery-of-the-wyrm",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 158
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-wyrm",
+          "tier": "eternal-frenzy",
+          "dots": 5
+        }
+      ],
+      "cost": {},
+      "dicePool": {
+        "text": "Intelligence + Medicine (extended, 10 successes, 1 hour per roll)"
+      },
+      "action": "extended",
+      "duration": "Until reversed with an identical roll",
+      "summary": "Removing a Kindred's heart prevents staking but stops feeding; heart's destruction kills."
+    },
+    {
+      "id": "blood-cleansing-ritual",
+      "name": "Blood Cleansing Ritual",
+      "mystery": "mystery-of-the-voivode",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 158
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-voivode",
+          "tier": "taste-of-fealty",
+          "dots": 1
+        }
+      ],
+      "cost": {
+        "vitae": "varies",
+        "note": "One repetition (and roll) per Vitae mixed into the wash"
+      },
+      "dicePool": {
+        "text": "Dragon's Blood Potency - bond creator's Blood Potency"
+      },
+      "duration": "Permanent",
+      "summary": "Torturous wash can permanently break a subject's blood bond to another vampire."
+    },
+    {
+      "id": "fealtys-reward",
+      "name": "Fealty's Reward",
+      "mystery": "mystery-of-the-voivode",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 159
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-voivode",
+          "tier": "call-to-serve",
+          "dots": 3
+        }
+      ],
+      "cost": {
+        "vitae": "varies",
+        "note": "Dragon feeds the subject near death, then returns the blood as Vitae"
+      },
+      "dicePool": null,
+      "duration": "One year; renewable only by the Dragon",
+      "summary": "Turns a stage-three bound mortal into a year-long ghoul who becomes a draugr on lapse."
+    },
+    {
+      "id": "mass-embrace",
+      "name": "Mass Embrace",
+      "mystery": "mystery-of-the-voivode",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 159
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-voivode",
+          "tier": "the-vast-dynasty",
+          "dots": 5
+        }
+      ],
+      "cost": {
+        "vitae": "varies",
+        "note": "Dragon bleeds out all her Vitae; costs a Humanity dot like a normal Embrace"
+      },
+      "dicePool": {
+        "text": "Chance die per subject"
+      },
+      "duration": "Permanent",
+      "summary": "Embraces a group at once; each subject's chance die decides control, frenzy or draugr."
+    },
+    {
+      "id": "sanguinary-invigoration",
+      "name": "Sanguinary Invigoration",
+      "mystery": "mystery-of-the-voivode",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 159
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "mystery-of-the-voivode",
+          "tier": "into-the-fold",
+          "dots": 2
+        }
+      ],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "duration": "One week",
+      "summary": "Injected vessel can feed high-Potency Kindred; Dragon smells it from much farther away."
     }
   ]
 }

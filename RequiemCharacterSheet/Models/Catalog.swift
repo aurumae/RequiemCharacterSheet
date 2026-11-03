@@ -5,7 +5,8 @@
 
 import Foundation
 
-/// Reference data for Disciplines, Merits, Banes, Clans and Covenants, merged from every catalog file.
+/// Reference data for Disciplines, Merits, Banes, Clans, Covenants, rituals, Devotions, Mysteries and Scales,
+/// merged from every catalog file.
 struct Catalog {
     let books: [Book]
     let disciplines: CatalogIndex<DisciplineEntry>
@@ -13,6 +14,10 @@ struct Catalog {
     let banes: CatalogIndex<BaneEntry>
     let clans: CatalogIndex<ClanEntry>
     let covenants: CatalogIndex<CovenantEntry>
+    let rituals: CatalogIndex<RitualEntry>
+    let devotions: CatalogIndex<DevotionEntry>
+    let mysteries: CatalogIndex<MysteryEntry>
+    let scales: CatalogIndex<ScaleEntry>
 
     /// Merges files in order; if two files use the same id for the same kind of entry, the first wins.
     init(files: [CatalogFile]) {
@@ -22,6 +27,10 @@ struct Catalog {
         banes = CatalogIndex(files.flatMap(\.banes))
         clans = CatalogIndex(files.flatMap(\.clans))
         covenants = CatalogIndex(files.flatMap(\.covenants))
+        rituals = CatalogIndex(files.flatMap(\.rituals))
+        devotions = CatalogIndex(files.flatMap(\.devotions))
+        mysteries = CatalogIndex(files.flatMap(\.mysteries))
+        scales = CatalogIndex(files.flatMap(\.scales))
     }
 
     func book(_ id: String) -> Book? {

@@ -20,7 +20,8 @@ final class Character: Codable {
     /// - 5: Disciplines, Merits, Banes, clan and covenant saved as a catalog id or custom text (`TraitSource`)
     ///   instead of a name; Merits gain a qualifier.
     /// - 6: adds `clanBaneActive`.
-    static let currentSchemaVersion = 6
+    /// - 7: adds `rituals`, `devotions`, `mystery`, `coils` and `scales`.
+    static let currentSchemaVersion = 7
 
     /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
     static let maxBanes = 3
@@ -87,6 +88,14 @@ final class Character: Codable {
 
     var disciplines: [Discipline]
     var merits: [Merit]
+    /// Crúac rites and Theban miracles.
+    var rituals: [Ritual]
+    var devotions: [Devotion]
+    /// The Ordo Dracul Mystery the character follows, whose Coil is cheaper to learn. Empty custom text if none.
+    var mysterySource: TraitSource
+    /// Dots in each Mystery's Coil, the character's own Mystery and any others.
+    var coils: [Coil]
+    var scales: [Scale]
 
     var aspirations: [Aspiration]
     var banes: [Bane]
@@ -102,7 +111,7 @@ final class Character: Codable {
              attributes, bloodPotency, healthTrack, willpowerTrack, skills, skillList,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              currentVitae, humanity, clanBaneActive, touchstones, disciplines, merits,
-             aspirations, banes, size, armor, beats, experiences
+             rituals, devotions, mystery, coils, scales, aspirations, banes, size, armor, beats, experiences
         // Read from saves before version 3 only
         case healthBoxes, willpowerBoxes
     }
@@ -141,6 +150,11 @@ final class Character: Codable {
 
         try container.encode(disciplines, forKey: .disciplines)
         try container.encode(merits, forKey: .merits)
+        try container.encode(rituals, forKey: .rituals)
+        try container.encode(devotions, forKey: .devotions)
+        try container.encode(mysterySource, forKey: .mystery)
+        try container.encode(coils, forKey: .coils)
+        try container.encode(scales, forKey: .scales)
 
         try container.encode(aspirations, forKey: .aspirations)
         try container.encode(banes, forKey: .banes)
@@ -204,6 +218,11 @@ final class Character: Codable {
 
         disciplines = try container.decode(.disciplines, default: [])
         merits = try container.decode(.merits, default: [])
+        rituals = try container.decode(.rituals, default: [])
+        devotions = try container.decode(.devotions, default: [])
+        mysterySource = try container.decodeTraitSource(.mystery, in: Catalog.bundled.mysteries)
+        coils = try container.decode(.coils, default: [])
+        scales = try container.decode(.scales, default: [])
 
         aspirations = try container.decode(.aspirations, default: [Aspiration()])
         banes = try container.decode(.banes, default: [])
@@ -253,6 +272,11 @@ final class Character: Codable {
 
         disciplines = [] // Added through the Discipline picker
         merits = [] // Added through the Merit picker
+        rituals = []
+        devotions = []
+        mysterySource = .custom("")
+        coils = []
+        scales = []
 
         aspirations = [Aspiration()] // Start with one empty Aspiration
         banes = [] // Added through the Bane picker
@@ -326,6 +350,16 @@ final class Character: Codable {
     var covenant: String {
         get { Catalog.bundled.covenants.name(of: covenantSource) }
         set { covenantSource = Catalog.bundled.covenants.source(named: newValue) }
+    }
+
+    /// The Ordo Dracul Mystery's name. Setting it links to the catalog Mystery with that name, if there is one.
+    var mystery: String {
+        get { Catalog.bundled.mysteries.name(of: mysterySource) }
+        set { mysterySource = Catalog.bundled.mysteries.source(named: newValue) }
+    }
+
+    var mysteryEntry: MysteryEntry? {
+        mysterySource.catalogID.flatMap { Catalog.bundled.mysteries.entry($0) }
     }
 
     var clanEntry: ClanEntry? {
