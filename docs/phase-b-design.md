@@ -7,6 +7,9 @@ Status: **agreed 2026-11-03**, with the decisions below. Implementation in progr
 - **Summaries are our own wording.** Book excerpts and the Codex of Darkness are references for facts only (names, dots, costs, pools, prerequisites, pages). No book text ships in the app.
 - **Scope:** core-book Disciplines, Merits, Banes, Clans and Covenants, plus the Akhud clan and Praestantia from *A Thousand Years of Night*. Devotions, Crúac and Theban rituals, and Coils of the Dragon come in a later phase.
 - **Clans and covenants are catalog-backed.** At least a dozen clans exist across supplements, so clans are data, not code. The clan bane belongs to the clan entry.
+- **Praestantia follows the book:** Dexterity for rolls and Initiative only, not Speed or Defense.
+- **Clan banes** take effect when Humanity falls to 6 (every clan, including Ventrue and Akhud), stay in effect if Humanity rises, and can be switched off by the player in case they were set while trying out changes.
+- **At most three Banes**; the Mekhet's extra Bane is one of them.
 
 ## Goals
 
@@ -142,30 +145,27 @@ Because pools are structured, the sheet can later show each power's **current po
 
 ## 3. Effects
 
-Effects are a closed vocabulary that the rules engine understands. Catalog entries list them. `Character` adds them up instead of matching names.
+Effects are a closed vocabulary that the rules understand. Catalog entries list them, and `Character` adds them up instead of matching names. As implemented (B2):
 
 ```swift
-enum Effect: Codable {
-    case attributeBonus(AttributeKind, Amount)        // Vigor, Resilience, Praestantia
-    case defenseBonus(Amount)                         // Celerity
-    case alternativeDefenseSkill(fromQualifier: Bool) // Defensive Combat (Brawl/Weaponry)
-    case initiativeBonus(Amount)                      // Fast Reflexes
-    case speedBonus(Amount)                           // Fleet of Foot
-    case sizeBonus(Amount)                            // Giant
-    case healthBonus(Amount)
-    // Added as new merits need them
+enum Effect {
+    case attribute(AttributeKind, Amount)       // raises the trait: Vigor, Resilience
+    case attributeRolls(AttributeKind, Amount)  // rolls only: Praestantia (Dexterity)
+    case defense(Amount)                        // Celerity
+    case initiative(Amount)                     // Praestantia, Fast Reflexes
+    case speed(Amount)                          // Fleet of Foot
+    case size(Amount)                           // Giant, Small-Framed (and so Health)
+    case defenseSkillFromQualifier              // Defensive Combat (Brawl/Weaponry)
 }
 
-enum Amount: Codable {
-    case rating                 // the entry's dots
-    case fixed(Int)
-    case perRating([Int])       // index by dots, for uneven tables
-}
+enum Amount { case rating, fixed(Int) }
 ```
 
-The first step of Phase B moves the five existing hard-coded rules onto this system: Vigor, Resilience, Praestantia, Celerity, and Defensive Combat. Tests must show identical totals before and after.
+In JSON: `{"type": "attribute", "attribute": "strength", "amount": "rating"}`. Unknown types are skipped, so a newer or imported catalog can't break loading.
 
-Not in the first version: **activated** effects (spending Vitae to boost Celerity this turn) and conditional effects. The vocabulary can grow to cover them, with a per-character "active" toggle.
+Attributes have two values: the **trait** (with `attribute` bonuses), used for Speed, Defense and Health, and the **roll** value (also with `attributeRolls` bonuses), used for dice pools and shown on the sheet.
+
+Not yet modelled: **activated** effects (spending Vitae to boost Celerity this turn), conditional effects (e.g. Safe Place's Initiative bonus), and wound penalties (Iron Stamina). The vocabulary can grow to cover them.
 
 ## 4. Catalog files
 
@@ -235,11 +235,11 @@ Import uses the system document picker (`fileImporter`), and the file is checked
 
 ## 8. Findings from the source books
 
-- **Praestantia** (*A Thousand Years of Night* p. 29) adds its dots to Dexterity **for rolls** and to **Initiative**, and may exceed the Blood Potency trait maximum. It doesn't mention Speed or Defense. The app currently adds it to Dexterity everywhere, including Speed and Defense. B2 needs a decision on this.
-- **Vigor, Resilience and Celerity** match the app today: Vigor adds to Strength, Resilience to Stamina (so Health), Celerity to Defense.
-- **Defensive Combat, Fast Reflexes, Giant, Iron Stamina and Strong Back** aren't in *Vampire: The Requiem*; they come from the *Chronicles of Darkness* core rulebook. The app already uses Defensive Combat, so it needs that book's entry before B2 can move it to data.
-- **Covenants** aren't described in the excerpts, so their entries have no page numbers yet.
-- **Clan banes** apply from Humanity 6 and stay even if Humanity later rises, so the sheet will need a stored "clan bane active" flag. The Ventrue bane applies from character creation, and the Akhud bane gives no threshold.
+- **Praestantia** (*A Thousand Years of Night* p. 29) adds to Dexterity for rolls and to Initiative, and may exceed the Blood Potency trait maximum. Implemented as such in B2.
+- **Vigor, Resilience and Celerity** matched the app: Vigor adds to Strength, Resilience to Stamina (so Health), Celerity to Defense.
+- **Defensive Combat, Fast Reflexes, Giant, Small-Framed** and other general Merits come from the *Chronicles of Darkness* core rulebook, now a third catalog (`cofd-core.json`). Merits reprinted in *Vampire: The Requiem* use the Requiem version.
+- **Defensive Combat (Weaponry)** only applies while holding a weapon, so the sheet keeps showing it as a separate Defense line.
+- **Clan banes** apply from Humanity 6 and stay even if Humanity rises; stored as `clanBaneActive` (schema version 6).
 - **Banes** (core p. 108–109): at most three, each −1 die to detachment rolls; many scale with Humanity.
 
 ## 9. Order of work
@@ -253,10 +253,10 @@ Import uses the system document picker (`fileImporter`), and the file is checked
 | B5 | Banes catalog and picker | Yes |
 | B6 | Import, Export Template, settings screen | Yes |
 
-B1 and B2 change no behaviour and are covered by tests, so the risky part (data model and migration) lands first.
+B1 and B2 change no behaviour (apart from the Praestantia correction) and are covered by tests, so the risky part (data model and migration) lands first.
+
+**Progress:** B1, B2, the Chronicles of Darkness Merits catalog, and the clan bane flag are done. Next is B3.
 
 ## Open questions
 
-1. **Praestantia:** should it apply to Speed and Defense (as the app does now), or only to rolls and Initiative (as the book says)?
-2. **Chronicles of Darkness Merits:** can you provide the core-rulebook pages for Defensive Combat and the other general Merits the app relies on (Fast Reflexes, Giant, Iron Stamina, Strong Back)?
-3. **Covenants:** can you provide the covenant pages from the core rulebook, so their entries can cite pages?
+None at the moment.
