@@ -1,44 +1,46 @@
 //
-//  RequiemCharacterSheetTests.swift
+//  CharacterRulesTests.swift
 //  RequiemCharacterSheetTests
 //
 //  Created by Oisín McColgan on 16/09/2024.
 //
 
-import XCTest
+import Testing
 @testable import RequiemCharacterSheet
 
-final class RequiemCharacterSheetTests: XCTestCase {
+/// Rating caps, Discipline bonuses, dice pools and Defense.
+@MainActor
+struct CharacterRulesTests {
 
-    func testBloodPotencyCapsBaseRatingsAtFiveUntilBloodPotencySix() {
+    @Test func bloodPotencyCapsBaseRatingsAtFiveUntilBloodPotencySix() {
         let character = Character()
 
         character.bloodPotency = 1
-        XCTAssertEqual(character.baseRatingCap, 5)
-        XCTAssertEqual(character.attributeRatingRange, 1...5)
-        XCTAssertEqual(character.skillRatingRange, 0...5)
+        #expect(character.baseRatingCap == 5)
+        #expect(character.attributeRatingRange == 1...5)
+        #expect(character.skillRatingRange == 0...5)
 
         character.bloodPotency = 5
-        XCTAssertEqual(character.baseRatingCap, 5)
-        XCTAssertEqual(character.attributeRatingRange, 1...5)
-        XCTAssertEqual(character.skillRatingRange, 0...5)
+        #expect(character.baseRatingCap == 5)
+        #expect(character.attributeRatingRange == 1...5)
+        #expect(character.skillRatingRange == 0...5)
     }
 
-    func testBloodPotencyAboveFiveCapsBaseRatingsAtBloodPotency() {
+    @Test func bloodPotencyAboveFiveCapsBaseRatingsAtBloodPotency() {
         let character = Character()
 
         character.bloodPotency = 6
-        XCTAssertEqual(character.baseRatingCap, 6)
-        XCTAssertEqual(character.attributeRatingRange, 1...6)
-        XCTAssertEqual(character.skillRatingRange, 0...6)
+        #expect(character.baseRatingCap == 6)
+        #expect(character.attributeRatingRange == 1...6)
+        #expect(character.skillRatingRange == 0...6)
 
         character.bloodPotency = 10
-        XCTAssertEqual(character.baseRatingCap, 10)
-        XCTAssertEqual(character.attributeRatingRange, 1...10)
-        XCTAssertEqual(character.skillRatingRange, 0...10)
+        #expect(character.baseRatingCap == 10)
+        #expect(character.attributeRatingRange == 1...10)
+        #expect(character.skillRatingRange == 0...10)
     }
 
-    func testBaseRatingsClampWhenBloodPotencyDrops() {
+    @Test func baseRatingsClampWhenBloodPotencyDrops() {
         let character = Character()
         let strength = attribute(named: "Strength", in: character)
         let brawl = skill(named: "Brawl", in: character)
@@ -49,11 +51,11 @@ final class RequiemCharacterSheetTests: XCTestCase {
         character.bloodPotency = 5
 
         // Clamped immediately, not on a later run loop pass
-        XCTAssertEqual(strength.rating, 5)
-        XCTAssertEqual(brawl.rating, 5)
+        #expect(strength.rating == 5)
+        #expect(brawl.rating == 5)
     }
 
-    func testVigorAddsToStrengthTotalAndStrengthDerivedValues() {
+    @Test func vigorAddsToStrengthTotalAndStrengthDerivedValues() {
         let character = Character()
         let strength = attribute(named: "Strength", in: character)
         let brawl = skill(named: "Brawl", in: character)
@@ -62,24 +64,24 @@ final class RequiemCharacterSheetTests: XCTestCase {
         brawl.rating = 2
         character.disciplines = [Discipline(name: "Vigor", rating: 5)]
 
-        XCTAssertEqual(character.totalAttributeRating(for: strength), 15)
-        XCTAssertEqual(character.speed, 21)
-        XCTAssertEqual(character.brawlDicePool, 17)
+        #expect(character.totalAttributeRating(for: strength) == 15)
+        #expect(character.speed == 21)
+        #expect(character.brawlDicePool == 17)
     }
 
-    func testResilienceAddsToStaminaTotalAndHealth() {
+    @Test func resilienceAddsToStaminaTotalAndHealth() {
         let character = Character()
         let stamina = attribute(named: "Stamina", in: character)
 
         stamina.rating = 4
         character.disciplines = [Discipline(name: "Resilience", rating: 3)]
 
-        XCTAssertEqual(character.totalAttributeRating(for: stamina), 7)
-        XCTAssertEqual(character.adjustedStamina, 7)
-        XCTAssertEqual(character.health, 12)
+        #expect(character.totalAttributeRating(for: stamina) == 7)
+        #expect(character.adjustedStamina == 7)
+        #expect(character.health == 12)
     }
 
-    func testPraestantiaAddsToDexterityTotalAndDexterityDerivedValues() {
+    @Test func praestantiaAddsToDexterityTotalAndDexterityDerivedValues() {
         let character = Character()
         let dexterity = attribute(named: "Dexterity", in: character)
         let composure = attribute(named: "Composure", in: character)
@@ -90,13 +92,13 @@ final class RequiemCharacterSheetTests: XCTestCase {
         firearms.rating = 2
         character.disciplines = [Discipline(name: "Praestantia", rating: 5)]
 
-        XCTAssertEqual(character.totalAttributeRating(for: dexterity), 9)
-        XCTAssertEqual(character.speed, 15)
-        XCTAssertEqual(character.initiativeMod, 12)
-        XCTAssertEqual(character.firearmsDicePool, 11)
+        #expect(character.totalAttributeRating(for: dexterity) == 9)
+        #expect(character.speed == 15)
+        #expect(character.initiativeMod == 12)
+        #expect(character.firearmsDicePool == 11)
     }
 
-    func testCombatDicePoolsSubtractOneForZeroRatingSkills() {
+    @Test func combatDicePoolsSubtractOneForZeroRatingSkills() {
         let character = Character()
         let strength = attribute(named: "Strength", in: character)
         let dexterity = attribute(named: "Dexterity", in: character)
@@ -104,12 +106,12 @@ final class RequiemCharacterSheetTests: XCTestCase {
         strength.rating = 3
         dexterity.rating = 4
 
-        XCTAssertEqual(character.brawlDicePool, 2)
-        XCTAssertEqual(character.firearmsDicePool, 3)
-        XCTAssertEqual(character.weaponryDicePool, 2)
+        #expect(character.brawlDicePool == 2)
+        #expect(character.firearmsDicePool == 3)
+        #expect(character.weaponryDicePool == 2)
     }
 
-    func testCombatDicePoolsUseSkillRatingWhenSkillIsTrained() {
+    @Test func combatDicePoolsUseSkillRatingWhenSkillIsTrained() {
         let character = Character()
         let strength = attribute(named: "Strength", in: character)
         let dexterity = attribute(named: "Dexterity", in: character)
@@ -123,12 +125,12 @@ final class RequiemCharacterSheetTests: XCTestCase {
         firearms.rating = 1
         weaponry.rating = 3
 
-        XCTAssertEqual(character.brawlDicePool, 5)
-        XCTAssertEqual(character.firearmsDicePool, 5)
-        XCTAssertEqual(character.weaponryDicePool, 6)
+        #expect(character.brawlDicePool == 5)
+        #expect(character.firearmsDicePool == 5)
+        #expect(character.weaponryDicePool == 6)
     }
 
-    func testDefensiveCombatBrawlAddsAlternativeDefense() {
+    @Test func defensiveCombatBrawlAddsAlternativeDefense() {
         let character = Character()
         let dexterity = attribute(named: "Dexterity", in: character)
         let wits = attribute(named: "Wits", in: character)
@@ -141,13 +143,13 @@ final class RequiemCharacterSheetTests: XCTestCase {
         brawl.rating = 4
         character.merits = [Merit(name: "Defensive Combat (Brawl)", rating: 1)]
 
-        XCTAssertTrue(character.hasDefensiveCombatBrawl)
-        XCTAssertFalse(character.hasDefensiveCombatWeaponry)
-        XCTAssertEqual(character.defense, 4)
-        XCTAssertEqual(character.defenseUsingBrawl, 7)
+        #expect(character.hasDefensiveCombatBrawl)
+        #expect(!character.hasDefensiveCombatWeaponry)
+        #expect(character.defense == 4)
+        #expect(character.defenseUsingBrawl == 7)
     }
 
-    func testDefensiveCombatWeaponryAddsAlternativeDefense() {
+    @Test func defensiveCombatWeaponryAddsAlternativeDefense() {
         let character = Character()
         let dexterity = attribute(named: "Dexterity", in: character)
         let wits = attribute(named: "Wits", in: character)
@@ -160,15 +162,15 @@ final class RequiemCharacterSheetTests: XCTestCase {
         weaponry.rating = 5
         character.merits = [Merit(name: "Defensive Combat (Weaponry)", rating: 1)]
 
-        XCTAssertFalse(character.hasDefensiveCombatBrawl)
-        XCTAssertTrue(character.hasDefensiveCombatWeaponry)
-        XCTAssertEqual(character.defense, 4)
-        XCTAssertEqual(character.defenseUsingWeaponry, 8)
+        #expect(!character.hasDefensiveCombatBrawl)
+        #expect(character.hasDefensiveCombatWeaponry)
+        #expect(character.defense == 4)
+        #expect(character.defenseUsingWeaponry == 8)
     }
 
     private func attribute(named name: String, in character: Character) -> Attribute {
         guard let attribute = character.attributes.first(where: { $0.name == name }) else {
-            XCTFail("Missing attribute named \(name)")
+            Issue.record("Missing attribute named \(name)")
             return Attribute(AttributeKind(name: name) ?? .intelligence)
         }
 
@@ -177,7 +179,7 @@ final class RequiemCharacterSheetTests: XCTestCase {
 
     private func skill(named name: String, in character: Character) -> Skill {
         guard let skill = character.skills.first(where: { $0.name == name }) else {
-            XCTFail("Missing skill named \(name)")
+            Issue.record("Missing skill named \(name)")
             return Skill(SkillID(name.lowercased()))
         }
 

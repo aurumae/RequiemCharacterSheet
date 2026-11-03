@@ -7,35 +7,48 @@
 
 import XCTest
 
+/// End-to-end check of the core flow: create a character, name it, and find it again after relaunching.
 final class RequiemCharacterSheetUITests: XCTestCase {
+    private let characterName = "UI Test Vampire \(Int.random(in: 1000...9999))"
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    @MainActor
+    func testCreatedCharacterIsSavedAndCanBeDeleted() throws {
         let app = XCUIApplication()
-        app.launch()
+        launchSkippingSplash(app)
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        // Create a character and give it a name
+        app.buttons["New Character"].tap()
+        let nameField = app.buttons["Tap to edit"].firstMatch
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+        nameField.tap()
+        app.textFields.firstMatch.typeText("\(characterName)\n")
+
+        // Going back keeps the changes
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.staticTexts[characterName].waitForExistence(timeout: 5))
+
+        // The character is still there after relaunching
+        app.terminate()
+        launchSkippingSplash(app)
+        let row = app.staticTexts[characterName]
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+
+        // Delete it again, confirming when asked
+        row.swipeLeft()
+        app.buttons["Delete"].tap()
+        app.buttons["Delete \(characterName)"].tap()
+        XCTAssertTrue(row.waitForNonExistence(timeout: 5))
     }
 
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    /// Launches the app and taps through the splash screen to the character list.
+    @MainActor
+    private func launchSkippingSplash(_ app: XCUIApplication) {
+        app.launch()
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssertTrue(app.buttons["New Character"].waitForExistence(timeout: 5))
     }
 }

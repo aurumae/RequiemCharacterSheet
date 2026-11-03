@@ -51,9 +51,8 @@
 		BCB158CE2C986811003B6A8F /* RequiemCharacterSheetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */; };
 		BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCB158D12C986812003B6A8F /* Assets.xcassets */; };
 		BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCB158D42C986812003B6A8F /* Preview Assets.xcassets */; };
-		BCB158DF2C986812003B6A8F /* RequiemCharacterSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158DE2C986812003B6A8F /* RequiemCharacterSheetTests.swift */; };
+		BCB158DF2C986812003B6A8F /* CharacterRulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158DE2C986812003B6A8F /* CharacterRulesTests.swift */; };
 		BCB158E92C986812003B6A8F /* RequiemCharacterSheetUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158E82C986812003B6A8F /* RequiemCharacterSheetUITests.swift */; };
-		BCB158EB2C986812003B6A8F /* RequiemCharacterSheetUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158EA2C986812003B6A8F /* RequiemCharacterSheetUITestsLaunchTests.swift */; };
 		BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158F82C986A67003B6A8F /* MrsEavesSmallCaps.otf */; };
 		BCB158FC2C986A67003B6A8F /* cas_antn.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158F92C986A67003B6A8F /* cas_antn.ttf */; };
 		BCB158FD2C986A67003B6A8F /* MrsEavesRoman.otf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */; };
@@ -133,10 +132,9 @@
 		BCB158D12C986812003B6A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BCB158D42C986812003B6A8F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BCB158DA2C986812003B6A8F /* RequiemCharacterSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RequiemCharacterSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BCB158DE2C986812003B6A8F /* RequiemCharacterSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCharacterSheetTests.swift; sourceTree = "<group>"; };
+		BCB158DE2C986812003B6A8F /* CharacterRulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterRulesTests.swift; sourceTree = "<group>"; };
 		BCB158E42C986812003B6A8F /* RequiemCharacterSheetUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RequiemCharacterSheetUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB158E82C986812003B6A8F /* RequiemCharacterSheetUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCharacterSheetUITests.swift; sourceTree = "<group>"; };
-		BCB158EA2C986812003B6A8F /* RequiemCharacterSheetUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCharacterSheetUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		BCB158F82C986A67003B6A8F /* MrsEavesSmallCaps.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrsEavesSmallCaps.otf; sourceTree = "<group>"; };
 		BCB158F92C986A67003B6A8F /* cas_antn.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = cas_antn.ttf; sourceTree = "<group>"; };
 		BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrsEavesRoman.otf; sourceTree = "<group>"; };
@@ -225,7 +223,7 @@
 		BCB158DD2C986812003B6A8F /* RequiemCharacterSheetTests */ = {
 			isa = PBXGroup;
 			children = (
-				BCB158DE2C986812003B6A8F /* RequiemCharacterSheetTests.swift */,
+				BCB158DE2C986812003B6A8F /* CharacterRulesTests.swift */,
 				BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */,
 				BC2B4427309660A900720F0C /* CharacterStoreTests.swift */,
 				BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */,
@@ -238,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				BCB158E82C986812003B6A8F /* RequiemCharacterSheetUITests.swift */,
-				BCB158EA2C986812003B6A8F /* RequiemCharacterSheetUITestsLaunchTests.swift */,
 			);
 			path = RequiemCharacterSheetUITests;
 			sourceTree = "<group>";
@@ -501,7 +498,7 @@
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
 				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
 				BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */,
-				BCB158DF2C986812003B6A8F /* RequiemCharacterSheetTests.swift in Sources */,
+				BCB158DF2C986812003B6A8F /* CharacterRulesTests.swift in Sources */,
 				BC2B4430309980E600720F0C /* TraitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -511,7 +508,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCB158E92C986812003B6A8F /* RequiemCharacterSheetUITests.swift in Sources */,
-				BCB158EB2C986812003B6A8F /* RequiemCharacterSheetUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
