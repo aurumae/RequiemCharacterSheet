@@ -11,6 +11,7 @@ import SwiftUI
 struct RequiemCharacterSheetApp: App {
     @State private var splashOpacity = 1.0
     @State private var showsSplash = true
+    @State private var isDismissingSplash = false
     @State private var mainOpacity = 0.0
     @State private var store = CharacterStore()
 
@@ -27,6 +28,14 @@ struct RequiemCharacterSheetApp: App {
                 if showsSplash {
                     SplashScreenView()
                         .opacity(splashOpacity)
+                        // Tapping anywhere skips the wait
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            Task { await dismissSplash(fadeOut: 0.4, pause: 0.2, fadeIn: 0.4) }
+                        }
+                        .accessibilityAction(named: "Skip") {
+                            Task { await dismissSplash(fadeOut: 0.4, pause: 0.2, fadeIn: 0.4) }
+                        }
                 }
             }
             .task {
@@ -39,22 +48,29 @@ struct RequiemCharacterSheetApp: App {
                 }
             }
             .task {
-                // Keep the splash screen visible for 5 seconds
+                // Keep the splash screen visible for 5 seconds, then fade it out over 2 seconds
+                // and fade in the main app view over 1 second
                 try? await Task.sleep(for: .seconds(5))
-
-                // Fade out the splash screen over 2 seconds
-                withAnimation(.easeOut(duration: 2)) {
-                    splashOpacity = 0.0
-                } completion: {
-                    showsSplash = false
-                }
-
-                // After splash screen has faded out, fade in the main app view over 1 second
-                try? await Task.sleep(for: .seconds(2))
-                withAnimation(.easeIn(duration: 1)) {
-                    mainOpacity = 1.0
-                }
+                await dismissSplash(fadeOut: 2, pause: 2, fadeIn: 1)
             }
+        }
+    }
+
+    /// Fades out the splash screen, waits `pause` seconds, then fades in the main view.
+    /// Only the first call has any effect, so a tap and the timer can't both run it.
+    private func dismissSplash(fadeOut: Double, pause: Double, fadeIn: Double) async {
+        guard !isDismissingSplash else { return }
+        isDismissingSplash = true
+
+        withAnimation(.easeOut(duration: fadeOut)) {
+            splashOpacity = 0.0
+        } completion: {
+            showsSplash = false
+        }
+
+        try? await Task.sleep(for: .seconds(pause))
+        withAnimation(.easeIn(duration: fadeIn)) {
+            mainOpacity = 1.0
         }
     }
 }
