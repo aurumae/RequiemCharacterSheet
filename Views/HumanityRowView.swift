@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct HumanityRowView: View {
-    @ObservedObject var touchstone: Touchstone
+    @Bindable var touchstone: Touchstone
     @Binding var humanity: Int
     @State private var isEditing = false
     @FocusState private var isFocused: Bool

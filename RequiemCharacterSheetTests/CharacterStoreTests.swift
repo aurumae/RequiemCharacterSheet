@@ -102,13 +102,40 @@ final class CharacterStoreTests {
         try store.save(character, at: firstSave)
 
         let reopened = try store.load(character.id)
-        // Box ids are regenerated whenever the boxes are rebuilt, which isn't a real edit
-        reopened.healthBoxes = reopened.healthBoxes.map { HealthBox(damageType: $0.damageType) }
-        reopened.willpowerBoxes = reopened.willpowerBoxes.map { WillpowerBox(state: $0.state) }
         let didWrite = try store.save(reopened, at: Date(timeIntervalSinceReferenceDate: 2_000))
 
         #expect(!didWrite)
         #expect(reopened.modifiedAt == firstSave)
+        #expect(store.summaries.first?.modifiedAt == firstSave)
+    }
+
+    @Test func olderFormatFileIsNotTreatedAsEdited() throws {
+        // Turn a current save into a version 2 file: boxes saved as objects with ids,
+        // plus the stored Vitae values
+        let character = Character()
+        character.name = "Marcus Vale"
+        let firstSave = Date(timeIntervalSinceReferenceDate: 1_000)
+        character.modifiedAt = firstSave
+        var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(character)) as? [String: Any])
+        json["schemaVersion"] = 2
+        json["healthTrack"] = nil
+        json["willpowerTrack"] = nil
+        json["maxVitae"] = 10
+        json["vitaePerTurn"] = 1
+        json["healthBoxes"] = ["lethal", "none", "none", "none", "none", "none"].map { ["id": UUID().uuidString, "damageType": $0] }
+        json["willpowerBoxes"] = ["spent", "none"].map { ["id": UUID().uuidString, "state": $0] }
+
+        let id = character.id
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try JSONSerialization.data(withJSONObject: json).write(to: directory.appending(path: "\(id.uuidString).json"))
+        let store = makeStore()
+
+        let reopened = try store.load(id)
+        let didWrite = try store.save(reopened, at: Date(timeIntervalSinceReferenceDate: 2_000))
+
+        #expect(reopened.healthBoxes.prefix(2) == [.lethal, .none])
+        #expect(reopened.willpowerBoxes.first == .spent)
+        #expect(!didWrite)
         #expect(store.summaries.first?.modifiedAt == firstSave)
     }
 
@@ -133,11 +160,11 @@ final class CharacterStoreTests {
         try store.save(character, at: Date(timeIntervalSinceReferenceDate: 1_000))
 
         let reopened = try store.load(character.id)
-        reopened.healthBoxes.first?.damageType = .lethal
+        reopened.setHealthBox(at: 0, to: .lethal)
         let didWrite = try store.save(reopened, at: Date(timeIntervalSinceReferenceDate: 2_000))
 
         #expect(didWrite)
-        #expect(try store.load(character.id).healthBoxes.first?.damageType == .lethal)
+        #expect(try store.load(character.id).healthBoxes.first == .lethal)
     }
 
     @Test func newStoreSeesPreviouslySavedCharacters() throws {

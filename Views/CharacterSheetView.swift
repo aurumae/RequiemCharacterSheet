@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CharacterSheetView: View {
-    @ObservedObject var character: Character
+    let character: Character
     let store: CharacterStore
 
     @Environment(\.scenePhase) private var scenePhase

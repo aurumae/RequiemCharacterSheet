@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct SkillRowView: View {
-    @ObservedObject var character: Character
-    @ObservedObject var skill: Skill
+    let character: Character
+    @Bindable var skill: Skill
     @State private var showingPicker = false
     @State private var isEditingSpecialty = false
     @FocusState private var specialtyFieldIsFocused: Bool

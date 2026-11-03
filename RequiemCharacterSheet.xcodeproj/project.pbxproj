@@ -11,14 +11,13 @@
 		BC2B44263096609600720F0C /* CharacterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B44253096609600720F0C /* CharacterStore.swift */; };
 		BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4427309660A900720F0C /* CharacterStoreTests.swift */; };
 		BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4429309662A300720F0C /* CharacterListView.swift */; };
+		BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
 		BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369F2C9A3182008D03F7 /* HealthBoxView.swift */; };
 		BC6D36A22C9A3261008D03F7 /* HealthBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */; };
-		BC6D36A62C9A5EFA008D03F7 /* HealthBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36A52C9A5EFA008D03F7 /* HealthBox.swift */; };
 		BC6D36A82C9A600C008D03F7 /* BoxFillType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36A72C9A600C008D03F7 /* BoxFillType.swift */; };
-		BC6D36AC2C9B441C008D03F7 /* WillpowerBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36AB2C9B441C008D03F7 /* WillpowerBox.swift */; };
 		BC6D36AE2C9B46F5008D03F7 /* WillpowerBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36AD2C9B46F5008D03F7 /* WillpowerBoxView.swift */; };
 		BC6D36B22C9CF096008D03F7 /* VampireFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B12C9CF096008D03F7 /* VampireFontModifier.swift */; };
 		BC6D36B42C9CF418008D03F7 /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B32C9CF418008D03F7 /* Skill.swift */; };
@@ -88,15 +87,14 @@
 		BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDecodingTests.swift; sourceTree = "<group>"; };
 		BC2B44253096609600720F0C /* CharacterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStore.swift; sourceTree = "<group>"; };
 		BC2B4427309660A900720F0C /* CharacterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStoreTests.swift; sourceTree = "<group>"; };
-		BC2B4429309662A300720F0C /* CharacterListView.swift */ = {isa = PBXFileReference; path = CharacterListView.swift; sourceTree = "<group>"; };
+		BC2B4429309662A300720F0C /* CharacterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterListView.swift; sourceTree = "<group>"; };
+		BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */ = {isa = PBXFileReference; path = CharacterTrackTests.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
 		BC6D369F2C9A3182008D03F7 /* HealthBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthBoxView.swift; sourceTree = "<group>"; };
 		BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthBoxesView.swift; sourceTree = "<group>"; };
-		BC6D36A52C9A5EFA008D03F7 /* HealthBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthBox.swift; sourceTree = "<group>"; };
 		BC6D36A72C9A600C008D03F7 /* BoxFillType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxFillType.swift; sourceTree = "<group>"; };
-		BC6D36AB2C9B441C008D03F7 /* WillpowerBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBox.swift; sourceTree = "<group>"; };
 		BC6D36AD2C9B46F5008D03F7 /* WillpowerBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxView.swift; sourceTree = "<group>"; };
 		BC6D36B12C9CF096008D03F7 /* VampireFontModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VampireFontModifier.swift; sourceTree = "<group>"; };
 		BC6D36B32C9CF418008D03F7 /* Skill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
@@ -226,6 +224,7 @@
 				BCB158DE2C986812003B6A8F /* RequiemCharacterSheetTests.swift */,
 				BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */,
 				BC2B4427309660A900720F0C /* CharacterStoreTests.swift */,
+				BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -259,9 +258,7 @@
 				BC6D36C72C9DD3D6008D03F7 /* Touchstone.swift */,
 				BC6D36B32C9CF418008D03F7 /* Skill.swift */,
 				BC6D36B12C9CF096008D03F7 /* VampireFontModifier.swift */,
-				BC6D36AB2C9B441C008D03F7 /* WillpowerBox.swift */,
 				BC6D36A72C9A600C008D03F7 /* BoxFillType.swift */,
-				BC6D36A52C9A5EFA008D03F7 /* HealthBox.swift */,
 				BCB159042C987143003B6A8F /* Attribute.swift */,
 				BCB159062C987161003B6A8F /* Character.swift */,
 				BC2B44253096609600720F0C /* CharacterStore.swift */,
@@ -464,7 +461,6 @@
 				BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */,
 				BC6D36D32C9DE65C008D03F7 /* DisciplineRowView.swift in Sources */,
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
-				BC6D36AC2C9B441C008D03F7 /* WillpowerBox.swift in Sources */,
 				BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */,
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,
 				BC6D36DD2C9DEA33008D03F7 /* EditableDotsRatingView.swift in Sources */,
@@ -473,7 +469,6 @@
 				BCB159052C987143003B6A8F /* Attribute.swift in Sources */,
 				BC6D36BE2C9D07A8008D03F7 /* CharacterInfoView.swift in Sources */,
 				BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */,
-				BC6D36A62C9A5EFA008D03F7 /* HealthBox.swift in Sources */,
 				BC6D36E12C9E002A008D03F7 /* Aspiration.swift in Sources */,
 				BC6D36BA2C9CF543008D03F7 /* SkillsSectionHeader.swift in Sources */,
 				BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */,
@@ -497,6 +492,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
+				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
 				BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */,
 				BCB158DF2C986812003B6A8F /* RequiemCharacterSheetTests.swift in Sources */,
 			);

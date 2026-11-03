@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct VitaeView: View {
-    @ObservedObject var character: Character
+    let character: Character
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct BaneRowView: View {
-    @ObservedObject var bane: Bane
+    @Bindable var bane: Bane
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

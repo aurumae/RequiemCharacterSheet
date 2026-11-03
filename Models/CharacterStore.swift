@@ -82,9 +82,12 @@ final class CharacterStore {
     @discardableResult
     func save(_ character: Character, at date: Date = .now) throws -> Bool {
         let url = fileURL(for: character.id)
+        // The saved file is loaded and re-encoded before comparing, so a file in an older format
+        // isn't mistaken for a change just because the format differs.
         if let savedData = try? Data(contentsOf: url),
-           let savedContent = try? Self.comparableContent(of: savedData),
-           let currentContent = try? Self.comparableContent(of: JSONEncoder().encode(character)),
+           let savedCharacter = try? decodeCharacter(from: savedData),
+           let savedContent = try? Self.comparableContent(of: savedCharacter),
+           let currentContent = try? Self.comparableContent(of: character),
            savedContent == currentContent {
             return false
         }
@@ -126,18 +129,13 @@ final class CharacterStore {
         return try JSONDecoder().decode(Character.self, from: data)
     }
 
-    /// The parts of a save that count as the character's content: everything except the edited date
-    /// and the health/willpower box ids, which are regenerated whenever the boxes are rebuilt (including on every load).
-    private static func comparableContent(of data: Data) throws -> Data {
+    /// The character's saved content, minus the edited date, for deciding whether anything has changed.
+    private static func comparableContent(of character: Character) throws -> Data {
+        let data = try JSONEncoder().encode(character)
         guard var object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             return data
         }
         object["modifiedAt"] = nil
-        for key in ["healthBoxes", "willpowerBoxes"] {
-            if let boxes = object[key] as? [[String: Any]] {
-                object[key] = boxes.map { $0.filter { $0.key != "id" } }
-            }
-        }
         return try JSONSerialization.data(withJSONObject: object, options: .sortedKeys)
     }
 

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct HealthView: View {
-    @ObservedObject var character: Character
+    let character: Character
 
     var body: some View {
         VStack(alignment: .leading) {

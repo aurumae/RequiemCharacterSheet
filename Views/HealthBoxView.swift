@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct HealthBoxView: View {
-    @ObservedObject var box: HealthBox
+    let damageType: HealthBoxFillType
     var isPenalty: Bool = false
     
     var body: some View {
         Rectangle()
             .fill(Color.clear) // Fill with clear or white color for all boxes
             .overlay(
-                Text(symbolForFillType(box.damageType))
+                Text(symbolForFillType(damageType))
                     .font(.system(size: 14))
                     .foregroundColor(.black)
                     .bold()

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DerivedAttributesView: View {
-    @ObservedObject var character: Character
+    let character: Character
     
     var body: some View {
         Section(header: Text("ADVANTAGES").font(.custom("CaslonAntique", size: 24))) {

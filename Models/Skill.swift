@@ -7,12 +7,14 @@
 
 
 import Foundation
+import Observation
 
-class Skill: ObservableObject, Identifiable, Codable {
+@Observable
+final class Skill: Identifiable, Codable {
     let id: UUID
     let name: String
-    @Published var rating: Int
-    @Published var specialty: String
+    var rating: Int
+    var specialty: String
 
     enum CodingKeys: CodingKey {
         case id, name, rating, specialty

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MeritsView: View {
-    @ObservedObject var character: Character
+    let character: Character
 
     var body: some View {
         Section(header: Text("MERITS").font(.custom("CaslonAntique", size: 24))) {

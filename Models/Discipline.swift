@@ -7,11 +7,13 @@
 
 
 import Foundation
+import Observation
 
-class Discipline: ObservableObject, Identifiable, Codable {
+@Observable
+final class Discipline: Identifiable, Codable {
     var id: UUID
-    @Published var name: String
-    @Published var rating: Int
+    var name: String
+    var rating: Int
 
     enum CodingKeys: CodingKey {
         case id, name, rating

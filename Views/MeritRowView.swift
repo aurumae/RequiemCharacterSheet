@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MeritRowView: View {
-    @ObservedObject var merit: Merit
+    @Bindable var merit: Merit
     @State private var isEditingMerit = false
     @FocusState private var meritFieldIsFocused: Bool
 

@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import Observation
 
-class Attribute: ObservableObject, Identifiable, Codable {
+@Observable
+final class Attribute: Identifiable, Codable {
     let id: UUID
     let name: String
-    @Published var rating: Int
+    var rating: Int
 
     enum CodingKeys: CodingKey {
         case id, name, rating

@@ -7,10 +7,12 @@
 
 
 import Foundation
+import Observation
 
-class Aspiration: ObservableObject, Identifiable, Codable {
+@Observable
+final class Aspiration: Identifiable, Codable {
     var id: UUID
-    @Published var text: String
+    var text: String
 
     enum CodingKeys: CodingKey {
         case id, text

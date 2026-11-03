@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DisciplineRowView: View {
-    @ObservedObject var discipline: Discipline
+    @Bindable var discipline: Discipline
     @State private var isEditingDiscipline = false
     @FocusState private var disciplineFieldIsFocused: Bool
     

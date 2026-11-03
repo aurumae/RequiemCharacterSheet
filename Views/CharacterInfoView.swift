@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CharacterInfoView: View {
-    @ObservedObject var character: Character
+    @Bindable var character: Character
 
     var body: some View {
         Section(header: Text("CHARACTER").font(.custom("CaslonAntique", size: 24))) {

@@ -9,18 +9,19 @@
 import SwiftUI
 
 struct HealthBoxesView: View {
-    @ObservedObject var character: Character
+    let character: Character
     var boxesPerRow: Int = 10
 
     var body: some View {
-        let rows = character.healthBoxes.chunked(into: boxesPerRow)
+        let boxes = character.healthBoxes
+        let rows = Array(boxes.indices).chunked(into: boxesPerRow)
         VStack(spacing: 4) {
             ForEach(0..<rows.count, id: \.self) { rowIndex in
                 HStack(spacing: 4) {
-                    ForEach(rows[rowIndex]) { box in
-                        HealthBoxView(box: box, isPenalty: false)
+                    ForEach(rows[rowIndex], id: \.self) { index in
+                        HealthBoxView(damageType: boxes[index], isPenalty: false)
                             .onTapGesture {
-                                box.damageType = nextDamageType(current: box.damageType)
+                                character.setHealthBox(at: index, to: nextDamageType(current: boxes[index]))
                             }
                     }
                 }

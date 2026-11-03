@@ -7,11 +7,13 @@
 
 
 import Foundation
+import Observation
 
-class Touchstone: ObservableObject, Identifiable, Codable {
+@Observable
+final class Touchstone: Identifiable, Codable {
     let id: UUID
     let level: Int
-    @Published var text: String
+    var text: String
 
     enum CodingKeys: CodingKey {
         case id, level, text

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AspirationRowView: View {
-    @ObservedObject var aspiration: Aspiration
+    @Bindable var aspiration: Aspiration
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

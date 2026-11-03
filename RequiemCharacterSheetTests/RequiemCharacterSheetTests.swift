@@ -48,14 +48,9 @@ final class RequiemCharacterSheetTests: XCTestCase {
         brawl.rating = 10
         character.bloodPotency = 5
 
-        let expectation = expectation(description: "Blood Potency observer clamps base ratings")
-        DispatchQueue.main.async {
-            XCTAssertEqual(strength.rating, 5)
-            XCTAssertEqual(brawl.rating, 5)
-            expectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 1)
+        // Clamped immediately, not on a later run loop pass
+        XCTAssertEqual(strength.rating, 5)
+        XCTAssertEqual(brawl.rating, 5)
     }
 
     func testVigorAddsToStrengthTotalAndStrengthDerivedValues() {

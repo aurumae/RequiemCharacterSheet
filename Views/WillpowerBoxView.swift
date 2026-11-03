@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct WillpowerBoxView: View {
-    @ObservedObject var box: WillpowerBox
+    let state: WillpowerBoxFillType
 
     var body: some View {
         Rectangle()
             .fill(Color.clear)
             .overlay(
-                Text(box.state == .spent ? "/" : "")
+                Text(state == .spent ? "/" : "")
                     .font(.system(size: 14))
                     .foregroundColor(.black)
                     .bold()
@@ -24,8 +24,5 @@ struct WillpowerBoxView: View {
                 Rectangle().stroke(Color.black, lineWidth: 1)
             )
             .frame(width: 20, height: 20)
-            .onTapGesture {
-                box.state = box.state == .none ? .spent : .none
-            }
     }
 }

@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct AttributeRowView: View {
-    @ObservedObject var character: Character
-    @ObservedObject var attribute: Attribute
+    let character: Character
+    @Bindable var attribute: Attribute
     @State private var showingPicker = false
 
     private var totalRating: Int {

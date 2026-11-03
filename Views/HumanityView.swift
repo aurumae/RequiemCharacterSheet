@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct HumanityView: View {
-    @ObservedObject var character: Character
+    @Bindable var character: Character
 
     var body: some View {
         VStack(spacing: 4) {

@@ -47,8 +47,8 @@ struct CharacterDecodingTests {
         #expect(character.experiences == 4)
 
         // Health = Stamina 2 + Size 5; Willpower = Resolve 2 + Composure 3
-        #expect(character.healthBoxes.map(\.damageType) == [.bashing, .none, .none, .none, .none, .none, .none])
-        #expect(character.willpowerBoxes.map(\.state) == [.spent, .none, .none, .none, .none])
+        #expect(character.healthBoxes == [.bashing, .none, .none, .none, .none, .none, .none])
+        #expect(character.willpowerBoxes == [.spent, .none, .none, .none, .none])
     }
 
     @Test func emptySaveLoadsAsDefaultCharacter() throws {
