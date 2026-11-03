@@ -66,7 +66,7 @@ struct CharacterDecodingTests {
         #expect(character.healthBoxes.count == 6)
         #expect(character.willpowerBoxes.count == 2)
         #expect(character.disciplines.isEmpty)
-        #expect(character.merits.count == 1)
+        #expect(character.merits.isEmpty)
     }
 
     @Test func missingEntriesAreFilledInAroundSavedOnes() throws {

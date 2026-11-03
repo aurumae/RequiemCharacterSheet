@@ -11,6 +11,8 @@ import SwiftUI
 struct DisciplineRowView: View {
     @Bindable var discipline: Discipline
     let character: Character
+    /// Opens the name for editing, for a custom Discipline that was just added.
+    var beginsEditing = false
     @State private var showingDetail = false
 
     var body: some View {
@@ -29,7 +31,7 @@ struct DisciplineRowView: View {
                     DisciplineDetailView(entry: entry, rating: discipline.rating, character: character)
                 }
             } else {
-                TapToEditText(placeholder: "Discipline Name", text: $discipline.name) { name in
+                TapToEditText(placeholder: "Discipline Name", text: $discipline.name, beginsEditing: beginsEditing) { name in
                     Text(name)
                         .themedText(.traitName)
                 }

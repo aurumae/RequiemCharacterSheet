@@ -236,8 +236,18 @@ struct TapToEditText<Display: View>: View {
     /// How the text is shown when it isn't being edited.
     @ViewBuilder let display: (String) -> Display
 
-    @State private var isEditing = false
+    @State private var isEditing: Bool
     @FocusState private var isFocused: Bool
+
+    /// - Parameter beginsEditing: Start with the field open, e.g. for a row that was just added.
+    init(placeholder: String, text: Binding<String>, font: ThemeTextStyle = .body, beginsEditing: Bool = false,
+         @ViewBuilder display: @escaping (String) -> Display) {
+        self.placeholder = placeholder
+        self._text = text
+        self.font = font
+        self.display = display
+        self._isEditing = State(initialValue: beginsEditing)
+    }
 
     var body: some View {
         if isEditing {
@@ -272,10 +282,9 @@ struct TapToEditText<Display: View>: View {
 extension TapToEditText where Display == ModifiedContent<Text, ThemedTextModifier> {
     /// Shows the text in the given style when it isn't being edited.
     init(_ placeholder: String, text: Binding<String>, font: ThemeTextStyle = .body) {
-        self.placeholder = placeholder
-        self._text = text
-        self.font = font
-        self.display = { Text($0).modifier(ThemedTextModifier(style: font)) }
+        self.init(placeholder: placeholder, text: text, font: font) {
+            Text($0).modifier(ThemedTextModifier(style: font))
+        }
     }
 }
 
