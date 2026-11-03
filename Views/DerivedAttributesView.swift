@@ -50,8 +50,8 @@ struct DerivedAttributesView: View {
             )
 
             // Combat Dice Pools section
-            Text("COMBAT DICE POOLS")
-                .themedText(.sectionHeader)
+            Text("Combat Dice Pools")
+                .themedText(.subsectionHeader)
                 .padding(.vertical, 4)
                 .accessibilityAddTraits(.isHeader)
 

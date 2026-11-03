@@ -9,8 +9,9 @@ import Foundation
 enum TraitCategory: String, CaseIterable, Codable {
     case mental, physical, social
 
-    var title: String {
-        rawValue.uppercased()
+    /// "Mental", "Physical" or "Social".
+    var name: String {
+        rawValue.capitalized
     }
 
     /// Dice modifier for rolling a skill in this category with no dots.

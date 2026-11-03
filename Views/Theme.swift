@@ -17,6 +17,8 @@ struct Theme {
     var muted: Color
     /// The display face used for headings and trait names.
     var displayFontName: String
+    /// The small-caps face used for subheadings such as Mental, Physical and Social.
+    var subheadingFontName: String
     var borderImageName: String
     var logoImageName: String
 
@@ -26,7 +28,7 @@ struct Theme {
         case .sectionHeader:
             return .custom(displayFontName, size: 24, relativeTo: .title2)
         case .subsectionHeader:
-            return .custom(displayFontName, size: 20, relativeTo: .title3)
+            return .custom(subheadingFontName, size: 20, relativeTo: .headline)
         case .label:
             return .custom(displayFontName, size: 22, relativeTo: .title3)
         case .traitName:
@@ -43,11 +45,11 @@ struct Theme {
     /// The colour a text style is drawn in, or `nil` to keep the surrounding colour.
     func color(_ style: ThemeTextStyle) -> Color? {
         switch style {
-        case .label, .traitName:
+        case .subsectionHeader, .label, .traitName:
             return accent
         case .note:
             return muted
-        case .sectionHeader, .subsectionHeader, .body, .detail:
+        case .sectionHeader, .body, .detail:
             return nil
         }
     }
@@ -57,6 +59,7 @@ struct Theme {
         ink: .black,
         muted: .gray,
         displayFontName: "CaslonAntique",
+        subheadingFontName: "MrsEavesSmallCaps",
         borderImageName: "VtRBorder_NewStyle",
         logoImageName: "VtR 2nd ED Logo"
     )
@@ -65,7 +68,8 @@ struct Theme {
 enum ThemeTextStyle {
     /// Top-level sheet sections: CHARACTER, ATTRIBUTES, SKILLS…
     case sectionHeader
-    /// Groups within a section: MENTAL, PHYSICAL, SOCIAL.
+    /// Groups within a section: Mental, Physical, Social. Written in mixed case so the
+    /// small capitals show, rather than uppercased like section headers.
     case subsectionHeader
     /// Row labels such as attribute names and "Speed:".
     case label
@@ -88,6 +92,18 @@ struct ThemedTextModifier: ViewModifier {
     let style: ThemeTextStyle
 
     func body(content: Content) -> some View {
+        if style == .subsectionHeader {
+            // List headers are uppercased by default, which would hide the small capitals
+            styled(content)
+                .tracking(1.5)
+                .textCase(nil)
+        } else {
+            styled(content)
+        }
+    }
+
+    @ViewBuilder
+    private func styled(_ content: Content) -> some View {
         if let color = theme.color(style) {
             content
                 .font(theme.font(style))

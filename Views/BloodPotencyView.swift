@@ -26,8 +26,6 @@ struct BloodPotencyView: View {
             // The dots above are adjustable with VoiceOver, so these would only repeat them
             .accessibilityHidden(true)
         }
-        .padding(.top, 8)
-        .padding(.horizontal, 16)
         .padding(.vertical, 4)
     }
 }

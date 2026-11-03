@@ -15,16 +15,20 @@ struct HumanityRowView: View {
 
     var body: some View {
         HStack {
-            // Level Number
-            Text("\(touchstone.level)")
-                .themedText(.label)
+            HStack(alignment: .firstTextBaseline) {
+                // Level Number
+                Text("\(touchstone.level)")
+                    .themedText(.label)
+                    // Keeps the touchstones lined up whether the level has one digit or two
+                    .frame(minWidth: 24, alignment: .leading)
 
-            // Touchstone Text
-            TapToEditText(placeholder: "Add Touchstone", text: $touchstone.text, font: .detail) { text in
-                Text(text)
-                    .themedText(.detail)
-                    // Touchstones above the current Humanity are lost
-                    .strikethrough(touchstone.level > humanity, color: theme.accent)
+                // Touchstone Text
+                TapToEditText(placeholder: "Add Touchstone", text: $touchstone.text, font: .detail) { text in
+                    Text(text)
+                        .themedText(.detail)
+                        // Touchstones above the current Humanity are lost
+                        .strikethrough(touchstone.level > humanity, color: theme.accent)
+                }
             }
 
             Spacer()

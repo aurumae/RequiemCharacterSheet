@@ -31,7 +31,7 @@ struct CharacterSheetView: View {
                     Section(header: Text("ATTRIBUTES").themedText(.sectionHeader)) {
                         // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
                         ForEach(TraitCategory.allCases, id: \.self) { category in
-                            Section(header: Text(category.title).themedText(.subsectionHeader)) {
+                            Section(header: Text(category.name).themedText(.subsectionHeader)) {
                                 ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
                                     AttributeRowView(character: character, attribute: attribute)
                                 }
@@ -67,19 +67,10 @@ struct CharacterSheetView: View {
                     // BLOOD POTENCY SECTION
                     Section(header: Text("BLOOD POTENCY").themedText(.sectionHeader)) {
                         BloodPotencyView(character: character)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                            .contentShape(Rectangle())
                     }
                     // VITAE SECTION
                     Section(header: Text("VITAE").themedText(.sectionHeader)) {
                         VitaeView(character: character)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                // Do nothing to disable row selection
-                            }
                     }
                     
                     // HUMANITY SECTION
