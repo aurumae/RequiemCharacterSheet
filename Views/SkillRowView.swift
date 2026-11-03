@@ -12,13 +12,16 @@ struct SkillRowView: View {
     let character: Character
     @Bindable var skill: Skill
     @State private var showingPicker = false
-    @State private var isEditingSpecialty = false
-    @FocusState private var specialtyFieldIsFocused: Bool
+
+    // Specialty being added or edited in the prompt
+    @State private var isAddingSpecialty = false
+    @State private var editingSpecialtyIndex: Int?
+    @State private var specialtyDraft = ""
 
     private var maximumVisibleRating: Int {
         character.baseRatingCap >= 6 || skill.rating >= 6 ? 10 : 5
     }
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
             VStack(alignment: .leading, spacing: 4) {
@@ -30,47 +33,40 @@ struct SkillRowView: View {
                         .vampireFont()
                 }
                 .buttonStyle(PlainButtonStyle())
-                .actionSheet(isPresented: $showingPicker) {
-                    ActionSheet(title: Text("Set \(skill.name)"), message: nil, buttons: actionSheetButtons())
-                }
-                
-                // Specialty Field or Prompt
-                if isEditingSpecialty {
-                    TextField("Specialty", text: $skill.specialty, onCommit: {
-                        isEditingSpecialty = false
-                    })
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .submitLabel(.done)
-                    .focused($specialtyFieldIsFocused)
-                } else {
-                    if skill.specialty.isEmpty {
-                        Button(action: {
-                            isEditingSpecialty = true
-                            specialtyFieldIsFocused = true
-                        }) {
-                            Text("Add Specialty")
-                                .font(.system(size: 14))
-                                .foregroundColor(.gray)
+                .confirmationDialog("Set \(skill.name)", isPresented: $showingPicker, titleVisibility: .visible) {
+                    ForEach(Array(character.skillRatingRange), id: \.self) { value in
+                        Button("\(value)") {
+                            skill.rating = value
                         }
-                        .buttonStyle(PlainButtonStyle())
-                    } else {
-                        // Display specialty text, tap to edit
-                        Button(action: {
-                            isEditingSpecialty = true
-                            specialtyFieldIsFocused = true
-                        }) {
-                            Text(skill.specialty)
-                                .font(.system(size: 14))
-                                .foregroundColor(.primary)
-                        }
-                        .buttonStyle(PlainButtonStyle())
                     }
                 }
+
+                // Specialties, each tappable to edit
+                ForEach(Array(skill.specialties.enumerated()), id: \.offset) { index, specialty in
+                    Button {
+                        specialtyDraft = specialty
+                        editingSpecialtyIndex = index
+                    } label: {
+                        Text(specialty)
+                            .font(.system(size: 14))
+                            .foregroundStyle(.primary)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+
+                Button {
+                    specialtyDraft = ""
+                    isAddingSpecialty = true
+                } label: {
+                    Text("Add Specialty")
+                        .font(.system(size: 14))
+                        .foregroundStyle(.gray)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
-            
+
             Spacer()
-            
-            
+
             DotsRatingView(
                 rating: $skill.rating,
                 maxRating: maximumVisibleRating,
@@ -84,23 +80,56 @@ struct SkillRowView: View {
                 .frame(width: 116)
         }
         .padding(.vertical, 4)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            if specialtyFieldIsFocused {
-                specialtyFieldIsFocused = false
-                isEditingSpecialty = false
+        .alert("Add Specialty", isPresented: $isAddingSpecialty) {
+            TextField("Specialty", text: $specialtyDraft)
+            Button("Add") {
+                addSpecialty()
             }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(skill.name)
+        }
+        .alert(
+            "Edit Specialty",
+            isPresented: Binding(
+                get: { editingSpecialtyIndex != nil },
+                set: { if !$0 { editingSpecialtyIndex = nil } }
+            )
+        ) {
+            TextField("Specialty", text: $specialtyDraft)
+            Button("Save") {
+                saveEditedSpecialty()
+            }
+            Button("Delete", role: .destructive) {
+                deleteEditedSpecialty()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(skill.name)
         }
     }
-    
-    func actionSheetButtons() -> [ActionSheet.Button] {
-        var buttons: [ActionSheet.Button] = []
-        for value in character.skillRatingRange {
-            buttons.append(.default(Text("\(value)")) {
-                skill.rating = value
-            })
+
+    private var trimmedDraft: String {
+        specialtyDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func addSpecialty() {
+        guard !trimmedDraft.isEmpty else { return }
+        skill.specialties.append(trimmedDraft)
+    }
+
+    private func saveEditedSpecialty() {
+        guard let index = editingSpecialtyIndex, skill.specialties.indices.contains(index) else { return }
+        // Saving an empty specialty removes it
+        if trimmedDraft.isEmpty {
+            skill.specialties.remove(at: index)
+        } else {
+            skill.specialties[index] = trimmedDraft
         }
-        buttons.append(.cancel())
-        return buttons
+    }
+
+    private func deleteEditedSpecialty() {
+        guard let index = editingSpecialtyIndex, skill.specialties.indices.contains(index) else { return }
+        skill.specialties.remove(at: index)
     }
 }

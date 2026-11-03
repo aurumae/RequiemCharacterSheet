@@ -25,7 +25,7 @@ struct CharacterDecodingTests {
 
         let brawl = character.skills.first { $0.name == "Brawl" }
         #expect(brawl?.rating == 2)
-        #expect(brawl?.specialty == "Grappling")
+        #expect(brawl?.specialties == ["Grappling"])
         #expect(character.skills.count == 24)
 
         #expect(character.bloodPotency == 2)
@@ -85,7 +85,7 @@ struct CharacterDecodingTests {
 
         #expect(character.skills.map(\.name) == Character.defaultSkills().map(\.name))
         #expect(character.skills.first { $0.name == "Brawl" }?.rating == 3)
-        #expect(character.skills.first { $0.name == "Brawl" }?.specialty == "")
+        #expect(character.skills.first { $0.name == "Brawl" }?.specialties == [])
 
         #expect(character.touchstones.map(\.level) == Array(1...10))
         #expect(character.touchstones.first { $0.level == 3 }?.text == "The old parish priest")

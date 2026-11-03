@@ -16,11 +16,6 @@ struct CharacterSheetView: View {
     @State private var showsSavedConfirmation = false
     @State private var saveErrorMessage: String?
 
-    // Attribute categories
-    let mentalAttributes = ["Intelligence", "Wits", "Resolve"]
-    let physicalAttributes = ["Strength", "Dexterity", "Stamina"]
-    let socialAttributes = ["Presence", "Manipulation", "Composure"]
-    
     var body: some View {
         BackgroundView {
             VStack {
@@ -37,24 +32,12 @@ struct CharacterSheetView: View {
                     
                     // ATTRIBUTES SECTION
                     Section(header: Text("ATTRIBUTES").font(.custom("CaslonAntique", size: 24))) {
-                        // MENTAL ATTRIBUTES
-                        Section(header: Text("MENTAL").font(.custom("CaslonAntique", size: 20))) {
-                            ForEach(character.attributes.filter { mentalAttributes.contains($0.name) }) { attribute in
-                                AttributeRowView(character: character, attribute: attribute)
-                            }
-                        }
-                        
-                        // PHYSICAL ATTRIBUTES
-                        Section(header: Text("PHYSICAL").font(.custom("CaslonAntique", size: 20))) {
-                            ForEach(character.attributes.filter { physicalAttributes.contains($0.name) }) { attribute in
-                                AttributeRowView(character: character, attribute: attribute)
-                            }
-                        }
-                        
-                        // SOCIAL ATTRIBUTES
-                        Section(header: Text("SOCIAL").font(.custom("CaslonAntique", size: 20))) {
-                            ForEach(character.attributes.filter { socialAttributes.contains($0.name) }) { attribute in
-                                AttributeRowView(character: character, attribute: attribute)
+                        // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
+                        ForEach(TraitCategory.allCases, id: \.self) { category in
+                            Section(header: Text(category.title).font(.custom("CaslonAntique", size: 20))) {
+                                ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
+                                    AttributeRowView(character: character, attribute: attribute)
+                                }
                             }
                         }
                     }

@@ -169,7 +169,7 @@ final class RequiemCharacterSheetTests: XCTestCase {
     private func attribute(named name: String, in character: Character) -> Attribute {
         guard let attribute = character.attributes.first(where: { $0.name == name }) else {
             XCTFail("Missing attribute named \(name)")
-            return Attribute(name: name, rating: 1)
+            return Attribute(AttributeKind(name: name) ?? .intelligence)
         }
 
         return attribute
@@ -178,7 +178,7 @@ final class RequiemCharacterSheetTests: XCTestCase {
     private func skill(named name: String, in character: Character) -> Skill {
         guard let skill = character.skills.first(where: { $0.name == name }) else {
             XCTFail("Missing skill named \(name)")
-            return Skill(name: name)
+            return Skill(SkillID(name.lowercased()))
         }
 
         return skill

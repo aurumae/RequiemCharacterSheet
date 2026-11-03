@@ -15,14 +15,20 @@ final class Character: Codable {
     /// - 1: no `schemaVersion`, `id` or timestamps.
     /// - 2: adds `id`, `createdAt`, `modifiedAt`.
     /// - 3: health and willpower marks saved as `healthTrack`/`willpowerTrack` instead of box objects.
-    static let currentSchemaVersion = 3
+    /// - 4: attributes and skills saved by id instead of display name; skills have a list of specialties;
+    ///   adds `skillList`.
+    static let currentSchemaVersion = 4
 
     let id: UUID
     let createdAt: Date
     var modifiedAt: Date
 
     var attributes: [Attribute]
+    /// The skills this character has a record for: every skill in their skill list,
+    /// plus any others they've been given dots or specialties in.
     var skills: [Skill]
+    /// The `SkillList` whose skills the sheet shows.
+    var skillListID: String
 
     /// Damage marked in each health box, in order. Boxes past the end are unmarked.
     /// Read `healthBoxes` for the boxes currently on the sheet.
@@ -68,7 +74,7 @@ final class Character: Codable {
 
     enum CodingKeys: CodingKey {
         case schemaVersion, id, createdAt, modifiedAt,
-             attributes, bloodPotency, healthTrack, willpowerTrack, skills,
+             attributes, bloodPotency, healthTrack, willpowerTrack, skills, skillList,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              currentVitae, humanity, touchstones, disciplines, merits,
              aspirations, banes, size, armor, beats, experiences
@@ -89,6 +95,7 @@ final class Character: Codable {
         try container.encode(healthBoxes, forKey: .healthTrack)
         try container.encode(willpowerBoxes, forKey: .willpowerTrack)
         try container.encode(skills, forKey: .skills)
+        try container.encode(skillListID, forKey: .skillList)
 
         try container.encode(name, forKey: .name)
         try container.encode(player, forKey: .player)
@@ -128,11 +135,16 @@ final class Character: Codable {
         createdAt = try container.decode(.createdAt, default: now)
         modifiedAt = try container.decode(.modifiedAt, default: now)
 
+        // Unknown lists (e.g. from a newer version's content) fall back to the core list
+        let savedSkillListID: String = try container.decode(.skillList, default: SkillList.vampireCore.id)
+        let skillList = SkillList.withID(savedSkillListID) ?? .vampireCore
+        skillListID = skillList.id
+
         let savedAttributes: [Attribute] = try container.decode(.attributes, default: [])
         let savedSkills: [Skill] = try container.decode(.skills, default: [])
         let savedTouchstones: [Touchstone] = try container.decode(.touchstones, default: [])
-        attributes = Character.merge(saved: savedAttributes, into: Character.defaultAttributes(), by: \.name)
-        skills = Character.merge(saved: savedSkills, into: Character.defaultSkills(), by: \.name)
+        attributes = Character.merge(saved: savedAttributes, into: Character.defaultAttributes(), by: \.kind)
+        skills = Character.merge(saved: savedSkills, into: Character.defaultSkills(for: skillList), by: \.skillID)
         touchstones = Character.merge(saved: savedTouchstones, into: Character.defaultTouchstones(), by: \.level)
 
         if let track = try container.decodeIfPresent([HealthBoxFillType].self, forKey: .healthTrack) {
@@ -185,7 +197,8 @@ final class Character: Codable {
         modifiedAt = createdAt
 
         attributes = Character.defaultAttributes()
-        skills = Character.defaultSkills()
+        skillListID = SkillList.vampireCore.id
+        skills = Character.defaultSkills(for: .vampireCore)
 
         healthTrack = []
         willpowerTrack = []
@@ -222,24 +235,11 @@ final class Character: Codable {
     // MARK: - Defaults
 
     static func defaultAttributes() -> [Attribute] {
-        [
-            "Intelligence", "Wits", "Resolve",
-            "Strength", "Dexterity", "Stamina",
-            "Presence", "Manipulation", "Composure"
-        ].map { Attribute(name: $0, rating: 1) }
+        AttributeKind.allCases.map { Attribute($0) }
     }
 
-    static func defaultSkills() -> [Skill] {
-        let mentalSkills = [
-            "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science"
-        ]
-        let physicalSkills = [
-            "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry"
-        ]
-        let socialSkills = [
-            "Animal Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge"
-        ]
-        return (mentalSkills + physicalSkills + socialSkills).map { Skill(name: $0) }
+    static func defaultSkills(for skillList: SkillList = .vampireCore) -> [Skill] {
+        skillList.skills.map { Skill($0) }
     }
 
     static func defaultTouchstones() -> [Touchstone] {
@@ -282,15 +282,37 @@ final class Character: Codable {
         willpowerTrack[index] = state
     }
 
+    // MARK: - Lookups
+
+    func attribute(_ kind: AttributeKind) -> Attribute? {
+        attributes.first { $0.kind == kind }
+    }
+
+    func skill(_ id: SkillID) -> Skill? {
+        skills.first { $0.skillID == id }
+    }
+
+    var skillList: SkillList {
+        SkillList.withID(skillListID) ?? .vampireCore
+    }
+
+    /// The skills to show in a category: those in the character's skill list, in list order,
+    /// followed by any other skills the character has dots or specialties in.
+    func skills(in category: TraitCategory) -> [Skill] {
+        let listed = Set(skillList.skills)
+        return skills.filter { skill in
+            skill.category == category
+                && (listed.contains(skill.skillID) || skill.rating > 0 || !skill.specialties.isEmpty)
+        }
+    }
+
     // Derived attributes
     var health: Int {
         return adjustedStamina + size
     }
 
     var willpower: Int {
-        let resolve = attributes.first { $0.name == "Resolve" }?.rating ?? 0
-        let composure = attributes.first { $0.name == "Composure" }?.rating ?? 0
-        return resolve + composure
+        rating(of: .resolve) + rating(of: .composure)
     }
 
     var maxVitae: Int {
@@ -315,19 +337,19 @@ final class Character: Codable {
 
     // Computed properties for derived attributes
     var adjustedStamina: Int {
-        totalAttributeRating(named: "Stamina")
+        totalRating(of: .stamina)
     }
 
     var defense: Int {
-        defense(usingSkillNamed: "Athletics")
+        defense(using: .athletics)
     }
 
     var defenseUsingBrawl: Int {
-        defense(usingSkillNamed: "Brawl")
+        defense(using: .brawl)
     }
 
     var defenseUsingWeaponry: Int {
-        defense(usingSkillNamed: "Weaponry")
+        defense(using: .weaponry)
     }
 
     var hasDefensiveCombatBrawl: Bool {
@@ -339,51 +361,51 @@ final class Character: Codable {
     }
 
     var speed: Int {
-        let strength = totalAttributeRating(named: "Strength")
-        let dexterity = totalAttributeRating(named: "Dexterity")
-        return 5 + strength + dexterity
+        5 + totalRating(of: .strength) + totalRating(of: .dexterity)
     }
 
     var initiativeMod: Int {
-        let dexterity = totalAttributeRating(named: "Dexterity")
-        let composure = totalAttributeRating(named: "Composure")
-        return dexterity + composure
+        totalRating(of: .dexterity) + totalRating(of: .composure)
     }
 
     var brawlDicePool: Int {
-        let strength = totalAttributeRating(named: "Strength")
-        let brawl = skillDiceContribution(named: "Brawl")
-        return strength + brawl
+        totalRating(of: .strength) + skillDiceContribution(.brawl)
     }
 
     var firearmsDicePool: Int {
-        let dexterity = totalAttributeRating(named: "Dexterity")
-        let firearms = skillDiceContribution(named: "Firearms")
-        return dexterity + firearms
+        totalRating(of: .dexterity) + skillDiceContribution(.firearms)
     }
 
     var weaponryDicePool: Int {
-        let strength = totalAttributeRating(named: "Strength")
-        let weaponry = skillDiceContribution(named: "Weaponry")
-        return strength + weaponry
+        totalRating(of: .strength) + skillDiceContribution(.weaponry)
+    }
+
+    /// The attribute's dots, without bonuses.
+    func rating(of kind: AttributeKind) -> Int {
+        attribute(kind)?.rating ?? 0
+    }
+
+    /// The skill's dots; 0 if the character has no record of it.
+    func rating(of id: SkillID) -> Int {
+        skill(id)?.rating ?? 0
+    }
+
+    /// The attribute's dots plus any bonus from Disciplines.
+    func totalRating(of kind: AttributeKind) -> Int {
+        rating(of: kind) + disciplineBonus(for: kind)
     }
 
     func totalAttributeRating(for attribute: Attribute) -> Int {
-        attribute.rating + disciplineBonus(forAttributeName: attribute.name)
+        totalRating(of: attribute.kind)
     }
 
-    func totalAttributeRating(named name: String) -> Int {
-        let baseRating = attributes.first { $0.name == name }?.rating ?? 0
-        return baseRating + disciplineBonus(forAttributeName: name)
-    }
-
-    func disciplineBonus(forAttributeName name: String) -> Int {
-        switch name {
-        case "Strength":
+    func disciplineBonus(for kind: AttributeKind) -> Int {
+        switch kind {
+        case .strength:
             return disciplineRating(named: "vigor")
-        case "Stamina":
+        case .stamina:
             return disciplineRating(named: "resilience")
-        case "Dexterity":
+        case .dexterity:
             return disciplineRating(named: "praestantia")
         default:
             return 0
@@ -397,17 +419,16 @@ final class Character: Codable {
         }?.rating ?? 0
     }
 
-    func skillDiceContribution(named name: String) -> Int {
-        let rating = skills.first { $0.name == name }?.rating ?? 0
-        return rating == 0 ? -1 : rating
+    /// The skill's contribution to a dice pool: its dots, or the unskilled penalty for its category.
+    func skillDiceContribution(_ id: SkillID) -> Int {
+        let rating = rating(of: id)
+        guard rating == 0 else { return rating }
+        return (SkillDefinition.withID(id)?.category ?? .mental).unskilledPenalty
     }
 
-    func defense(usingSkillNamed skillName: String) -> Int {
-        let dexterity = totalAttributeRating(named: "Dexterity")
-        let wits = totalAttributeRating(named: "Wits")
-        let skillRating = skills.first { $0.name == skillName }?.rating ?? 0
+    func defense(using skillID: SkillID) -> Int {
         let celerityRating = disciplineRating(named: "celerity")
-        return min(dexterity, wits) + skillRating + celerityRating
+        return min(totalRating(of: .dexterity), totalRating(of: .wits)) + rating(of: skillID) + celerityRating
     }
 
     func hasDefensiveCombatMerit(for skillName: String) -> Bool {
@@ -449,8 +470,7 @@ final class Character: Codable {
     private func vitaeData(for bloodPotency: Int) -> (max: Int, perTurn: Int) {
         switch bloodPotency {
         case ...0:
-            let stamina = attributes.first { $0.name == "Stamina" }?.rating ?? 0
-            return (stamina, 1)
+            return (rating(of: .stamina), 1)
         case 1:
             return (10, 1)
         case 2:

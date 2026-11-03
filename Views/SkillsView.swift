@@ -13,31 +13,14 @@ struct SkillsView: View {
 
     var body: some View {
         Section(header: Text("SKILLS").font(.custom("CaslonAntique", size: 24))) {
-            // MENTAL
-            Section(header: SkillsSectionHeader(title: "MENTAL", subtitle: "(-3 unskilled)")) {
-                ForEach(character.skills.filter { mentalSkills.contains($0.name) }) { skill in
-                    SkillRowView(character: character, skill: skill)
-                }
-            }
-
-            // PHYSICAL
-            Section(header: SkillsSectionHeader(title: "PHYSICAL", subtitle: "(-1 unskilled)")) {
-                ForEach(character.skills.filter { physicalSkills.contains($0.name) }) { skill in
-                    SkillRowView(character: character, skill: skill)
-                }
-            }
-
-            // SOCIAL
-            Section(header: SkillsSectionHeader(title: "SOCIAL", subtitle: "(-1 unskilled)")) {
-                ForEach(character.skills.filter { socialSkills.contains($0.name) }) { skill in
-                    SkillRowView(character: character, skill: skill)
+            // MENTAL, PHYSICAL and SOCIAL SKILLS
+            ForEach(TraitCategory.allCases, id: \.self) { category in
+                Section(header: SkillsSectionHeader(title: category.title, subtitle: "(\(category.unskilledPenalty) unskilled)")) {
+                    ForEach(character.skills(in: category)) { skill in
+                        SkillRowView(character: character, skill: skill)
+                    }
                 }
             }
         }
     }
-
-    // Skill names for filtering
-    let mentalSkills = ["Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science"]
-    let physicalSkills = ["Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry"]
-    let socialSkills = ["Animal Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge"]
 }
