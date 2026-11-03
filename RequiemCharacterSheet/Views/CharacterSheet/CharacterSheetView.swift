@@ -44,6 +44,15 @@ struct CharacterSheetView: View {
                     
                     // DISCIPLINES SECTION
                     DisciplinesView(character: character)
+
+                    // DEVOTIONS, RITUALS and COILS SECTIONS
+                    DevotionsView(character: character)
+                    if character.showsRituals {
+                        RitualsView(character: character)
+                    }
+                    if character.showsCoils {
+                        CoilsView(character: character)
+                    }
                     
                     // MERITS SECTION
                     MeritsView(character: character)

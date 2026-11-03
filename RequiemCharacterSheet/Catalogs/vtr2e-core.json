@@ -3571,6 +3571,20 @@
       "summary": "Next bashing damage the named victim takes becomes lethal."
     },
     {
+      "id": "blandishment-of-sin-advanced",
+      "name": "Blandishment of Sin (Advanced)",
+      "discipline": "theban-sorcery",
+      "dots": 4,
+      "source": {
+        "book": "vtr2e-core",
+        "page": 153
+      },
+      "targetSuccesses": 8,
+      "contestedBy": "Resolve + Blood Potency",
+      "sacrament": "Paper bearing the victim's name",
+      "summary": "Next lethal damage the named victim takes becomes aggravated."
+    },
+    {
       "id": "curse-of-babel",
       "name": "Curse of Babel",
       "discipline": "theban-sorcery",
@@ -4006,6 +4020,42 @@
       "summary": "Stay still in your haven to watch all of it and pounce on intruders."
     },
     {
+      "id": "gargoyles-vigilance-advanced",
+      "name": "Gargoyle’s Vigilance (Advanced)",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 144
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 1
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "note": "Use while asleep costs 1 Willpower"
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 4,
+      "summary": "As Gargoyle’s Vigilance, but the still vampire becomes a statue immune to fire and sunlight."
+    },
+    {
       "id": "hint-of-fear",
       "name": "Hint of Fear",
       "source": {
@@ -4394,7 +4444,7 @@
       "dicePool": {
         "attribute": "intelligence",
         "skill": "medicine",
-        "discipline": "auspex",
+        "discipline": "obfuscate",
         "resistance": "Resolve + Blood Potency"
       },
       "action": "instant",

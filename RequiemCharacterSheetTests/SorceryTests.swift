@@ -38,7 +38,7 @@ struct SorceryTests {
             #expect(ritual.targetSuccesses > 0, "\(ritual.name)")
         }
         #expect(catalog.rituals.all.filter { $0.discipline == "cruac" }.count == 10)
-        #expect(catalog.rituals.all.filter { $0.discipline == "theban-sorcery" }.count == 9)
+        #expect(catalog.rituals.all.filter { $0.discipline == "theban-sorcery" }.count == 10)
     }
 
     @Test func ritualFactsMatchTheBook() throws {
@@ -84,6 +84,22 @@ struct SorceryTests {
         // Summoning can be learned through either Dominate or Majesty
         let summoning = try #require(catalog.devotions.entry(named: "Summoning"))
         #expect(summoning.prerequisitesAnyOf.map { $0.map(\.id) } == [["dominate"], ["majesty"]])
+
+        // The 2e book's pool says Auspex, a holdover from 1e; its prerequisites are Obfuscate and Dominate
+        #expect(catalog.devotions.entry(named: "Touch of Deprivation")?.dicePool?.discipline == "obfuscate")
+    }
+
+    @Test func advancedVersionsAreSeparateEntries() throws {
+        // Typed with a straight apostrophe, matching the catalog's curly one
+        let gargoyle = try #require(catalog.devotions.entry(named: "Gargoyle's Vigilance (Advanced)"))
+        #expect(gargoyle.experienceCost == 4)
+        #expect(gargoyle.prerequisites.contains { $0.id == "protean" && $0.minimum == 5 })
+        #expect(catalog.devotions.entry(named: "Gargoyle's Vigilance")?.experienceCost == 1)
+
+        let blandishment = try #require(catalog.rituals.entry(named: "Blandishment of Sin (Advanced)"))
+        #expect(blandishment.dots == 4)
+        #expect(blandishment.targetSuccesses == 8)
+        #expect(catalog.rituals.entry(named: "Blandishment of Sin")?.dots == 1)
     }
 
     @Test func everyCoilHasFiveTiersInOrder() {
@@ -162,5 +178,119 @@ struct SorceryTests {
         let coil = try JSONDecoder().decode(Coil.self, from: Data(json.utf8))
         #expect(coil.rating == 5)
         #expect(coil.learnedTiers.count == 5)
+    }
+
+    // MARK: - Rules
+
+    private func character(disciplines: [(String, Int)], status: [(String, Int)] = []) -> Character {
+        let character = Character()
+        character.disciplines = disciplines.map { Discipline(name: $0.0, rating: $0.1) }
+        character.merits = status.map { Merit(source: .catalog("covenant-status"), qualifier: $0.0, rating: $0.1) }
+        return character
+    }
+
+    @Test func ritualsAboveTheDisciplineAreFlagged() {
+        let character = character(disciplines: [("Crúac", 1)])
+        let cheval = Ritual(source: catalog.rituals.source(named: "Cheval"))
+        let rigorMortis = Ritual(source: catalog.rituals.source(named: "Rigor Mortis"))
+
+        #expect(character.warnings(for: cheval) == ["Requires Crúac 2"])
+        #expect(character.warnings(for: rigorMortis).isEmpty)
+        #expect(character.freeRitualCount(for: "cruac") == 1)
+    }
+
+    @Test func thebanMiraclesNeedHumanity() {
+        let character = character(disciplines: [("Theban Sorcery", 4)])
+        character.humanity = 3
+        let stigmata = Ritual(source: catalog.rituals.source(named: "Stigmata"))
+        #expect(character.warnings(for: stigmata) == ["Casting requires Humanity 4"])
+
+        character.humanity = 4
+        #expect(character.warnings(for: stigmata).isEmpty)
+    }
+
+    @Test func cruacCapsHumanity() {
+        let character = character(disciplines: [("Crúac", 3)])
+        #expect(character.humanityCap == HumanityCap(limit: 7, disciplineName: "Crúac", dots: 3))
+        #expect(Character().humanityCap == nil)
+    }
+
+    @Test func learningRitualsNeedsCovenantStatus() throws {
+        let cruac = try #require(catalog.disciplines.entry("cruac"))
+        let outsider = character(disciplines: [("Crúac", 1)])
+        #expect(outsider.ritualLearningWarning(for: cruac) == "Learning rituals requires Circle of the Crone Status 1")
+
+        let acolyte = character(disciplines: [("Crúac", 1)], status: [("Circle of the Crone", 1)])
+        #expect(acolyte.ritualLearningWarning(for: cruac) == nil)
+        #expect(acolyte.showsRituals)
+        #expect(!Character().showsRituals)
+    }
+
+    @Test func choosingAMysteryAddsItsCoil() {
+        let character = Character()
+        character.chooseMystery(.catalog("mystery-of-the-ascendant"))
+        #expect(character.coils.map(\.mystery) == [.catalog("mystery-of-the-ascendant")])
+        #expect(character.showsCoils)
+
+        // Switching Mystery keeps the old Coil's dots
+        character.coils[0].rating = 2
+        character.chooseMystery(.catalog("mystery-of-the-wyrm"))
+        #expect(character.coils.count == 2)
+        #expect(character.coilRating("mystery-of-the-ascendant") == 2)
+    }
+
+    @Test func customMysteryKeepsItsCoilWhenRenamed() {
+        let character = Character()
+        character.renameMystery(to: "Mystery of the Serpent")
+        character.coils[0].rating = 1
+        character.renameMystery(to: "Mystery of the Serpents")
+
+        #expect(character.coils.count == 1)
+        #expect(character.coils[0].mystery == .custom("Mystery of the Serpents"))
+        #expect(character.isMysteryCoil(character.coils[0]))
+    }
+
+    @Test func otherCoilsAreLimitedByOrdoDraculStatus() {
+        let character = character(disciplines: [], status: [("Ordo Dracul", 1)])
+        character.chooseMystery(.catalog("mystery-of-the-wyrm"))
+        let own = character.coils[0]
+        own.rating = 3
+        let other = Coil(mystery: .catalog("mystery-of-the-voivode"), rating: 2)
+        character.coils.append(other)
+
+        #expect(character.warning(for: own) == nil)
+        #expect(character.warning(for: other) == "Outside your Mystery, limited to Ordo\u{00A0}Dracul Status (1)")
+        other.rating = 1
+        #expect(character.warning(for: other) == nil)
+    }
+
+    @Test func scalesCostLessWithTheirPrerequisiteCoil() throws {
+        let scale = try #require(catalog.scales.entry(named: "Kindred Sense Endowment"))
+        let character = Character()
+        #expect(character.experienceCost(of: scale) == 2)
+
+        character.coils = [Coil(mystery: .catalog("mystery-of-the-wyrm"), rating: 2)]
+        #expect(character.meetsPrerequisite(of: scale))
+        #expect(character.experienceCost(of: scale) == 1)
+        #expect(scale.prerequisiteText.hasSuffix("Hunger (Mystery of the Wyrm ••)"))
+    }
+
+    @Test func devotionPrerequisitesAreChecked() throws {
+        let summoning = try #require(catalog.devotions.entry(named: "Summoning"))
+        #expect(!character(disciplines: [("Majesty", 3)]).unmetPrerequisites(for: summoning).isEmpty)
+        #expect(character(disciplines: [("Majesty", 4)]).unmetPrerequisites(for: summoning).isEmpty)
+
+        let bodyOfWill = try #require(catalog.devotions.entry(named: "Body of Will"))
+        let missingVigor = character(disciplines: [("Resilience", 3)]).unmetPrerequisites(for: bodyOfWill)
+        #expect(missingVigor.map(\.description) == ["Vigor 1"])
+    }
+
+    @Test func devotionPoolsAddTheirNamedDiscipline() throws {
+        let bodyOfWill = try #require(catalog.devotions.entry(named: "Body of Will"))
+        let pool = try #require(bodyOfWill.dicePool)
+        let character = character(disciplines: [("Resilience", 3), ("Vigor", 1)])
+        // Stamina 1 raised to 4 by Resilience, Survival unskilled (−1), plus Resilience 3
+        #expect(character.dice(for: pool) == 6)
+        #expect(pool.formula(disciplineName: "") == "Stamina + Survival + Resilience")
     }
 }

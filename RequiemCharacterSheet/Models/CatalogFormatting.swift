@@ -44,6 +44,9 @@ extension DicePool {
         if includesDiscipline {
             parts.append(disciplineName)
         }
+        if let discipline {
+            parts.append(Catalog.bundled.disciplines.entry(discipline)?.name ?? discipline)
+        }
         let formula = parts.joined(separator: " + ")
         if let resistance, subtractsResistance {
             return "\(formula) \(resistance)"
@@ -85,7 +88,13 @@ extension Character {
     func dice(for pool: DicePool, disciplineRating: Int) -> Int? {
         guard let attribute = pool.attribute else { return nil }
         let skill = pool.skill.map(skillDiceContribution) ?? 0
-        return rollRating(of: attribute) + skill + (pool.includesDiscipline ? disciplineRating : 0)
+        let named = pool.discipline.map(self.disciplineRating) ?? 0
+        return rollRating(of: attribute) + skill + (pool.includesDiscipline ? disciplineRating : 0) + named
+    }
+
+    /// Dice for a pool that names its own Discipline, such as a Devotion's.
+    func dice(for pool: DicePool) -> Int? {
+        dice(for: pool, disciplineRating: 0)
     }
 
     /// The Disciplines the character's clan has in-clan, if the clan is from the catalog.

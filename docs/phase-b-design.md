@@ -268,7 +268,25 @@ Added ahead of XP tracking and guided creation, which need their costs and rules
 - **Scales** (`scales`): 10 entries, each naming its prerequisite Coil tier, which decides whether it costs 1 or 2 Experiences.
 - **Character schema v7** adds `rituals`, `devotions`, `mystery` (the Mystery followed), `coils` (dots per Mystery) and `scales`. These are additive, so older saves load with none. A custom Discipline typed as "Crúac" or "Theban Sorcery" links to the new entry.
 
-Next: S2, the sheet UI and rules for these. Then X1–X2 for XP tracking and C1–C2 for guided creation.
+Corrections agreed with the user:
+- Printed Devotion costs stand. The book's halving rule is only a guideline.
+- Touch of Deprivation's pool uses Obfuscate. The printed Auspex is a holdover from 1e.
+- Variants the book describes in passing are separate entries named "… (Advanced)", after Onyx Path's later "Danger Sense (Advanced)" style: Gargoyle's Vigilance (Advanced), which adds Protean 5 and costs 4 Experiences, and Blandishment of Sin (Advanced), at 4 dots with 8 successes.
+
+**S2 (sheet UI and rules).** New Devotions, Rituals and Coils of the Dragon sections. Each has a picker built on a shared `CatalogPickerView`, a detail sheet built on `CatalogDetailView`, and a custom-entry option.
+- The Rituals section appears once the character has a Ritual Discipline.
+- The Coils section appears for the Ordo Dracul, or once the character has Coils or Scales.
+
+As with Merit prerequisites, broken rules show as warnings rather than being blocked; hard limits come with guided creation. The warnings cover:
+- a ritual rated above the Discipline's dots;
+- a Theban miracle above the character's Humanity;
+- Crúac's Humanity cap (a note, which becomes a warning when Humanity is above it);
+- learning rituals without the covenant Status;
+- a Coil outside the character's Mystery above their Ordo Dracul Status.
+
+Scales show 1 or 2 Experiences depending on their prerequisite Coil. Name matching treats curly and straight apostrophes alike.
+
+Next: X1–X2 (XP tracking), then C1–C2 (guided creation).
 
 ## Open questions
 

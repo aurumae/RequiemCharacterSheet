@@ -35,6 +35,11 @@
 		BC2B4460309A851B00720F0C /* BanePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B445F309A851B00720F0C /* BanePickerView.swift */; };
 		BC2B4464309A9B7900720F0C /* Sorcery.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4463309A9B7900720F0C /* Sorcery.swift */; };
 		BC2B4466309A9BB700720F0C /* SorceryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4465309A9BB700720F0C /* SorceryTests.swift */; };
+		BC2B4468309AA12C00720F0C /* SorceryRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4467309AA12C00720F0C /* SorceryRules.swift */; };
+		BC2B446A309AA14400720F0C /* CatalogPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4469309AA14400720F0C /* CatalogPickerView.swift */; };
+		BC2B446C309AA16400720F0C /* DevotionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B446B309AA16400720F0C /* DevotionsView.swift */; };
+		BC2B446E309AA18100720F0C /* RitualsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B446D309AA18100720F0C /* RitualsView.swift */; };
+		BC2B4470309AA1A400720F0C /* CoilsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B446F309AA1A400720F0C /* CoilsView.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -131,7 +136,12 @@
 		BC2B445D309A4E1F00720F0C /* MeritRulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeritRulesTests.swift; sourceTree = "<group>"; };
 		BC2B445F309A851B00720F0C /* BanePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanePickerView.swift; sourceTree = "<group>"; };
 		BC2B4463309A9B7900720F0C /* Sorcery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sorcery.swift; sourceTree = "<group>"; };
-		BC2B4465309A9BB700720F0C /* SorceryTests.swift */ = {isa = PBXFileReference; path = SorceryTests.swift; sourceTree = "<group>"; };
+		BC2B4465309A9BB700720F0C /* SorceryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorceryTests.swift; sourceTree = "<group>"; };
+		BC2B4467309AA12C00720F0C /* SorceryRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorceryRules.swift; sourceTree = "<group>"; };
+		BC2B4469309AA14400720F0C /* CatalogPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPickerView.swift; sourceTree = "<group>"; };
+		BC2B446B309AA16400720F0C /* DevotionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevotionsView.swift; sourceTree = "<group>"; };
+		BC2B446D309AA18100720F0C /* RitualsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RitualsView.swift; sourceTree = "<group>"; };
+		BC2B446F309AA1A400720F0C /* CoilsView.swift */ = {isa = PBXFileReference; path = CoilsView.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -274,6 +284,9 @@
 				BC2B4459309A4DDC00720F0C /* MeritPickerView.swift */,
 				BC2B445B309A4DE600720F0C /* MeritDetailView.swift */,
 				BC2B445F309A851B00720F0C /* BanePickerView.swift */,
+				BC2B446B309AA16400720F0C /* DevotionsView.swift */,
+				BC2B446D309AA18100720F0C /* RitualsView.swift */,
+				BC2B446F309AA1A400720F0C /* CoilsView.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -288,6 +301,7 @@
 				BC6D36AD2C9B46F5008D03F7 /* WillpowerBoxView.swift */,
 				BC2B4433309982B500720F0C /* SharedRows.swift */,
 				BCB159152C9874A5003B6A8F /* BackgroundView.swift */,
+				BC2B4469309AA14400720F0C /* CatalogPickerView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -411,6 +425,7 @@
 				BC2B444F309A452F00720F0C /* CatalogFormatting.swift */,
 				BC2B4457309A4DC400720F0C /* MeritRules.swift */,
 				BC2B4463309A9B7900720F0C /* Sorcery.swift */,
+				BC2B4467309AA12C00720F0C /* SorceryRules.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -573,6 +588,7 @@
 				BC2B4464309A9B7900720F0C /* Sorcery.swift in Sources */,
 				BC2B4434309982B500720F0C /* SharedRows.swift in Sources */,
 				BC6D36D12C9DE643008D03F7 /* Merit.swift in Sources */,
+				BC2B446C309AA16400720F0C /* DevotionsView.swift in Sources */,
 				BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */,
 				BC2B445A309A4DDC00720F0C /* MeritPickerView.swift in Sources */,
 				BCB1590E2C9872D6003B6A8F /* DotsRowView.swift in Sources */,
@@ -580,8 +596,10 @@
 				BCB159102C9872FD003B6A8F /* DotView.swift in Sources */,
 				BC6D36CA2C9DD3F9008D03F7 /* HumanityRowView.swift in Sources */,
 				BCB158CE2C986811003B6A8F /* RequiemCharacterSheetApp.swift in Sources */,
+				BC2B446E309AA18100720F0C /* RitualsView.swift in Sources */,
 				BC6D36C82C9DD3D6008D03F7 /* Touchstone.swift in Sources */,
 				BC2B4444309A30F600720F0C /* TraitSource.swift in Sources */,
+				BC2B4470309AA1A400720F0C /* CoilsView.swift in Sources */,
 				BCB1590A2C987230003B6A8F /* AttributeRowView.swift in Sources */,
 				BC6D36CF2C9DE637008D03F7 /* Discipline.swift in Sources */,
 				BC6D36E32C9E003B008D03F7 /* Bane.swift in Sources */,
@@ -598,6 +616,7 @@
 				BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */,
 				BCB159072C987161003B6A8F /* Character.swift in Sources */,
 				BCB159052C987143003B6A8F /* Attribute.swift in Sources */,
+				BC2B4468309AA12C00720F0C /* SorceryRules.swift in Sources */,
 				BC6D36BE2C9D07A8008D03F7 /* CharacterInfoView.swift in Sources */,
 				BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */,
 				BC6D36E12C9E002A008D03F7 /* Aspiration.swift in Sources */,
@@ -613,6 +632,7 @@
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
 				BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */,
 				BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */,
+				BC2B446A309AA14400720F0C /* CatalogPickerView.swift in Sources */,
 				BC2B445C309A4DE600720F0C /* MeritDetailView.swift in Sources */,
 				BC6D36A82C9A600C008D03F7 /* BoxFillType.swift in Sources */,
 				BC2B442E3099806A00720F0C /* TraitDefinitions.swift in Sources */,

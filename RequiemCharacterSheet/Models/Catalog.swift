@@ -88,7 +88,7 @@ struct CatalogIndex<Entry: CatalogEntry> {
         byID[id]
     }
 
-    /// The entry with this name, ignoring case, accents and a leading "The", but not spaces,
+    /// The entry with this name, ignoring case, accents, curly apostrophes and a leading "The", but not spaces,
     /// so a partly typed "Vigor B…" doesn't match Vigor.
     func entry(named name: String) -> Entry? {
         byName[Self.matchKey(name)]
@@ -111,6 +111,7 @@ struct CatalogIndex<Entry: CatalogEntry> {
 
     private static func matchKey(_ name: String) -> String {
         let folded = name.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
+            .replacingOccurrences(of: "\u{2019}", with: "'")
         return folded.hasPrefix("the ") ? String(folded.dropFirst(4)) : folded
     }
 }

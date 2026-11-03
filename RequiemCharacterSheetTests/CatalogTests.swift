@@ -22,8 +22,8 @@ struct CatalogTests {
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 6)
         #expect(catalog.covenants.all.count == 5)
-        #expect(catalog.rituals.all.count == 19)
-        #expect(catalog.devotions.all.count == 28)
+        #expect(catalog.rituals.all.count == 20)
+        #expect(catalog.devotions.all.count == 29)
         #expect(catalog.mysteries.all.count == 3)
         #expect(catalog.scales.all.count == 10)
     }

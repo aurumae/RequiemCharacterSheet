@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// One requirement of a Merit, worded for display, and whether the character meets it.
+/// One requirement of a Merit or Devotion, worded for display, and whether the character meets it.
 struct PrerequisiteCheck: Equatable {
     let description: String
     /// `nil` when it can't be checked automatically, e.g. "Cannot also have the Fame Merit".
@@ -15,9 +15,23 @@ struct PrerequisiteCheck: Equatable {
 extension Character {
     /// Every requirement of the Merit: each prerequisite, then one line per "one of" choice.
     func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck] {
-        var checks = entry.prerequisites.map(check)
-        if !entry.prerequisitesAnyOf.isEmpty {
-            let groups = entry.prerequisitesAnyOf.map { $0.map(check) }
+        prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf)
+    }
+
+    /// Every Discipline a Devotion needs, then one line per "one of" choice.
+    func prerequisiteChecks(for entry: DevotionEntry) -> [PrerequisiteCheck] {
+        prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf)
+    }
+
+    /// The requirements the character is known not to meet. Devotions can still be taken; these are warnings.
+    func unmetPrerequisites(for entry: DevotionEntry) -> [PrerequisiteCheck] {
+        prerequisiteChecks(for: entry).filter { $0.isMet == false }
+    }
+
+    private func prerequisiteChecks(_ prerequisites: [Prerequisite], anyOf: [[Prerequisite]]) -> [PrerequisiteCheck] {
+        var checks = prerequisites.map(check)
+        if !anyOf.isEmpty {
+            let groups = anyOf.map { $0.map(check) }
             let descriptions = groups.map { $0.map(\.description).joined(separator: " and ") }
             // A choice is met if any of its options has nothing unmet
             let isMet = groups.contains { group in group.allSatisfy { $0.isMet != false } }
@@ -50,8 +64,7 @@ extension Character {
             return PrerequisiteCheck(description: minimum > 1 ? "\(name) \(minimum)" : name, isMet: isMet)
         case .discipline:
             let name = catalog.disciplines.entry(id)?.name ?? id
-            let dots = disciplines.filter { $0.source == .catalog(id) }.map(\.rating).max() ?? 0
-            return PrerequisiteCheck(description: "\(name) \(minimum)", isMet: dots >= minimum)
+            return PrerequisiteCheck(description: "\(name) \(minimum)", isMet: disciplineRating(id) >= minimum)
         case .bloodPotency:
             return PrerequisiteCheck(description: "Blood Potency \(minimum)", isMet: bloodPotency >= minimum)
         case .clan:
@@ -63,10 +76,7 @@ extension Character {
                 return PrerequisiteCheck(description: "Covenant: \(name)", isMet: covenantSource == .catalog(id))
             }
             // Measured in Covenant Status with that covenant
-            let status = merits
-                .filter { $0.source == .catalog("covenant-status") && $0.qualifier?.caseInsensitiveCompare(name) == .orderedSame }
-                .map(\.rating).max() ?? 0
-            return PrerequisiteCheck(description: "\(name) Status \(minimum)", isMet: status >= minimum)
+            return PrerequisiteCheck(description: "\(name) Status \(minimum)", isMet: covenantStatus(id) >= minimum)
         case .other:
             return unknown(prerequisite)
         }

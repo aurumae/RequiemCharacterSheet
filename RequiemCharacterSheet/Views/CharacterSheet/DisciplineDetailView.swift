@@ -41,6 +41,10 @@ struct DisciplineDetailView: View {
                     .accessibilityElement(children: .combine)
                 }
 
+                if let rules = entry.ritualRules {
+                    ritualSection(rules)
+                }
+
                 if !knownPowers.isEmpty {
                     Section(header: Text(rating == 1 ? "Your power" : "Your powers").themedText(.subsectionHeader)) {
                         ForEach(knownPowers) { power in
@@ -67,6 +71,45 @@ struct DisciplineDetailView: View {
             }
         }
         .tint(theme.accent)
+    }
+}
+
+extension DisciplineDetailView {
+    /// How a Ritual Discipline is learned and cast, and the rituals the character knows.
+    @ViewBuilder
+    private func ritualSection(_ rules: RitualRules) -> some View {
+        let covenant = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
+        let known = character.rituals(of: .catalog(entry.id))
+        Section(header: Text("Rituals").themedText(.subsectionHeader)) {
+            VStack(alignment: .leading, spacing: 4) {
+                fact("Learned with", "\(covenant) Status \(rules.covenantStatusMinimum)")
+                fact("Casting cost", rules.castingCost.displayText == "Varies"
+                     ? (rules.castingCost.note ?? "Varies")
+                     : rules.castingCost.displayText + (rules.castingCost.note.map { " (\($0))" } ?? ""))
+                if let formula = rules.castingPool.formula(disciplineName: entry.name) {
+                    fact("Dice pool", formula)
+                }
+                fact("Humanity", rules.humanity.description)
+                fact("Rituals", "Each dot comes with one ritual; others cost 2 Experiences each. A ritual can't be rated above your dots.")
+            }
+            .padding(.vertical, 4)
+            .accessibilityElement(children: .combine)
+
+            ForEach(known) { ritual in
+                HStack {
+                    Text(ritual.name)
+                        .themedText(.traitName)
+                    Spacer()
+                    DotsText(ritual.dots)
+                }
+                .opacity(ritual.dots <= rating ? 1 : 0.5)
+            }
+        }
+    }
+
+    private func fact(_ label: String, _ value: String) -> some View {
+        (Text("\(label): ").bold() + Text(value))
+            .themedText(.detail)
     }
 }
 
