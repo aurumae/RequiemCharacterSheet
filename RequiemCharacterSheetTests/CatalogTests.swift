@@ -177,7 +177,7 @@ struct CatalogTests {
         let disciplines = try #require(json["disciplines"] as? [[String: Any]])
         let merits = try #require(json["merits"] as? [[String: Any]])
 
-        #expect(json["schemaVersion"] as? Int == 5)
+        #expect(json["schemaVersion"] as? Int == Character.currentSchemaVersion)
         #expect((json["clan"] as? [String: String]) == ["catalog": "mekhet"])
         #expect((json["covenant"] as? [String: String]) == ["custom": "Homebrew Covenant"])
         #expect((disciplines.first?["source"] as? [String: String]) == ["catalog": "auspex"])

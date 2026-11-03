@@ -3244,7 +3244,8 @@
         "name": "The Tenebrous Curse",
         "summary": "Gains one extra bane (no breaking point, counts toward the limit of three); Humanity counts one lower for Humanity-based banes, sunlight and torpor.",
         "humanityThreshold": 6,
-        "page": 22
+        "page": 22,
+        "grantsExtraBane": true
       },
       "summary": "Secretive spies and seers who hunt hidden knowledge and move unseen."
     },

@@ -19,7 +19,11 @@ final class Character: Codable {
     ///   adds `skillList`.
     /// - 5: Disciplines, Merits, Banes, clan and covenant saved as a catalog id or custom text (`TraitSource`)
     ///   instead of a name; Merits gain a qualifier.
-    static let currentSchemaVersion = 5
+    /// - 6: adds `clanBaneActive`.
+    static let currentSchemaVersion = 6
+
+    /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
+    static let maxBanes = 3
 
     let id: UUID
     let createdAt: Date
@@ -47,7 +51,14 @@ final class Character: Codable {
     var dirge: String
     var concept: String
     /// The clan: a catalog entry or custom text.
-    var clanSource: TraitSource
+    var clanSource: TraitSource {
+        didSet {
+            // Choosing a clan when Humanity is already at or below the threshold puts its bane in effect
+            if clanSource != oldValue, clanEntry != nil, humanity <= clanBaneThreshold {
+                clanBaneActive = true
+            }
+        }
+    }
     var bloodline: String
     /// The covenant: a catalog entry or custom text.
     var covenantSource: TraitSource
@@ -61,7 +72,17 @@ final class Character: Codable {
     }
     var currentVitae: Int
 
-    var humanity: Int
+    var humanity: Int {
+        didSet {
+            // A known clan's bane takes hold when Humanity first falls to its threshold, and stays even if Humanity rises again
+            if clanEntry != nil, humanity <= clanBaneThreshold, oldValue > clanBaneThreshold {
+                clanBaneActive = true
+            }
+        }
+    }
+    /// Whether the clan bane is in effect. Set automatically when Humanity falls to the threshold;
+    /// the player can switch it off, e.g. if that happened while trying out changes.
+    var clanBaneActive: Bool
     var touchstones: [Touchstone]
 
     var disciplines: [Discipline]
@@ -80,7 +101,7 @@ final class Character: Codable {
         case schemaVersion, id, createdAt, modifiedAt,
              attributes, bloodPotency, healthTrack, willpowerTrack, skills, skillList,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
-             currentVitae, humanity, touchstones, disciplines, merits,
+             currentVitae, humanity, clanBaneActive, touchstones, disciplines, merits,
              aspirations, banes, size, armor, beats, experiences
         // Read from saves before version 3 only
         case healthBoxes, willpowerBoxes
@@ -115,6 +136,7 @@ final class Character: Codable {
         try container.encode(currentVitae, forKey: .currentVitae)
 
         try container.encode(humanity, forKey: .humanity)
+        try container.encode(clanBaneActive, forKey: .clanBaneActive)
         try container.encode(touchstones, forKey: .touchstones)
 
         try container.encode(disciplines, forKey: .disciplines)
@@ -177,6 +199,8 @@ final class Character: Codable {
         currentVitae = try container.decode(.currentVitae, default: 0)
 
         humanity = try container.decode(.humanity, default: 7)
+        let savedClanBaneActive = try container.decodeIfPresent(Bool.self, forKey: .clanBaneActive)
+        clanBaneActive = false
 
         disciplines = try container.decode(.disciplines, default: [Discipline()])
         merits = try container.decode(.merits, default: [Merit()])
@@ -193,6 +217,9 @@ final class Character: Codable {
         // Bring loaded values within the limits set by Blood Potency
         clampBaseRatings()
         currentVitae = min(currentVitae, maxVitae)
+
+        // Saves before version 6 didn't record it, so assume it from the current Humanity
+        clanBaneActive = savedClanBaneActive ?? (humanity <= clanBaneThreshold)
     }
 
     init() {
@@ -221,6 +248,7 @@ final class Character: Codable {
         currentVitae = 0
 
         humanity = 7
+        clanBaneActive = false
         touchstones = Character.defaultTouchstones()
 
         disciplines = [Discipline()] // Start with one empty Discipline
@@ -302,6 +330,15 @@ final class Character: Codable {
 
     var clanEntry: ClanEntry? {
         clanSource.catalogID.flatMap { Catalog.bundled.clans.entry($0) }
+    }
+
+    /// The Humanity at which the clan bane takes effect: 6 for every clan unless its entry says otherwise.
+    var clanBaneThreshold: Int {
+        clanEntry?.bane.humanityThreshold ?? 6
+    }
+
+    var canAddBane: Bool {
+        banes.count < Character.maxBanes
     }
 
     var covenantEntry: CovenantEntry? {

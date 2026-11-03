@@ -281,6 +281,21 @@ struct ClanBane: Decodable {
     /// Takes effect when Humanity first falls to this, if the book gives one.
     let humanityThreshold: Int?
     let page: Int?
+    /// The bane gives the vampire an extra Bane from the list, which counts toward the limit of three (Mekhet).
+    let grantsExtraBane: Bool
+
+    enum CodingKeys: CodingKey {
+        case name, summary, humanityThreshold, page, grantsExtraBane
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        summary = try container.decode(String.self, forKey: .summary)
+        humanityThreshold = try container.decodeIfPresent(Int.self, forKey: .humanityThreshold)
+        page = try container.decodeIfPresent(Int.self, forKey: .page)
+        grantsExtraBane = try container.decode(.grantsExtraBane, default: false)
+    }
 }
 
 struct CovenantEntry: CatalogEntry {
