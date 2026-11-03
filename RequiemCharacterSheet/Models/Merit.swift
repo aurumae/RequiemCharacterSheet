@@ -67,8 +67,13 @@ final class Merit: Identifiable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(.id, default: UUID())
         if let source = try container.decodeIfPresent(TraitSource.self, forKey: .source) {
-            self.source = source
-            qualifier = try container.decodeIfPresent(String.self, forKey: .qualifier)
+            if case .custom(let name) = source {
+                // A custom name that now matches a catalog entry (e.g. one added since the save) is linked to it
+                (self.source, qualifier) = Self.parse(name)
+            } else {
+                self.source = source
+                qualifier = try container.decodeIfPresent(String.self, forKey: .qualifier)
+            }
         } else {
             let name: String = try container.decode(.name, default: "")
             (source, qualifier) = Self.parse(name.trimmingCharacters(in: .whitespacesAndNewlines))

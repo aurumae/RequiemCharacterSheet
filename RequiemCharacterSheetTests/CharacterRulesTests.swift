@@ -81,21 +81,28 @@ struct CharacterRulesTests {
         #expect(character.health == 12)
     }
 
-    @Test func praestantiaAddsToDexterityTotalAndDexterityDerivedValues() {
+    /// A Thousand Years of Night p. 29: Praestantia adds to Dexterity for rolls and to Initiative,
+    /// but not to traits derived from Dexterity such as Speed and Defense.
+    @Test func praestantiaAddsToDexterityRollsAndInitiativeOnly() {
         let character = Character()
         let dexterity = attribute(named: "Dexterity", in: character)
         let composure = attribute(named: "Composure", in: character)
+        let wits = attribute(named: "Wits", in: character)
         let firearms = skill(named: "Firearms", in: character)
 
         dexterity.rating = 4
         composure.rating = 3
+        wits.rating = 5
         firearms.rating = 2
         character.disciplines = [Discipline(name: "Praestantia", rating: 5)]
 
         #expect(character.totalAttributeRating(for: dexterity) == 9)
-        #expect(character.speed == 15)
-        #expect(character.initiativeMod == 12)
         #expect(character.firearmsDicePool == 11)
+        #expect(character.initiativeMod == 12)
+        // Speed: 5 + Strength 1 + Dexterity 4, without Praestantia
+        #expect(character.speed == 10)
+        // Defense: lower of Dexterity 4 and Wits 5, without Praestantia
+        #expect(character.defense == 4)
     }
 
     @Test func combatDicePoolsSubtractOneForZeroRatingSkills() {

@@ -43,8 +43,12 @@ enum TraitSource: Hashable, Codable {
 
 extension KeyedDecodingContainer {
     /// Decodes a `TraitSource`, or, for saves before version 5, a plain name matched against `entries`.
+    /// Custom names that now match a catalog entry (e.g. one added since the save) are linked to it.
     func decodeTraitSource<Entry: CatalogEntry>(_ key: Key, legacyNameKey: Key? = nil, in entries: CatalogIndex<Entry>) throws -> TraitSource {
         if let source = try? decodeIfPresent(TraitSource.self, forKey: key) {
+            if case .custom(let name) = source {
+                return entries.source(named: name)
+            }
             return source
         }
         let name = try decodeIfPresent(String.self, forKey: legacyNameKey ?? key) ?? ""

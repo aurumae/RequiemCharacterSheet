@@ -16,7 +16,7 @@ struct DerivedAttributesView: View {
 
     var body: some View {
         Section(header: Text("ADVANTAGES").themedText(.sectionHeader)) {
-            LabeledValueRow("Size:", value: character.size)
+            LabeledValueRow("Size:", value: character.effectiveSize)
             LabeledValueRow("Speed:", value: character.speed)
             LabeledValueRow("Defense (Athletics):", value: character.defense)
 

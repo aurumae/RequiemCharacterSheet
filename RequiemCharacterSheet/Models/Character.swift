@@ -332,13 +332,73 @@ final class Character: Codable {
         }
     }
 
-    // Derived attributes
+    // MARK: - Effects
+
+    /// A catalog effect from one of the character's Disciplines or Merits, with the dots and qualifier it applies at.
+    struct AppliedEffect {
+        let effect: Effect
+        let rating: Int
+        let qualifier: String?
+    }
+
+    /// Every effect from the character's catalog Disciplines and Merits that have at least one dot.
+    var appliedEffects: [AppliedEffect] {
+        let fromDisciplines = disciplines.filter { $0.rating > 0 }.flatMap { discipline in
+            (discipline.entry?.effects ?? []).map { AppliedEffect(effect: $0, rating: discipline.rating, qualifier: nil) }
+        }
+        let fromMerits = merits.filter { $0.rating > 0 }.flatMap { merit in
+            (merit.entry?.effects ?? []).map { AppliedEffect(effect: $0, rating: merit.rating, qualifier: merit.qualifier) }
+        }
+        return fromDisciplines + fromMerits
+    }
+
+    /// Adds up the amounts of the effects `select` picks out.
+    private func effectTotal(_ select: (Effect) -> Amount?) -> Int {
+        appliedEffects.reduce(0) { total, applied in
+            total + (select(applied.effect)?.value(forRating: applied.rating) ?? 0)
+        }
+    }
+
+    /// Bonuses that raise the Attribute itself, e.g. Vigor.
+    func attributeBonus(for kind: AttributeKind) -> Int {
+        effectTotal { effect in
+            if case .attribute(let target, let amount) = effect, target == kind { return amount }
+            return nil
+        }
+    }
+
+    /// Bonuses that only apply when the Attribute is rolled, e.g. Praestantia.
+    func rollBonus(for kind: AttributeKind) -> Int {
+        effectTotal { effect in
+            if case .attributeRolls(let target, let amount) = effect, target == kind { return amount }
+            return nil
+        }
+    }
+
+    /// Skills that may replace Athletics when calculating Defense, e.g. Brawl from Defensive Combat (Brawl).
+    var alternativeDefenseSkills: [SkillID] {
+        appliedEffects.compactMap { applied in
+            guard applied.effect == .defenseSkillFromQualifier, let qualifier = applied.qualifier else { return nil }
+            return SkillDefinition.named(qualifier)?.id
+        }
+    }
+
+    // MARK: - Derived traits
+
     var health: Int {
-        return adjustedStamina + size
+        adjustedStamina + effectiveSize
     }
 
     var willpower: Int {
         rating(of: .resolve) + rating(of: .composure)
+    }
+
+    /// Size including Merits such as Giant.
+    var effectiveSize: Int {
+        size + effectTotal { effect in
+            if case .size(let amount) = effect { return amount }
+            return nil
+        }
     }
 
     var maxVitae: Int {
@@ -361,7 +421,6 @@ final class Character: Codable {
         0...baseRatingCap
     }
 
-    // Computed properties for derived attributes
     var adjustedStamina: Int {
         totalRating(of: .stamina)
     }
@@ -379,31 +438,39 @@ final class Character: Codable {
     }
 
     var hasDefensiveCombatBrawl: Bool {
-        hasDefensiveCombatMerit(for: "brawl")
+        alternativeDefenseSkills.contains(.brawl)
     }
 
     var hasDefensiveCombatWeaponry: Bool {
-        hasDefensiveCombatMerit(for: "weaponry")
+        alternativeDefenseSkills.contains(.weaponry)
     }
 
     var speed: Int {
-        5 + totalRating(of: .strength) + totalRating(of: .dexterity)
+        let bonus = effectTotal { effect in
+            if case .speed(let amount) = effect { return amount }
+            return nil
+        }
+        return 5 + totalRating(of: .strength) + totalRating(of: .dexterity) + bonus
     }
 
     var initiativeMod: Int {
-        totalRating(of: .dexterity) + totalRating(of: .composure)
+        let bonus = effectTotal { effect in
+            if case .initiative(let amount) = effect { return amount }
+            return nil
+        }
+        return totalRating(of: .dexterity) + totalRating(of: .composure) + bonus
     }
 
     var brawlDicePool: Int {
-        totalRating(of: .strength) + skillDiceContribution(.brawl)
+        rollRating(of: .strength) + skillDiceContribution(.brawl)
     }
 
     var firearmsDicePool: Int {
-        totalRating(of: .dexterity) + skillDiceContribution(.firearms)
+        rollRating(of: .dexterity) + skillDiceContribution(.firearms)
     }
 
     var weaponryDicePool: Int {
-        totalRating(of: .strength) + skillDiceContribution(.weaponry)
+        rollRating(of: .strength) + skillDiceContribution(.weaponry)
     }
 
     /// The attribute's dots, without bonuses.
@@ -416,33 +483,19 @@ final class Character: Codable {
         skill(id)?.rating ?? 0
     }
 
-    /// The attribute's dots plus any bonus from Disciplines.
+    /// The Attribute as a trait, including bonuses that raise it (e.g. Vigor). Used for Speed, Defense and Health.
     func totalRating(of kind: AttributeKind) -> Int {
-        rating(of: kind) + disciplineBonus(for: kind)
+        rating(of: kind) + attributeBonus(for: kind)
     }
 
+    /// The Attribute when rolled, also including roll-only bonuses (e.g. Praestantia). Used for dice pools.
+    func rollRating(of kind: AttributeKind) -> Int {
+        totalRating(of: kind) + rollBonus(for: kind)
+    }
+
+    /// The rating shown on the sheet: the Attribute as rolled.
     func totalAttributeRating(for attribute: Attribute) -> Int {
-        totalRating(of: attribute.kind)
-    }
-
-    func disciplineBonus(for kind: AttributeKind) -> Int {
-        switch kind {
-        case .strength:
-            return disciplineRating(named: "vigor")
-        case .stamina:
-            return disciplineRating(named: "resilience")
-        case .dexterity:
-            return disciplineRating(named: "praestantia")
-        default:
-            return 0
-        }
-    }
-
-    func disciplineRating(named name: String) -> Int {
-        let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return disciplines.first {
-            $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == normalizedName
-        }?.rating ?? 0
+        rollRating(of: attribute.kind)
     }
 
     /// The skill's contribution to a dice pool: its dots, or the unskilled penalty for its category.
@@ -453,27 +506,11 @@ final class Character: Codable {
     }
 
     func defense(using skillID: SkillID) -> Int {
-        let celerityRating = disciplineRating(named: "celerity")
-        return min(totalRating(of: .dexterity), totalRating(of: .wits)) + rating(of: skillID) + celerityRating
-    }
-
-    func hasDefensiveCombatMerit(for skillName: String) -> Bool {
-        let normalizedSkillName = normalizedRulesText(skillName)
-
-        return merits.contains { merit in
-            let normalizedMeritName = normalizedRulesText(merit.name)
-            return normalizedMeritName.contains("defensive combat")
-                && normalizedMeritName.contains(normalizedSkillName)
+        let bonus = effectTotal { effect in
+            if case .defense(let amount) = effect { return amount }
+            return nil
         }
-    }
-
-    private func normalizedRulesText(_ text: String) -> String {
-        text.trimmingCharacters(in: .whitespacesAndNewlines)
-            .lowercased()
-            .replacingOccurrences(of: "(", with: " ")
-            .replacingOccurrences(of: ")", with: " ")
-            .split(separator: " ")
-            .joined(separator: " ")
+        return min(totalRating(of: .dexterity), totalRating(of: .wits)) + rating(of: skillID) + bonus
     }
 
     private func baseRatingCap(for bloodPotency: Int) -> Int {

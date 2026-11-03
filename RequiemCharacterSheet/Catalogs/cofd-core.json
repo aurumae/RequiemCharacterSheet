@@ -136,7 +136,13 @@
           }
         ]
       ],
-      "summary": "Quick to react: adds to Initiative."
+      "summary": "Quick to react: adds to Initiative.",
+      "effects": [
+        {
+          "type": "initiative",
+          "amount": "rating"
+        }
+      ]
     },
     {
       "id": "good-time-management",
@@ -493,7 +499,15 @@
         3
       ],
       "repeatable": false,
-      "summary": "Very large: Size 6 and one extra Health."
+      "summary": "Very large: Size 6 and one extra Health.",
+      "effects": [
+        {
+          "type": "size",
+          "amount": {
+            "fixed": 1
+          }
+        }
+      ]
     },
     {
       "id": "hardy",
@@ -674,7 +688,15 @@
         2
       ],
       "repeatable": false,
-      "summary": "Small: Size 4, one less Health, bonus to hide."
+      "summary": "Small: Size 4, one less Health, bonus to hide.",
+      "effects": [
+        {
+          "type": "size",
+          "amount": {
+            "fixed": -1
+          }
+        }
+      ]
     },
     {
       "id": "stunt-driver",
@@ -1462,7 +1484,12 @@
           }
         ]
       ],
-      "summary": "Use Brawl or Weaponry in place of Athletics for Defense."
+      "summary": "Use Brawl or Weaponry in place of Athletics for Defense.",
+      "effects": [
+        {
+          "type": "defenseSkillFromQualifier"
+        }
+      ]
     },
     {
       "id": "fighting-finesse",

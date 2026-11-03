@@ -162,7 +162,7 @@ struct CatalogTests {
 
         // Rules that still match by name keep working
         #expect(character.hasDefensiveCombatBrawl)
-        #expect(character.disciplineRating(named: "vigor") == 2)
+        #expect(character.attributeBonus(for: .strength) == 2)
     }
 
     @Test func traitSourcesAreSaved() throws {

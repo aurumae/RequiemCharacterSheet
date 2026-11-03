@@ -36,6 +36,17 @@
           "summary": "Persistent Dexterity and Initiative bonus; spend Vitae for attack bonuses or redoing failures.",
           "page": 29
         }
+      ],
+      "effects": [
+        {
+          "type": "attributeRolls",
+          "attribute": "dexterity",
+          "amount": "rating"
+        },
+        {
+          "type": "initiative",
+          "amount": "rating"
+        }
       ]
     }
   ],

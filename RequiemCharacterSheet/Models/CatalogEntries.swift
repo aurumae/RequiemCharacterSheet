@@ -68,6 +68,23 @@ struct DisciplineEntry: CatalogEntry {
     let source: SourceReference
     let summary: String
     let powers: [DisciplinePower]
+    /// Always-on effects on the sheet, e.g. Vigor adding its dots to Strength.
+    let effects: [Effect]
+
+    enum CodingKeys: CodingKey {
+        case id, name, kind, source, summary, powers, effects
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        kind = try container.decode(Kind.self, forKey: .kind)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(String.self, forKey: .summary)
+        powers = try container.decode([DisciplinePower].self, forKey: .powers)
+        effects = try container.decodeEffects(.effects)
+    }
 
     enum Kind: String, Decodable {
         /// One named power per dot, e.g. Dominate.
@@ -181,6 +198,8 @@ struct MeritEntry: CatalogEntry {
     /// For Fighting Styles: the maneuver each dot grants.
     let styleManeuvers: [StyleManeuver]
     let summary: String
+    /// Always-on effects on the sheet, e.g. Fleet of Foot adding to Speed.
+    let effects: [Effect]
 
     enum Category: String, Decodable {
         case mental, physical, social, fighting, vampire, covenant, other
@@ -188,7 +207,7 @@ struct MeritEntry: CatalogEntry {
 
     enum CodingKeys: CodingKey {
         case id, name, category, source, ratings, qualifier, repeatable
-        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary
+        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary, effects
     }
 
     init(from decoder: Decoder) throws {
@@ -204,6 +223,7 @@ struct MeritEntry: CatalogEntry {
         prerequisitesAnyOf = try container.decode(.prerequisitesAnyOf, default: [])
         styleManeuvers = try container.decode(.styleManeuvers, default: [])
         summary = try container.decode(String.self, forKey: .summary)
+        effects = try container.decodeEffects(.effects)
     }
 }
 
@@ -269,4 +289,100 @@ struct CovenantEntry: CatalogEntry {
     let nickname: String?
     let source: SourceReference
     let summary: String
+}
+
+// MARK: - Effects
+
+/// A rules effect a Discipline or Merit has on the sheet. The character's rules add these up
+/// instead of recognising Disciplines and Merits by name.
+enum Effect: Decodable, Equatable {
+    /// Raises the Attribute itself, so everything derived from it (Speed, Defense, Health) and every roll includes it.
+    /// Vigor (Strength), Resilience (Stamina).
+    case attribute(AttributeKind, Amount)
+    /// Adds to the Attribute only when it's rolled, not to traits derived from it. Praestantia (Dexterity).
+    case attributeRolls(AttributeKind, Amount)
+    /// Celerity.
+    case defense(Amount)
+    /// Praestantia, Fast Reflexes.
+    case initiative(Amount)
+    /// Fleet of Foot.
+    case speed(Amount)
+    /// Changes Size, and so Health. Giant, Small-Framed.
+    case size(Amount)
+    /// Defense may use the Skill named by the Merit's qualifier instead of Athletics. Defensive Combat.
+    case defenseSkillFromQualifier
+
+    private enum CodingKeys: CodingKey {
+        case type, attribute, amount
+    }
+
+    /// Saved as e.g. {"type": "attribute", "attribute": "strength", "amount": "rating"}.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "attribute":
+            self = .attribute(try container.decode(AttributeKind.self, forKey: .attribute), try container.decode(Amount.self, forKey: .amount))
+        case "attributeRolls":
+            self = .attributeRolls(try container.decode(AttributeKind.self, forKey: .attribute), try container.decode(Amount.self, forKey: .amount))
+        case "defense":
+            self = .defense(try container.decode(Amount.self, forKey: .amount))
+        case "initiative":
+            self = .initiative(try container.decode(Amount.self, forKey: .amount))
+        case "speed":
+            self = .speed(try container.decode(Amount.self, forKey: .amount))
+        case "size":
+            self = .size(try container.decode(Amount.self, forKey: .amount))
+        case "defenseSkillFromQualifier":
+            self = .defenseSkillFromQualifier
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown effect \(type)")
+        }
+    }
+}
+
+/// How much an effect adds.
+enum Amount: Decodable, Equatable {
+    /// The Discipline's or Merit's dots.
+    case rating
+    case fixed(Int)
+
+    private enum CodingKeys: CodingKey {
+        case fixed
+    }
+
+    /// Saved as "rating" or {"fixed": 1}.
+    init(from decoder: Decoder) throws {
+        if let text = try? decoder.singleValueContainer().decode(String.self), text == "rating" {
+            self = .rating
+        } else {
+            self = .fixed(try decoder.container(keyedBy: CodingKeys.self).decode(Int.self, forKey: .fixed))
+        }
+    }
+
+    func value(forRating rating: Int) -> Int {
+        switch self {
+        case .rating:
+            return rating
+        case .fixed(let amount):
+            return amount
+        }
+    }
+}
+
+extension KeyedDecodingContainer {
+    /// Decodes a list of effects, skipping any this version doesn't understand
+    /// (e.g. from a newer or imported catalog) rather than failing the whole entry.
+    func decodeEffects(_ key: Key) throws -> [Effect] {
+        try decode(key, default: [Lossy<Effect>]()).compactMap(\.value)
+    }
+}
+
+/// Decodes a value if it can, or `nil` if it can't, without failing the surrounding list.
+private struct Lossy<Value: Decodable>: Decodable {
+    let value: Value?
+
+    init(from decoder: Decoder) throws {
+        value = try? Value(from: decoder)
+    }
 }

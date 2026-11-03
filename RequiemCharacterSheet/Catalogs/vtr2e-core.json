@@ -319,6 +319,12 @@
           "summary": "Persistent Defense bonus; spend Vitae for initiative, interrupts or extreme speed.",
           "page": 130
         }
+      ],
+      "effects": [
+        {
+          "type": "defense",
+          "amount": "rating"
+        }
       ]
     },
     {
@@ -977,6 +983,13 @@
           "summary": "Persistent Stamina bonus and aggravated downgrade; spend Vitae to reduce damage.",
           "page": 141
         }
+      ],
+      "effects": [
+        {
+          "type": "attribute",
+          "attribute": "stamina",
+          "amount": "rating"
+        }
       ]
     },
     {
@@ -1008,6 +1021,13 @@
           "duration": "Permanent (persistent effects); one turn (active effects)",
           "summary": "Persistent Strength bonus and jumping; spend Vitae for heavy strikes or hurling objects.",
           "page": 141
+        }
+      ],
+      "effects": [
+        {
+          "type": "attribute",
+          "attribute": "strength",
+          "amount": "rating"
         }
       ]
     }
@@ -2514,7 +2534,13 @@
           "minimum": 2
         }
       ],
-      "summary": "Runs much faster than expected and is hard to chase down."
+      "summary": "Runs much faster than expected and is hard to chase down.",
+      "effects": [
+        {
+          "type": "speed",
+          "amount": "rating"
+        }
+      ]
     },
     {
       "id": "hobbyist-clique",
