@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
-		BC2B44263096609600720F0C /* CharacterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B44253096609600720F0C /* CharacterStore.swift */; };
 		BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4427309660A900720F0C /* CharacterStoreTests.swift */; };
 		BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4429309662A300720F0C /* CharacterListView.swift */; };
 		BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */; };
@@ -86,7 +85,6 @@
 
 /* Begin PBXFileReference section */
 		BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDecodingTests.swift; sourceTree = "<group>"; };
-		BC2B44253096609600720F0C /* CharacterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStore.swift; sourceTree = "<group>"; };
 		BC2B4427309660A900720F0C /* CharacterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStoreTests.swift; sourceTree = "<group>"; };
 		BC2B4429309662A300720F0C /* CharacterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterListView.swift; sourceTree = "<group>"; };
 		BC2B442B30997D2400720F0C /* CharacterTrackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterTrackTests.swift; sourceTree = "<group>"; };
@@ -150,6 +148,10 @@
 		BCB159152C9874A5003B6A8F /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		BC2B4435309A09BA00720F0C /* Persistence */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Persistence; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		BCB158C72C986811003B6A8F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -175,12 +177,87 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC2B4436309A09CF00720F0C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */,
+				BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		BC2B4437309A09CF00720F0C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				BC6D36DE2C9DF3F7008D03F7 /* Extensions.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		BC2B4438309A09D000720F0C /* CharacterList */ = {
+			isa = PBXGroup;
+			children = (
+				BC2B4429309662A300720F0C /* CharacterListView.swift */,
+			);
+			path = CharacterList;
+			sourceTree = "<group>";
+		};
+		BC2B4439309A09D000720F0C /* CharacterSheet */ = {
+			isa = PBXGroup;
+			children = (
+				BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */,
+				BC6D36E42C9E006A008D03F7 /* AspirationRowView.swift */,
+				BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */,
+				BCB159092C987230003B6A8F /* AttributeRowView.swift */,
+				BC6D36E62C9E0074008D03F7 /* BaneRowView.swift */,
+				BC6D36EA2C9E0087008D03F7 /* BanesView.swift */,
+				BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */,
+				BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */,
+				BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */,
+				BC6D36DA2C9DE940008D03F7 /* DerivedAttributesView.swift */,
+				BC6D36D22C9DE65C008D03F7 /* DisciplineRowView.swift */,
+				BC6D36D62C9DE680008D03F7 /* DisciplinesView.swift */,
+				BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */,
+				BCB159132C9873D3003B6A8F /* HealthView.swift */,
+				BC6D36C92C9DD3F9008D03F7 /* HumanityRowView.swift */,
+				BC6D36CC2C9DD41C008D03F7 /* HumanityView.swift */,
+				BC6D36D42C9DE667008D03F7 /* MeritRowView.swift */,
+				BC6D36D82C9DE68F008D03F7 /* MeritsView.swift */,
+				BC6D36B52C9CF4F6008D03F7 /* SkillRowView.swift */,
+				BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */,
+				BC6D36B72C9CF52B008D03F7 /* SkillsView.swift */,
+				BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */,
+				BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */,
+				BC6D36992C9A0929008D03F7 /* WillpowerView.swift */,
+			);
+			path = CharacterSheet;
+			sourceTree = "<group>";
+		};
+		BC2B443A309A09D100720F0C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BCB1590F2C9872FD003B6A8F /* DotView.swift */,
+				BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */,
+				BCB1590B2C9872AC003B6A8F /* DotsRatingView.swift */,
+				BC6D369F2C9A3182008D03F7 /* HealthBoxView.swift */,
+				BC6D36AD2C9B46F5008D03F7 /* WillpowerBoxView.swift */,
+				BC2B4433309982B500720F0C /* SharedRows.swift */,
+				BCB159152C9874A5003B6A8F /* BackgroundView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		BC2B443B309A09D200720F0C /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				BC2B4431309982A300720F0C /* Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 		BCB158C12C986811003B6A8F = {
 			isa = PBXGroup;
 			children = (
-				BCB159082C987213003B6A8F /* Views */,
-				BCB159032C98705B003B6A8F /* Models */,
-				BCB158F72C986A3F003B6A8F /* Fonts */,
 				BCB158CC2C986811003B6A8F /* RequiemCharacterSheet */,
 				BCB158DD2C986812003B6A8F /* RequiemCharacterSheetTests */,
 				BCB158E72C986812003B6A8F /* RequiemCharacterSheetUITests */,
@@ -202,12 +279,15 @@
 			isa = PBXGroup;
 			children = (
 				BC6D36EC2C9E457F008D03F7 /* RequiemCharacterSheet.entitlements */,
-				BC6D36DE2C9DF3F7008D03F7 /* Extensions.swift */,
-				BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */,
 				BCB159002C986E22003B6A8F /* Info.plist */,
-				BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */,
 				BCB158D12C986812003B6A8F /* Assets.xcassets */,
 				BCB158D32C986812003B6A8F /* Preview Content */,
+				BC2B4435309A09BA00720F0C /* Persistence */,
+				BCB159032C98705B003B6A8F /* Models */,
+				BCB158F72C986A3F003B6A8F /* Fonts */,
+				BCB159082C987213003B6A8F /* Views */,
+				BC2B4436309A09CF00720F0C /* App */,
+				BC2B4437309A09CF00720F0C /* Utilities */,
 			);
 			path = RequiemCharacterSheet;
 			sourceTree = "<group>";
@@ -262,7 +342,6 @@
 				BC6D36A72C9A600C008D03F7 /* BoxFillType.swift */,
 				BCB159042C987143003B6A8F /* Attribute.swift */,
 				BCB159062C987161003B6A8F /* Character.swift */,
-				BC2B44253096609600720F0C /* CharacterStore.swift */,
 				BC2B442D3099806A00720F0C /* TraitDefinitions.swift */,
 			);
 			path = Models;
@@ -271,39 +350,10 @@
 		BCB159082C987213003B6A8F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				BC6D36EA2C9E0087008D03F7 /* BanesView.swift */,
-				BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */,
-				BC6D36E62C9E0074008D03F7 /* BaneRowView.swift */,
-				BC6D36E42C9E006A008D03F7 /* AspirationRowView.swift */,
-				BC6D36DA2C9DE940008D03F7 /* DerivedAttributesView.swift */,
-				BC6D36D82C9DE68F008D03F7 /* MeritsView.swift */,
-				BC6D36D62C9DE680008D03F7 /* DisciplinesView.swift */,
-				BC6D36D42C9DE667008D03F7 /* MeritRowView.swift */,
-				BC6D36D22C9DE65C008D03F7 /* DisciplineRowView.swift */,
-				BC6D36CC2C9DD41C008D03F7 /* HumanityView.swift */,
-				BC6D36C92C9DD3F9008D03F7 /* HumanityRowView.swift */,
-				BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */,
-				BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */,
-				BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */,
-				BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */,
-				BC6D36B72C9CF52B008D03F7 /* SkillsView.swift */,
-				BC6D36B52C9CF4F6008D03F7 /* SkillRowView.swift */,
-				BC6D36992C9A0929008D03F7 /* WillpowerView.swift */,
-				BC6D36AD2C9B46F5008D03F7 /* WillpowerBoxView.swift */,
-				BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */,
-				BCB159132C9873D3003B6A8F /* HealthView.swift */,
-				BC6D369F2C9A3182008D03F7 /* HealthBoxView.swift */,
-				BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */,
-				BCB1590F2C9872FD003B6A8F /* DotView.swift */,
-				BCB1590B2C9872AC003B6A8F /* DotsRatingView.swift */,
-				BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */,
-				BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */,
-				BCB159092C987230003B6A8F /* AttributeRowView.swift */,
-				BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */,
-				BCB159152C9874A5003B6A8F /* BackgroundView.swift */,
-				BC2B4429309662A300720F0C /* CharacterListView.swift */,
-				BC2B4431309982A300720F0C /* Theme.swift */,
-				BC2B4433309982B500720F0C /* SharedRows.swift */,
+				BC2B4438309A09D000720F0C /* CharacterList */,
+				BC2B4439309A09D000720F0C /* CharacterSheet */,
+				BC2B443A309A09D100720F0C /* Components */,
+				BC2B443B309A09D200720F0C /* Theme */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -322,6 +372,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BC2B4435309A09BA00720F0C /* Persistence */,
 			);
 			name = RequiemCharacterSheet;
 			productName = RequiemCharacterSheet;
@@ -449,7 +502,6 @@
 				BC2B4434309982B500720F0C /* SharedRows.swift in Sources */,
 				BC6D36D12C9DE643008D03F7 /* Merit.swift in Sources */,
 				BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */,
-				BC2B44263096609600720F0C /* CharacterStore.swift in Sources */,
 				BCB1590E2C9872D6003B6A8F /* DotsRowView.swift in Sources */,
 				BC2B4432309982A300720F0C /* Theme.swift in Sources */,
 				BCB159102C9872FD003B6A8F /* DotView.swift in Sources */,
