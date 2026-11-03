@@ -59,7 +59,7 @@
       "bane": {
         "name": "The Curse of Five",
         "summary": "Knowingly harming another Akhud costs dice equal to half (10 - Humanity), rounded up; at chance die it dramatically fails. Cannot be compelled.",
-        "humanityThreshold": null,
+        "humanityThreshold": 6,
         "page": 28
       },
       "summary": "A near-extinct Babylonian lost clan steeped in diablerie, bound by an oath of kinship."

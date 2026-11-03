@@ -15,12 +15,27 @@ struct CatalogTests {
     // MARK: - Bundled data
 
     @Test func bundledCatalogsLoad() {
-        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "thousand-years-of-night"])
+        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night"])
         #expect(catalog.disciplines.all.count == 11)
-        #expect(catalog.merits.all.count == 85)
+        // 85 from Vampire: The Requiem, plus 72 from Chronicles of Darkness that Requiem doesn't reprint
+        #expect(catalog.merits.all.count == 157)
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 6)
         #expect(catalog.covenants.all.count == 5)
+    }
+
+    @Test func requiemEntriesTakePrecedenceOverReprints() {
+        // Fleet of Foot is in both books; the Requiem version wins
+        #expect(catalog.merits.entry("fleet-of-foot")?.source.book == "vtr2e-core")
+        #expect(catalog.merits.entry("defensive-combat")?.source == SourceReference(book: "cofd-core", page: 61))
+    }
+
+    @Test func everyClanBaneStartsAtHumanitySix() {
+        #expect(catalog.clans.all.allSatisfy { $0.bane.humanityThreshold == 6 })
+    }
+
+    @Test func covenantsCitePages() {
+        #expect(catalog.covenants.all.allSatisfy { $0.source.page != nil })
     }
 
     @Test func everyEntryCitesALoadedBook() {
@@ -103,10 +118,14 @@ struct CatalogTests {
         #expect(language.qualifier == "French")
         #expect(language.name == "Language (French)")
 
-        // Not in the Vampire catalogs, so kept whole
+        // From the Chronicles of Darkness catalog
         let defensiveCombat = Merit(name: "Defensive Combat (Brawl)", rating: 1)
-        #expect(defensiveCombat.source == .custom("Defensive Combat (Brawl)"))
-        #expect(defensiveCombat.qualifier == nil)
+        #expect(defensiveCombat.source == .catalog("defensive-combat"))
+        #expect(defensiveCombat.qualifier == "Brawl")
+
+        let homebrew = Merit(name: "Homebrew Merit (Variant)", rating: 1)
+        #expect(homebrew.source == .custom("Homebrew Merit (Variant)"))
+        #expect(homebrew.qualifier == nil)
     }
 
     @Test func typingANameLinksToTheCatalog() {
@@ -137,8 +156,8 @@ struct CatalogTests {
         #expect(character.covenantSource == .catalog("ordo-dracul"))
         #expect(character.disciplines.map(\.source) == [.catalog("vigor"), .custom("Homebrew Power")])
         #expect(character.disciplines.map(\.rating) == [2, 1])
-        #expect(character.merits.map(\.source) == [.catalog("language"), .custom("Defensive Combat (Brawl)")])
-        #expect(character.merits.first?.qualifier == "French")
+        #expect(character.merits.map(\.source) == [.catalog("language"), .catalog("defensive-combat")])
+        #expect(character.merits.map(\.qualifier) == ["French", "Brawl"])
         #expect(character.banes.map(\.source) == [.catalog("bells"), .custom("Cannot cross running water")])
 
         // Rules that still match by name keep working

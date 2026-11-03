@@ -266,6 +266,7 @@ struct ClanBane: Decodable {
 struct CovenantEntry: CatalogEntry {
     let id: CatalogEntryID
     let name: String
+    let nickname: String?
     let source: SourceReference
     let summary: String
 }

@@ -1,0 +1,2160 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "cofd-core",
+    "name": "Chronicles of Darkness"
+  },
+  "merits": [
+    {
+      "id": "common-sense",
+      "name": "Common Sense",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Once per chapter, roll Wits + Composure to ask the Storyteller a guidance question."
+    },
+    {
+      "id": "danger-sense",
+      "name": "Danger Sense",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "+2 on reflexive rolls to notice an ambush before it springs."
+    },
+    {
+      "id": "direction-sense",
+      "name": "Direction Sense",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Always knows facing and location; no penalties to navigation."
+    },
+    {
+      "id": "eidetic-memory",
+      "name": "Eidetic Memory",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "No rolls to remember experiences; +2 to recall fine details."
+    },
+    {
+      "id": "encyclopedic-knowledge",
+      "name": "Encyclopedic Knowledge",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Skill",
+        "options": null
+      },
+      "repeatable": false,
+      "summary": "Roll Intelligence + Wits to know a useful fact about the chosen Skill's field."
+    },
+    {
+      "id": "eye-for-the-strange",
+      "name": "Eye for the Strange",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "occult",
+          "minimum": 1
+        }
+      ],
+      "summary": "Can tell whether a scene's cause is natural or supernatural."
+    },
+    {
+      "id": "fast-reflexes",
+      "name": "Fast Reflexes",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "wits",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "attribute",
+            "id": "dexterity",
+            "minimum": 3
+          }
+        ]
+      ],
+      "summary": "Quick to react: adds to Initiative."
+    },
+    {
+      "id": "good-time-management",
+      "name": "Good Time Management",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "skill",
+            "id": "academics",
+            "minimum": 2
+          }
+        ],
+        [
+          {
+            "kind": "skill",
+            "id": "science",
+            "minimum": 2
+          }
+        ]
+      ],
+      "summary": "Halves the time between rolls on extended actions."
+    },
+    {
+      "id": "holistic-awareness",
+      "name": "Holistic Awareness",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 44
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Treats injuries and illness using natural remedies instead of medical gear."
+    },
+    {
+      "id": "investigative-aide",
+      "name": "Investigative Aide",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 45
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Skill",
+        "options": null
+      },
+      "repeatable": true,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "The chosen Skill at 3 or more"
+        }
+      ],
+      "summary": "With the chosen Skill, uncovering Clues gets exceptional success at three successes."
+    },
+    {
+      "id": "investigative-prodigy",
+      "name": "Investigative Prodigy",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 45
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "investigation",
+          "minimum": 3
+        }
+      ],
+      "summary": "Uncovers several Clues in one instant action."
+    },
+    {
+      "id": "meditative-mind",
+      "name": "Meditative Mind",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1,
+        2,
+        4
+      ],
+      "repeatable": false,
+      "summary": "Improved meditation; higher levels add composure bonuses and easier success."
+    },
+    {
+      "id": "multilingual",
+      "name": "Multilingual",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Two languages",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "Conversational in two chosen languages; can roll to read them."
+    },
+    {
+      "id": "patient",
+      "name": "Patient",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Two extra rolls allowed on extended actions."
+    },
+    {
+      "id": "professional-training",
+      "name": "Professional Training",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Profession",
+        "options": null
+      },
+      "repeatable": false,
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Networking",
+          "summary": "Gain two dots of Contacts tied to the profession."
+        },
+        {
+          "dots": 2,
+          "name": "Continuing Education",
+          "summary": "Asset Skill rolls get 9-again."
+        },
+        {
+          "dots": 3,
+          "name": "Breadth of Knowledge",
+          "summary": "Pick a third Asset Skill and gain two Specialties among Asset Skills."
+        },
+        {
+          "dots": 4,
+          "name": "On the Job Training",
+          "summary": "Gain one dot in an Asset Skill; take a Beat whenever buying an Asset Skill dot."
+        },
+        {
+          "dots": 5,
+          "name": "The Routine",
+          "summary": "Spend Willpower to make an Asset Skill roll a rote action."
+        }
+      ],
+      "summary": "Career training that boosts a Profession's Asset Skills."
+    },
+    {
+      "id": "tolerance-for-biology",
+      "name": "Tolerance for Biology",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        }
+      ],
+      "summary": "No rolls needed to withstand gore and biological horrors."
+    },
+    {
+      "id": "vice-ridden",
+      "name": "Vice-Ridden",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Has two Vices, still limited to one Willpower per scene from them."
+    },
+    {
+      "id": "virtuous",
+      "name": "Virtuous",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Has two Virtues; choose which to use when refreshing Willpower."
+    },
+    {
+      "id": "ambidextrous",
+      "name": "Ambidextrous",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "No off-hand penalty."
+    },
+    {
+      "id": "automotive-genius",
+      "name": "Automotive Genius",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "crafts",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "drive",
+          "minimum": 1
+        },
+        {
+          "kind": "skill",
+          "id": "science",
+          "minimum": 1
+        }
+      ],
+      "summary": "Vehicles can carry more modifications: triple Crafts instead of double."
+    },
+    {
+      "id": "crack-driver",
+      "name": "Crack Driver",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "drive",
+          "minimum": 3
+        }
+      ],
+      "summary": "Adds Composure to Drive rolls; three dots allows a reflexive Drive action."
+    },
+    {
+      "id": "demolisher",
+      "name": "Demolisher",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "strength",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "attribute",
+            "id": "intelligence",
+            "minimum": 3
+          }
+        ]
+      ],
+      "summary": "Ignores one point of object Durability per dot."
+    },
+    {
+      "id": "giant",
+      "name": "Giant",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Very large: Size 6 and one extra Health."
+    },
+    {
+      "id": "hardy",
+      "name": "Hardy",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        }
+      ],
+      "summary": "Adds dots to resist disease, poison, deprivation, unconsciousness, suffocation."
+    },
+    {
+      "id": "greyhound",
+      "name": "Greyhound",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 48
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        }
+      ],
+      "summary": "In chases, exceptional success needs only three successes."
+    },
+    {
+      "id": "iron-stamina",
+      "name": "Iron Stamina",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 48
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "stamina",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "attribute",
+            "id": "resolve",
+            "minimum": 3
+          }
+        ]
+      ],
+      "summary": "Cancels fatigue and wound penalties, one point per dot."
+    },
+    {
+      "id": "quick-draw",
+      "name": "Quick Draw",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 49
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Weaponry or Firearms Specialty",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "other",
+          "text": "A Specialty in the chosen weapon or fighting style"
+        }
+      ],
+      "summary": "Drawing or holstering the chosen weapon is reflexive."
+    },
+    {
+      "id": "relentless",
+      "name": "Relentless",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 49
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        }
+      ],
+      "summary": "Chase opponents need two extra successes to catch or escape."
+    },
+    {
+      "id": "seizing-the-edge",
+      "name": "Seizing the Edge",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 49
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        }
+      ],
+      "summary": "Always holds the Edge in a chase's first turn."
+    },
+    {
+      "id": "small-framed",
+      "name": "Small-Framed",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 49
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Small: Size 4, one less Health, bonus to hide."
+    },
+    {
+      "id": "stunt-driver",
+      "name": "Stunt Driver",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 49
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "drive",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Defensive Driving",
+          "summary": "Attacks on the moving vehicle are penalized by Drive dots."
+        },
+        {
+          "dots": 2,
+          "name": "Speed Demon",
+          "summary": "Each acceleration success adds 10 Speed instead of 5."
+        },
+        {
+          "dots": 3,
+          "name": "Drift",
+          "summary": "No maneuvering roll needed to turn at high speed."
+        },
+        {
+          "dots": 4,
+          "name": "Clipping",
+          "summary": "When ramming deliberately, ignore own-vehicle damage equal to Wits, before Durability."
+        }
+      ],
+      "summary": "Driving Style with defensive and high-speed techniques."
+    },
+    {
+      "id": "closed-book",
+      "name": "Closed Book",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 50
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "manipulation",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        }
+      ],
+      "summary": "Hard to read or manipulate; adds Doors and contested dice."
+    },
+    {
+      "id": "fixer",
+      "name": "Fixer",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 51
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "contacts",
+          "minimum": 2
+        },
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        }
+      ],
+      "summary": "Lowers the Availability of hired services by one."
+    },
+    {
+      "id": "pusher",
+      "name": "Pusher",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 53
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "persuasion",
+          "minimum": 2
+        }
+      ],
+      "summary": "Accepted soft leverage also counts as satisfying the mark's Vice."
+    },
+    {
+      "id": "small-unit-tactics",
+      "name": "Small Unit Tactics",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 54
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "presence",
+          "minimum": 3
+        }
+      ],
+      "summary": "Extends a planned group action's Willpower bonus to several allies."
+    },
+    {
+      "id": "spin-doctor",
+      "name": "Spin Doctor",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 54
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "manipulation",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "subterfuge",
+          "minimum": 2
+        }
+      ],
+      "summary": "Tainted Clues cost a -1 penalty instead of lost successes."
+    },
+    {
+      "id": "table-turner",
+      "name": "Table Turner",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 55
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "manipulation",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        }
+      ],
+      "summary": "Spend Willpower to preempt Social Maneuvering against you."
+    },
+    {
+      "id": "takes-one-to-know-one",
+      "name": "Takes One to Know One",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 55
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "Investigating crimes matching one's Vice gives a bonus, not a penalty."
+    },
+    {
+      "id": "untouchable",
+      "name": "Untouchable",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 56
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "manipulation",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "subterfuge",
+          "minimum": 2
+        }
+      ],
+      "summary": "Investigations into the character get Incomplete Clues unless exceptional."
+    },
+    {
+      "id": "aura-reading",
+      "name": "Aura Reading",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 56
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Spend Willpower and roll to read a subject's aura for emotions and nature."
+    },
+    {
+      "id": "automatic-writing",
+      "name": "Automatic Writing",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 56
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Trance in which a spirit writes cryptic clues."
+    },
+    {
+      "id": "biokinesis",
+      "name": "Biokinesis",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 57
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Shift Physical Attribute dots temporarily; heals faster."
+    },
+    {
+      "id": "clairvoyance",
+      "name": "Clairvoyance",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 57
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Projects senses to a distant place via a chosen scrying method."
+    },
+    {
+      "id": "cursed",
+      "name": "Cursed",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 57
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Knows the manner of his doom; fearless as a result."
+    },
+    {
+      "id": "laying-on-hands",
+      "name": "Laying on Hands",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 57
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Heals others by touch but takes on part of the harm."
+    },
+    {
+      "id": "medium",
+      "name": "Medium",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 57
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        },
+        {
+          "kind": "skill",
+          "id": "empathy",
+          "minimum": 2
+        }
+      ],
+      "summary": "Hears and speaks with the dead; can strengthen ghostly Conditions."
+    },
+    {
+      "id": "mind-of-a-madman",
+      "name": "Mind of a Madman",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 57
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        },
+        {
+          "kind": "skill",
+          "id": "empathy",
+          "minimum": 3
+        }
+      ],
+      "summary": "Thinking like a culprit grants 8-again to hunt them, at a mental cost."
+    },
+    {
+      "id": "omen-sensitivity",
+      "name": "Omen Sensitivity",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 58
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Once per session, read omens to ask yes-or-no questions."
+    },
+    {
+      "id": "numbing-touch",
+      "name": "Numbing Touch",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 58
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Psychic touch numbs targets and can drain Willpower."
+    },
+    {
+      "id": "psychokinesis",
+      "name": "Psychokinesis",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 58
+      },
+      "ratings": [
+        3,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Force",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Control one elemental force; five dots can create it from nothing."
+    },
+    {
+      "id": "psychometry",
+      "name": "Psychometry",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 58
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Reads emotional impressions and events from objects and places."
+    },
+    {
+      "id": "telekinesis",
+      "name": "Telekinesis",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 59
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Moves objects with the mind; dots act as Strength."
+    },
+    {
+      "id": "telepathy",
+      "name": "Telepathy",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 59
+      },
+      "ratings": [
+        3,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Reads surface thoughts; five dots can send messages."
+    },
+    {
+      "id": "thief-of-fate",
+      "name": "Thief of Fate",
+      "category": "other",
+      "source": {
+        "book": "cofd-core",
+        "page": 60
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must remain human (non-supernatural)"
+        }
+      ],
+      "summary": "Touch steals luck, causing dramatic failures; boosts own Willpower dice."
+    },
+    {
+      "id": "armed-defense",
+      "name": "Armed Defense",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 60
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 2
+        },
+        {
+          "kind": "merit",
+          "id": "defensive-combat",
+          "minimum": 1,
+          "text": "Weaponry"
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Cover the Angles",
+          "summary": "When Dodging, multiple-attacker Defense penalty starts one attacker later."
+        },
+        {
+          "dots": 2,
+          "name": "Weak Spot",
+          "summary": "Disarm an armed attacker if your Defense cuts their pool or successes to zero."
+        },
+        {
+          "dots": 3,
+          "name": "Aggressive Defense",
+          "summary": "Spend Willpower: excess Dodge successes inflict lethal damage on the attacker."
+        },
+        {
+          "dots": 4,
+          "name": "Iron Guard",
+          "summary": "Trade weapon bonus for Defense each turn; when Dodging, add full weapon bonus after doubling."
+        },
+        {
+          "dots": 5,
+          "name": "Press the Advantage",
+          "summary": "Spend Willpower: after a block that zeroes an attack, make an unarmed counter at -2."
+        }
+      ],
+      "summary": "Weapon-based defensive Style."
+    },
+    {
+      "id": "cheap-shot",
+      "name": "Cheap Shot",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 61
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "street-fighting",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "subterfuge",
+          "minimum": 2
+        }
+      ],
+      "summary": "Dirty trick that can strip an opponent's Defense next turn."
+    },
+    {
+      "id": "choke-hold",
+      "name": "Choke Hold",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 61
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        }
+      ],
+      "summary": "Grapple move that can render a victim unconscious."
+    },
+    {
+      "id": "close-quarters-combat",
+      "name": "Close Quarters Combat",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 61
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 3
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Firing Lines",
+          "summary": "Give up action to reach cover within twice Speed in reaction to gunfire."
+        },
+        {
+          "dots": 2,
+          "name": "Hard Surfaces",
+          "summary": "Grapple Damage move against a hard surface deals lethal, then ends the grapple."
+        },
+        {
+          "dots": 3,
+          "name": "Armored Coffin",
+          "summary": "Add opponent's general armor to grapple pool; Damage moves ignore armor."
+        },
+        {
+          "dots": 4,
+          "name": "Prep Work",
+          "summary": "Dexterity + Stealth for a surprise attack becomes rote (Brawl/Weaponry only)."
+        },
+        {
+          "dots": 5,
+          "name": "Turnabout",
+          "summary": "Disarm results step up one level; can seize the weapon."
+        }
+      ],
+      "summary": "Style using the environment and grapples to hurt people."
+    },
+    {
+      "id": "defensive-combat",
+      "name": "Defensive Combat",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 61
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Skill",
+        "options": [
+          "Brawl",
+          "Weaponry"
+        ]
+      },
+      "repeatable": true,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "skill",
+            "id": "brawl",
+            "minimum": 1
+          }
+        ],
+        [
+          {
+            "kind": "skill",
+            "id": "weaponry",
+            "minimum": 1
+          }
+        ]
+      ],
+      "summary": "Use Brawl or Weaponry in place of Athletics for Defense."
+    },
+    {
+      "id": "fighting-finesse",
+      "name": "Fighting Finesse",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 61
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Weaponry or Brawl Specialty",
+        "options": null
+      },
+      "repeatable": true,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "other",
+          "text": "A Specialty in Weaponry or Brawl"
+        }
+      ],
+      "summary": "Use Dexterity in place of Strength with one weapon Specialty."
+    },
+    {
+      "id": "firefight",
+      "name": "Firefight",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 61
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "firearms",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Shoot First",
+          "summary": "With gun drawn, add Firearms to Initiative."
+        },
+        {
+          "dots": 2,
+          "name": "Suppressive Fire",
+          "summary": "Covering Fire denies enemies aiming bonus; keep Defense against gunfire; works with semi-autos."
+        },
+        {
+          "dots": 3,
+          "name": "Secondary Target",
+          "summary": "Hit a covered target with debris: bashing damage, ignore cover penalties, no weapon bonus."
+        }
+      ],
+      "summary": "Practical gunfighting Style."
+    },
+    {
+      "id": "grappling",
+      "name": "Grappling",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 62
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "strength",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Sprawl",
+          "summary": "Grappled opponents cannot Drop Prone or Take Cover."
+        },
+        {
+          "dots": 2,
+          "name": "Takedown",
+          "summary": "Knock an opponent prone instead of grappling, optionally dealing bashing equal to successes."
+        },
+        {
+          "dots": 3,
+          "name": "Joint Lock",
+          "summary": "Joint Lock grapple move deals bashing next turn; overpowering moves add 1 lethal."
+        }
+      ],
+      "summary": "Wrestling Style."
+    },
+    {
+      "id": "heavy-weapons",
+      "name": "Heavy Weapons",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 62
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "strength",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Sure Strike",
+          "summary": "Drop three attack dice to add 1 to weapon damage this turn."
+        },
+        {
+          "dots": 2,
+          "name": "Threat Range",
+          "summary": "If not moving or Dodging, enemies closing in take 1 lethal and a Defense penalty."
+        },
+        {
+          "dots": 3,
+          "name": "Bring the Pain",
+          "summary": "Sacrifice Defense; damage dealt becomes the victim's penalty next turn."
+        },
+        {
+          "dots": 4,
+          "name": "Warding Stance",
+          "summary": "Spend Willpower to add weapon damage as armor for a turn (not vs firearms)."
+        },
+        {
+          "dots": 5,
+          "name": "Rending",
+          "summary": "Spend Willpower before attacking to add 1 aggravated damage on a hit."
+        }
+      ],
+      "summary": "Style for big two-handed weapons."
+    },
+    {
+      "id": "improvised-weaponry",
+      "name": "Improvised Weaponry",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 62
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 1
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Always Armed",
+          "summary": "Reflexive Wits + Weaponry to grab a usable weapon; no improvised-weapon penalty."
+        },
+        {
+          "dots": 2,
+          "name": "In Harm's Way",
+          "summary": "Use the found weapon's Structure as armor against one melee attack."
+        },
+        {
+          "dots": 3,
+          "name": "Breaking Point",
+          "summary": "On an all-out attack, sacrifice weapon Structure for extra damage."
+        }
+      ],
+      "summary": "Style for turning found objects into weapons."
+    },
+    {
+      "id": "iron-skin",
+      "name": "Iron Skin",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 63
+      },
+      "ratings": [
+        2,
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "merit",
+            "id": "martial-arts",
+            "minimum": 2
+          }
+        ],
+        [
+          {
+            "kind": "merit",
+            "id": "street-fighting",
+            "minimum": 2
+          }
+        ]
+      ],
+      "summary": "Toughened body: armor against bashing; can downgrade lethal."
+    },
+    {
+      "id": "light-weapons",
+      "name": "Light Weapons",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 63
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "wits",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "merit",
+            "id": "fighting-finesse",
+            "minimum": 2
+          }
+        ]
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Rapidity",
+          "summary": "Drop weapon damage to zero for the turn to add Weaponry to Initiative."
+        },
+        {
+          "dots": 2,
+          "name": "Thrust",
+          "summary": "Trade Defense points one-for-one into attack dice."
+        },
+        {
+          "dots": 3,
+          "name": "Feint",
+          "summary": "A no-damage feint lets the next attack bypass Defense and add damage."
+        },
+        {
+          "dots": 4,
+          "name": "Flurry",
+          "summary": "While Defense is available, adjacent enemies take 1 lethal each turn."
+        },
+        {
+          "dots": 5,
+          "name": "Vital Shot",
+          "summary": "Sacrifice Defense; a hit adds 1 aggravated damage."
+        }
+      ],
+      "summary": "Finesse Style for small one-handed weapons (damage 2 or less)."
+    },
+    {
+      "id": "marksmanship",
+      "name": "Marksmanship",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 63
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "firearms",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Through the Crosshairs",
+          "summary": "Max aiming bonus becomes Composure + Firearms instead of 3."
+        },
+        {
+          "dots": 2,
+          "name": "Precision Shot",
+          "summary": "Lower weapon damage one-for-one to cancel specified-target penalties."
+        },
+        {
+          "dots": 3,
+          "name": "A Shot Rings Out",
+          "summary": "Fire into a crowd at a target without penalty; never hit the wrong person."
+        },
+        {
+          "dots": 4,
+          "name": "Ghost",
+          "summary": "Firearms penalizes rolls to find the shooter's position."
+        }
+      ],
+      "summary": "Aimed-shooting Style; no Defense on turns it is used."
+    },
+    {
+      "id": "martial-arts",
+      "name": "Martial Arts",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 63
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Focused Attack",
+          "summary": "Specified-target penalties reduced by 1; ignore 1 armor."
+        },
+        {
+          "dots": 2,
+          "name": "Defensive Strike",
+          "summary": "Add 1-2 to Defense, losing an attack die per point; not with Dodge."
+        },
+        {
+          "dots": 3,
+          "name": "Whirlwind Strike",
+          "summary": "While Defense is up, adjacent enemies take 1 bashing per turn (2 with Willpower)."
+        },
+        {
+          "dots": 4,
+          "name": "The Hand As Weapon",
+          "summary": "Unarmed strikes deal lethal damage."
+        },
+        {
+          "dots": 5,
+          "name": "The Touch of Death",
+          "summary": "Unarmed strikes may count as 2-damage weapons."
+        }
+      ],
+      "summary": "Formal unarmed fighting Style."
+    },
+    {
+      "id": "police-tactics",
+      "name": "Police Tactics",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 64
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 1
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Compliance Hold",
+          "summary": "+2 on overpowering rolls to disarm or immobilize."
+        },
+        {
+          "dots": 2,
+          "name": "Weapon Retention",
+          "summary": "Disarming you needs more successes than your Weaponry."
+        },
+        {
+          "dots": 3,
+          "name": "Speed Cuff",
+          "summary": "Restrain an immobilized foe reflexively."
+        }
+      ],
+      "summary": "Restraint and arrest Style."
+    },
+    {
+      "id": "shiv",
+      "name": "Shiv",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 64
+      },
+      "ratings": [
+        1,
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "street-fighting",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "weaponry",
+          "minimum": 1
+        }
+      ],
+      "summary": "Hides small weapons usable with Brawl."
+    },
+    {
+      "id": "street-fighting",
+      "name": "Street Fighting",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 65
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "streetwise",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Duck and Weave",
+          "summary": "Take -1 on actions to use the higher of Wits or Dexterity for Defense."
+        },
+        {
+          "dots": 2,
+          "name": "Knocking the Wind Out",
+          "summary": "A successful unarmed hit gives -1 to the target's next roll."
+        },
+        {
+          "dots": 3,
+          "name": "Kick 'Em While They're Down",
+          "summary": "Inflict Knocked Down when successes beat Stamina; hit foes standing up."
+        },
+        {
+          "dots": 4,
+          "name": "One-Two Punch",
+          "summary": "Spend Willpower on a hit for 2 extra bashing."
+        },
+        {
+          "dots": 5,
+          "name": "Last-Ditch Effort",
+          "summary": "While wounded, spend Willpower and Defense to counterattack first."
+        }
+      ],
+      "summary": "Gritty unarmed Style learned in real fights."
+    },
+    {
+      "id": "unarmed-defense",
+      "name": "Unarmed Defense",
+      "category": "fighting",
+      "source": {
+        "book": "cofd-core",
+        "page": 65
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        },
+        {
+          "kind": "merit",
+          "id": "defensive-combat",
+          "minimum": 1,
+          "text": "Brawl"
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Like a Book",
+          "summary": "Against unarmed foes, when not Dodging, add half Brawl (round down) to Defense."
+        },
+        {
+          "dots": 2,
+          "name": "Studied Style",
+          "summary": "One chosen foe's attacks don't lower your Defense."
+        },
+        {
+          "dots": 3,
+          "name": "Redirect",
+          "summary": "When Dodging, a zeroed attack is turned onto another attacker."
+        },
+        {
+          "dots": 4,
+          "name": "Joint Strike",
+          "summary": "Spend Willpower: roll Strength + Brawl instead of Defense to injure and Wrack a limb."
+        },
+        {
+          "dots": 5,
+          "name": "Like the Breeze",
+          "summary": "When a Dodge zeroes an attack, knock the attacker down."
+        }
+      ],
+      "summary": "Defensive unarmed Style that redirects blows."
+    }
+  ]
+}

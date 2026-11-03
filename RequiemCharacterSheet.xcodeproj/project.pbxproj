@@ -21,6 +21,7 @@
 		BC2B4444309A30F600720F0C /* TraitSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4443309A30F600720F0C /* TraitSource.swift */; };
 		BC2B4446309A310200720F0C /* Catalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4445309A310200720F0C /* Catalog.swift */; };
 		BC2B4448309A316800720F0C /* CatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4447309A316800720F0C /* CatalogTests.swift */; };
+		BC2B444A309A3C3500720F0C /* cofd-core.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4449309A3C3500720F0C /* cofd-core.json */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -103,7 +104,8 @@
 		BC2B4441309A30EC00720F0C /* CatalogEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogEntries.swift; sourceTree = "<group>"; };
 		BC2B4443309A30F600720F0C /* TraitSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitSource.swift; sourceTree = "<group>"; };
 		BC2B4445309A310200720F0C /* Catalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catalog.swift; sourceTree = "<group>"; };
-		BC2B4447309A316800720F0C /* CatalogTests.swift */ = {isa = PBXFileReference; path = CatalogTests.swift; sourceTree = "<group>"; };
+		BC2B4447309A316800720F0C /* CatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogTests.swift; sourceTree = "<group>"; };
+		BC2B4449309A3C3500720F0C /* cofd-core.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cofd-core.json"; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 			children = (
 				BC2B443D309A30A500720F0C /* vtr2e-core.json */,
 				BC2B443F309A30A600720F0C /* thousand-years-of-night.json */,
+				BC2B4449309A3C3500720F0C /* cofd-core.json */,
 			);
 			path = Catalogs;
 			sourceTree = "<group>";
@@ -491,6 +494,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC2B444A309A3C3500720F0C /* cofd-core.json in Resources */,
 				BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */,
 				BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */,
 				BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */,

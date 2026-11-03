@@ -3267,7 +3267,7 @@
       "bane": {
         "name": "The Aloof Curse",
         "summary": "First Touchstone sits on Humanity 7, so the first Humanity loss detaches it; others go on dots 6 down to 2.",
-        "humanityThreshold": null,
+        "humanityThreshold": 6,
         "page": 28
       },
       "summary": "Domineering aristocrats who seek control over people, wealth and institutions."
@@ -3277,42 +3277,52 @@
     {
       "id": "carthian-movement",
       "name": "Carthian Movement",
+      "nickname": "Firebrands",
       "source": {
-        "book": "vtr2e-core"
+        "book": "vtr2e-core",
+        "page": 32
       },
-      "summary": "Revolutionaries who test new forms of Kindred government."
+      "summary": "Revolutionaries who adapt modern human political systems to overturn elder rule and reshape Kindred government."
     },
     {
       "id": "circle-of-the-crone",
       "name": "Circle of the Crone",
+      "nickname": "Acolytes",
       "source": {
-        "book": "vtr2e-core"
+        "book": "vtr2e-core",
+        "page": 35
       },
-      "summary": "Pagans who revere the Crone and practise the blood sorcery Crúac."
+      "summary": "A loose pagan alliance of blood-cults that embraces monstrosity as natural and rejects imposed dogma."
     },
     {
       "id": "invictus",
       "name": "Invictus",
+      "nickname": "First Estate",
       "source": {
-        "book": "vtr2e-core"
+        "book": "vtr2e-core",
+        "page": 38
       },
-      "summary": "An aristocracy of elders that rules through tradition, oaths and wealth."
+      "summary": "The entrenched aristocracy of the Kindred, guarding the Masquerade and holding power through hierarchy and wealth."
     },
     {
       "id": "lancea-et-sanctum",
       "name": "Lancea et Sanctum",
+      "nickname": "Sanctified",
       "source": {
-        "book": "vtr2e-core"
+        "book": "vtr2e-core",
+        "page": 41
       },
-      "summary": "A church that sees the Kindred as God's appointed predators, wielding Theban Sorcery."
+      "summary": "The Kindred church, believing vampires are damned to test humanity's faith as God's instruments."
     },
     {
       "id": "ordo-dracul",
       "name": "Ordo Dracul",
+      "nickname": "Dragons",
       "source": {
-        "book": "vtr2e-core"
+        "book": "vtr2e-core",
+        "page": 44
       },
-      "summary": "Scholars of Dracula's teachings who seek to transcend the vampiric curse."
+      "summary": "Occult seekers following Dracula's example, studying the supernatural to transcend the vampiric curse."
     }
   ]
 }
