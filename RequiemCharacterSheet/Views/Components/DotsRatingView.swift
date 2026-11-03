@@ -48,6 +48,11 @@ struct DotsRatingView: View {
         self.onOverflowTap = onOverflowTap
     }
 
+    /// The width of a row of `dots` dots, e.g. to give ratings with fewer dots the same column as five.
+    static func width(forDots dots: Int) -> CGFloat {
+        CGFloat(dots * 20 + max(0, dots - 1) * 4)
+    }
+
     /// A rating that can't be changed by tapping, such as Health.
     init(_ label: String, value: Int, maxRating: Int, dotsPerRow: Int = 5) {
         self.init(label, rating: .constant(value), maxRating: maxRating, dotsPerRow: dotsPerRow, isInteractive: false)
@@ -56,7 +61,7 @@ struct DotsRatingView: View {
     var body: some View {
         let rows = (maxRating + dotsPerRow - 1) / dotsPerRow
         let visibleDots = min(maxRating, dotsPerRow)
-        let dotRowsWidth = CGFloat(visibleDots * 20 + max(0, visibleDots - 1) * 4)
+        let dotRowsWidth = Self.width(forDots: visibleDots)
 
         VStack(alignment: .leading) {
             if showsOverflowTotal && totalRating > maxRating {

@@ -35,13 +35,15 @@ struct MeritRowView: View {
 
                     Spacer()
 
-                    // Only as many dots as the Merit can have, e.g. one for Defensive Combat
+                    // Only as many dots as the Merit can have, centred in a five-dot column,
+                    // so a Merit capped below five (e.g. Defensive Combat) reads as capped
                     DotsRatingView(
                         merit.name,
                         rating: allowedRating(for: entry),
                         maxRating: entry.ratings.max() ?? 5,
                         allowsResetToZero: true
                     )
+                    .frame(width: DotsRatingView.width(forDots: 5), alignment: .center)
                 }
 
                 let unmet = character.unmetPrerequisites(for: entry)
