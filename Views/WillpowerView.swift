@@ -13,7 +13,7 @@ struct WillpowerView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            DotsRatingView(rating: .constant(character.willpower), maxRating: character.willpower, dotsPerRow: 10)
+            DotsRatingView("Willpower", value: character.willpower, maxRating: character.willpower, dotsPerRow: 10)
             WillpowerBoxesView(character: character)
                 .padding(.vertical, 4)
         }

@@ -20,10 +20,7 @@ struct CharacterSheetView: View {
         BackgroundView {
             VStack {
                 Spacer(minLength: 20)
-                Image("VtR 2nd ED Logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 100)
+                LogoHeader()
                 Spacer(minLength: 20)
                 
                 List {
@@ -31,10 +28,10 @@ struct CharacterSheetView: View {
                     CharacterInfoView(character: character)
                     
                     // ATTRIBUTES SECTION
-                    Section(header: Text("ATTRIBUTES").font(.custom("CaslonAntique", size: 24))) {
+                    Section(header: Text("ATTRIBUTES").themedText(.sectionHeader)) {
                         // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
                         ForEach(TraitCategory.allCases, id: \.self) { category in
-                            Section(header: Text(category.title).font(.custom("CaslonAntique", size: 20))) {
+                            Section(header: Text(category.title).themedText(.subsectionHeader)) {
                                 ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
                                     AttributeRowView(character: character, attribute: attribute)
                                 }
@@ -58,24 +55,24 @@ struct CharacterSheetView: View {
                     BanesView(character: character)
                     
                     // HEALTH SECTION
-                    Section(header: Text("HEALTH").font(.custom("CaslonAntique", size: 24))) {
+                    Section(header: Text("HEALTH").themedText(.sectionHeader)) {
                         HealthView(character: character)
                     }
                     
                     // WILLPOWER SECTION
-                    Section(header: Text("WILLPOWER").font(.custom("CaslonAntique", size: 24))) {
+                    Section(header: Text("WILLPOWER").themedText(.sectionHeader)) {
                         WillpowerView(character: character)
                     }
                     
                     // BLOOD POTENCY SECTION
-                    Section(header: Text("BLOOD POTENCY").font(.custom("CaslonAntique", size: 24))) {
+                    Section(header: Text("BLOOD POTENCY").themedText(.sectionHeader)) {
                         BloodPotencyView(character: character)
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets())
                             .contentShape(Rectangle())
                     }
                     // VITAE SECTION
-                    Section(header: Text("VITAE").font(.custom("CaslonAntique", size: 24))) {
+                    Section(header: Text("VITAE").themedText(.sectionHeader)) {
                         VitaeView(character: character)
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets())
@@ -86,15 +83,17 @@ struct CharacterSheetView: View {
                     }
                     
                     // HUMANITY SECTION
-                    Section(header: Text("HUMANITY").font(.custom("CaslonAntique", size: 24))) {
+                    Section(header: Text("HUMANITY").themedText(.sectionHeader)) {
                         HumanityView(character: character)
                     }
                     
                     // DERIVED ATTRIBUTES SECTION
                     DerivedAttributesView(character: character)
                 }
-                .listStyle(GroupedListStyle())
+                .listStyle(.grouped)
                 .background(Color.clear)
+                // Scrolling ends text editing
+                .scrollDismissesKeyboard(.immediately)
             }
             .padding(.horizontal)
             // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border

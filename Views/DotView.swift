@@ -8,22 +8,31 @@
 
 import SwiftUI
 
+/// A single rating dot. Interactive dots are buttons; others are drawn only.
 struct DotView: View {
-    var index: Int
+    @Environment(\.theme) private var theme
     var isFilled: Bool
-    var fillColor: Color = .vampireRed
-    var isInteractive: Bool = true // I ended up setting this to true. This is not as clean as having a single approach to all the dots on the sheet, but it works for now
-    var action: ((Int) -> Void)?
-    
+    /// Defaults to the theme's accent colour.
+    var fillColor: Color?
+    /// Called when the dot is tapped. A dot with no action can't be tapped.
+    var action: (() -> Void)?
+
     var body: some View {
-        Circle()
-            .fill(isFilled ? fillColor : Color.clear)
-            .overlay(Circle().stroke(Color.black, lineWidth: 1))
-            .frame(width: 20, height: 20)
-            .onTapGesture {
-                if isInteractive, let action = action {
-                    action(index)
-                }
+        if let action {
+            Button(action: action) {
+                circle
             }
+            .buttonStyle(.borderless)
+        } else {
+            circle
+        }
+    }
+
+    private var circle: some View {
+        Circle()
+            .fill(isFilled ? (fillColor ?? theme.accent) : Color.clear)
+            .overlay(Circle().stroke(theme.ink, lineWidth: 1))
+            .frame(width: 20, height: 20)
+            .contentShape(Circle())
     }
 }

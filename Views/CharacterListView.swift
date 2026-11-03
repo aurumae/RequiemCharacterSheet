@@ -7,6 +7,7 @@ import SwiftUI
 
 /// The first screen: every saved character, with options to open, create and delete them.
 struct CharacterListView: View {
+    @Environment(\.theme) private var theme
     let store: CharacterStore
 
     @State private var openCharacter: OpenCharacter?
@@ -18,17 +19,14 @@ struct CharacterListView: View {
             BackgroundView {
                 VStack {
                     Spacer(minLength: 20)
-                    Image("VtR 2nd ED Logo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 100)
+                    LogoHeader()
                     Spacer(minLength: 20)
 
                     List {
-                        Section(header: Text("CHARACTERS").font(.custom("CaslonAntique", size: 24))) {
+                        Section(header: Text("CHARACTERS").themedText(.sectionHeader)) {
                             if store.summaries.isEmpty {
                                 Text("No characters yet")
-                                    .font(.system(size: 16))
+                                    .themedText(.body)
                                     .foregroundStyle(.secondary)
                             }
 
@@ -58,19 +56,10 @@ struct CharacterListView: View {
                                     }
                             }
 
-                            Button(action: createCharacter) {
-                                HStack {
-                                    Image(systemName: "plus.circle")
-                                    Text("New Character")
-                                }
-                                .foregroundColor(.vampireRed)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .contentShape(Rectangle())
-                            }
-                            .buttonStyle(PlainButtonStyle())
+                            AddRowButton("New Character", action: createCharacter)
                         }
                     }
-                    .listStyle(GroupedListStyle())
+                    .listStyle(.grouped)
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 26)
@@ -100,7 +89,7 @@ struct CharacterListView: View {
                 Text(alert.message)
             }
         }
-        .tint(.vampireRed)
+        .tint(theme.accent)
     }
 
     @ViewBuilder
@@ -111,16 +100,15 @@ struct CharacterListView: View {
             } label: {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(displayName(for: summary))
-                        .vampireFont()
+                        .themedText(.label)
                     let details = [summary.clan, summary.covenant].filter { !$0.isEmpty }
                     if !details.isEmpty {
                         Text(details.joined(separator: " · "))
-                            .font(.system(size: 16))
-                            .foregroundStyle(.primary)
+                            .themedText(.body)
                     }
                     if let modifiedAt = summary.modifiedAt {
                         Text("Edited \(modifiedAt, format: .relative(presentation: .named))")
-                            .font(.system(size: 14))
+                            .themedText(.detail)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -128,13 +116,13 @@ struct CharacterListView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
         } else {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Couldn't open this character")
-                    .font(.system(size: 16))
+                    .themedText(.body)
                 Text("It may be damaged, or saved by a newer version of the app.")
-                    .font(.system(size: 14))
+                    .themedText(.detail)
                     .foregroundStyle(.secondary)
             }
             .padding(.vertical, 4)

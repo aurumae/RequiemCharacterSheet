@@ -9,198 +9,55 @@
 import SwiftUI
 
 struct DerivedAttributesView: View {
-    let character: Character
-    
+    @Bindable var character: Character
+
+    /// Armor can't go below 0; the upper limit just keeps the counter sensible.
+    private let armorRange = 0...32
+
     var body: some View {
-        Section(header: Text("ADVANTAGES").font(.custom("CaslonAntique", size: 24))) {
-            HStack {
-                Text("Size:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.size)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            
-            HStack {
-                Text("Speed:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.speed)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            
-            HStack {
-                Text("Defense (Athletics):")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.defense)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
+        Section(header: Text("ADVANTAGES").themedText(.sectionHeader)) {
+            LabeledValueRow("Size:", value: character.size)
+            LabeledValueRow("Speed:", value: character.speed)
+            LabeledValueRow("Defense (Athletics):", value: character.defense)
 
             if character.hasDefensiveCombatBrawl {
-                HStack {
-                    Text("Defense (Brawl):")
-                        .vampireFont()
-                    Spacer()
-                    Text("\(character.defenseUsingBrawl)")
-                        .vampireFont()
-                }
-                .padding(.vertical, 4)
+                LabeledValueRow("Defense (Brawl):", value: character.defenseUsingBrawl)
             }
 
             if character.hasDefensiveCombatWeaponry {
-                HStack {
-                    Text("Defense (Weaponry):")
-                        .vampireFont()
-                    Spacer()
-                    Text("\(character.defenseUsingWeaponry)")
-                        .vampireFont()
-                }
-                .padding(.vertical, 4)
+                LabeledValueRow("Defense (Weaponry):", value: character.defenseUsingWeaponry)
             }
-            
-            HStack {
-                Text("Armor:")
-                    .vampireFont()
-                Spacer()
-                HStack(spacing: 16) {
-                    Button(action: {
-                        if character.armor > 0 {
-                            character.armor -= 1
-                        }
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    
-                    Text("\(character.armor)")
-                        .vampireFont()
-                        .frame(minWidth: 30)
-                    
-                    Button(action: {
-                        if character.armor < 32 {
-                            character.armor += 1
-                        }
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                }
-            }
-            
-            HStack {
-                Text("Initiative Mod:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.initiativeMod)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            
-            // New Beats Line
-            HStack {
-                Text("Beats:")
-                    .vampireFont()
-                Spacer()
-                HStack(spacing: 16) {
-                    Button(action: {
-                        character.decrementBeats()
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    
-                    Text("\(character.beats)")
-                        .vampireFont()
-                        .frame(minWidth: 30)
-                    
-                    Button(action: {
-                        character.incrementBeats()
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                }
-            }
-            .padding(.vertical, 4)
-            
-            // New Experiences Line
-            HStack {
-                Text("Experiences:")
-                    .vampireFont()
-                Spacer()
-                HStack(spacing: 16) {
-                    Button(action: {
-                        character.decrementExperiences()
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    .disabled(character.experiences <= 0)
-                    
-                    Text("\(character.experiences)")
-                        .vampireFont()
-                        .frame(minWidth: 30)
-                    
-                    Button(action: {
-                        character.incrementExperiences()
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    //.disabled(character.experiences <= 0)
-                }
-            }
-            .padding(.vertical, 4)
-            
+
+            CounterRow("Armor:", value: $character.armor, in: armorRange)
+
+            LabeledValueRow("Initiative Mod:", value: character.initiativeMod)
+
+            // Five Beats make an Experience
+            CounterRow(
+                "Beats:",
+                value: character.beats,
+                canDecrement: character.beats > 0,
+                decrement: character.decrementBeats,
+                increment: character.incrementBeats
+            )
+
+            CounterRow(
+                "Experiences:",
+                value: character.experiences,
+                canDecrement: character.experiences > 0,
+                decrement: character.decrementExperiences,
+                increment: character.incrementExperiences
+            )
+
             // Combat Dice Pools section
-            
-            HStack {
-                Text("COMBAT DICE POOLS").font(.custom("CaslonAntique", size: 24))
-            }
-            .padding(.vertical, 4)
-            
-            HStack {
-                Text("Brawl Pool:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.brawlDicePool)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            
-            HStack {
-                Text("Firearms Pool:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.firearmsDicePool)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            
-            HStack {
-                Text("Weaponry Pool:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.weaponryDicePool)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
+            Text("COMBAT DICE POOLS")
+                .themedText(.sectionHeader)
+                .padding(.vertical, 4)
+                .accessibilityAddTraits(.isHeader)
+
+            LabeledValueRow("Brawl Pool:", value: character.brawlDicePool)
+            LabeledValueRow("Firearms Pool:", value: character.firearmsDicePool)
+            LabeledValueRow("Weaponry Pool:", value: character.weaponryDicePool)
         }
     }
 }

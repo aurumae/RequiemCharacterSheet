@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct SkillRowView: View {
+    @Environment(\.theme) private var theme
     let character: Character
     @Bindable var skill: Skill
     @State private var showingPicker = false
@@ -30,9 +31,10 @@ struct SkillRowView: View {
                     showingPicker = true
                 }) {
                     Text(skill.name)
-                        .vampireFont()
+                        .themedText(.label)
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
+                .accessibilityHint("Double-tap to choose a rating")
                 .confirmationDialog("Set \(skill.name)", isPresented: $showingPicker, titleVisibility: .visible) {
                     ForEach(Array(character.skillRatingRange), id: \.self) { value in
                         Button("\(value)") {
@@ -48,10 +50,11 @@ struct SkillRowView: View {
                         editingSpecialtyIndex = index
                     } label: {
                         Text(specialty)
-                            .font(.system(size: 14))
-                            .foregroundStyle(.primary)
+                            .themedText(.detail)
                     }
-                    .buttonStyle(PlainButtonStyle())
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Specialty: \(specialty)")
+                    .accessibilityHint("Double-tap to edit")
                 }
 
                 Button {
@@ -59,15 +62,17 @@ struct SkillRowView: View {
                     isAddingSpecialty = true
                 } label: {
                     Text("Add Specialty")
-                        .font(.system(size: 14))
-                        .foregroundStyle(.gray)
+                        .themedText(.detail)
+                        .foregroundStyle(theme.muted)
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
+                .accessibilityLabel("Add \(skill.name) specialty")
             }
 
             Spacer()
 
             DotsRatingView(
+                skill.name,
                 rating: $skill.rating,
                 maxRating: maximumVisibleRating,
                 maxEditableRating: character.baseRatingCap,

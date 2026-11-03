@@ -12,22 +12,15 @@ struct MeritsView: View {
     let character: Character
 
     var body: some View {
-        Section(header: Text("MERITS").font(.custom("CaslonAntique", size: 24))) {
+        Section(header: Text("MERITS").themedText(.sectionHeader)) {
             ForEach(character.merits) { merit in
                 MeritRowView(merit: merit)
             }
             .onDelete(perform: deleteMerit)
 
-            // Add New Merit Button
-            Button(action: {
+            AddRowButton("Add Merit") {
                 character.merits.append(Merit())
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle")
-                    Text("Add Merit")
-                }
             }
-            .buttonStyle(PlainButtonStyle())
         }
     }
 

@@ -8,29 +8,29 @@
 
 import SwiftUI
 
+/// One health box, showing the damage marked in it.
 struct HealthBoxView: View {
+    @Environment(\.theme) private var theme
     let damageType: HealthBoxFillType
     var isPenalty: Bool = false
-    
+
     var body: some View {
         Rectangle()
-            .fill(Color.clear) // Fill with clear or white color for all boxes
+            .fill(Color.clear)
             .overlay(
-                Text(symbolForFillType(damageType))
+                Text(symbol(for: damageType))
                     .font(.system(size: 14))
-                    .foregroundColor(.black)
+                    .foregroundStyle(theme.ink)
                     .bold()
             )
             .overlay(
-                Rectangle().stroke(
-                    isPenalty ? Color(red: 88/255, green: 26/255, blue: 18/255) : Color.black,
-                    lineWidth: isPenalty ? 3 : 1
-                )
+                Rectangle().stroke(isPenalty ? theme.accent : theme.ink, lineWidth: isPenalty ? 3 : 1)
             )
             .frame(width: 20, height: 20)
+            .contentShape(Rectangle())
     }
-    
-    func symbolForFillType(_ type: HealthBoxFillType) -> String {
+
+    private func symbol(for type: HealthBoxFillType) -> String {
         switch type {
         case .bashing:
             return "/"
@@ -40,6 +40,22 @@ struct HealthBoxView: View {
             return "✱"
         case .none:
             return ""
+        }
+    }
+}
+
+extension HealthBoxFillType {
+    /// How VoiceOver describes a health box.
+    var accessibilityDescription: String {
+        switch self {
+        case .none:
+            return "Empty"
+        case .bashing:
+            return "Bashing damage"
+        case .lethal:
+            return "Lethal damage"
+        case .aggravated:
+            return "Aggravated damage"
         }
     }
 }

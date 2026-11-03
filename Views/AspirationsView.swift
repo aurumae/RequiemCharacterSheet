@@ -12,23 +12,15 @@ struct AspirationsView: View {
     let character: Character
 
     var body: some View {
-        Section(header: Text("ASPIRATIONS").font(.custom("CaslonAntique", size: 24))) {
+        Section(header: Text("ASPIRATIONS").themedText(.sectionHeader)) {
             ForEach(character.aspirations) { aspiration in
                 AspirationRowView(aspiration: aspiration)
             }
             .onDelete(perform: deleteAspiration)
 
-            // Add New Aspiration Button
-            Button(action: {
+            AddRowButton("Add Aspiration") {
                 character.aspirations.append(Aspiration())
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle")
-                    Text("Add Aspiration")
-                }
-                .foregroundColor(.vampireRed)
             }
-            .buttonStyle(PlainButtonStyle())
         }
     }
 

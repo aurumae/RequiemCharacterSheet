@@ -10,48 +10,22 @@ import SwiftUI
 
 struct MeritRowView: View {
     @Bindable var merit: Merit
-    @State private var isEditingMerit = false
-    @FocusState private var meritFieldIsFocused: Bool
 
     var body: some View {
-        HStack {
-            if isEditingMerit {
-                TextField("Merit Name", text: $merit.name, onCommit: {
-                    isEditingMerit = false
-                })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .submitLabel(.done)
-                .focused($meritFieldIsFocused)
-                .frame(maxWidth: .infinity)
-            } else {
-                if merit.name.isEmpty {
-                    Button(action: {
-                        isEditingMerit = true
-                        meritFieldIsFocused = true
-                    }) {
-                        Text("Merit Name")
-                            .foregroundColor(.gray)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                } else {
-                    // Display discipline name, tap to edit
-                    Button(action: {
-                        isEditingMerit = true
-                        meritFieldIsFocused = true
-                    }) {
-                        Text(merit.name)
-                            .font(.custom("CaslonAntique", size: 20))
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
+        HStack(alignment: .center, spacing: 8) {
+            TapToEditText(placeholder: "Merit Name", text: $merit.name) { name in
+                Text(name)
+                    .themedText(.traitName)
             }
-            
+
             Spacer()
 
-            // Dots Rating View
-            EditableDotsRatingView(rating: $merit.rating, maxRating: 5)
-                .frame(width: 100)
+            DotsRatingView(
+                merit.name.isEmpty ? "Merit" : merit.name,
+                rating: $merit.rating,
+                maxRating: 5,
+                allowsResetToZero: true
+            )
         }
         .padding(.vertical, 4)
     }

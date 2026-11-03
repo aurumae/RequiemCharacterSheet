@@ -12,22 +12,15 @@ struct DisciplinesView: View {
     let character: Character
 
     var body: some View {
-        Section(header: Text("DISCIPLINES").font(.custom("CaslonAntique", size: 24))) {
+        Section(header: Text("DISCIPLINES").themedText(.sectionHeader)) {
             ForEach(character.disciplines) { discipline in
                 DisciplineRowView(discipline: discipline)
             }
             .onDelete(perform: deleteDiscipline)
 
-            // Add New Discipline Button
-            Button(action: {
+            AddRowButton("Add Discipline") {
                 character.disciplines.append(Discipline())
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle")
-                    Text("Add Discipline")
-                }
             }
-            .buttonStyle(PlainButtonStyle())
         }
     }
 

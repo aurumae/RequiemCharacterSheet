@@ -20,22 +20,27 @@ struct AttributeRowView: View {
     private var maximumVisibleRating: Int {
         character.baseRatingCap >= 6 || totalRating >= 6 ? 10 : 5
     }
-    
+
     var body: some View {
         HStack {
             Button(action: {
                 showingPicker = true
             }) {
                 Text(attribute.name)
-                    .font(.custom("CaslonAntique", size: 22))
-                    .foregroundColor(.vampireRed) // Apply the custom red color here
+                    .themedText(.label)
             }
-            .buttonStyle(PlainButtonStyle())
-            .actionSheet(isPresented: $showingPicker) {
-                ActionSheet(title: Text("Set \(attribute.name)"), message: nil, buttons: actionSheetButtons())
+            .buttonStyle(.plain)
+            .accessibilityHint("Double-tap to choose a rating")
+            .confirmationDialog("Set \(attribute.name)", isPresented: $showingPicker, titleVisibility: .visible) {
+                ForEach(Array(character.attributeRatingRange), id: \.self) { value in
+                    Button("\(value)") {
+                        attribute.rating = value
+                    }
+                }
             }
             Spacer()
             DotsRatingView(
+                attribute.name,
                 rating: $attribute.rating,
                 totalRating: totalRating,
                 maxRating: maximumVisibleRating,
@@ -47,16 +52,5 @@ struct AttributeRowView: View {
             )
         }
         .padding(.vertical, 4)
-    }
-    
-    func actionSheetButtons() -> [ActionSheet.Button] {
-        var buttons: [ActionSheet.Button] = []
-        for value in character.attributeRatingRange {
-            buttons.append(.default(Text("\(value)")) {
-                attribute.rating = value
-            })
-        }
-        buttons.append(.cancel())
-        return buttons
     }
 }

@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct BaneRowView: View {
+    @Environment(\.theme) private var theme
     @Bindable var bane: Bane
 
     var body: some View {
@@ -18,9 +19,10 @@ struct BaneRowView: View {
                 .padding(4)
                 .background(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.gray, lineWidth: 1)
+                        .stroke(theme.muted, lineWidth: 1)
                 )
-                .font(.system(size: 16))
+                .themedText(.body)
+                .accessibilityLabel("Bane")
         }
         .padding(.vertical, 4)
     }

@@ -15,10 +15,9 @@ struct SkillsSectionHeader: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
-                .font(.custom("CaslonAntique", size: 20))
+                .themedText(.subsectionHeader)
             Text(subtitle)
-                .font(.custom("CaslonAntique", size: 16))
-                .foregroundColor(.gray)
+                .themedText(.note)
         }
         .padding(.vertical, 4)
     }

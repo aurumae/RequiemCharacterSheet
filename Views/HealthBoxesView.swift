@@ -19,16 +19,22 @@ struct HealthBoxesView: View {
             ForEach(0..<rows.count, id: \.self) { rowIndex in
                 HStack(spacing: 4) {
                     ForEach(rows[rowIndex], id: \.self) { index in
-                        HealthBoxView(damageType: boxes[index], isPenalty: false)
-                            .onTapGesture {
-                                character.setHealthBox(at: index, to: nextDamageType(current: boxes[index]))
-                            }
+                        Button {
+                            character.setHealthBox(at: index, to: nextDamageType(current: boxes[index]))
+                        } label: {
+                            HealthBoxView(damageType: boxes[index], isPenalty: false)
+                        }
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel("Health box \(index + 1)")
+                        .accessibilityValue(boxes[index].accessibilityDescription)
+                        .accessibilityHint("Double-tap to change the damage")
                     }
                 }
             }
         }
     }
 
+    /// Tapping cycles a box through no damage, bashing, lethal and aggravated.
     func nextDamageType(current: HealthBoxFillType) -> HealthBoxFillType {
         switch current {
         case .none:

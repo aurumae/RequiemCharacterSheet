@@ -19,10 +19,15 @@ struct WillpowerBoxesView: View {
             ForEach(0..<rows.count, id: \.self) { rowIndex in
                 HStack(spacing: 4) {
                     ForEach(rows[rowIndex], id: \.self) { index in
-                        WillpowerBoxView(state: boxes[index])
-                            .onTapGesture {
-                                character.setWillpowerBox(at: index, to: boxes[index] == .none ? .spent : .none)
-                            }
+                        Button {
+                            character.setWillpowerBox(at: index, to: boxes[index] == .none ? .spent : .none)
+                        } label: {
+                            WillpowerBoxView(state: boxes[index])
+                        }
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel("Willpower box \(index + 1)")
+                        .accessibilityValue(boxes[index] == .spent ? "Spent" : "Available")
+                        .accessibilityHint("Double-tap to toggle")
                     }
                 }
             }

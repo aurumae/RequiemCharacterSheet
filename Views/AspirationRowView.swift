@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct AspirationRowView: View {
+    @Environment(\.theme) private var theme
     @Bindable var aspiration: Aspiration
 
     var body: some View {
@@ -18,9 +19,10 @@ struct AspirationRowView: View {
                 .padding(4)
                 .background(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.gray, lineWidth: 1)
+                        .stroke(theme.muted, lineWidth: 1)
                 )
-                .font(.system(size: 16))
+                .themedText(.body)
+                .accessibilityLabel("Aspiration")
         }
         .padding(.vertical, 4)
     }

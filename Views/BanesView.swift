@@ -12,23 +12,15 @@ struct BanesView: View {
     let character: Character
 
     var body: some View {
-        Section(header: Text("BANES").font(.custom("CaslonAntique", size: 24))) {
+        Section(header: Text("BANES").themedText(.sectionHeader)) {
             ForEach(character.banes) { bane in
                 BaneRowView(bane: bane)
             }
             .onDelete(perform: deleteBane)
 
-            // Add New Bane Button
-            Button(action: {
+            AddRowButton("Add Bane") {
                 character.banes.append(Bane())
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle")
-                    Text("Add Bane")
-                }
-                .foregroundColor(.vampireRed)
             }
-            .buttonStyle(PlainButtonStyle())
         }
     }
 

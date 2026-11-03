@@ -13,7 +13,7 @@ struct HealthView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            DotsRatingView(rating: .constant(character.health), maxRating: character.health, dotsPerRow: 10)
+            DotsRatingView("Health", value: character.health, maxRating: character.health, dotsPerRow: 10)
             HealthBoxesView(character: character)
                 .padding(.vertical, 4)
         }

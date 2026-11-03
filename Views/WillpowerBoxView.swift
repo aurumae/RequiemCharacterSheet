@@ -8,7 +8,9 @@
 
 import SwiftUI
 
+/// One willpower box, showing whether it's been spent.
 struct WillpowerBoxView: View {
+    @Environment(\.theme) private var theme
     let state: WillpowerBoxFillType
 
     var body: some View {
@@ -17,12 +19,13 @@ struct WillpowerBoxView: View {
             .overlay(
                 Text(state == .spent ? "/" : "")
                     .font(.system(size: 14))
-                    .foregroundColor(.black)
+                    .foregroundStyle(theme.ink)
                     .bold()
             )
             .overlay(
-                Rectangle().stroke(Color.black, lineWidth: 1)
+                Rectangle().stroke(theme.ink, lineWidth: 1)
             )
             .frame(width: 20, height: 20)
+            .contentShape(Rectangle())
     }
 }

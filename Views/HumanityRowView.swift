@@ -9,73 +9,33 @@
 import SwiftUI
 
 struct HumanityRowView: View {
+    @Environment(\.theme) private var theme
     @Bindable var touchstone: Touchstone
     @Binding var humanity: Int
-    @State private var isEditing = false
-    @FocusState private var isFocused: Bool
 
     var body: some View {
         HStack {
             // Level Number
             Text("\(touchstone.level)")
-                .vampireFont()
+                .themedText(.label)
 
             // Touchstone Text
-            if isEditing {
-                TextField("Add Touchstone", text: $touchstone.text, onCommit: {
-                    isEditing = false
-                })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .submitLabel(.done)
-                .focused($isFocused)
-                .onAppear {
-                    self.isFocused = true
-                }
-            } else {
-                if touchstone.text.isEmpty {
-                    Button(action: {
-                        isEditing = true
-                        isFocused = true
-                    }) {
-                        Text("Add Touchstone")
-                            .font(.system(size: 14))
-                            .foregroundColor(.gray)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                } else {
-                    Button(action: {
-                        isEditing = true
-                        isFocused = true
-                    }) {
-                        Text(touchstone.text)
-                            .font(.system(size: 14))
-                            .foregroundColor(.primary)
-                            .strikethrough(touchstone.level > humanity, color: .vampireRed)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
+            TapToEditText(placeholder: "Add Touchstone", text: $touchstone.text, font: .detail) { text in
+                Text(text)
+                    .themedText(.detail)
+                    // Touchstones above the current Humanity are lost
+                    .strikethrough(touchstone.level > humanity, color: theme.accent)
             }
 
             Spacer()
 
-            // Dot
-            Circle()
-                .fill(touchstone.level <= humanity ? Color.vampireRed : Color.clear)
-                .frame(width: 20, height: 20)
-                .overlay(
-                    Circle().stroke(Color.black, lineWidth: 1)
-                )
-                .onTapGesture {
-                    humanity = touchstone.level
-                }
+            DotView(isFilled: touchstone.level <= humanity) {
+                humanity = touchstone.level
+            }
+            .accessibilityLabel("Humanity \(touchstone.level)")
+            .accessibilityValue(touchstone.level <= humanity ? "Reached" : "Not reached")
+            .accessibilityHint("Double-tap to set Humanity to \(touchstone.level)")
         }
         .padding(.vertical, 4)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            if isFocused {
-                isFocused = false
-                isEditing = false
-            }
-        }
     }
 }

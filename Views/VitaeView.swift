@@ -9,67 +9,18 @@
 import SwiftUI
 
 struct VitaeView: View {
-    let character: Character
+    @Bindable var character: Character
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Vitae Per Turn
-            HStack {
-                Text("Vitae Per Turn:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.vitaePerTurn)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            .padding(.horizontal)
-            
-            // Max Vitae
-            HStack {
-                Text("Max Vitae:")
-                    .vampireFont()
-                Spacer()
-                Text("\(character.maxVitae)")
-                    .vampireFont()
-            }
-            .padding(.vertical, 4)
-            .padding(.horizontal)
-            
-            // Current Vitae with plus and minus buttons
-            HStack {
-                Text("Current Vitae:")
-                    .vampireFont()
-                Spacer()
-                HStack(spacing: 16) {
-                    Button(action: {
-                        if character.currentVitae > 0 {
-                            character.currentVitae -= 1
-                        }
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
+            LabeledValueRow("Vitae Per Turn:", value: character.vitaePerTurn)
+                .padding(.horizontal)
 
-                    Text("\(character.currentVitae)")
-                        .vampireFont()
-                        .frame(minWidth: 30)
+            LabeledValueRow("Max Vitae:", value: character.maxVitae)
+                .padding(.horizontal)
 
-                    Button(action: {
-                        if character.currentVitae < character.maxVitae {
-                            character.currentVitae += 1
-                        }
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .font(.title2)
-                            .foregroundColor(.vampireRed)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                }
-            }
-            .padding(.vertical, 4)
-            .padding(.horizontal)
+            CounterRow("Current Vitae:", value: $character.currentVitae, in: 0...character.maxVitae)
+                .padding(.horizontal)
         }
         .padding(.vertical, 4)
         .padding(.horizontal)
