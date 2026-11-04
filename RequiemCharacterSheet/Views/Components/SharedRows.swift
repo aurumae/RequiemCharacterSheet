@@ -230,6 +230,7 @@ struct TapToEditNumberRow: View {
 /// losing focus), not on every keystroke, so names that link to the catalog don't change mid-word.
 struct TapToEditText<Display: View>: View {
     @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let placeholder: String
     @Binding var text: String
     /// Font for the placeholder and the text field.
@@ -254,7 +255,7 @@ struct TapToEditText<Display: View>: View {
     var body: some View {
         if isEditing {
             TextField(placeholder, text: $draft)
-                .font(theme.font(font))
+                .font(theme.font(font, dynamicTypeSize: dynamicTypeSize))
                 .textFieldStyle(.roundedBorder)
                 .submitLabel(.done)
                 .focused($isFocused)
@@ -272,7 +273,7 @@ struct TapToEditText<Display: View>: View {
             } label: {
                 if text.isEmpty {
                     Text(placeholder)
-                        .font(theme.font(font))
+                        .font(theme.font(font, dynamicTypeSize: dynamicTypeSize))
                         .foregroundStyle(theme.muted)
                 } else {
                     display(text)

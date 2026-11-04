@@ -17,29 +17,42 @@ struct Theme {
     var muted: Color
     /// The display face used for headings and trait names.
     var displayFontName: String
+    /// Draws letters the display face doesn't have, such as the ú in Crúac, instead of the system font.
+    var displayFallbackFontName: String
     /// The small-caps face used for subheadings such as Mental, Physical and Social.
     var subheadingFontName: String
     var borderImageName: String
     var logoImageName: String
 
     /// Each style scales with the user's preferred text size, relative to the given system style.
-    func font(_ style: ThemeTextStyle) -> Font {
+    func font(_ style: ThemeTextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {
         switch style {
         case .sectionHeader:
-            return .custom(displayFontName, size: 24, relativeTo: .title2)
+            return displayFont(size: 24, relativeTo: .title2, dynamicTypeSize: dynamicTypeSize)
         case .subsectionHeader:
             return .custom(subheadingFontName, size: 20, relativeTo: .headline)
         case .label:
-            return .custom(displayFontName, size: 22, relativeTo: .title3)
+            return displayFont(size: 22, relativeTo: .title3, dynamicTypeSize: dynamicTypeSize)
         case .traitName:
-            return .custom(displayFontName, size: 20, relativeTo: .title3)
+            return displayFont(size: 20, relativeTo: .title3, dynamicTypeSize: dynamicTypeSize)
         case .note:
-            return .custom(displayFontName, size: 16, relativeTo: .subheadline)
+            return displayFont(size: 16, relativeTo: .subheadline, dynamicTypeSize: dynamicTypeSize)
         case .body:
             return .callout
         case .detail:
             return .subheadline
         }
+    }
+
+    /// The display face, falling back to `displayFallbackFontName` for missing letters. Caslon Antique has no
+    /// lowercase accented letters, and the system font's are so much taller that "Crúac" reads as "CrÚac".
+    /// `Font.custom` can't take a fallback, so this scales the font for the text size itself.
+    private func displayFont(size: CGFloat, relativeTo textStyle: UIFont.TextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {
+        let fallback = UIFontDescriptor(name: displayFallbackFontName, size: size)
+        let descriptor = UIFontDescriptor(name: displayFontName, size: size).addingAttributes([.cascadeList: [fallback]])
+        let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(dynamicTypeSize))
+        let scaled = UIFontMetrics(forTextStyle: textStyle).scaledFont(for: UIFont(descriptor: descriptor, size: size), compatibleWith: traits)
+        return Font(scaled as CTFont)
     }
 
     /// The colour a text style is drawn in, or `nil` to keep the surrounding colour.
@@ -59,6 +72,7 @@ struct Theme {
         ink: .black,
         muted: .gray,
         displayFontName: "CaslonAntique",
+        displayFallbackFontName: "MrsEavesRoman",
         subheadingFontName: "MrsEavesSmallCaps",
         borderImageName: "VtRBorder_NewStyle",
         logoImageName: "VtR 2nd ED Logo"
@@ -89,6 +103,7 @@ extension EnvironmentValues {
 
 struct ThemedTextModifier: ViewModifier {
     @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let style: ThemeTextStyle
 
     func body(content: Content) -> some View {
@@ -106,11 +121,11 @@ struct ThemedTextModifier: ViewModifier {
     private func styled(_ content: Content) -> some View {
         if let color = theme.color(style) {
             content
-                .font(theme.font(style))
+                .font(theme.font(style, dynamicTypeSize: dynamicTypeSize))
                 .foregroundStyle(color)
         } else {
             content
-                .font(theme.font(style))
+                .font(theme.font(style, dynamicTypeSize: dynamicTypeSize))
         }
     }
 }
