@@ -31,7 +31,8 @@ final class CharacterStore {
     static let legacySaveKey = "SavedCharacter"
 
     nonisolated static var defaultDirectory: URL {
-        URL.applicationSupportDirectory.appending(path: "Characters", directoryHint: .isDirectory)
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("Characters", isDirectory: true)
     }
 
     /// Newest first; unreadable files are listed last.

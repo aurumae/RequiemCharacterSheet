@@ -11,7 +11,7 @@ import Testing
 struct CharacterDecodingTests {
 
     @Test func version1SaveLoadsWithAllValues() throws {
-        let character = try decode(Self.version1Save)
+        let character = try JSONDecoder().decode(Character.self, from: SaveFixtures.data("v1-unversioned"))
 
         #expect(character.name == "Marcus Vale")
         #expect(character.player == "Sam")
@@ -121,108 +121,4 @@ struct CharacterDecodingTests {
     private func attributeRating(_ name: String, in character: Character) -> Int? {
         character.attributes.first { $0.name == name }?.rating
     }
-
-    /// A save exactly as written by the app before schema versioning (version 1).
-    /// It has no id or timestamps, and includes the since-removed healthDamage and willpowerSpent keys.
-    private static let version1Save = """
-    {
-      "attributes": [
-        {"id": "00000000-0000-0000-0000-000000000001", "name": "Intelligence", "rating": 1},
-        {"id": "00000000-0000-0000-0000-000000000002", "name": "Wits", "rating": 1},
-        {"id": "00000000-0000-0000-0000-000000000003", "name": "Resolve", "rating": 2},
-        {"id": "00000000-0000-0000-0000-000000000004", "name": "Strength", "rating": 3},
-        {"id": "00000000-0000-0000-0000-000000000005", "name": "Dexterity", "rating": 2},
-        {"id": "00000000-0000-0000-0000-000000000006", "name": "Stamina", "rating": 2},
-        {"id": "00000000-0000-0000-0000-000000000007", "name": "Presence", "rating": 1},
-        {"id": "00000000-0000-0000-0000-000000000008", "name": "Manipulation", "rating": 1},
-        {"id": "00000000-0000-0000-0000-000000000009", "name": "Composure", "rating": 3}
-      ],
-      "healthDamage": 0,
-      "willpowerSpent": 0,
-      "healthBoxes": [
-        {"id": "00000000-0000-0000-0000-000000000010", "damageType": "bashing"},
-        {"id": "00000000-0000-0000-0000-000000000011", "damageType": "none"},
-        {"id": "00000000-0000-0000-0000-000000000012", "damageType": "none"},
-        {"id": "00000000-0000-0000-0000-000000000013", "damageType": "none"},
-        {"id": "00000000-0000-0000-0000-000000000014", "damageType": "none"},
-        {"id": "00000000-0000-0000-0000-000000000015", "damageType": "none"},
-        {"id": "00000000-0000-0000-0000-000000000016", "damageType": "none"}
-      ],
-      "willpowerBoxes": [
-        {"id": "00000000-0000-0000-0000-000000000017", "state": "spent"},
-        {"id": "00000000-0000-0000-0000-000000000018", "state": "none"},
-        {"id": "00000000-0000-0000-0000-000000000019", "state": "none"},
-        {"id": "00000000-0000-0000-0000-000000000020", "state": "none"},
-        {"id": "00000000-0000-0000-0000-000000000021", "state": "none"}
-      ],
-      "skills": [
-        {"id": "00000000-0000-0000-0000-000000000022", "name": "Academics", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000023", "name": "Computer", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000024", "name": "Crafts", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000025", "name": "Investigation", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000026", "name": "Medicine", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000027", "name": "Occult", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000028", "name": "Politics", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000029", "name": "Science", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000030", "name": "Athletics", "rating": 1, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000031", "name": "Brawl", "rating": 2, "specialty": "Grappling"},
-        {"id": "00000000-0000-0000-0000-000000000032", "name": "Drive", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000033", "name": "Firearms", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000034", "name": "Larceny", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000035", "name": "Stealth", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000036", "name": "Survival", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000037", "name": "Weaponry", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000038", "name": "Animal Ken", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000039", "name": "Empathy", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000040", "name": "Expression", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000041", "name": "Intimidation", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000042", "name": "Persuasion", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000043", "name": "Socialize", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000044", "name": "Streetwise", "rating": 0, "specialty": ""},
-        {"id": "00000000-0000-0000-0000-000000000045", "name": "Subterfuge", "rating": 0, "specialty": ""}
-      ],
-      "name": "Marcus Vale",
-      "player": "Sam",
-      "chronicle": "Dublin by Night",
-      "mask": "Authoritarian",
-      "dirge": "Survivor",
-      "concept": "Fixer",
-      "clan": "Daeva",
-      "bloodline": "",
-      "covenant": "Invictus",
-      "bloodPotency": 2,
-      "maxVitae": 11,
-      "vitaePerTurn": 2,
-      "currentVitae": 8,
-      "humanity": 6,
-      "touchstones": [
-        {"id": "00000000-0000-0000-0000-000000000046", "level": 1, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000047", "level": 2, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000048", "level": 3, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000049", "level": 4, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000050", "level": 5, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000051", "level": 6, "text": "His sister, Ana"},
-        {"id": "00000000-0000-0000-0000-000000000052", "level": 7, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000053", "level": 8, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000054", "level": 9, "text": ""},
-        {"id": "00000000-0000-0000-0000-000000000055", "level": 10, "text": ""}
-      ],
-      "disciplines": [
-        {"id": "00000000-0000-0000-0000-000000000056", "name": "Vigor", "rating": 2}
-      ],
-      "merits": [
-        {"id": "00000000-0000-0000-0000-000000000057", "name": "Defensive Combat (Brawl)", "rating": 1}
-      ],
-      "aspirations": [
-        {"id": "00000000-0000-0000-0000-000000000058", "text": "Win a seat on the Prince's council"}
-      ],
-      "banes": [
-        {"id": "00000000-0000-0000-0000-000000000059", "text": "Cannot cross running water"}
-      ],
-      "size": 5,
-      "armor": 1,
-      "beats": 3,
-      "experiences": 4
-    }
-    """
 }

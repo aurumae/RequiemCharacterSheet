@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exchange_dir=$(mktemp -d)
+trap 'rm -rf "$exchange_dir"' EXIT
+export REQUIEM_EXCHANGE_DIR="$exchange_dir"
+swift test
+android/gradlew -p android :rules:test "-PexchangeDir=$exchange_dir"
+REQUIEM_CHECK_KOTLIN=1 swift test --skip-build --filter readsKotlinEdits
