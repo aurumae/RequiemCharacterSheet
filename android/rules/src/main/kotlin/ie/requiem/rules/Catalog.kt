@@ -39,6 +39,10 @@ class Catalog(files: Map<String, String>) {
 
     fun entries(kind: CatalogKind): Map<String, JsonObject> = byId.getValue(kind)
 
+    fun name(kind: CatalogKind, source: TraitSource): String = source.custom
+        ?: entries(kind)[source.catalog]?.get("name")?.jsonPrimitive?.content
+        ?: source.catalog.orEmpty()
+
     fun source(kind: CatalogKind, name: String): TraitSource {
         val id = byName.getValue(kind)[matchKey(name)]
         return if (id != null) TraitSource(catalog = id) else TraitSource(custom = name)

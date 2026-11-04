@@ -7,6 +7,7 @@ sealed interface SheetEdit {
     data class Rename(val name: String) : SheetEdit
     data class XpMode(val enabled: Boolean) : SheetEdit
     data class Stamina(val delta: Int) : SheetEdit
+    data class StaminaRating(val rating: Int) : SheetEdit
     data class Mark(val index: Int) : SheetEdit
 }
 
@@ -18,6 +19,7 @@ fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundat
     return when (action) {
         is SheetEdit.Rename -> copy(name = action.name)
         is SheetEdit.XpMode -> copy(xpMode = action.enabled)
+        is SheetEdit.StaminaRating -> edit(SheetEdit.Stamina(action.rating.coerceIn(1, staminaCap) - stamina), catalog, at)
         is SheetEdit.Mark -> {
             val total = health(catalog)
             if (action.index !in 0 until total) return this
@@ -27,7 +29,6 @@ fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundat
             copy(healthTrack = track)
         }
         is SheetEdit.Stamina -> {
-            require(action.delta == -1 || action.delta == 1)
             val from = stamina
             val to = (from + action.delta).coerceIn(1, staminaCap)
             if (to == from) return this
@@ -35,9 +36,12 @@ fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundat
             val ledger = paidDots.toMutableMap()
             val levels = ledger[key].orEmpty().toMutableMap()
             val cost = if (to > from) {
-                if (xpMode) { levels[to] = 4; 4 } else 0
+                if (xpMode) {
+                    for (level in from + 1..to) levels[level] = 4
+                    (to - from) * 4
+                } else 0
             } else {
-                val paid = levels.remove(from) ?: 0
+                val paid = (to + 1..from).sumOf { levels.remove(it) ?: 0 }
                 if (xpMode) -paid else 0
             }
             if (levels.isEmpty()) ledger.remove(key) else ledger[key] = levels

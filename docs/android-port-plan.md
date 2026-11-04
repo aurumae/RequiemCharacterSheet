@@ -48,7 +48,7 @@ Serialize file operations off the UI thread, use atomic replacement and compare 
 
 ## Order of work
 
-Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet`. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 extends it to the rest of ordinary play.
+Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet` and has run successfully on the Galaxy S24 FE. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 extends it to the rest of ordinary play.
 
 | Milestone | Implementation | Done when |
 | --- | --- | --- |
@@ -61,6 +61,18 @@ Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scr
 Treat the second milestone as a build worth handing to one player for an interaction check. A TalkBack user should be able to focus “Stamina” once, hear its base and bonus, and adjust its rating. A Health box needs its own position, state and action. Wrap the track on narrow screens or at large font sizes so adjacent marks remain individually usable. [Compose accessibility semantics](https://developer.android.com/develop/ui/compose/accessibility/semantics)
 
 Carry the recent iOS interaction fixes into Android acceptance testing. A typed clan name should resolve when editing ends. A custom Bane stays editable while typing and can link by name on reload. A new Aspiration opens for multiline display and commits on Done. Show Vampire Merits first, retain the left alignment of capped Merit dots and check that the display face renders the accented letter in “Crúac” at large text sizes.
+
+## Visual alignment before the remaining sheet sections
+
+The 15 iOS App Store screenshots supplied on 4 November 2026 are the visual reference. The `android/visual-parity` branch establishes this appearance for the existing Android library, sheet and change log before the rest of milestone 3 is added.
+
+- Use the original `VtRBorder_NewStyle` paper and centered logo, Caslon Antique for section headings and trait labels, Mrs Eaves Small Caps for categories, and Mrs Eaves Roman as Caslon’s accented-letter fallback. The primary ink color is `#581A12`; section bands are `#F2F2F7`.
+- Use flat white rows with subtle separators. Character names, clan/covenant details and relative edit times follow reference 01. Save confirms without leaving the sheet; Back saves and returns to the library.
+- Keep editing on the sheet, as requested. Draw red base dots, black bonus dots, and square damage marks. Each direct target has at least 48 dp of space. Ratings stack below labels and Health wraps on small screens; the logo contracts in landscape and above the keyboard.
+- Present the XP badge, earned/spent/available values and a separate dated Change Log using references 09–10. Keep the paper theme light even when Android is in dark mode. Android supplies its keyboard, menus, dialog behavior and accessibility actions.
+- References 03–06, 08, and 11–14 also define the styles for the remaining Attributes, Skills, powers, Humanity, sorcery and creation screens. Their unfinished editing features remain in the milestones above; this visual pass does not enable guided creation.
+
+The Android resources are exports of the supplied artwork and fonts; the screenshot files themselves remain outside the repository. The app module contains the theme, shared controls and native sheet layouts. Continue using those components for new sections.
 
 ## Keeping the two versions together
 

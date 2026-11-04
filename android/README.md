@@ -9,7 +9,9 @@ android/gradlew -p android :app:assembleDebug
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-The first playable build supports a character library, name, Stamina, Health and XP Mode. Each edit is saved to app-private storage. Save and Back wait for pending writes. Existing guided sheets can be viewed; editing them comes in milestone 4. Unreadable and newer saves stay in the library with an explanation.
+The current alpha supports a character library, name, Stamina, Health and XP Mode. Each edit is saved to app-private storage. Save waits for pending writes and confirms in place; Back waits and returns to the library. Existing guided sheets can be viewed; editing them comes in milestone 4. Unreadable and newer saves stay in the library with an explanation.
+
+The second alpha follows the iOS release’s paper frame, fonts, colors and section bands. Edit Stamina by tapping a dot and tap each Health box to cycle damage. Touch targets stay at least 48 dp; rows wrap or stack at large text sizes. The Change Log opens as a native bottom sheet. Install with `adb install -r` to update the first alpha while retaining characters.
 
 **Try a scene.** Create a blank sheet and name it. Raise Stamina from 1 to 2 with XP Mode off, turn XP Mode on, and raise it to 3. The log should show one free dot and one 4 XP purchase, with −4 XP available. Tap Health box 8 once for bashing damage. Go Home. To simulate Android reclaiming the process, run `adb shell am kill ie.requiem.sheet` while the app is in the background, then resume it from Recents. The same character should open with the eighth mark and two log entries. Lower Stamina to 2 with XP Mode on: the refund brings the balance back to zero. With TalkBack on, Stamina has raise/lower actions and each Health box announces its position and damage.
 

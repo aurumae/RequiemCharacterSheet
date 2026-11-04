@@ -14,7 +14,7 @@ import java.util.UUID
 internal data class Screen(
     val rows: List<LibraryRow> = emptyList(), val character: CharacterSave? = null,
     val busy: Boolean = true, val saving: Boolean = false, val error: String? = null,
-    val saveFailed: Boolean = false, val overdraft: Int = 0,
+    val saveFailed: Boolean = false, val overdraft: Int = 0, val savedNotice: Int = 0,
 )
 
 internal class SheetModel(app: Application, private val restored: SavedStateHandle) : AndroidViewModel(app) {
@@ -98,6 +98,15 @@ internal class SheetModel(app: Application, private val restored: SavedStateHand
             writer?.join()
             if (screen.saveFailed) { screen = screen.copy(busy = false); return@launch }
             try { showLibrary() } catch (e: Exception) { failure("Could not load the library", e) }
+        }
+    }
+
+    fun save() {
+        if (screen.busy || session == null) return
+        viewModelScope.launch {
+            flush()
+            writer?.join()
+            if (!screen.saveFailed) screen = screen.copy(savedNotice = screen.savedNotice + 1)
         }
     }
 

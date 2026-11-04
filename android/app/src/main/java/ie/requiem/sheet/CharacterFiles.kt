@@ -11,6 +11,7 @@ import java.util.UUID
 internal data class LibraryRow(
     val id: UUID, val name: String = "", val edited: Double? = null,
     val guided: Boolean = false, val problem: String? = null,
+    val details: String = "",
 )
 
 internal data class OpenSheet(val file: File, val saved: CharacterSave, val text: String)
@@ -22,7 +23,9 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
     fun library(): List<LibraryRow> = files().map { (id, file) ->
         try {
             val c = read(id, file).saved
-            LibraryRow(id, c.name, c.modifiedAt, c.creation != null)
+            val details = listOf(catalog.name(CatalogKind.clans, c.clan), catalog.name(CatalogKind.covenants, c.covenant))
+                .filter { it.isNotBlank() }.joinToString(" · ")
+            LibraryRow(id, c.name, c.modifiedAt, c.creation != null, details = details)
         } catch (e: UnsupportedSchema) {
             LibraryRow(id, problem = "Unsupported save version ${e.version}")
         } catch (_: Exception) {

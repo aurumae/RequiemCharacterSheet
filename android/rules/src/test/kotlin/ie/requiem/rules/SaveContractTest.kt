@@ -6,6 +6,18 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SaveContractTest {
+    @Test fun tappingTheSameDotTwiceDoesNotReplayAPurchase() {
+        val blank = CharacterSave(xpMode = true)
+        val bought = blank.edit(SheetEdit.StaminaRating(4), catalog)
+        assertEquals(listOf(12), bought.changeLog.map { it.experiences })
+        assertSame(bought, bought.edit(SheetEdit.StaminaRating(4), catalog))
+        val lowered = bought.edit(SheetEdit.StaminaRating(2), catalog)
+        assertEquals(listOf(12, -8), lowered.changeLog.map { it.experiences })
+        assertEquals(mapOf(2 to 4), lowered.paidDots["attribute:stamina"])
+        // An absolute tap uses the latest state even before the next Compose frame.
+        assertEquals(1, lowered.edit(SheetEdit.StaminaRating(1), catalog).stamina)
+    }
+
     @Test fun staminaAdvancementMatchesTheSwiftEditor() {
         val steps = Json.parseToJsonElement(javaClass.getResource("/stamina-advancement.json")!!.readText()).jsonArray
         var c = CharacterSave()

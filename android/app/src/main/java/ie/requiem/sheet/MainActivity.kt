@@ -2,6 +2,7 @@ package ie.requiem.sheet
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,67 +11,69 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.*
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import java.text.DateFormat
-import java.util.Date
+import android.text.format.DateUtils
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     private val model: SheetModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            val colors = if (isSystemInDarkTheme()) darkColorScheme(
-                primary = Color(0xFFFFB3BB), surface = Color(0xFF211B1C), background = Color(0xFF211B1C),
-                surfaceContainer = Color(0xFF322A2B), onSurface = Color(0xFFF3E8E3)
-            ) else lightColorScheme(
-                primary = Color(0xFF782C3C), onPrimary = Color.White, surface = Color(0xFFFAF6EC),
-                background = Color(0xFFFAF6EC), surfaceContainer = Color(0xFFF0E8D9), onSurface = Color(0xFF27201F),
-                onSurfaceVariant = Color(0xFF584B49), outline = Color(0xFF806F6A)
-            )
-            MaterialTheme(colorScheme = colors) { Requiem(model) }
-        }
+        // The reference is a light paper sheet, including when the device is in dark mode.
+        enableEdgeToEdge(statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT))
+        setContent { SheetTheme { Requiem(model) } }
     }
     override fun onStop() { super.onStop(); model.flush() }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Requiem(model: SheetModel) {
     val state by model.ui.collectAsStateWithLifecycle()
     var about by rememberSaveable { mutableStateOf(false) }
     val snack = remember { SnackbarHostState() }
     val c = state.character
+    val window = LocalWindowInfo.current.containerSize
+    val sideInset = if (window.width > window.height) with(LocalDensity.current) { (window.width * .08f).toDp() } else 16.dp
     var announced by rememberSaveable(c?.id?.toString()) { mutableIntStateOf(0) }
+    var saved by remember(c?.id) { mutableStateOf(false) }
     LaunchedEffect(state.overdraft) {
         if (state.overdraft > announced) {
             announced = state.overdraft
             snack.showSnackbar("Your available Experiences are now below zero.")
         }
     }
+    LaunchedEffect(state.savedNotice) {
+        if (state.savedNotice > 0) { saved = true; delay(1500); saved = false }
+    }
     BackHandler(enabled = c != null) { model.close() }
-    Scaffold(topBar = {
-        TopAppBar(title = { Text(if (c == null) "Requiem" else "Character sheet", fontFamily = FontFamily.Serif) },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
-            navigationIcon = { if (c != null) TextButton(onClick = model::close, enabled = !state.busy) { Text("Back") } },
-            actions = {
-                if (c == null) TextButton(onClick = { about = true }) { Text("About") }
-                else if (c.creation == null) TextButton(onClick = model::close, enabled = !state.busy) { Text("Save") }
-            })
-    }, snackbarHost = { SnackbarHost(snack) }) { padding ->
-        Column(Modifier.padding(padding).fillMaxSize().imePadding()) {
+    PageBackground {
+        Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = sideInset).padding(top = 20.dp, bottom = 40.dp)) {
+            if (c != null) Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = model::close, enabled = !state.busy, modifier = Modifier.semantics { contentDescription = "Back" }) {
+                    SheetIcon(SheetSymbol.Back, SheetColors.ink)
+                }
+                Spacer(Modifier.weight(1f))
+                if (c.creation == null) {
+                    XpBadge(c.xpMode, c.experiencesAvailable, !state.busy) { model.edit(ie.requiem.rules.SheetEdit.XpMode(!c.xpMode)) }
+                    TextButton(onClick = model::save, enabled = !state.busy && !saved) { Text(if (saved) "Saved" else "Save") }
+                }
+            }
+            LogoHeader()
             state.error?.let {
                 Surface(color = MaterialTheme.colorScheme.errorContainer) {
                     Column(Modifier.fillMaxWidth().padding(12.dp)) {
@@ -82,9 +85,10 @@ private fun Requiem(model: SheetModel) {
             when {
                 c != null -> key(c.id) { SheetEditor(c, model.catalog, state.busy, model::edit) }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-                else -> Library(state.rows, model)
+                else -> Library(state.rows, model) { about = true }
             }
         }
+        SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))
     }
     if (about) AlertDialog(onDismissRequest = { about = false }, title = { Text("About Requiem") }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -96,37 +100,68 @@ private fun Requiem(model: SheetModel) {
 }
 
 @Composable
-private fun Library(rows: List<LibraryRow>, model: SheetModel) {
+private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, toggle: () -> Unit) {
+    Box(Modifier.heightIn(min = 48.dp).widthIn(min = 64.dp).clip(CircleShape)
+        .clickable(enabled = interactive, role = Role.Switch, onClick = toggle)
+        .clearAndSetSemantics {
+            contentDescription = "XP Mode"
+            stateDescription = if (enabled) "On, $available Experiences available" else "Off"
+            role = Role.Switch
+            if (interactive) onClick(label = "Toggle XP Mode") { toggle(); true }
+        }, contentAlignment = Alignment.Center) {
+        Text(if (enabled) "XP $available" else "XP Off",
+            Modifier.border(1.dp, SheetColors.accent, CircleShape)
+                .background(if (enabled) SheetColors.accent else Color.White, CircleShape).padding(horizontal = 8.dp, vertical = 3.dp),
+            color = if (enabled) Color.White else SheetColors.accent,
+            style = MaterialTheme.typography.labelSmall)
+    }
+}
+
+@Composable
+private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit) {
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
-    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Image(painterResource(R.drawable.requiem_logo), "Vampire: The Requiem, Second Edition",
-                    Modifier.width(158.dp).height(90.dp))
-                SectionTitle("Characters")
-                Text(if (rows.isEmpty()) "Create a blank sheet to start your chronicle." else "By last edit",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Button(onClick = model::create) { Text("New blank sheet") }
-            }
+    LazyColumn(Modifier.fillMaxSize().testTag("character-library")) {
+        item { SectionBand("CHARACTERS") }
+        if (rows.isEmpty()) item {
+            Text("Create a blank sheet to start your chronicle.",
+                Modifier.fillMaxWidth().background(Color.White).padding(12.dp), color = SheetColors.muted)
         }
         items(rows, key = { it.id.toString() }) { row ->
-            val title = row.name.ifBlank { if (row.problem == null) "Unnamed character" else "Unavailable character" }
-            val description = row.problem ?: listOfNotNull(if (row.guided) "Guided · Read-only" else null,
-                row.edited?.let { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
-                    .format(Date((it * 1000).toLong() + 978_307_200_000L)) }).joinToString("  ·  ")
-            Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.surfaceContainer) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f).clickable(enabled = row.problem == null, onClickLabel = "Open sheet") {
-                        model.open(row.id)
-                    }.padding(16.dp)) {
-                        Text(title, style = MaterialTheme.typography.titleMedium)
-                        Text(description, style = MaterialTheme.typography.bodySmall)
+            val title = row.name.ifBlank { if (row.problem == null) "Unnamed Character" else "Unavailable character" }
+            var menu by remember { mutableStateOf(false) }
+            Row(Modifier.fillMaxWidth().background(Color.White), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f).clickable(enabled = row.problem == null, onClickLabel = "Open sheet") {
+                    model.open(row.id)
+                }.padding(horizontal = 8.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(title, style = LocalSheetType.current.label)
+                    if (row.details.isNotEmpty()) Text(row.details, style = MaterialTheme.typography.bodyMedium)
+                    if (row.guided) Text("Guided · Read-only", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    if (row.problem != null) Text(row.problem, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    else row.edited?.let {
+                        Text("Edited " + DateUtils.getRelativeTimeSpanString((it * 1000).toLong() + 978_307_200_000L,
+                            System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
+                            style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     }
-                    if (!row.guided && row.problem == null) TextButton(onClick = { confirmId = row.id.toString() }) { Text("Delete") }
+                }
+                if (!row.guided && row.problem == null) Box {
+                    IconButton(onClick = { menu = true }, modifier = Modifier.semantics { contentDescription = "Options for $title" }) {
+                        SheetIcon(SheetSymbol.More, SheetColors.muted)
+                    }
+                    DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                        DropdownMenuItem(text = { Text("Delete character") }, onClick = { menu = false; confirmId = row.id.toString() })
+                    }
                 }
             }
+            SheetRule()
         }
+        item {
+            Row(Modifier.fillMaxWidth().background(Color.White).clickable(onClick = model::create).padding(8.dp).heightIn(min = 48.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                SheetIcon(SheetSymbol.Add)
+                Text("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
+            }
+        }
+        item { TextButton(onClick = about) { Text("About Requiem") } }
     }
     val selected = rows.firstOrNull { it.id.toString() == confirmId }
     if (selected != null) AlertDialog(onDismissRequest = { confirmId = null },
@@ -134,10 +169,4 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel) {
         text = { Text("“${selected.name.ifBlank { "Unnamed character" }}” will be removed from this device.") },
         confirmButton = { TextButton(onClick = { confirmId = null; model.delete(selected.id) }) { Text("Delete") } },
         dismissButton = { TextButton(onClick = { confirmId = null }) { Text("Cancel") } })
-}
-
-@Composable
-internal fun SectionTitle(text: String) {
-    Text(text, Modifier.semantics { heading() }, style = MaterialTheme.typography.headlineSmall,
-        fontFamily = FontFamily.Serif, fontWeight = FontWeight.SemiBold)
 }
