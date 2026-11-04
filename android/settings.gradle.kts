@@ -1,11 +1,12 @@
 pluginManagement {
     repositories {
+        google()
         gradlePluginPortal()
         mavenCentral()
     }
 }
 dependencyResolutionManagement {
-    repositories { mavenCentral() }
+    repositories { google(); mavenCentral() }
 }
 rootProject.name = "RequiemCharacterSheet"
-include(":rules")
+include(":rules", ":app")

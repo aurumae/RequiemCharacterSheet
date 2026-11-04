@@ -26,6 +26,30 @@ struct SaveContractTests {
     private static let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"]
     private let encoder = JSONEncoder()
 
+    @Test func staminaAdvancementMatchesThePhoneEditor() throws {
+        struct Step: Decodable {
+            let delta, rating, cost, available: Int
+            let xpMode: Bool
+            let paidLevels: [Int]
+        }
+        let steps = try JSONDecoder().decode([Step].self, from: SaveFixtures.resource("stamina-advancement"))
+        var character = Character()
+        for (index, step) in steps.enumerated() {
+            character.xpMode = step.xpMode
+            let before = character.traitSnapshot
+            let stamina = try #require(character.attributes.first { $0.kind == .stamina })
+            stamina.rating += step.delta
+            character.recordChanges(since: before)
+            character = try JSONDecoder().decode(Character.self, from: encoder.encode(character))
+            #expect(character.rating(of: .stamina) == step.rating)
+            #expect(character.changeLog.count == index + 1)
+            #expect(character.changeLog.last?.experiences == step.cost)
+            #expect(character.experiencesAvailable == step.available)
+            let paid = character.paidDots[TraitKey(.attribute, "stamina")] ?? [:]
+            #expect(paid.keys.sorted() == step.paidLevels)
+        }
+    }
+
     @Test func currentFixturesMatchWhatSwiftWrites() throws {
         if let path = Self.exchange {
             let c = Catalog.bundled

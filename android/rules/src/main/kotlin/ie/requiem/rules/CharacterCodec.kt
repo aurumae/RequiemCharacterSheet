@@ -7,7 +7,7 @@ class UnsupportedSchema(val version: Int) : IllegalArgumentException("Unsupporte
 class CharacterCodec(private val catalog: Catalog) {
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false }
 
-    fun decode(text: String): CharacterSave {
+    fun decode(text: String, fileId: java.util.UUID? = null): CharacterSave {
         val input = json.parseToJsonElement(text).jsonObject
         val version = input["schemaVersion"]?.takeUnless { it == JsonNull }?.let {
             require(!it.jsonPrimitive.isString) { "schemaVersion must be a number" }
@@ -15,6 +15,8 @@ class CharacterCodec(private val catalog: Catalog) {
         } ?: 1
         if (version !in 1..CURRENT_SCHEMA) throw UnsupportedSchema(version)
         val fields = input.filterValues { it != JsonNull }.toMutableMap()
+        // The oldest payloads did not carry an ID; keep the library filename as their identity.
+        if (fileId != null) fields.putIfAbsent("id", JsonPrimitive(fileId.toString()))
         fields["schemaVersion"] = JsonPrimitive(CURRENT_SCHEMA)
         if ("createdAt" !in fields || "modifiedAt" !in fields) {
             val now = JsonPrimitive(foundationNow())

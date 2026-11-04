@@ -48,7 +48,7 @@ Serialize file operations off the UI thread, use atomic replacement and compare 
 
 ## Order of work
 
-Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is the first installable build for the Galaxy S24 FE.
+Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet`. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 extends it to the rest of ordinary play.
 
 | Milestone | Implementation | Done when |
 | --- | --- | --- |

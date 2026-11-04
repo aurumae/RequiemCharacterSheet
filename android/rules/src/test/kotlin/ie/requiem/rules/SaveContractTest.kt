@@ -6,6 +6,24 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SaveContractTest {
+    @Test fun staminaAdvancementMatchesTheSwiftEditor() {
+        val steps = Json.parseToJsonElement(javaClass.getResource("/stamina-advancement.json")!!.readText()).jsonArray
+        var c = CharacterSave()
+        steps.forEachIndexed { index, element ->
+            val step = element.jsonObject
+            fun number(key: String) = step.getValue(key).jsonPrimitive.int
+            c = c.edit(SheetEdit.XpMode(step.getValue("xpMode").jsonPrimitive.boolean), catalog)
+                .edit(SheetEdit.Stamina(number("delta")), catalog)
+            c = codec.decode(codec.encode(c))
+            assertEquals(number("rating"), c.stamina)
+            assertEquals(index + 1, c.changeLog.size)
+            assertEquals(number("cost"), c.changeLog.last().experiences)
+            assertEquals(number("available"), c.experiencesAvailable)
+            assertEquals(step.getValue("paidLevels").jsonArray.map { it.jsonPrimitive.int },
+                c.paidDots["attribute:stamina"].orEmpty().keys.sorted())
+        }
+    }
+
     private val catalog = Catalog.bundled()
     private val codec = CharacterCodec(catalog)
 

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Requiem Character Sheet</string>
+    <style name="Theme.Requiem" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">#FAF6EC</item>
+        <item name="android:windowSplashScreenBackground">#FAF6EC</item>
+    </style>
+</resources>

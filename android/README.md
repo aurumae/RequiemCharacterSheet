@@ -1,11 +1,23 @@
 # Android character sheet
 
-Open this directory in Android Studio to work on the Kotlin `:rules` module. The first milestone covers the character file and catalog formats. The Android app module will target Android 16 and later (minimum API 36). The first device for testing is a Galaxy S24 FE on Android 17.
+Open this directory in Android Studio and run the **app** configuration. The Kotlin/Compose app supports Android 16 and later (minimum API 36). It stores characters on the device and works offline. The Galaxy S24 FE on Android 17 is the first physical test device.
 
-From the repository root, run the Kotlin tests with JDK 21:
+To build and install the debug APK with JDK 21 or Android Studio’s bundled JDK, set up Android SDK Platform 36 and Build Tools 36.0.0, then run from the repository root:
 
 ```sh
-android/gradlew -p android :rules:test
+android/gradlew -p android :app:assembleDebug
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+The first playable build supports a character library, name, Stamina, Health and XP Mode. Each edit is saved to app-private storage. Save and Back wait for pending writes. Existing guided sheets can be viewed; editing them comes in milestone 4. Unreadable and newer saves stay in the library with an explanation.
+
+**Try a scene.** Create a blank sheet and name it. Raise Stamina from 1 to 2 with XP Mode off, turn XP Mode on, and raise it to 3. The log should show one free dot and one 4 XP purchase, with −4 XP available. Tap Health box 8 once for bashing damage. Go Home. To simulate Android reclaiming the process, run `adb shell am kill ie.requiem.sheet` while the app is in the background, then resume it from Recents. The same character should open with the eighth mark and two log entries. Lower Stamina to 2 with XP Mode on: the refund brings the balance back to zero. With TalkBack on, Stamina has raise/lower actions and each Health box announces its position and damage.
+
+Run the local tests or the Compose interaction test (with an emulator or authorized device attached):
+
+```sh
+android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintDebug
+android/gradlew -p android :app:connectedDebugAndroidTest
 ```
 
 With Swift 6 and JDK 21 on the same machine, run the file exchange:
