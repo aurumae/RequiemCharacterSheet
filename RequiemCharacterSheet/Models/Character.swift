@@ -21,7 +21,8 @@ final class Character: Codable {
     ///   instead of a name; Merits gain a qualifier.
     /// - 6: adds `clanBaneActive`.
     /// - 7: adds `rituals`, `devotions`, `mystery`, `coils` and `scales`.
-    static let currentSchemaVersion = 7
+    /// - 8: adds `xpMode`, `changeLog` and `paidDots`.
+    static let currentSchemaVersion = 8
 
     /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
     static let maxBanes = 3
@@ -104,14 +105,23 @@ final class Character: Codable {
     var armor: Int
 
     var beats: Int
+    /// Experiences earned. What's left to spend is `experiencesAvailable`.
     var experiences: Int
+    /// When on, raising a trait spends Experiences; when off (Storyteller awards, entering an existing
+    /// character), changes are free. Either way, they're logged.
+    var xpMode: Bool
+    /// Every change to a trait that costs Experiences, oldest first.
+    var changeLog: [TraitChange]
+    /// The dots bought with Experiences, and what each cost, so lowering a trait can refund them.
+    var paidDots: [TraitKey: [Int: Int]]
 
     enum CodingKeys: CodingKey {
         case schemaVersion, id, createdAt, modifiedAt,
              attributes, bloodPotency, healthTrack, willpowerTrack, skills, skillList,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              currentVitae, humanity, clanBaneActive, touchstones, disciplines, merits,
-             rituals, devotions, mystery, coils, scales, aspirations, banes, size, armor, beats, experiences
+             rituals, devotions, mystery, coils, scales, aspirations, banes, size, armor, beats, experiences,
+             xpMode, changeLog, paidDots
         // Read from saves before version 3 only
         case healthBoxes, willpowerBoxes
     }
@@ -164,6 +174,9 @@ final class Character: Codable {
 
         try container.encode(beats, forKey: .beats)
         try container.encode(experiences, forKey: .experiences)
+        try container.encode(xpMode, forKey: .xpMode)
+        try container.encode(changeLog, forKey: .changeLog)
+        try container.encode(paidDots, forKey: .paidDots)
     }
 
     // Decoding. Every field falls back to its default when missing, so saves written
@@ -232,6 +245,9 @@ final class Character: Codable {
 
         beats = try container.decode(.beats, default: 0)
         experiences = try container.decode(.experiences, default: 0)
+        xpMode = try container.decode(.xpMode, default: false)
+        changeLog = try container.decode(.changeLog, default: [])
+        paidDots = try container.decode(.paidDots, default: [:])
 
         // Bring loaded values within the limits set by Blood Potency
         clampBaseRatings()
@@ -286,6 +302,9 @@ final class Character: Codable {
 
         beats = 0
         experiences = 0
+        xpMode = false
+        changeLog = []
+        paidDots = [:]
     }
 
     // MARK: - Defaults

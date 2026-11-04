@@ -40,6 +40,9 @@
 		BC2B446C309AA16400720F0C /* DevotionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B446B309AA16400720F0C /* DevotionsView.swift */; };
 		BC2B446E309AA18100720F0C /* RitualsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B446D309AA18100720F0C /* RitualsView.swift */; };
 		BC2B4470309AA1A400720F0C /* CoilsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B446F309AA1A400720F0C /* CoilsView.swift */; };
+		BC2B4472309AADC300720F0C /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4471309AADC300720F0C /* Experience.swift */; };
+		BC2B4474309AADD600720F0C /* ExperienceRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4473309AADD600720F0C /* ExperienceRules.swift */; };
+		BC2B4476309AAE0E00720F0C /* ExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -141,7 +144,10 @@
 		BC2B4469309AA14400720F0C /* CatalogPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPickerView.swift; sourceTree = "<group>"; };
 		BC2B446B309AA16400720F0C /* DevotionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevotionsView.swift; sourceTree = "<group>"; };
 		BC2B446D309AA18100720F0C /* RitualsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RitualsView.swift; sourceTree = "<group>"; };
-		BC2B446F309AA1A400720F0C /* CoilsView.swift */ = {isa = PBXFileReference; path = CoilsView.swift; sourceTree = "<group>"; };
+		BC2B446F309AA1A400720F0C /* CoilsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoilsView.swift; sourceTree = "<group>"; };
+		BC2B4471309AADC300720F0C /* Experience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experience.swift; sourceTree = "<group>"; };
+		BC2B4473309AADD600720F0C /* ExperienceRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceRules.swift; sourceTree = "<group>"; };
+		BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */ = {isa = PBXFileReference; path = ExperienceTests.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -384,6 +390,7 @@
 				BC2B4455309A457C00720F0C /* CatalogFormattingTests.swift */,
 				BC2B445D309A4E1F00720F0C /* MeritRulesTests.swift */,
 				BC2B4465309A9BB700720F0C /* SorceryTests.swift */,
+				BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -426,6 +433,8 @@
 				BC2B4457309A4DC400720F0C /* MeritRules.swift */,
 				BC2B4463309A9B7900720F0C /* Sorcery.swift */,
 				BC2B4467309AA12C00720F0C /* SorceryRules.swift */,
+				BC2B4471309AADC300720F0C /* Experience.swift */,
+				BC2B4473309AADD600720F0C /* ExperienceRules.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -585,6 +594,7 @@
 				BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */,
 				BC6D36D72C9DE680008D03F7 /* DisciplinesView.swift in Sources */,
 				BC6D36DF2C9DF3FC008D03F7 /* Extensions.swift in Sources */,
+				BC2B4474309AADD600720F0C /* ExperienceRules.swift in Sources */,
 				BC2B4464309A9B7900720F0C /* Sorcery.swift in Sources */,
 				BC2B4434309982B500720F0C /* SharedRows.swift in Sources */,
 				BC6D36D12C9DE643008D03F7 /* Merit.swift in Sources */,
@@ -630,6 +640,7 @@
 				BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */,
 				BC6D36C62C9D1866008D03F7 /* SplashScreenView.swift in Sources */,
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
+				BC2B4472309AADC300720F0C /* Experience.swift in Sources */,
 				BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */,
 				BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */,
 				BC2B446A309AA14400720F0C /* CatalogPickerView.swift in Sources */,
@@ -652,6 +663,7 @@
 				BC2B4456309A457C00720F0C /* CatalogFormattingTests.swift in Sources */,
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
 				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
+				BC2B4476309AAE0E00720F0C /* ExperienceTests.swift in Sources */,
 				BC2B4466309A9BB700720F0C /* SorceryTests.swift in Sources */,
 				BC2B444C309A3E1B00720F0C /* EffectsTests.swift in Sources */,
 				BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */,

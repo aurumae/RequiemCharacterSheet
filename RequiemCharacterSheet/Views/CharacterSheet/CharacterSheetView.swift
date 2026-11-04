@@ -99,6 +99,8 @@ struct CharacterSheetView: View {
             // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border
             .padding(.bottom, 26)
         }
+        // Log every change to a trait, and charge for it in XP Mode
+        .background(TraitChangeRecorder(character: character))
         // Let the parchment border show behind the navigation bar
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
@@ -141,5 +143,18 @@ struct CharacterSheetView: View {
             try? await Task.sleep(for: .seconds(1.5))
             showsSavedConfirmation = false
         }
+    }
+}
+
+/// Watches the character's traits and records each change in their log. It's a separate view so that
+/// taking the snapshot doesn't make the whole sheet redraw.
+private struct TraitChangeRecorder: View {
+    let character: Character
+
+    var body: some View {
+        Color.clear
+            .onChange(of: character.traitSnapshot) { old, _ in
+                character.recordChanges(since: old)
+            }
     }
 }

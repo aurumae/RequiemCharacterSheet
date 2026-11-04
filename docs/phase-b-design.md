@@ -286,7 +286,23 @@ As with Merit prerequisites, broken rules show as warnings rather than being blo
 
 Scales show 1 or 2 Experiences depending on their prerequisite Coil. Name matching treats curly and straight apostrophes alike.
 
-Next: X1–X2 (XP tracking), then C1–C2 (guided creation).
+## Experiences (X1)
+
+- **XP Mode** (`xpMode`, per character, off by default).
+  - Off: changes are free.
+  - On: each new dot costs the book's price and is remembered in `paidDots`.
+- **Costs per dot:** Attribute 4, Skill 2, Specialty 1, Merit 1, in-clan Discipline 3 and other Disciplines 4 (Crúac and Theban Sorcery always 4), Mystery Coil 3 and other Coils 4, Humanity 2, Blood Potency 5.
+  - Rituals are free up to one per Discipline dot, then 2 each.
+  - Devotions and Scales cost what the catalog lists; a Scale costs 1 with its prerequisite Coil and 2 without.
+- **The change log** (`changeLog`) records every change to these traits, whatever the mode: trait, name, from → to, date, Experiences charged or refunded, and whether XP Mode was on.
+- **How changes are noticed.** The sheet watches a snapshot of trait levels (`traitSnapshot`) and logs the differences after each edit. This needs no per-row code, and a deleted trait keeps its name in the log.
+- **Refunds.** Lowering a trait with XP Mode on refunds only the dots that were paid for. Dots added while XP Mode was off aren't refunded.
+  - Lowering with XP Mode off drops the paid record without a refund.
+  - Losing Humanity or Blood Potency never refunds, since those fall in play.
+- **Totals.** `experiences` is now Experiences earned. Spent is the sum of the log, and Available is earned minus spent. It may go negative.
+- **Saves.** Schema 8. Older saves start with XP Mode off and an empty log, so Available equals the Experiences they already show.
+
+Next: X2 (Experience section, XP Mode toolbar badge, the log screen, the negative-XP indication), then C1–C2 (guided creation).
 
 ## Open questions
 
