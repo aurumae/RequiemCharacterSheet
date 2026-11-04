@@ -33,9 +33,14 @@ struct CoilsView: View {
                 }
                 .onDelete { character.scales.remove(atOffsets: $0) }
 
+                if !character.canLearnDevotionsAndScales {
+                    CreationNote("Scales are learned with Experiences after creation.")
+                }
+
                 AddRowButton("Add Scale") {
                     showingScalePicker = true
                 }
+                .disabled(!character.canLearnDevotionsAndScales)
                 .sheet(isPresented: $showingScalePicker, onDismiss: addCustomScaleIfChosen) {
                     CatalogPickerView(
                         title: "Add Scale",
@@ -117,16 +122,19 @@ struct CoilsView: View {
     private var addCoilMenu: some View {
         Menu {
             let present = Set(character.coils.map(\.mystery))
+            // At creation, only the character's own Mystery's Coil, which choosing the Mystery adds
             ForEach(Catalog.bundled.mysteries.all.filter { !present.contains(.catalog($0.id)) }) { entry in
                 Button(entry.coil.name) {
                     character.coils.append(Coil(mystery: .catalog(entry.id)))
                 }
+                .disabled(character.isInCreation)
             }
             Button("Custom Coil") {
                 let coil = Coil(mystery: .custom(""))
                 newCustomCoilID = coil.id
                 character.coils.append(coil)
             }
+            .disabled(character.isInCreation)
         } label: {
             Label("Add Coil", systemImage: "plus.circle")
                 .foregroundStyle(theme.accent)
@@ -216,6 +224,7 @@ struct CoilRowView: View {
                     coil.entry?.coil.name ?? (coil.name.isEmpty ? "Coil" : coil.name),
                     rating: $coil.rating,
                     maxRating: Coil.maxRating,
+                    maxEditableRating: character.editableMaximum(for: TraitKey(.coil, coil.id.uuidString), upTo: Coil.maxRating),
                     allowsResetToZero: true
                 )
             }

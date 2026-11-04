@@ -372,7 +372,8 @@
         2
       ],
       "repeatable": false,
-      "summary": "Has two Vices, still limited to one Willpower per scene from them."
+      "summary": "Has two Vices, still limited to one Willpower per scene from them.",
+      "unavailableToKindred": true
     },
     {
       "id": "virtuous",
@@ -386,7 +387,8 @@
         2
       ],
       "repeatable": false,
-      "summary": "Has two Virtues; choose which to use when refreshing Willpower."
+      "summary": "Has two Virtues; choose which to use when refreshing Willpower.",
+      "unavailableToKindred": true
     },
     {
       "id": "ambidextrous",
@@ -952,7 +954,7 @@
     {
       "id": "aura-reading",
       "name": "Aura Reading",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 56
@@ -967,12 +969,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Spend Willpower and roll to read a subject's aura for emotions and nature."
+      "summary": "Spend Willpower and roll to read a subject's aura for emotions and nature.",
+      "unavailableToKindred": true
     },
     {
       "id": "automatic-writing",
       "name": "Automatic Writing",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 56
@@ -987,12 +990,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Trance in which a spirit writes cryptic clues."
+      "summary": "Trance in which a spirit writes cryptic clues.",
+      "unavailableToKindred": true
     },
     {
       "id": "biokinesis",
       "name": "Biokinesis",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 57
@@ -1011,12 +1015,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Shift Physical Attribute dots temporarily; heals faster."
+      "summary": "Shift Physical Attribute dots temporarily; heals faster.",
+      "unavailableToKindred": true
     },
     {
       "id": "clairvoyance",
       "name": "Clairvoyance",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 57
@@ -1031,12 +1036,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Projects senses to a distant place via a chosen scrying method."
+      "summary": "Projects senses to a distant place via a chosen scrying method.",
+      "unavailableToKindred": true
     },
     {
       "id": "cursed",
       "name": "Cursed",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 57
@@ -1051,12 +1057,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Knows the manner of his doom; fearless as a result."
+      "summary": "Knows the manner of his doom; fearless as a result.",
+      "unavailableToKindred": true
     },
     {
       "id": "laying-on-hands",
       "name": "Laying on Hands",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 57
@@ -1071,12 +1078,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Heals others by touch but takes on part of the harm."
+      "summary": "Heals others by touch but takes on part of the harm.",
+      "unavailableToKindred": true
     },
     {
       "id": "medium",
       "name": "Medium",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 57
@@ -1096,12 +1104,13 @@
           "minimum": 2
         }
       ],
-      "summary": "Hears and speaks with the dead; can strengthen ghostly Conditions."
+      "summary": "Hears and speaks with the dead; can strengthen ghostly Conditions.",
+      "unavailableToKindred": true
     },
     {
       "id": "mind-of-a-madman",
       "name": "Mind of a Madman",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 57
@@ -1121,12 +1130,13 @@
           "minimum": 3
         }
       ],
-      "summary": "Thinking like a culprit grants 8-again to hunt them, at a mental cost."
+      "summary": "Thinking like a culprit grants 8-again to hunt them, at a mental cost.",
+      "unavailableToKindred": true
     },
     {
       "id": "omen-sensitivity",
       "name": "Omen Sensitivity",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 58
@@ -1141,12 +1151,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Once per session, read omens to ask yes-or-no questions."
+      "summary": "Once per session, read omens to ask yes-or-no questions.",
+      "unavailableToKindred": true
     },
     {
       "id": "numbing-touch",
       "name": "Numbing Touch",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 58
@@ -1165,12 +1176,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Psychic touch numbs targets and can drain Willpower."
+      "summary": "Psychic touch numbs targets and can drain Willpower.",
+      "unavailableToKindred": true
     },
     {
       "id": "psychokinesis",
       "name": "Psychokinesis",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 58
@@ -1190,12 +1202,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Control one elemental force; five dots can create it from nothing."
+      "summary": "Control one elemental force; five dots can create it from nothing.",
+      "unavailableToKindred": true
     },
     {
       "id": "psychometry",
       "name": "Psychometry",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 58
@@ -1210,12 +1223,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Reads emotional impressions and events from objects and places."
+      "summary": "Reads emotional impressions and events from objects and places.",
+      "unavailableToKindred": true
     },
     {
       "id": "telekinesis",
       "name": "Telekinesis",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 59
@@ -1234,12 +1248,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Moves objects with the mind; dots act as Strength."
+      "summary": "Moves objects with the mind; dots act as Strength.",
+      "unavailableToKindred": true
     },
     {
       "id": "telepathy",
       "name": "Telepathy",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 59
@@ -1255,12 +1270,13 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Reads surface thoughts; five dots can send messages."
+      "summary": "Reads surface thoughts; five dots can send messages.",
+      "unavailableToKindred": true
     },
     {
       "id": "thief-of-fate",
       "name": "Thief of Fate",
-      "category": "other",
+      "category": "supernatural",
       "source": {
         "book": "cofd-core",
         "page": 60
@@ -1275,7 +1291,8 @@
           "text": "Must remain human (non-supernatural)"
         }
       ],
-      "summary": "Touch steals luck, causing dramatic failures; boosts own Willpower dice."
+      "summary": "Touch steals luck, causing dramatic failures; boosts own Willpower dice.",
+      "unavailableToKindred": true
     },
     {
       "id": "armed-defense",

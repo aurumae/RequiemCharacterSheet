@@ -19,6 +19,8 @@ struct CatalogPickerItem: Identifiable {
     let citation: String
     /// Already on the sheet, so shown ticked and not chosen again.
     var isOwned = false
+    /// Why it can't be chosen now, e.g. it doesn't fit the starting dots during guided creation.
+    var unavailableReason: String?
 }
 
 struct CatalogPickerSection: Identifiable {
@@ -32,6 +34,7 @@ struct CatalogPickerCustomOption: Identifiable {
     let id: String
     let title: String
     var subtitle = "For homebrew, or one that isn't listed."
+    var isAvailable = true
 }
 
 /// A searchable list of catalog entries in sections, with custom options at the end.
@@ -92,6 +95,8 @@ struct CatalogPickerView: View {
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .disabled(!option.isAvailable)
+                        .opacity(option.isAvailable ? 1 : 0.5)
                     }
                 }
             }
@@ -127,7 +132,11 @@ struct CatalogPickerView: View {
                         Text(detail)
                             .themedText(.detail)
                     }
-                    if let warning = item.warning {
+                    if let reason = item.unavailableReason {
+                        Label(reason, systemImage: "nosign")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    } else if let warning = item.warning {
                         Label(warning, systemImage: "exclamationmark.triangle")
                             .themedText(.detail)
                             .foregroundStyle(theme.accent)
@@ -147,7 +156,8 @@ struct CatalogPickerView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .disabled(item.isOwned)
+        .disabled(item.isOwned || item.unavailableReason != nil)
+        .opacity(item.unavailableReason == nil ? 1 : 0.5)
     }
 
     private func choose(_ choice: Choice) {

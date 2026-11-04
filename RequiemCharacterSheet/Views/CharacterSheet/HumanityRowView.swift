@@ -12,6 +12,7 @@ struct HumanityRowView: View {
     @Environment(\.theme) private var theme
     @Bindable var touchstone: Touchstone
     @Binding var humanity: Int
+    var maxHumanity = 10
 
     var body: some View {
         HStack {
@@ -36,6 +37,8 @@ struct HumanityRowView: View {
             DotView(isFilled: touchstone.level <= humanity) {
                 humanity = touchstone.level
             }
+            .disabled(touchstone.level > maxHumanity)
+            .opacity(touchstone.level > maxHumanity ? 0.35 : 1)
             .accessibilityLabel("Humanity \(touchstone.level)")
             .accessibilityValue(touchstone.level <= humanity ? "Reached" : "Not reached")
             .accessibilityHint("Double-tap to set Humanity to \(touchstone.level)")

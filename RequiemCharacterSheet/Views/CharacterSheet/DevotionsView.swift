@@ -21,9 +21,14 @@ struct DevotionsView: View {
             }
             .onDelete { character.devotions.remove(atOffsets: $0) }
 
+            if !character.canLearnDevotionsAndScales {
+                CreationNote("Devotions are learned with Experiences after creation.")
+            }
+
             AddRowButton("Add Devotion") {
                 showingPicker = true
             }
+            .disabled(!character.canLearnDevotionsAndScales)
             .sheet(isPresented: $showingPicker, onDismiss: addCustomDevotionIfChosen) {
                 CatalogPickerView(
                     title: "Add Devotion",

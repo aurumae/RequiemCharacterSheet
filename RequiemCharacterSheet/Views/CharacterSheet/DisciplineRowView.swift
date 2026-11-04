@@ -54,6 +54,7 @@ struct DisciplineRowView: View {
                 discipline.name.isEmpty ? "Discipline" : discipline.name,
                 rating: $discipline.rating,
                 maxRating: 5,
+                maxEditableRating: character.editableMaximum(for: TraitKey(.discipline, discipline.id.uuidString), upTo: 5),
                 allowsResetToZero: true
             )
         }

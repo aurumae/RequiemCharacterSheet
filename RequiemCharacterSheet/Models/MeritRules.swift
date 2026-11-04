@@ -7,15 +7,31 @@ import Foundation
 
 /// One requirement of a Merit or Devotion, worded for display, and whether the character meets it.
 struct PrerequisiteCheck: Equatable {
+    static let notForKindred = "Not available to Kindred"
+
     let description: String
     /// `nil` when it can't be checked automatically, e.g. "Cannot also have the Fame Merit".
     let isMet: Bool?
 }
 
+extension Array where Element == PrerequisiteCheck {
+    /// Unmet requirements as one warning, e.g. "Requires Wits 3; Investigation 2", or
+    /// "Not available to Kindred" for a Merit vampires can't take.
+    var warningText: String {
+        let requirements = filter { $0.description != PrerequisiteCheck.notForKindred }.map(\.description)
+        var parts = contains { $0.description == PrerequisiteCheck.notForKindred } ? [PrerequisiteCheck.notForKindred] : []
+        if !requirements.isEmpty {
+            parts.append("Requires \(requirements.joined(separator: "; "))")
+        }
+        return parts.joined(separator: ". ")
+    }
+}
+
 extension Character {
     /// Every requirement of the Merit: each prerequisite, then one line per "one of" choice.
     func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck] {
-        prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf)
+        let kindred = entry.unavailableToKindred ? [PrerequisiteCheck(description: PrerequisiteCheck.notForKindred, isMet: false)] : []
+        return kindred + prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf)
     }
 
     /// Every Discipline a Devotion needs, then one line per "one of" choice.

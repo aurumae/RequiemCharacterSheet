@@ -5009,5 +5009,223 @@
       "duration": "One week",
       "summary": "Injected vessel can feed high-Potency Kindred; Dragon smells it from much farther away."
     }
+  ],
+  "archetypes": [
+    {
+      "id": "authoritarian",
+      "name": "Authoritarian",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "child",
+      "name": "Child",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "competitor",
+      "name": "Competitor",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "conformist",
+      "name": "Conformist",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "conspirator",
+      "name": "Conspirator",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "courtesan",
+      "name": "Courtesan",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "cult-leader",
+      "name": "Cult Leader",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "deviant",
+      "name": "Deviant",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "follower",
+      "name": "Follower",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "guru",
+      "name": "Guru",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "idealist",
+      "name": "Idealist",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "jester",
+      "name": "Jester",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "junkie",
+      "name": "Junkie",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "martyr",
+      "name": "Martyr",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "masochist",
+      "name": "Masochist",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "monster",
+      "name": "Monster",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "nomad",
+      "name": "Nomad",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "nurturer",
+      "name": "Nurturer",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "perfectionist",
+      "name": "Perfectionist",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "penitent",
+      "name": "Penitent",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "questioner",
+      "name": "Questioner",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "rebel",
+      "name": "Rebel",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "scholar",
+      "name": "Scholar",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "social-chameleon",
+      "name": "Social Chameleon",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "spy",
+      "name": "Spy",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "survivor",
+      "name": "Survivor",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    },
+    {
+      "id": "visionary",
+      "name": "Visionary",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 81
+      }
+    }
   ]
 }

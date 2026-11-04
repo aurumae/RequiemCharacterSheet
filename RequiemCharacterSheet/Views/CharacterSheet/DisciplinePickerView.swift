@@ -51,6 +51,7 @@ struct DisciplinePickerView: View {
                 }
 
                 Section {
+                    let customFits = character.creationAllows(.discipline(nil))
                     Button {
                         choose(nil)
                     } label: {
@@ -65,6 +66,8 @@ struct DisciplinePickerView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .disabled(!customFits)
+                    .opacity(customFits ? 1 : 0.5)
                 }
             }
             .searchable(text: $searchText, prompt: "Search Disciplines")
@@ -82,6 +85,8 @@ struct DisciplinePickerView: View {
     @ViewBuilder
     private func row(for entry: DisciplineEntry) -> some View {
         let isOwned = owned.contains(entry.id)
+        // During guided creation, only Disciplines that fit the three starting dots
+        let fits = character.creationAllows(.discipline(entry))
         Button {
             choose(entry)
         } label: {
@@ -92,6 +97,11 @@ struct DisciplinePickerView: View {
                     Text(entry.summary)
                         .themedText(.detail)
                         .foregroundStyle(.primary)
+                    if !fits {
+                        Label(creationReason(for: entry), systemImage: "nosign")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    }
                     Text(entry.source.citation())
                         .themedText(.detail)
                         .foregroundStyle(theme.muted)
@@ -107,7 +117,15 @@ struct DisciplinePickerView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .disabled(isOwned)
+        .disabled(isOwned || !fits)
+        .opacity(fits ? 1 : 0.5)
+    }
+
+    /// Why a Discipline can't start on the sheet, e.g. Crúac without Circle of the Crone Status.
+    private func creationReason(for entry: DisciplineEntry) -> String {
+        let added = character.creationReport(levels: character.traitSnapshot.levels, adding: .discipline(entry)).problems
+        let existing = character.creationReport.problems
+        return added.subtracting(existing).first?.description ?? "Doesn't fit the starting Discipline dots"
     }
 
     private func choose(_ entry: DisciplineEntry?) {

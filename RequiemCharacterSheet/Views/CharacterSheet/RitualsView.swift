@@ -44,7 +44,11 @@ struct RitualsView: View {
                     searchPrompt: "Search Rituals",
                     sections: pickerSections,
                     customOptions: pickerDisciplines.map {
-                        CatalogPickerCustomOption(id: $0.id, title: "Custom \($0.name) Ritual")
+                        CatalogPickerCustomOption(
+                            id: $0.id,
+                            title: "Custom \($0.name) Ritual",
+                            isAvailable: character.creationAllows(.ritual(discipline: .catalog($0.id), dots: 1))
+                        )
                     }
                 ) { choice in
                     switch choice {
@@ -99,7 +103,10 @@ struct RitualsView: View {
                         details: ["Target successes: \(entry.targetSuccesses)"],
                         warning: rating < entry.dots ? "Requires \(discipline.name) \(entry.dots)" : nil,
                         citation: entry.source.citation(),
-                        isOwned: owned.contains(entry.id)
+                        isOwned: owned.contains(entry.id),
+                        // During guided creation, only the ritual that comes with each dot
+                        unavailableReason: character.creationAllows(.ritual(discipline: .catalog(discipline.id), dots: entry.dots))
+                            ? nil : "Doesn't fit: one ritual per \(discipline.name) dot at creation"
                     )
                 }
             return CatalogPickerSection(title: discipline.name, items: items)

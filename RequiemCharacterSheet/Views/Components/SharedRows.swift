@@ -303,6 +303,7 @@ extension TapToEditText where Display == ModifiedContent<Text, ThemedTextModifie
 /// The "+ Add …" button at the end of a list section.
 struct AddRowButton: View {
     @Environment(\.theme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
     let title: String
     let action: () -> Void
 
@@ -315,6 +316,7 @@ struct AddRowButton: View {
         Button(action: action) {
             Label(title, systemImage: "plus.circle")
                 .foregroundStyle(theme.accent)
+                .opacity(isEnabled ? 1 : 0.35)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
         }
@@ -332,5 +334,21 @@ struct LogoHeader: View {
             .scaledToFit()
             .frame(height: 100)
             .accessibilityHidden(true)
+    }
+}
+
+/// A muted line explaining why something can't be done during guided creation.
+struct CreationNote: View {
+    @Environment(\.theme) private var theme
+    let text: String
+
+    init(_ text: String) {
+        self.text = text
+    }
+
+    var body: some View {
+        Text(text)
+            .themedText(.detail)
+            .foregroundStyle(theme.muted)
     }
 }

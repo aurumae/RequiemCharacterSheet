@@ -44,10 +44,11 @@ struct CatalogFile: Decodable {
     let devotions: [DevotionEntry]
     let mysteries: [MysteryEntry]
     let scales: [ScaleEntry]
+    let archetypes: [ArchetypeEntry]
 
     enum CodingKeys: CodingKey {
         case format, version, book, disciplines, merits, banes, clans, covenants
-        case rituals, devotions, mysteries, scales
+        case rituals, devotions, mysteries, scales, archetypes
     }
 
     init(from decoder: Decoder) throws {
@@ -65,6 +66,7 @@ struct CatalogFile: Decodable {
         devotions = try container.decode(.devotions, default: [])
         mysteries = try container.decode(.mysteries, default: [])
         scales = try container.decode(.scales, default: [])
+        archetypes = try container.decode(.archetypes, default: [])
     }
 }
 
@@ -266,14 +268,17 @@ struct MeritEntry: CatalogEntry {
     let summary: String
     /// Always-on effects on the sheet, e.g. Fleet of Foot adding to Speed.
     let effects: [Effect]
+    /// Kindred can't take it: the Supernatural Merits, and Vice-Ridden and Virtuous, since vampires
+    /// have no Virtue or Vice (Vampire: The Requiem p. 81).
+    let unavailableToKindred: Bool
 
     enum Category: String, Decodable {
-        case mental, physical, social, fighting, vampire, covenant, other
+        case mental, physical, social, fighting, vampire, covenant, supernatural, other
     }
 
     enum CodingKeys: CodingKey {
         case id, name, category, source, ratings, qualifier, repeatable
-        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary, effects
+        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary, effects, unavailableToKindred
     }
 
     init(from decoder: Decoder) throws {
@@ -290,6 +295,7 @@ struct MeritEntry: CatalogEntry {
         styleManeuvers = try container.decode(.styleManeuvers, default: [])
         summary = try container.decode(String.self, forKey: .summary)
         effects = try container.decodeEffects(.effects)
+        unavailableToKindred = try container.decode(.unavailableToKindred, default: false)
     }
 }
 
@@ -501,6 +507,29 @@ struct CoilPrerequisite: Decodable, Equatable {
     /// The tier's id, for reference.
     let tier: CatalogEntryID
     let dots: Int
+}
+
+// MARK: - Masks and Dirges
+
+/// A sample Mask or Dirge archetype, e.g. Authoritarian. Players may also write their own.
+struct ArchetypeEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    let source: SourceReference
+    /// The book gives only names, so this is usually empty.
+    let summary: String
+
+    enum CodingKeys: CodingKey {
+        case id, name, source, summary
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(.summary, default: "")
+    }
 }
 
 // MARK: - Effects

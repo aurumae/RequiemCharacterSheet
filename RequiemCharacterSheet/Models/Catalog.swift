@@ -18,6 +18,7 @@ struct Catalog {
     let devotions: CatalogIndex<DevotionEntry>
     let mysteries: CatalogIndex<MysteryEntry>
     let scales: CatalogIndex<ScaleEntry>
+    let archetypes: CatalogIndex<ArchetypeEntry>
 
     /// Merges files in order; if two files use the same id for the same kind of entry, the first wins.
     init(files: [CatalogFile]) {
@@ -31,6 +32,7 @@ struct Catalog {
         devotions = CatalogIndex(files.flatMap(\.devotions))
         mysteries = CatalogIndex(files.flatMap(\.mysteries))
         scales = CatalogIndex(files.flatMap(\.scales))
+        archetypes = CatalogIndex(files.flatMap(\.archetypes))
     }
 
     func book(_ id: String) -> Book? {

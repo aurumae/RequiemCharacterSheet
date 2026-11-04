@@ -17,6 +17,11 @@ struct AttributeRowView: View {
         character.totalAttributeRating(for: attribute)
     }
 
+    /// The Blood Potency cap, and during guided creation, the starting dots left.
+    private var maxEditableRating: Int {
+        character.editableMaximum(for: TraitKey(.attribute, attribute.kind.rawValue), upTo: character.baseRatingCap)
+    }
+
     private var maximumVisibleRating: Int {
         character.baseRatingCap >= 6 || totalRating >= 6 ? 10 : 5
     }
@@ -32,7 +37,7 @@ struct AttributeRowView: View {
             .buttonStyle(.plain)
             .accessibilityHint("Double-tap to choose a rating")
             .confirmationDialog("Set \(attribute.name)", isPresented: $showingPicker, titleVisibility: .visible) {
-                ForEach(Array(character.attributeRatingRange), id: \.self) { value in
+                ForEach(Array(character.attributeRatingRange.clamped(to: 1...maxEditableRating)), id: \.self) { value in
                     Button("\(value)") {
                         attribute.rating = value
                     }
@@ -44,7 +49,7 @@ struct AttributeRowView: View {
                 rating: $attribute.rating,
                 totalRating: totalRating,
                 maxRating: maximumVisibleRating,
-                maxEditableRating: character.baseRatingCap,
+                maxEditableRating: maxEditableRating,
                 showsOverflowTotal: true,
                 onOverflowTap: {
                     showingPicker = true

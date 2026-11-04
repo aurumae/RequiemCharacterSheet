@@ -13,13 +13,19 @@ struct BloodPotencyView: View {
 
     private let bloodPotencyRange = 0...10
 
+    /// During guided creation, at most 3, paid for with Merit dots.
+    private var maxEditableRating: Int {
+        character.editableMaximum(for: TraitKey(.bloodPotency, "bloodPotency"), upTo: bloodPotencyRange.upperBound)
+    }
+
     var body: some View {
         HStack {
-            DotsRatingView("Blood Potency", rating: $character.bloodPotency, maxRating: 10, dotsPerRow: 10, allowsResetToZero: true)
+            DotsRatingView("Blood Potency", rating: $character.bloodPotency, maxRating: 10, maxEditableRating: maxEditableRating,
+                           dotsPerRow: 10, allowsResetToZero: true)
             Spacer()
             StepperButtons(
                 canDecrement: character.bloodPotency > bloodPotencyRange.lowerBound,
-                canIncrement: character.bloodPotency < bloodPotencyRange.upperBound,
+                canIncrement: character.bloodPotency < maxEditableRating,
                 decrement: { character.bloodPotency -= 1 },
                 increment: { character.bloodPotency += 1 }
             )

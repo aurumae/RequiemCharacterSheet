@@ -19,6 +19,11 @@ struct SkillRowView: View {
     @State private var editingSpecialtyIndex: Int?
     @State private var specialtyDraft = ""
 
+    /// The Blood Potency cap, and during guided creation, the starting dots left.
+    private var maxEditableRating: Int {
+        character.editableMaximum(for: TraitKey(.skill, skill.skillID.rawValue), upTo: character.baseRatingCap)
+    }
+
     private var maximumVisibleRating: Int {
         character.baseRatingCap >= 6 || skill.rating >= 6 ? 10 : 5
     }
@@ -36,7 +41,7 @@ struct SkillRowView: View {
                 .buttonStyle(.plain)
                 .accessibilityHint("Double-tap to choose a rating")
                 .confirmationDialog("Set \(skill.name)", isPresented: $showingPicker, titleVisibility: .visible) {
-                    ForEach(Array(character.skillRatingRange), id: \.self) { value in
+                    ForEach(Array(character.skillRatingRange.clamped(to: 0...maxEditableRating)), id: \.self) { value in
                         Button("\(value)") {
                             skill.rating = value
                         }
@@ -67,6 +72,8 @@ struct SkillRowView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Add \(skill.name) specialty")
+                // During guided creation, three Specialties in all
+                .disabled(!character.canAddSpecialty)
             }
 
             Spacer()
@@ -75,7 +82,7 @@ struct SkillRowView: View {
                 skill.name,
                 rating: $skill.rating,
                 maxRating: maximumVisibleRating,
-                maxEditableRating: character.baseRatingCap,
+                maxEditableRating: maxEditableRating,
                 showsOverflowTotal: true,
                 allowsResetToZero: true,
                 onOverflowTap: {

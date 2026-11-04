@@ -312,7 +312,28 @@ The toolbar badge reads "XP Off", or the Available total in XP Mode, and switche
 
 Below zero, per the user's wish for nothing intrusive: Available and the badge turn yellow (`theme.caution`), and a three-second notice appears only when Available first drops below zero. VoiceOver announces it too.
 
-Next: C1–C2 (guided creation).
+## Guided creation (C1)
+
+A character with `creation` set (schema 9) is held to the starting dots on pp. 79–82. These are hard limits: dots beyond them can't be tapped, and pickers grey out what doesn't fit.
+
+| Area | Rule |
+|---|---|
+| Attributes | 5/4/3 extra dots. The book doesn't make the player declare priorities, so they're worked out: the category with the most dots is primary. The clan's free favoured-Attribute dot goes wherever it fits best. |
+| Skills | 11/7/4, worked out the same way |
+| Specialties | 3 |
+| Disciplines | 3 dots, at most 1 out of clan. That one dot may be Crúac or Theban Sorcery with Status in their covenant, or the Mystery's Coil with Ordo Dracul Status. Other Coils aren't allowed. |
+| Rituals | One ritual per sorcery dot, rated no higher than the Discipline |
+| Devotions and Scales | Not at creation; they're learned with Experiences afterwards |
+| Merits | 10 dots, with 5 more per extra dot of Blood Potency (at most 3). Merits Kindred can't take are refused. |
+| Humanity | 7 |
+
+`creationReport` gives the budgets and problems for the creation panel. `creationMaximum(for:upTo:)` gives each row's limit: the highest rating that adds no new problem.
+
+The 15 Chronicles of Darkness Supernatural Merits, plus Vice-Ridden and Virtuous, are marked `unavailableToKindred`. On the normal sheet they show a "Not available to Kindred" warning; in creation they're refused.
+
+The book's 27 Mask and Dirge archetypes (p. 81) are a catalog list. The Mask and Dirge rows gain a menu of them, and typing your own still works.
+
+Next: C2 (the creation panel, the Guided Character Creation / Blank Sheet choice, Finish with Experienced Kindred bonus Experiences).
 
 ## Open questions
 

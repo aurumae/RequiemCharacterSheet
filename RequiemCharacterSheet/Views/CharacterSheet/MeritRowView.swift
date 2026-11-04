@@ -41,6 +41,7 @@ struct MeritRowView: View {
                         merit.name,
                         rating: allowedRating(for: entry),
                         maxRating: entry.ratings.max() ?? 5,
+                        maxEditableRating: maxEditableRating(upTo: entry.ratings.max() ?? 5),
                         allowsResetToZero: true
                     )
                     .frame(width: DotsRatingView.width(forDots: 5), alignment: .center)
@@ -48,7 +49,7 @@ struct MeritRowView: View {
 
                 let unmet = character.unmetPrerequisites(for: entry)
                 if !unmet.isEmpty {
-                    Label("Requires \(unmet.map(\.description).joined(separator: "; "))", systemImage: "exclamationmark.triangle")
+                    Label(unmet.warningText, systemImage: "exclamationmark.triangle")
                         .themedText(.detail)
                         .foregroundStyle(theme.accent)
                 }
@@ -67,6 +68,7 @@ struct MeritRowView: View {
                     merit.name.isEmpty ? "Merit" : merit.name,
                     rating: $merit.rating,
                     maxRating: 5,
+                    maxEditableRating: maxEditableRating(upTo: 5),
                     allowsResetToZero: true
                 )
             }
@@ -74,11 +76,21 @@ struct MeritRowView: View {
         }
     }
 
+    /// During guided creation, the Merit dots left.
+    private func maxEditableRating(upTo cap: Int) -> Int {
+        character.editableMaximum(for: TraitKey(.merit, merit.id.uuidString), upTo: cap)
+    }
+
     /// The rating, snapped to one the Merit allows, e.g. Iron Skin is bought at 2 or 4.
     private func allowedRating(for entry: MeritEntry) -> Binding<Int> {
         Binding(
             get: { merit.rating },
-            set: { merit.rating = entry.allowedRating(for: $0) }
+            set: { newValue in
+                let snapped = entry.allowedRating(for: newValue)
+                // Never snap up past the creation limit, e.g. to 4 when only 3 Merit dots are left
+                let limit = maxEditableRating(upTo: entry.ratings.max() ?? 5)
+                merit.rating = snapped <= limit ? snapped : (entry.ratings.filter { $0 <= limit }.max() ?? merit.rating)
+            }
         )
     }
 }

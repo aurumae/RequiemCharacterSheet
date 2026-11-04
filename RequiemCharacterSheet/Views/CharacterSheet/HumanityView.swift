@@ -12,6 +12,11 @@ struct HumanityView: View {
     @Environment(\.theme) private var theme
     @Bindable var character: Character
 
+    /// During guided creation, Humanity starts at 7.
+    private var maxHumanity: Int {
+        character.editableMaximum(for: TraitKey(.humanity, "humanity"), upTo: 10)
+    }
+
     var body: some View {
         VStack(spacing: 4) {
             if let cap = character.humanityCap {
@@ -28,7 +33,7 @@ struct HumanityView: View {
                 Spacer().frame(height: 4)
             }
             ForEach(character.touchstones.sorted(by: { $0.level > $1.level })) { touchstone in
-                HumanityRowView(touchstone: touchstone, humanity: $character.humanity)
+                HumanityRowView(touchstone: touchstone, humanity: $character.humanity, maxHumanity: maxHumanity)
             }
         }
     }

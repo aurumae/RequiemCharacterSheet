@@ -29,7 +29,7 @@ struct MeritPickerView: View {
         return nameMatches + summaryMatches
     }
 
-    private static let categoryOrder: [MeritEntry.Category] = [.mental, .physical, .social, .fighting, .vampire, .covenant, .other]
+    private static let categoryOrder: [MeritEntry.Category] = [.mental, .physical, .social, .fighting, .vampire, .covenant, .other, .supernatural]
 
     var body: some View {
         NavigationStack {
@@ -52,6 +52,7 @@ struct MeritPickerView: View {
                 }
 
                 Section {
+                    let customFits = character.creationAllows(.merit(nil, rating: 1))
                     Button {
                         onChoose(nil, nil)
                         dismiss()
@@ -67,6 +68,8 @@ struct MeritPickerView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .disabled(!customFits)
+                    .opacity(customFits ? 1 : 0.5)
                 }
             }
             .searchable(text: $searchText, prompt: "Search Merits")
@@ -117,6 +120,8 @@ struct MeritPickerView: View {
     private func row(for entry: MeritEntry) -> some View {
         let isOwned = !entry.repeatable && character.merits.contains { $0.source == .catalog(entry.id) }
         let unmet = character.unmetPrerequisites(for: entry)
+        // During guided creation, only Merits that fit the ten starting dots, and none Kindred can't take
+        let fits = character.creationAllows(.merit(entry, rating: entry.ratings.min() ?? 1))
         Button {
             if entry.qualifier != nil {
                 qualifierDraft = ""
@@ -138,8 +143,13 @@ struct MeritPickerView: View {
                     Text(entry.summary)
                         .themedText(.detail)
                         .foregroundStyle(.primary)
-                    if !unmet.isEmpty {
-                        Label("Requires \(unmet.map(\.description).joined(separator: "; "))", systemImage: "exclamationmark.triangle")
+                    if !fits {
+                        Label(entry.unavailableToKindred ? PrerequisiteCheck.notForKindred : "Doesn't fit the starting Merit dots",
+                              systemImage: "nosign")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    } else if !unmet.isEmpty {
+                        Label(unmet.warningText, systemImage: "exclamationmark.triangle")
                             .themedText(.detail)
                             .foregroundStyle(theme.accent)
                     }
@@ -158,7 +168,8 @@ struct MeritPickerView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .disabled(isOwned)
+        .disabled(isOwned || !fits)
+        .opacity(fits ? 1 : 0.5)
     }
 
     private func ratingsAccessibilityLabel(_ entry: MeritEntry) -> String {
@@ -183,6 +194,7 @@ extension MeritEntry.Category {
         case .fighting: return "Fighting"
         case .vampire: return "Vampire"
         case .covenant: return "Covenant"
+        case .supernatural: return "Supernatural (not for Kindred)"
         case .other: return "Other"
         }
     }

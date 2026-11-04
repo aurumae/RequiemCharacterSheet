@@ -22,7 +22,8 @@ final class Character: Codable {
     /// - 6: adds `clanBaneActive`.
     /// - 7: adds `rituals`, `devotions`, `mystery`, `coils` and `scales`.
     /// - 8: adds `xpMode`, `changeLog` and `paidDots`.
-    static let currentSchemaVersion = 8
+    /// - 9: adds `creation`.
+    static let currentSchemaVersion = 9
 
     /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
     static let maxBanes = 3
@@ -114,6 +115,8 @@ final class Character: Codable {
     var changeLog: [TraitChange]
     /// The dots bought with Experiences, and what each cost, so lowering a trait can refund them.
     var paidDots: [TraitKey: [Int: Int]]
+    /// Set while the character is being made with guided creation.
+    var creation: CreationState?
 
     enum CodingKeys: CodingKey {
         case schemaVersion, id, createdAt, modifiedAt,
@@ -121,7 +124,7 @@ final class Character: Codable {
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              currentVitae, humanity, clanBaneActive, touchstones, disciplines, merits,
              rituals, devotions, mystery, coils, scales, aspirations, banes, size, armor, beats, experiences,
-             xpMode, changeLog, paidDots
+             xpMode, changeLog, paidDots, creation
         // Read from saves before version 3 only
         case healthBoxes, willpowerBoxes
     }
@@ -177,6 +180,7 @@ final class Character: Codable {
         try container.encode(xpMode, forKey: .xpMode)
         try container.encode(changeLog, forKey: .changeLog)
         try container.encode(paidDots, forKey: .paidDots)
+        try container.encodeIfPresent(creation, forKey: .creation)
     }
 
     // Decoding. Every field falls back to its default when missing, so saves written
@@ -248,6 +252,7 @@ final class Character: Codable {
         xpMode = try container.decode(.xpMode, default: false)
         changeLog = try container.decode(.changeLog, default: [])
         paidDots = try container.decode(.paidDots, default: [:])
+        creation = try container.decodeIfPresent(CreationState.self, forKey: .creation)
 
         // Bring loaded values within the limits set by Blood Potency
         clampBaseRatings()
@@ -305,6 +310,7 @@ final class Character: Codable {
         xpMode = false
         changeLog = []
         paidDots = [:]
+        creation = nil
     }
 
     // MARK: - Defaults
