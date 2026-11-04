@@ -333,7 +333,21 @@ The 15 Chronicles of Darkness Supernatural Merits, plus Vice-Ridden and Virtuous
 
 The book's 27 Mask and Dirge archetypes (p. 81) are a catalog list. The Mask and Dirge rows gain a menu of them, and typing your own still works.
 
-Next: C2 (the creation panel, the Guided Character Creation / Blank Sheet choice, Finish with Experienced Kindred bonus Experiences).
+**C2 (UI).**
+- "New Character" asks for **Guided Character Creation** or **Blank Sheet**. A blank sheet has no limits, e.g. for an existing character.
+- A guided character's sheet opens with a CHARACTER CREATION panel: progress, then the seven book steps. Each step shows its live budget and a done, in progress or problem icon, followed by any broken rule.
+- While creating:
+  - dots that can't be bought are faded;
+  - the XP badge is hidden and XP Mode is locked off;
+  - log entries are marked "Creation";
+  - catalog Merit prerequisites are hard limits.
+- **Finish Creation**
+  - Disabled while a rule is broken.
+  - If steps remain, it reminds the player and offers "Finish Anyway".
+  - It then asks for an Experienced Kindred rank (+0 to +100) and adds those Experiences. XP Mode turns on, so what's bought afterwards is paid for.
+- **Leave Guided Creation** keeps everything as a blank sheet.
+
+Still open: B6 (catalog import and export template).
 
 ## Open questions
 

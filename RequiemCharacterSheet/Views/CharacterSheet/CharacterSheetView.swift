@@ -26,6 +26,11 @@ struct CharacterSheetView: View {
                 Spacer(minLength: 20)
                 
                 List {
+                    // GUIDED CREATION CHECKLIST
+                    if character.isInCreation {
+                        CreationPanelView(character: character)
+                    }
+
                     // CHARACTER SECTION
                     CharacterInfoView(character: character)
                     
@@ -120,8 +125,11 @@ struct CharacterSheetView: View {
         // Let the parchment border show behind the navigation bar
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                XPModeBadge(character: character)
+            // Starting dots are free; XP Mode starts when creation is finished
+            if !character.isInCreation {
+                ToolbarItem(placement: .topBarTrailing) {
+                    XPModeBadge(character: character)
+                }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(showsSavedConfirmation ? "Saved" : "Save") {

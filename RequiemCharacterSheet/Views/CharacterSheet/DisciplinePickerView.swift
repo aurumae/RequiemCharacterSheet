@@ -97,7 +97,7 @@ struct DisciplinePickerView: View {
                     Text(entry.summary)
                         .themedText(.detail)
                         .foregroundStyle(.primary)
-                    if !fits {
+                    if !fits, !isOwned {
                         Label(creationReason(for: entry), systemImage: "nosign")
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)
@@ -125,7 +125,8 @@ struct DisciplinePickerView: View {
     private func creationReason(for entry: DisciplineEntry) -> String {
         let added = character.creationReport(levels: character.traitSnapshot.levels, adding: .discipline(entry)).problems
         let existing = character.creationReport.problems
-        return added.subtracting(existing).first?.description ?? "Doesn't fit the starting Discipline dots"
+        return added.subtracting(existing).sorted { $0.priority < $1.priority }.first?.description
+            ?? "Doesn't fit the starting Discipline dots"
     }
 
     private func choose(_ entry: DisciplineEntry?) {

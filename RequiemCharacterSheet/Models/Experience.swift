@@ -95,6 +95,8 @@ struct TraitChange: Identifiable, Codable, Equatable {
     let experiences: Int
     /// Whether XP Mode was on, so the change was paid for.
     let xpMode: Bool
+    /// Made during guided creation, with the starting dots. Not saved before version 9.
+    var duringCreation: Bool? = nil
 }
 
 /// Every trait's rating at one moment, and its name, so a deleted trait can still be named in the log.
@@ -118,8 +120,9 @@ extension TraitChange {
         }
     }
 
-    /// What it cost, e.g. "Spent 8", "Refunded 4", "Free" (XP Mode off) or "No cost".
+    /// What it cost, e.g. "Spent 8", "Refunded 4", "Creation", "Free" (XP Mode off) or "No cost".
     var costText: String {
+        if duringCreation == true { return "Creation" }
         if experiences > 0 { return "Spent \(experiences)" }
         if experiences < 0 { return "Refunded \(-experiences)" }
         return xpMode ? "No cost" : "Free"

@@ -95,7 +95,7 @@ extension Character {
         }
         paidDots[key] = paid.isEmpty ? nil : paid
         changeLog.append(TraitChange(id: UUID(), date: date, trait: key, name: name, from: from, to: to,
-                                     experiences: experiences, xpMode: xpMode))
+                                     experiences: experiences, xpMode: xpMode, duringCreation: isInCreation ? true : nil))
     }
 
     // MARK: - Costs

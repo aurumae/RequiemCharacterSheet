@@ -215,6 +215,16 @@ struct CreationTests {
         #expect(Character().unmetPrerequisites(for: telepathy).first?.description == "Not available to Kindred")
     }
 
+    @Test func meritPrerequisitesAreHardLimitsAtCreation() throws {
+        let attache = try #require(Catalog.bundled.merits.entry("attache"))
+        let character = newCharacter()
+        #expect(!character.creationAllows(.merit(attache, rating: 1)))
+        #expect(Character().creationAllows(.merit(attache, rating: 1)))
+
+        character.merits = [statusMerit("Invictus")]
+        #expect(character.creationAllows(.merit(attache, rating: 1)) == character.unmetPrerequisites(for: attache).isEmpty)
+    }
+
     @Test func humanityStartsAtSeven() {
         let character = newCharacter()
         #expect(character.creationMaximum(for: TraitKey(.humanity, "humanity"), upTo: 10) == 7)
@@ -237,5 +247,73 @@ struct CreationTests {
         #expect(archetypes.count == 27)
         #expect(archetypes.first?.name == "Authoritarian")
         #expect(Catalog.bundled.archetypes.entry(named: "social chameleon") != nil)
+    }
+
+    // MARK: - Steps, finishing and leaving
+
+    @Test func guidedCharactersStartInCreation() {
+        let character = Character.guided()
+        #expect(character.isInCreation)
+        #expect(!character.xpMode)
+        #expect(!Character().isInCreation)
+    }
+
+    @Test func stepsShowTheBudgets() {
+        let character = newCharacter()
+        set(.strength, 3, on: character)
+        let steps = character.creationSteps
+
+        #expect(steps.map(\.number) == Array(1...7))
+        #expect(steps[1].detail == "Mental 2 of 5 · Physical 0 of 4 · Social 0 of 3"
+                || steps[1].detail.hasPrefix("Physical 2 of 5"))
+        #expect(steps[1].status == .inProgress)
+        #expect(steps[4].detail.hasPrefix("Needs Mask, Dirge, Touchstone"))
+        #expect(steps[6].status == .done)
+    }
+
+    @Test func aStepIsDoneWhenItsDotsAreSpent() {
+        let character = newCharacter(clan: "")
+        let brawl = character.skills.first { $0.skillID == .brawl }!
+        brawl.specialties = ["Grappling", "Biting", "Dirty Tricks"]
+        #expect(character.creationSteps[3].status == .done)
+    }
+
+    @Test func aBrokenRuleMarksItsStep() {
+        let character = newCharacter()
+        character.disciplines = [Discipline(name: "Dominate", rating: 2)]
+        #expect(character.creationSteps[4].status == .problem)
+        #expect(character.unfinishedCreationSteps.contains { $0.number == 5 })
+    }
+
+    @Test func finishingAddsBonusExperiencesAndTurnsOnXPMode() {
+        let character = newCharacter()
+        character.experiences = 2
+        character.finishCreation(bonusExperiences: 15)
+
+        #expect(!character.isInCreation)
+        #expect(character.experiences == 17)
+        #expect(character.xpMode)
+        #expect(CreationRules.experiencedRanks.map(\.experiences) == [0, 5, 10, 15, 25, 35, 50, 100])
+    }
+
+    @Test func leavingKeepsEverythingWithoutLimits() {
+        let character = newCharacter()
+        set(.strength, 3, on: character)
+        character.leaveCreation()
+
+        #expect(!character.isInCreation)
+        #expect(!character.xpMode)
+        #expect(character.attributes.first { $0.kind == .strength }?.rating == 3)
+        #expect(character.creationMaximum(for: TraitKey(.attribute, "strength"), upTo: 5) == nil)
+    }
+
+    @Test func changesDuringCreationAreLoggedAsCreation() {
+        let character = newCharacter()
+        let before = character.traitSnapshot
+        set(.strength, 2, on: character)
+        character.recordChanges(since: before)
+
+        #expect(character.changeLog.last?.duringCreation == true)
+        #expect(character.changeLog.last?.costText == "Creation")
     }
 }

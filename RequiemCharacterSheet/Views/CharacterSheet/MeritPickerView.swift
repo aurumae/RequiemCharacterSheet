@@ -144,7 +144,8 @@ struct MeritPickerView: View {
                         .themedText(.detail)
                         .foregroundStyle(.primary)
                     if !fits {
-                        Label(entry.unavailableToKindred ? PrerequisiteCheck.notForKindred : "Doesn't fit the starting Merit dots",
+                        Label(entry.unavailableToKindred ? PrerequisiteCheck.notForKindred
+                              : unmet.isEmpty ? "Doesn't fit the starting Merit dots" : unmet.warningText,
                               systemImage: "nosign")
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)

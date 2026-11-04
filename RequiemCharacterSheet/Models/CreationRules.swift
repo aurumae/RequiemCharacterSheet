@@ -14,6 +14,18 @@ struct CreationState: Codable, Equatable {
 
 /// The book's starting dots.
 enum CreationRules {
+    /// Bonus Experiences a Storyteller may allow for a more experienced vampire (p. 82).
+    static let experiencedRanks: [(name: String, experiences: Int)] = [
+        ("Starting character", 0),
+        ("Around the block", 5),
+        ("Rising star", 10),
+        ("Ancilla", 15),
+        ("Rank elder", 25),
+        ("Mover and shaker", 35),
+        ("Urban Legend", 50),
+        ("Methuselah", 100),
+    ]
+
     /// Extra Attribute dots for the primary, secondary and tertiary categories; each Attribute also has one free dot.
     static let attributeDots = [5, 4, 3]
     /// Skill dots for the primary, secondary and tertiary categories.
@@ -53,8 +65,21 @@ enum CreationProblem: Hashable {
     case devotionsOrScales
     case tooManyMeritDots
     case meritUnavailableToKindred(merit: String)
+    case meritPrerequisitesUnmet(merit: String)
     case bloodPotencyTooHigh
     case humanityTooHigh
+
+    /// Which reason to give first when several apply, e.g. running out of dots before needing Status.
+    var priority: Int {
+        switch self {
+        case .tooManyDisciplineDots, .tooManyMeritDots, .attributesOverBudget, .skillsOverBudget, .tooManySpecialties:
+            return 0
+        case .sorceryWithoutStatus, .coilWithoutStatus, .coilOutsideMystery, .meritUnavailableToKindred, .meritPrerequisitesUnmet:
+            return 1
+        default:
+            return 2
+        }
+    }
 
     var description: String {
         switch self {
@@ -84,6 +109,8 @@ enum CreationProblem: Hashable {
             return "More than 10 Merit dots, counting 5 per extra dot of Blood Potency"
         case .meritUnavailableToKindred(let merit):
             return "\(merit) isn't available to Kindred"
+        case .meritPrerequisitesUnmet(let merit):
+            return "\(merit)'s prerequisites aren't met"
         case .bloodPotencyTooHigh:
             return "Blood Potency can start at most at 3"
         case .humanityTooHigh:
@@ -215,8 +242,14 @@ extension Character {
         let meritDots = meritList.map(\.2).reduce(0, +) + max(bloodPotency - 1, 0) * CreationRules.meritDotsPerBloodPotency
         report.merits = CreationBudget(used: meritDots, allowed: CreationRules.meritDots)
         if meritDots > CreationRules.meritDots { report.problems.insert(.tooManyMeritDots) }
-        for (entry, name, _) in meritList where entry?.unavailableToKindred == true {
-            report.problems.insert(.meritUnavailableToKindred(merit: name))
+        for (entry, name, _) in meritList {
+            guard let entry else { continue }
+            if entry.unavailableToKindred {
+                report.problems.insert(.meritUnavailableToKindred(merit: name))
+            } else if !unmetPrerequisites(for: entry).isEmpty {
+                // Prerequisites are hard limits at creation too, e.g. Attaché needs Invictus Status
+                report.problems.insert(.meritPrerequisitesUnmet(merit: name))
+            }
         }
         if bloodPotency > CreationRules.maxBloodPotency { report.problems.insert(.bloodPotencyTooHigh) }
         if level(TraitKey(.humanity, "humanity")) > CreationRules.humanity { report.problems.insert(.humanityTooHigh) }
@@ -283,5 +316,118 @@ extension Character {
 
     private static func overspend(_ budgets: [TraitCategory: CreationBudget]) -> Int {
         budgets.values.reduce(0) { $0 + max($1.used - $1.allowed, 0) }
+    }
+}
+
+// MARK: - Steps
+
+/// One of the book's seven creation steps, with how far along the character is.
+struct CreationStep: Identifiable, Equatable {
+    enum Status: Equatable {
+        case done, inProgress, problem
+    }
+
+    let number: Int
+    let title: String
+    /// e.g. "Physical 5 of 5 · Mental 3 of 4 · Social 0 of 3".
+    let detail: String
+    let status: Status
+
+    var id: Int { number }
+}
+
+extension Character {
+    /// A new character made with guided creation: held to the starting dots, with XP Mode off.
+    static func guided() -> Character {
+        let character = Character()
+        character.creation = CreationState()
+        return character
+    }
+
+    /// The seven steps of creation (pp. 79–82), each with its budget and whether it's done.
+    var creationSteps: [CreationStep] {
+        let report = creationReport
+        let problems = report.problems
+        func status(done: Bool, problemsIn area: Set<CreationProblem>) -> CreationStep.Status {
+            if !problems.isDisjoint(with: area) { return .problem }
+            return done ? .done : .inProgress
+        }
+        func describe(_ budgets: [TraitCategory: CreationBudget]) -> String {
+            budgets.sorted { $0.value.allowed > $1.value.allowed }
+                .map { "\($0.key.name) \($0.value.used) of \($0.value.allowed)" }
+                .joined(separator: " · ")
+        }
+        func isSpent(_ budgets: [TraitCategory: CreationBudget]) -> Bool {
+            budgets.values.allSatisfy { $0.remaining == 0 }
+        }
+
+        let aspirationCount = aspirations.filter { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }.count
+        let hasConcept = !concept.trimmingCharacters(in: .whitespaces).isEmpty
+
+        let touchstone = touchstones.first { $0.level == 6 }?.text.trimmingCharacters(in: .whitespaces) ?? ""
+        var missing: [String] = []
+        if clan.isEmpty { missing.append("clan") }
+        if mask.isEmpty { missing.append("Mask") }
+        if dirge.isEmpty { missing.append("Dirge") }
+        if touchstone.isEmpty { missing.append("Touchstone") }
+        var kindredDetail = "Disciplines \(report.disciplines.used) of \(report.disciplines.allowed)"
+        if !missing.isEmpty {
+            kindredDetail = "Needs " + missing.joined(separator: ", ") + " · " + kindredDetail
+        }
+        let disciplineProblems: Set<CreationProblem> = Set(problems.filter {
+            switch $0 {
+            case .tooManyDisciplineDots, .tooFewInClanDisciplineDots, .sorceryWithoutStatus, .coilWithoutStatus,
+                 .coilOutsideMystery, .tooManyRituals, .ritualAboveDiscipline, .devotionsOrScales, .humanityTooHigh:
+                return true
+            default:
+                return false
+            }
+        })
+        let meritProblems: Set<CreationProblem> = Set(problems.filter {
+            switch $0 {
+            case .tooManyMeritDots, .meritUnavailableToKindred, .meritPrerequisitesUnmet, .bloodPotencyTooHigh:
+                return true
+            default:
+                return false
+            }
+        })
+
+        return [
+            CreationStep(number: 1, title: "Concept",
+                         detail: "A concept and three Aspirations (\(aspirationCount) of 3)",
+                         status: hasConcept && aspirationCount >= 3 ? .done : .inProgress),
+            CreationStep(number: 2, title: "Attributes", detail: describe(report.attributes),
+                         status: status(done: isSpent(report.attributes), problemsIn: [.attributesOverBudget])),
+            CreationStep(number: 3, title: "Skills", detail: describe(report.skills),
+                         status: status(done: isSpent(report.skills), problemsIn: [.skillsOverBudget])),
+            CreationStep(number: 4, title: "Skill Specialties",
+                         detail: "\(report.specialties.used) of \(report.specialties.allowed)",
+                         status: status(done: report.specialties.remaining == 0, problemsIn: [.tooManySpecialties])),
+            CreationStep(number: 5, title: "Kindred Traits", detail: kindredDetail,
+                         status: status(done: missing.isEmpty && report.disciplines.remaining == 0, problemsIn: disciplineProblems)),
+            CreationStep(number: 6, title: "Merits",
+                         detail: "\(report.merits.used) of \(report.merits.allowed), counting Blood Potency \(bloodPotency)",
+                         status: status(done: report.merits.remaining == 0, problemsIn: meritProblems)),
+            CreationStep(number: 7, title: "Advantages", detail: "Worked out for you from the traits above", status: .done),
+        ]
+    }
+
+    /// The steps not yet done, for the reminder before finishing.
+    var unfinishedCreationSteps: [CreationStep] {
+        creationSteps.filter { $0.status != .done }
+    }
+
+    /// Ends guided creation: adds any bonus Experiences for an experienced vampire and turns XP Mode on,
+    /// so what's bought from now on is paid for.
+    func finishCreation(bonusExperiences: Int) {
+        guard isInCreation else { return }
+        creation = nil
+        experiences += bonusExperiences
+        xpMode = true
+    }
+
+    /// Stops guided creation without finishing it, leaving a blank sheet with no limits.
+    func leaveCreation() {
+        creation = nil
     }
 }

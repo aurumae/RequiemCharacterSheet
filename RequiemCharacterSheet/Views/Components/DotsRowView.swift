@@ -30,6 +30,8 @@ struct DotsRowView: View {
                     fillColor: index <= rating ? theme.accent : theme.ink,
                     action: isInteractive && index <= maxEditableRating ? { tap(index) } : nil
                 )
+                // Empty dots that can't be bought now (e.g. past the starting dots in guided creation) are faded
+                .opacity(isInteractive && index > maxEditableRating && index > totalRating ? 0.35 : 1)
                 // The whole rating is one accessibility element (see DotsRatingView), not each dot
                 .accessibilityHidden(true)
             }

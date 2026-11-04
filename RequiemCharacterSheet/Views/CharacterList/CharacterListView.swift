@@ -13,6 +13,7 @@ struct CharacterListView: View {
     @State private var openCharacter: OpenCharacter?
     @State private var pendingDeletion: CharacterSummary?
     @State private var errorAlert: ErrorAlert?
+    @State private var choosingNewCharacter = false
 
     var body: some View {
         NavigationStack {
@@ -56,7 +57,16 @@ struct CharacterListView: View {
                                     }
                             }
 
-                            AddRowButton("New Character", action: createCharacter)
+                            AddRowButton("New Character") {
+                                choosingNewCharacter = true
+                            }
+                            .confirmationDialog("New Character", isPresented: $choosingNewCharacter, titleVisibility: .visible) {
+                                Button("Guided Character Creation") { createCharacter(guided: true) }
+                                Button("Blank Sheet") { createCharacter(guided: false) }
+                                Button("Cancel", role: .cancel) {}
+                            } message: {
+                                Text("Guided creation walks through the book's steps and keeps to the starting dots. A blank sheet has no limits, e.g. for a character you already have.")
+                            }
                         }
                     }
                     .listStyle(.grouped)
@@ -135,8 +145,8 @@ struct CharacterListView: View {
 
     // MARK: - Actions
 
-    private func createCharacter() {
-        let character = Character()
+    private func createCharacter(guided: Bool) {
+        let character = guided ? Character.guided() : Character()
         do {
             try store.save(character)
         } catch {

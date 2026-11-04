@@ -19,7 +19,10 @@ struct ExperienceView: View {
                         .themedText(.label)
                 }
                 .tint(theme.accent)
-                Text(character.xpMode
+                .disabled(character.isInCreation)
+                Text(character.isInCreation
+                     ? "Starting dots are free. XP Mode turns on when creation is finished."
+                     : character.xpMode
                      ? "Raising a trait spends Experiences; lowering it refunds what it cost."
                      : "Changes are free, e.g. Storyteller awards or entering an existing character.")
                     .themedText(.detail)
@@ -155,7 +158,7 @@ private struct ChangeLogRow: View {
                 Text(change.costText)
                     .themedText(.detail)
                     .foregroundStyle(change.experiences == 0 ? theme.muted : theme.accent)
-                if !change.xpMode {
+                if !change.xpMode, change.duringCreation != true {
                     Text("XP Mode off")
                         .themedText(.detail)
                         .foregroundStyle(theme.muted)
