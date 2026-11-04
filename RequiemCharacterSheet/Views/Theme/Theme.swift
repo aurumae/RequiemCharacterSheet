@@ -15,6 +15,8 @@ struct Theme {
     var ink: Color
     /// Placeholders and secondary text.
     var muted: Color
+    /// Gentle warnings that last, such as Experiences below zero. Yellow, dark enough to read on the page.
+    var caution: Color
     /// The display face used for headings and trait names.
     var displayFontName: String
     /// Draws letters the display face doesn't have, such as the ú in Crúac, instead of the system font.
@@ -71,6 +73,7 @@ struct Theme {
         accent: Color(red: 88/255, green: 26/255, blue: 18/255),
         ink: .black,
         muted: .gray,
+        caution: Color(red: 184/255, green: 134/255, blue: 11/255),
         displayFontName: "CaslonAntique",
         displayFallbackFontName: "MrsEavesRoman",
         subheadingFontName: "MrsEavesSmallCaps",

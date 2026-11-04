@@ -302,7 +302,17 @@ Scales show 1 or 2 Experiences depending on their prerequisite Coil. Name matchi
 - **Totals.** `experiences` is now Experiences earned. Spent is the sum of the log, and Available is earned minus spent. It may go negative.
 - **Saves.** Schema 8. Older saves start with XP Mode off and an empty log, so Available equals the Experiences they already show.
 
-Next: X2 (Experience section, XP Mode toolbar badge, the log screen, the negative-XP indication), then C1–C2 (guided creation).
+**X2 (UI).** Beats and Experiences move out of Advantages into a new EXPERIENCE section. It has:
+- an XP Mode switch, with a line explaining the current mode;
+- Beats;
+- Earned (adjustable), Spent and Available;
+- a Change Log row, which opens the log newest first, grouped by day, with each entry's time, change, cost, and "XP Mode off" where it applied.
+
+The toolbar badge reads "XP Off", or the Available total in XP Mode, and switches XP Mode when tapped.
+
+Below zero, per the user's wish for nothing intrusive: Available and the badge turn yellow (`theme.caution`), and a three-second notice appears only when Available first drops below zero. VoiceOver announces it too.
+
+Next: C1–C2 (guided creation).
 
 ## Open questions
 

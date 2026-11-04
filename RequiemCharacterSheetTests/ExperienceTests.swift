@@ -235,4 +235,29 @@ struct ExperienceTests {
         #expect(character.changeLog.isEmpty)
         #expect(character.experiencesAvailable == 6)
     }
+
+    // MARK: - Log wording
+
+    @Test func logEntriesDescribeTheChangeAndItsCost() {
+        let character = Character()
+        character.disciplines = [Discipline(name: "Crúac", rating: 1)]
+        change(character) { strength(character).rating = 2 }
+        character.xpMode = true
+        change(character) { strength(character).rating = 3 }
+        change(character) { strength(character).rating = 2 }
+        change(character) { character.rituals.append(Ritual(source: .catalog("rigor-mortis"))) }
+
+        #expect(character.changeLog.map(\.changeText) == ["1 → 2", "2 → 3", "3 → 2", "Learned"])
+        #expect(character.changeLog.map(\.costText) == ["Free", "Spent 4", "Refunded 4", "No cost"])
+    }
+
+    @Test func logNamesCustomTraitsNamedAfterTheyWereAdded() {
+        let character = Character()
+        let discipline = Discipline(source: .custom(""), rating: 1)
+        change(character) { character.disciplines.append(discipline) }
+        #expect(character.displayName(for: character.changeLog[0]) == "Unnamed Discipline")
+
+        discipline.name = "Blood Magic"
+        #expect(character.displayName(for: character.changeLog[0]) == "Blood Magic")
+    }
 }

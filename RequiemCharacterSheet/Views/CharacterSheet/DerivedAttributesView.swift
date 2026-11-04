@@ -32,23 +32,6 @@ struct DerivedAttributesView: View {
 
             LabeledValueRow("Initiative Mod:", value: character.initiativeMod)
 
-            // Five Beats make an Experience
-            CounterRow(
-                "Beats:",
-                value: character.beats,
-                canDecrement: character.beats > 0,
-                decrement: character.decrementBeats,
-                increment: character.incrementBeats
-            )
-
-            CounterRow(
-                "Experiences:",
-                value: character.experiences,
-                canDecrement: character.experiences > 0,
-                decrement: character.decrementExperiences,
-                increment: character.incrementExperiences
-            )
-
             // Combat Dice Pools section
             Text("Combat Dice Pools")
                 .themedText(.subsectionHeader)

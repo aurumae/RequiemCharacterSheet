@@ -15,6 +15,8 @@ struct CharacterSheetView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var showsSavedConfirmation = false
     @State private var saveErrorMessage: String?
+    /// Shown for a few seconds when Experiences first fall below zero.
+    @State private var showsNegativeExperienceNotice = false
 
     var body: some View {
         BackgroundView {
@@ -89,6 +91,9 @@ struct CharacterSheetView: View {
                     
                     // DERIVED ATTRIBUTES SECTION
                     DerivedAttributesView(character: character)
+
+                    // EXPERIENCE SECTION
+                    ExperienceView(character: character)
                 }
                 .listStyle(.grouped)
                 .background(Color.clear)
@@ -100,10 +105,24 @@ struct CharacterSheetView: View {
             .padding(.bottom, 26)
         }
         // Log every change to a trait, and charge for it in XP Mode
-        .background(TraitChangeRecorder(character: character))
+        .background(TraitChangeRecorder(character: character, onExperiencesBelowZero: showNegativeExperienceNotice))
+        // A brief notice, not a banner: a character may stay below zero for many sessions
+        .overlay(alignment: .bottom) {
+            if showsNegativeExperienceNotice {
+                NegativeExperienceNotice(available: character.experiencesAvailable)
+                    // Clear of the page border's ornament
+                    .padding(.bottom, 64)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .onTapGesture { showsNegativeExperienceNotice = false }
+            }
+        }
+
         // Let the parchment border show behind the navigation bar
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                XPModeBadge(character: character)
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(showsSavedConfirmation ? "Saved" : "Save") {
                     save(showingConfirmation: true)
@@ -130,6 +149,15 @@ struct CharacterSheetView: View {
         }
     }
 
+    private func showNegativeExperienceNotice(available: Int) {
+        withAnimation { showsNegativeExperienceNotice = true }
+        AccessibilityNotification.Announcement("Experiences are now below zero, \(available)").post()
+        Task {
+            try? await Task.sleep(for: .seconds(3))
+            withAnimation { showsNegativeExperienceNotice = false }
+        }
+    }
+
     private func save(showingConfirmation: Bool) {
         do {
             try store.save(character)
@@ -146,15 +174,21 @@ struct CharacterSheetView: View {
     }
 }
 
-/// Watches the character's traits and records each change in their log. It's a separate view so that
-/// taking the snapshot doesn't make the whole sheet redraw.
+/// Watches the character's traits and records each change in their log, and notices Experiences
+/// falling below zero. It's a separate view so that watching these doesn't make the whole sheet redraw.
 private struct TraitChangeRecorder: View {
     let character: Character
+    let onExperiencesBelowZero: (Int) -> Void
 
     var body: some View {
         Color.clear
             .onChange(of: character.traitSnapshot) { old, _ in
                 character.recordChanges(since: old)
+            }
+            .onChange(of: character.experiencesAvailable) { old, new in
+                if old >= 0, new < 0 {
+                    onExperiencesBelowZero(new)
+                }
             }
     }
 }

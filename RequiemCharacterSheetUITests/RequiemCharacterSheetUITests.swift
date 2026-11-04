@@ -28,7 +28,7 @@ final class RequiemCharacterSheetUITests: XCTestCase {
         app.textFields.firstMatch.typeText("\(characterName)\n")
 
         // Going back keeps the changes
-        app.navigationBars.buttons.firstMatch.tap()
+        app.navigationBars.buttons["Characters"].tap()
         XCTAssertTrue(app.staticTexts[characterName].waitForExistence(timeout: 5))
 
         // The character is still there after relaunching

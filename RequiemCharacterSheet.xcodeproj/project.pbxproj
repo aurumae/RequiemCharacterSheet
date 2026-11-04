@@ -43,6 +43,7 @@
 		BC2B4472309AADC300720F0C /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4471309AADC300720F0C /* Experience.swift */; };
 		BC2B4474309AADD600720F0C /* ExperienceRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4473309AADD600720F0C /* ExperienceRules.swift */; };
 		BC2B4476309AAE0E00720F0C /* ExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */; };
+		BC2B4478309ABD4300720F0C /* ExperienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4477309ABD4300720F0C /* ExperienceView.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -147,7 +148,8 @@
 		BC2B446F309AA1A400720F0C /* CoilsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoilsView.swift; sourceTree = "<group>"; };
 		BC2B4471309AADC300720F0C /* Experience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experience.swift; sourceTree = "<group>"; };
 		BC2B4473309AADD600720F0C /* ExperienceRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceRules.swift; sourceTree = "<group>"; };
-		BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */ = {isa = PBXFileReference; path = ExperienceTests.swift; sourceTree = "<group>"; };
+		BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceTests.swift; sourceTree = "<group>"; };
+		BC2B4477309ABD4300720F0C /* ExperienceView.swift */ = {isa = PBXFileReference; path = ExperienceView.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				BC2B446B309AA16400720F0C /* DevotionsView.swift */,
 				BC2B446D309AA18100720F0C /* RitualsView.swift */,
 				BC2B446F309AA1A400720F0C /* CoilsView.swift */,
+				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -618,6 +621,7 @@
 				BCB159142C9873D3003B6A8F /* HealthView.swift in Sources */,
 				BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */,
 				BC6D36D32C9DE65C008D03F7 /* DisciplineRowView.swift in Sources */,
+				BC2B4478309ABD4300720F0C /* ExperienceView.swift in Sources */,
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
 				BC2B4454309A454C00720F0C /* DisciplinePickerView.swift in Sources */,
 				BC2B4446309A310200720F0C /* Catalog.swift in Sources */,
