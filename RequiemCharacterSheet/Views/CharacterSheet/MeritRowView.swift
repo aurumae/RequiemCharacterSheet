@@ -35,8 +35,8 @@ struct MeritRowView: View {
 
                     Spacer()
 
-                    // Only as many dots as the Merit can have, centred in a five-dot column,
-                    // so a Merit capped below five (e.g. Defensive Combat) reads as capped
+                    // Only as many dots as the Merit can have, at the left of a five-dot column so the first
+                    // dot lines up with other rows; a Merit capped below five (e.g. Defensive Combat) ends early
                     DotsRatingView(
                         merit.name,
                         rating: allowedRating(for: entry),
@@ -44,7 +44,7 @@ struct MeritRowView: View {
                         maxEditableRating: maxEditableRating(upTo: entry.ratings.max() ?? 5),
                         allowsResetToZero: true
                     )
-                    .frame(width: DotsRatingView.width(forDots: 5), alignment: .center)
+                    .frame(width: DotsRatingView.width(forDots: 5), alignment: .leading)
                 }
 
                 let unmet = character.unmetPrerequisites(for: entry)

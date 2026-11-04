@@ -9,20 +9,19 @@
 import SwiftUI
 
 struct AspirationRowView: View {
-    @Environment(\.theme) private var theme
     @Bindable var aspiration: Aspiration
+    /// Opens the field for typing, for an Aspiration that was just added.
+    var beginsEditing = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            TextEditor(text: $aspiration.text)
-                .frame(minHeight: 40, maxHeight: 100) // Adjust minHeight and maxHeight as needed
-                .padding(4)
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(theme.muted, lineWidth: 1)
-                )
-                .themedText(.body)
-                .accessibilityLabel("Aspiration")
+        // Shown like other entries, in the theme's red display face; a sentence or two wraps over several lines
+        TapToEditText(placeholder: "Tap to write an Aspiration", text: $aspiration.text, font: .traitName,
+                      multiline: true, beginsEditing: beginsEditing) { text in
+            Text(text)
+                .themedText(.traitName)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.vertical, 4)
     }

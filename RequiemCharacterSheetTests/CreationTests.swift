@@ -30,10 +30,20 @@ struct CreationTests {
         Merit(source: .catalog("covenant-status"), qualifier: covenant, rating: rating)
     }
 
+    /// Physical primary, Mental secondary, Social tertiary, for Attributes and Skills.
+    private func choosePriorities(on character: Character) {
+        for skills in [false, true] {
+            character.setPriority(.primary, for: .physical, skills: skills)
+            character.setPriority(.secondary, for: .mental, skills: skills)
+            character.setPriority(.tertiary, for: .social, skills: skills)
+        }
+    }
+
     // MARK: - Attributes
 
-    @Test func attributePrioritiesFollowTheDots() {
+    @Test func attributeDotsFollowTheChosenPriorities() {
         let character = newCharacter(clan: "")
+        choosePriorities(on: character)
         set(.strength, 4, on: character)   // Physical: 3 + 2 = 5
         set(.dexterity, 3, on: character)
         set(.wits, 3, on: character)       // Mental: 2 + 2 = 4
@@ -41,44 +51,103 @@ struct CreationTests {
         set(.presence, 4, on: character)   // Social: 3
 
         let report = character.creationReport
-        #expect(report.attributes[.physical] == CreationBudget(used: 5, allowed: 5))
-        #expect(report.attributes[.mental] == CreationBudget(used: 4, allowed: 4))
-        #expect(report.attributes[.social] == CreationBudget(used: 3, allowed: 3))
+        #expect(report.attributes[.physical] == CreationBudget(used: 5, allowed: 5, priority: .primary))
+        #expect(report.attributes[.mental] == CreationBudget(used: 4, allowed: 4, priority: .secondary))
+        #expect(report.attributes[.social] == CreationBudget(used: 3, allowed: 3, priority: .tertiary))
         #expect(report.isWithinLimits)
     }
 
-    @Test func theClansFavoredAttributeGetsAFreeDot() {
+    @Test func noDotsUntilACategoryHasAPriority() {
+        let character = newCharacter(clan: "")
+        #expect(character.creationReport.attributes[.mental] == CreationBudget(used: 0, allowed: 0))
+        #expect(character.creationMaximum(for: TraitKey(.attribute, "wits"), upTo: 5) == 1)
+
+        character.setPriority(.tertiary, for: .mental, skills: false)
+        #expect(character.creationMaximum(for: TraitKey(.attribute, "wits"), upTo: 5) == 4)
+    }
+
+    @Test func choosingATakenPrioritySwaps() {
+        let character = newCharacter(clan: "")
+        choosePriorities(on: character)
+        character.setPriority(.primary, for: .social, skills: false)
+
+        #expect(character.creation?.attributePriorities == [.social: 0, .mental: 1, .physical: 2])
+        // Skills are chosen separately
+        #expect(character.creation?.skillPriorities[.physical] == 0)
+    }
+
+    @Test func changingPrioritiesCanPutACategoryOverBudget() {
+        let character = newCharacter(clan: "")
+        choosePriorities(on: character)
+        set(.strength, 5, on: character)   // Physical 4 of 5
+        character.setPriority(.tertiary, for: .physical, skills: false)
+
+        #expect(character.creationReport.problems == [.attributesOverBudget(.physical)])
+        #expect(character.creationSteps[1].status == .problem)
+    }
+
+    @Test func aCategoryOverBudgetCantGrow() {
+        let character = newCharacter(clan: "")
+        choosePriorities(on: character)
+        set(.strength, 5, on: character)
+        set(.dexterity, 3, on: character)  // Physical 6 of 5
+        set(.intelligence, 2, on: character)
+
+        // No more Physical dots, but other categories can still be spent
+        #expect(character.creationMaximum(for: TraitKey(.attribute, "stamina"), upTo: 5) == 1)
+        #expect(character.creationMaximum(for: TraitKey(.attribute, "intelligence"), upTo: 5) == 5)
+
+        // An unassigned category can't take dots either, even once it has some
+        character.creation?.attributePriorities[.social] = nil
+        set(.presence, 2, on: character)
+        #expect(character.creationMaximum(for: TraitKey(.attribute, "presence"), upTo: 5) == 2)
+    }
+
+    @Test func theClansDotIsChosenAndOutsideTheBudget() {
         // Daeva favour Dexterity or Manipulation
         let character = newCharacter()
-        set(.strength, 4, on: character)
-        set(.dexterity, 4, on: character)  // Physical: 3 + 3 = 6, less the clan's dot = 5
-        set(.wits, 3, on: character)
-        set(.resolve, 3, on: character)
-        set(.presence, 4, on: character)
+        #expect(character.needsFavoredAttribute)
+        choosePriorities(on: character)
+        character.chooseFavoredAttribute(.dexterity)
 
-        let report = character.creationReport
-        #expect(report.favoredAttribute == .dexterity)
-        #expect(report.attributes[.physical] == CreationBudget(used: 5, allowed: 5))
-        #expect(report.isWithinLimits)
+        #expect(!character.needsFavoredAttribute)
+        #expect(character.attributes.first { $0.kind == .dexterity }?.rating == 2)
+        #expect(character.creationReport.attributes[.physical]?.used == 0)
+        // Tapping can't take it away
+        #expect(character.minimumRating(of: .dexterity) == 2)
+        #expect(character.minimumRating(of: .strength) == 1)
     }
 
-    @Test func attributesCantGoBeyondTheirBudget() {
-        let character = newCharacter(clan: "")
-        set(.strength, 4, on: character)
-        set(.dexterity, 4, on: character)  // Physical 6: over every allotment
-        #expect(character.creationReport.problems.contains(.attributesOverBudget))
+    @Test func theClansDotMovesWhenChosenAgain() {
+        let character = newCharacter()
+        character.chooseFavoredAttribute(.dexterity)
+        character.chooseFavoredAttribute(.manipulation)
+
+        #expect(character.attributes.first { $0.kind == .dexterity }?.rating == 1)
+        #expect(character.attributes.first { $0.kind == .manipulation }?.rating == 2)
+    }
+
+    @Test func changingClanTakesTheDotOff() {
+        let character = newCharacter()
+        character.chooseFavoredAttribute(.dexterity)
+        character.clan = "Ventrue"
+
+        #expect(character.creation?.favoredAttribute == nil)
+        #expect(character.attributes.first { $0.kind == .dexterity }?.rating == 1)
+        #expect(character.needsFavoredAttribute)
     }
 
     @Test func attributeLimitsAreHard() {
         let character = newCharacter(clan: "")
+        choosePriorities(on: character)
         set(.strength, 5, on: character)
-        set(.dexterity, 2, on: character)  // Physical 5, the primary allotment, used up
+        set(.dexterity, 2, on: character)  // Physical 5 of 5, used up
         let stamina = TraitKey(.attribute, AttributeKind.stamina.rawValue)
 
-        // Mental can still take 4, so Stamina can't rise at all while Physical is primary
         #expect(character.creationMaximum(for: stamina, upTo: 5) == 1)
-        // Mental's Wits can take up to the secondary 4 extra dots, but no more than 5
+        // Mental, secondary, has 4 dots to spend
         #expect(character.creationMaximum(for: TraitKey(.attribute, AttributeKind.wits.rawValue), upTo: 5) == 5)
+        #expect(character.creationMaximum(for: TraitKey(.attribute, AttributeKind.presence.rawValue), upTo: 5) == 4)
     }
 
     @Test func limitsDontApplyOutsideCreation() {
@@ -90,8 +159,9 @@ struct CreationTests {
 
     // MARK: - Skills and Specialties
 
-    @Test func skillPrioritiesFollowTheDots() {
+    @Test func skillDotsFollowTheChosenPriorities() {
         let character = newCharacter()
+        choosePriorities(on: character)
         set(.brawl, 3, on: character)
         set(.athletics, 3, on: character)
         set(.stealth, 3, on: character)
@@ -101,13 +171,13 @@ struct CreationTests {
         set(.persuasion, 4, on: character) // Social 4
 
         let report = character.creationReport
-        #expect(report.skills[.physical] == CreationBudget(used: 11, allowed: 11))
-        #expect(report.skills[.mental] == CreationBudget(used: 7, allowed: 7))
-        #expect(report.skills[.social] == CreationBudget(used: 4, allowed: 4))
+        #expect(report.skills[.physical] == CreationBudget(used: 11, allowed: 11, priority: .primary))
+        #expect(report.skills[.mental] == CreationBudget(used: 7, allowed: 7, priority: .secondary))
+        #expect(report.skills[.social] == CreationBudget(used: 4, allowed: 4, priority: .tertiary))
         #expect(report.isWithinLimits)
 
         set(.socialize, 1, on: character)
-        #expect(character.creationReport.problems.contains(.skillsOverBudget))
+        #expect(character.creationReport.problems.contains(.skillsOverBudget(.social)))
     }
 
     @Test func threeSpecialties() {
@@ -259,16 +329,27 @@ struct CreationTests {
     }
 
     @Test func stepsShowTheBudgets() {
-        let character = newCharacter()
+        let character = newCharacter(clan: "")
+        #expect(character.creationSteps[1].detail == "Choose a priority for each category")
+
+        character.setPriority(.primary, for: .physical, skills: false)
         set(.strength, 3, on: character)
         let steps = character.creationSteps
-
         #expect(steps.map(\.number) == Array(1...7))
-        #expect(steps[1].detail == "Mental 2 of 5 · Physical 0 of 4 · Social 0 of 3"
-                || steps[1].detail.hasPrefix("Physical 2 of 5"))
+        #expect(steps[1].detail == "Physical (primary) 2 of 5 · Mental: choose a priority · Social: choose a priority")
         #expect(steps[1].status == .inProgress)
-        #expect(steps[4].detail.hasPrefix("Needs Mask, Dirge, Touchstone"))
+        #expect(steps[4].detail.hasPrefix("Needs clan, Mask, Dirge, Touchstone on Humanity 6"))
         #expect(steps[6].status == .done)
+    }
+
+    @Test func theVentruesFirstTouchstoneIsOnHumanitySeven() {
+        let character = newCharacter(clan: "Ventrue")
+        character.touchstones.first { $0.level == 7 }?.text = "The family estate"
+        #expect(!character.creationSteps[4].detail.contains("Touchstone"))
+
+        let daeva = newCharacter()
+        daeva.touchstones.first { $0.level == 7 }?.text = "Her sister"
+        #expect(daeva.creationSteps[4].detail.contains("Touchstone on Humanity 6"))
     }
 
     @Test func aStepIsDoneWhenItsDotsAreSpent() {

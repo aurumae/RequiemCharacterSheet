@@ -17,6 +17,8 @@ struct DotsRatingView: View {
     var totalRating: Int
     var maxRating: Int
     var maxEditableRating: Int
+    /// Dots at or below this can't be taken away, e.g. the clan's dot during guided creation.
+    var minEditableRating: Int
     var dotsPerRow: Int = 5
     var isInteractive: Bool = true
     var showsOverflowTotal: Bool = false
@@ -30,6 +32,7 @@ struct DotsRatingView: View {
         totalRating: Int? = nil,
         maxRating: Int,
         maxEditableRating: Int? = nil,
+        minEditableRating: Int = 0,
         dotsPerRow: Int = 5,
         isInteractive: Bool = true,
         showsOverflowTotal: Bool = false,
@@ -41,6 +44,7 @@ struct DotsRatingView: View {
         self.totalRating = totalRating ?? rating.wrappedValue
         self.maxRating = maxRating
         self.maxEditableRating = maxEditableRating ?? maxRating
+        self.minEditableRating = minEditableRating
         self.dotsPerRow = dotsPerRow
         self.isInteractive = isInteractive
         self.showsOverflowTotal = showsOverflowTotal
@@ -92,6 +96,7 @@ struct DotsRatingView: View {
                             rowIndex: rowIndex,
                             maxRating: maxRating,
                             maxEditableRating: maxEditableRating,
+                            minEditableRating: minEditableRating,
                             dotsPerRow: dotsPerRow,
                             isInteractive: isInteractive,
                             allowsResetToZero: allowsResetToZero
@@ -106,7 +111,7 @@ struct DotsRatingView: View {
         .modifier(AdjustableRating(
             isEnabled: isInteractive,
             rating: $rating,
-            range: (allowsResetToZero ? 0 : 1)...maxEditableRating
+            range: max(allowsResetToZero ? 0 : 1, minEditableRating)...max(maxEditableRating, minEditableRating)
         ))
     }
 

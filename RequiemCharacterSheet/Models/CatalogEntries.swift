@@ -355,9 +355,11 @@ struct ClanBane: Decodable {
     let page: Int?
     /// The bane gives the vampire an extra Bane from the list, which counts toward the limit of three (Mekhet).
     let grantsExtraBane: Bool
+    /// The Humanity dot the first Touchstone goes on: 7 for the Ventrue, whose bane moves it, otherwise 6.
+    let firstTouchstoneHumanity: Int
 
     enum CodingKeys: CodingKey {
-        case name, summary, humanityThreshold, page, grantsExtraBane
+        case name, summary, humanityThreshold, page, grantsExtraBane, firstTouchstoneHumanity
     }
 
     init(from decoder: Decoder) throws {
@@ -367,6 +369,7 @@ struct ClanBane: Decodable {
         humanityThreshold = try container.decodeIfPresent(Int.self, forKey: .humanityThreshold)
         page = try container.decodeIfPresent(Int.self, forKey: .page)
         grantsExtraBane = try container.decode(.grantsExtraBane, default: false)
+        firstTouchstoneHumanity = try container.decode(.firstTouchstoneHumanity, default: 6)
     }
 }
 

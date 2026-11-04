@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct AttributeRowView: View {
+    @Environment(\.theme) private var theme
     let character: Character
     @Bindable var attribute: Attribute
     @State private var showingPicker = false
@@ -31,13 +32,21 @@ struct AttributeRowView: View {
             Button(action: {
                 showingPicker = true
             }) {
-                Text(attribute.name)
-                    .themedText(.label)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(attribute.name)
+                        .themedText(.label)
+                    if character.creation?.favoredAttribute == attribute.kind {
+                        // The clan's free dot, outside the 5/4/3
+                        Text("Includes the \(character.clan) dot")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    }
+                }
             }
             .buttonStyle(.plain)
             .accessibilityHint("Double-tap to choose a rating")
             .confirmationDialog("Set \(attribute.name)", isPresented: $showingPicker, titleVisibility: .visible) {
-                ForEach(Array(character.attributeRatingRange.clamped(to: 1...maxEditableRating)), id: \.self) { value in
+                ForEach(Array(character.attributeRatingRange.clamped(to: character.minimumRating(of: attribute.kind)...max(maxEditableRating, character.minimumRating(of: attribute.kind)))), id: \.self) { value in
                     Button("\(value)") {
                         attribute.rating = value
                     }
@@ -50,6 +59,7 @@ struct AttributeRowView: View {
                 totalRating: totalRating,
                 maxRating: maximumVisibleRating,
                 maxEditableRating: maxEditableRating,
+                minEditableRating: character.minimumRating(of: attribute.kind),
                 showsOverflowTotal: true,
                 onOverflowTap: {
                     showingPicker = true

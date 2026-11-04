@@ -15,7 +15,8 @@ struct SkillsView: View {
         Section(header: Text("SKILLS").themedText(.sectionHeader)) {
             // MENTAL, PHYSICAL and SOCIAL SKILLS
             ForEach(TraitCategory.allCases, id: \.self) { category in
-                Section(header: SkillsSectionHeader(title: category.name, subtitle: "(\(category.unskilledPenalty) unskilled)")) {
+                Section(header: CategoryHeader(title: category.name, subtitle: "(\(category.unskilledPenalty) unskilled)",
+                                               character: character, category: category, skills: true)) {
                     ForEach(character.skills(in: category)) { skill in
                         SkillRowView(character: character, skill: skill)
                     }

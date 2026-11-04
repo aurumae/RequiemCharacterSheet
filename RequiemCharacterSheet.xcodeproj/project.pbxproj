@@ -57,7 +57,7 @@
 		BC6D36B42C9CF418008D03F7 /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B32C9CF418008D03F7 /* Skill.swift */; };
 		BC6D36B62C9CF4F6008D03F7 /* SkillRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B52C9CF4F6008D03F7 /* SkillRowView.swift */; };
 		BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B72C9CF52B008D03F7 /* SkillsView.swift */; };
-		BC6D36BA2C9CF543008D03F7 /* SkillsSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */; };
+		BC6D36BA2C9CF543008D03F7 /* CategoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B92C9CF543008D03F7 /* CategoryHeader.swift */; };
 		BC6D36BC2C9D0792008D03F7 /* CharacterInfoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */; };
 		BC6D36BE2C9D07A8008D03F7 /* CharacterInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */; };
 		BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */; };
@@ -155,7 +155,7 @@
 		BC2B4477309ABD4300720F0C /* ExperienceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceView.swift; sourceTree = "<group>"; };
 		BC2B4479309AC90400720F0C /* CreationRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationRules.swift; sourceTree = "<group>"; };
 		BC2B447B309AC93B00720F0C /* CreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationTests.swift; sourceTree = "<group>"; };
-		BC2B447D309B564700720F0C /* CreationPanelView.swift */ = {isa = PBXFileReference; path = CreationPanelView.swift; sourceTree = "<group>"; };
+		BC2B447D309B564700720F0C /* CreationPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationPanelView.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 		BC6D36B32C9CF418008D03F7 /* Skill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
 		BC6D36B52C9CF4F6008D03F7 /* SkillRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillRowView.swift; sourceTree = "<group>"; };
 		BC6D36B72C9CF52B008D03F7 /* SkillsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillsView.swift; sourceTree = "<group>"; };
-		BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillsSectionHeader.swift; sourceTree = "<group>"; };
+		BC6D36B92C9CF543008D03F7 /* CategoryHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryHeader.swift; sourceTree = "<group>"; };
 		BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterInfoRowView.swift; sourceTree = "<group>"; };
 		BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterInfoView.swift; sourceTree = "<group>"; };
 		BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitaeView.swift; sourceTree = "<group>"; };
@@ -288,7 +288,7 @@
 				BC6D36D42C9DE667008D03F7 /* MeritRowView.swift */,
 				BC6D36D82C9DE68F008D03F7 /* MeritsView.swift */,
 				BC6D36B52C9CF4F6008D03F7 /* SkillRowView.swift */,
-				BC6D36B92C9CF543008D03F7 /* SkillsSectionHeader.swift */,
+				BC6D36B92C9CF543008D03F7 /* CategoryHeader.swift */,
 				BC6D36B72C9CF52B008D03F7 /* SkillsView.swift */,
 				BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */,
 				BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */,
@@ -645,7 +645,7 @@
 				BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */,
 				BC6D36E12C9E002A008D03F7 /* Aspiration.swift in Sources */,
 				BC2B4460309A851B00720F0C /* BanePickerView.swift in Sources */,
-				BC6D36BA2C9CF543008D03F7 /* SkillsSectionHeader.swift in Sources */,
+				BC6D36BA2C9CF543008D03F7 /* CategoryHeader.swift in Sources */,
 				BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */,
 				BC2B4458309A4DC400720F0C /* MeritRules.swift in Sources */,
 				BC6D36DB2C9DE940008D03F7 /* DerivedAttributesView.swift in Sources */,

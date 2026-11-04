@@ -347,6 +347,17 @@ The book's 27 Mask and Dirge archetypes (p. 81) are a catalog list. The Mask and
   - It then asks for an Experienced Kindred rank (+0 to +100) and adds those Experiences. XP Mode turns on, so what's bought afterwards is paid for.
 - **Leave Guided Creation** keeps everything as a blank sheet.
 
+**After the user's test (2026-11-04).** Guiding by inference was unclear, so the player now chooses explicitly:
+- **Priorities.** Each Attribute and Skill category header has a Primary/Secondary/Tertiary menu showing the dots left. A category can't take dots until it has a priority. Choosing a taken priority swaps the two categories.
+- **The clan's dot.** Choosing a clan in guided creation asks which favoured Attribute takes it. That dot is outside the 5/4/3 and can't be tapped away; changing clan takes it off and asks again.
+- **Over-budget categories.** A category over its budget (e.g. after a priority swap) can't grow.
+
+Other changes:
+- The clan's first Touchstone Humanity (`firstTouchstoneHumanity`: 7 for the Ventrue, 6 otherwise) decides which dot the Kindred Traits step checks.
+- The Merit picker lists Vampire Merits first.
+- Capped Merits' dots sit at the left of the five-dot column.
+- Aspirations are tap-to-edit, multi-line, and shown in the trait-name style. Return ends editing.
+
 Still open: B6 (catalog import and export template).
 
 ## Open questions

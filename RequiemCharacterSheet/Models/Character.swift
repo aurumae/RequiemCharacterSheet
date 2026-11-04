@@ -60,6 +60,10 @@ final class Character: Codable {
             if clanSource != oldValue, clanEntry != nil, humanity <= clanBaneThreshold {
                 clanBaneActive = true
             }
+            // During guided creation the clan's dot comes off if the new clan doesn't favour that Attribute
+            if let favored = creation?.favoredAttribute, clanEntry?.favoredAttributes.contains(favored) != true {
+                clearFavoredAttribute()
+            }
         }
     }
     var bloodline: String

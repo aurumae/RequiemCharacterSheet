@@ -10,6 +10,45 @@ import Foundation
 struct CreationState: Codable, Equatable {
     /// Bonus Experiences for an experienced character, added when creation is finished.
     var bonusExperiences = 0
+    /// The Attribute the player gave the clan's free dot. It's outside the 5/4/3.
+    var favoredAttribute: AttributeKind?
+    /// Each category's priority as the player chose it: 0 primary, 1 secondary, 2 tertiary.
+    /// A category has no dots to spend until it has one.
+    var attributePriorities: [TraitCategory: Int] = [:]
+    var skillPriorities: [TraitCategory: Int] = [:]
+
+    enum CodingKeys: CodingKey {
+        case bonusExperiences, favoredAttribute, attributePriorities, skillPriorities
+    }
+
+    init(bonusExperiences: Int = 0, favoredAttribute: AttributeKind? = nil,
+         attributePriorities: [TraitCategory: Int] = [:], skillPriorities: [TraitCategory: Int] = [:]) {
+        self.bonusExperiences = bonusExperiences
+        self.favoredAttribute = favoredAttribute
+        self.attributePriorities = attributePriorities
+        self.skillPriorities = skillPriorities
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        bonusExperiences = try container.decode(.bonusExperiences, default: 0)
+        favoredAttribute = try container.decodeIfPresent(AttributeKind.self, forKey: .favoredAttribute)
+        attributePriorities = try container.decode(.attributePriorities, default: [:])
+        skillPriorities = try container.decode(.skillPriorities, default: [:])
+    }
+}
+
+/// Which priority a category has: the attributes' 5/4/3 or the skills' 11/7/4.
+enum CreationPriority: Int, CaseIterable {
+    case primary, secondary, tertiary
+
+    var name: String {
+        switch self {
+        case .primary: return "Primary"
+        case .secondary: return "Secondary"
+        case .tertiary: return "Tertiary"
+        }
+    }
 }
 
 /// The book's starting dots.
@@ -45,14 +84,22 @@ enum CreationRules {
 struct CreationBudget: Equatable {
     let used: Int
     let allowed: Int
+    /// For Attribute and Skill categories: the priority the player chose, if they have.
+    var priority: CreationPriority?
+
+    init(used: Int, allowed: Int, priority: CreationPriority? = nil) {
+        self.used = used
+        self.allowed = allowed
+        self.priority = priority
+    }
 
     var remaining: Int { allowed - used }
 }
 
 /// A starting-dots rule the character breaks.
 enum CreationProblem: Hashable {
-    case attributesOverBudget
-    case skillsOverBudget
+    case attributesOverBudget(TraitCategory)
+    case skillsOverBudget(TraitCategory)
     case tooManySpecialties
     case tooManyDisciplineDots
     case tooFewInClanDisciplineDots
@@ -83,10 +130,10 @@ enum CreationProblem: Hashable {
 
     var description: String {
         switch self {
-        case .attributesOverBudget:
-            return "More Attribute dots than 5, 4 and 3"
-        case .skillsOverBudget:
-            return "More Skill dots than 11, 7 and 4"
+        case .attributesOverBudget(let category):
+            return "More \(category.name) Attribute dots than its priority allows"
+        case .skillsOverBudget(let category):
+            return "More \(category.name) Skill dots than its priority allows"
         case .tooManySpecialties:
             return "More than 3 Specialties"
         case .tooManyDisciplineDots:
@@ -128,11 +175,20 @@ struct CreationReport: Equatable {
     var disciplines = CreationBudget(used: 0, allowed: CreationRules.disciplineDots)
     /// Merit dots, plus five for each extra dot of Blood Potency.
     var merits = CreationBudget(used: 0, allowed: CreationRules.meritDots)
-    /// The Attribute given the clan's free dot, if one could be.
-    var favoredAttribute: AttributeKind?
     var problems: Set<CreationProblem> = []
 
     var isWithinLimits: Bool { problems.isEmpty }
+
+    /// Dots spent beyond every budget, so a change can't make a category that's already over any worse.
+    var overspend: Int {
+        let budgets = Array(attributes.values) + Array(skills.values) + [specialties, disciplines, merits]
+        return budgets.reduce(0) { $0 + max(-$1.remaining, 0) }
+    }
+
+    /// Whether `other` breaks no rule this report doesn't, and isn't further over budget.
+    func allows(_ other: CreationReport) -> Bool {
+        other.problems.isSubset(of: problems) && other.overspend <= overspend
+    }
 }
 
 /// Something about to be added to the sheet, so a picker can tell whether it fits.
@@ -157,23 +213,17 @@ extension Character {
         var report = CreationReport()
         let level = { (key: TraitKey) in levels[key] ?? 0 }
 
-        // Attributes: one free dot each, then 5/4/3, with the clan's favoured Attribute getting a free dot
+        // Attributes: one free dot each, and the clan's dot on the favoured Attribute, then 5/4/3 by priority
         var attributeDots: [TraitCategory: Int] = [:]
         for kind in AttributeKind.allCases {
-            attributeDots[kind.category, default: 0] += max(level(TraitKey(.attribute, kind.rawValue)) - 1, 0)
+            let free = kind == creation?.favoredAttribute ? 2 : 1
+            attributeDots[kind.category, default: 0] += max(level(TraitKey(.attribute, kind.rawValue)) - free, 0)
         }
-        let favored = (clanEntry?.favoredAttributes ?? []).filter { level(TraitKey(.attribute, $0.rawValue)) >= 2 }
-        // Try each way of placing the clan's dot (or none), and keep the one that fits best
-        let options: [AttributeKind?] = favored.map { $0 } + [nil]
-        let placed = options.map { favorite -> (AttributeKind?, [TraitCategory: CreationBudget]) in
-            var dots = attributeDots
-            if let favorite { dots[favorite.category, default: 0] -= 1 }
-            return (favorite, Self.budgets(for: dots, allotments: CreationRules.attributeDots))
+        report.attributes = Self.budgets(for: attributeDots, priorities: creation?.attributePriorities ?? [:],
+                                         allotments: CreationRules.attributeDots)
+        for (category, budget) in report.attributes where budget.remaining < 0 {
+            report.problems.insert(.attributesOverBudget(category))
         }
-        let best = placed.min { Self.overspend($0.1) < Self.overspend($1.1) }
-        report.attributes = best?.1 ?? [:]
-        report.favoredAttribute = best?.0 ?? nil
-        if Self.overspend(report.attributes) > 0 { report.problems.insert(.attributesOverBudget) }
 
         // Skills: 11/7/4
         var skillDots: [TraitCategory: Int] = [:]
@@ -183,8 +233,11 @@ extension Character {
             skillDots[category, default: 0] += level(TraitKey(.skill, skill.skillID.rawValue))
             specialties += level(TraitKey(.specialty, skill.skillID.rawValue))
         }
-        report.skills = Self.budgets(for: skillDots, allotments: CreationRules.skillDots)
-        if Self.overspend(report.skills) > 0 { report.problems.insert(.skillsOverBudget) }
+        report.skills = Self.budgets(for: skillDots, priorities: creation?.skillPriorities ?? [:],
+                                     allotments: CreationRules.skillDots)
+        for (category, budget) in report.skills where budget.remaining < 0 {
+            report.problems.insert(.skillsOverBudget(category))
+        }
         report.specialties = CreationBudget(used: specialties, allowed: CreationRules.specialties)
         if specialties > CreationRules.specialties { report.problems.insert(.tooManySpecialties) }
 
@@ -265,10 +318,10 @@ extension Character {
         guard isInCreation else { return nil }
         var levels = traitSnapshot.levels
         let current = levels[key] ?? 0
-        let existing = creationReport(levels: levels).problems
+        let existing = creationReport(levels: levels)
         for rating in stride(from: cap, to: current, by: -1) {
             levels[key] = rating
-            if creationReport(levels: levels).problems.isSubset(of: existing) {
+            if existing.allows(creationReport(levels: levels)) {
                 return rating
             }
         }
@@ -284,8 +337,7 @@ extension Character {
     func creationAllows(_ pending: PendingTrait) -> Bool {
         guard isInCreation else { return true }
         let levels = traitSnapshot.levels
-        let existing = creationReport(levels: levels).problems
-        return creationReport(levels: levels, adding: pending).problems.isSubset(of: existing)
+        return creationReport(levels: levels).allows(creationReport(levels: levels, adding: pending))
     }
 
     /// Whether Devotions and Scales can be added: not during creation.
@@ -298,24 +350,69 @@ extension Character {
         !isInCreation || creationReport.specialties.remaining > 0
     }
 
-    // MARK: - Priorities
+    // MARK: - Priorities and the clan's dot
 
-    /// Gives the categories with the most dots the largest allotments: primary, secondary, tertiary.
-    private static func budgets(for dots: [TraitCategory: Int], allotments: [Int]) -> [TraitCategory: CreationBudget] {
-        // Ties keep the sheet's order (Mental, Physical, Social), so the budgets shown don't jump about
-        let ordered = TraitCategory.allCases.enumerated().sorted { lhs, rhs in
-            let (left, right) = (dots[lhs.element] ?? 0, dots[rhs.element] ?? 0)
-            return left != right ? left > right : lhs.offset < rhs.offset
-        }.map(\.element)
+    /// Each category's dots against the allotment for the priority the player gave it; none until they choose.
+    private static func budgets(for dots: [TraitCategory: Int], priorities: [TraitCategory: Int],
+                                allotments: [Int]) -> [TraitCategory: CreationBudget] {
         var budgets: [TraitCategory: CreationBudget] = [:]
-        for (category, allowed) in zip(ordered, allotments) {
-            budgets[category] = CreationBudget(used: dots[category] ?? 0, allowed: allowed)
+        for category in TraitCategory.allCases {
+            let priority = priorities[category].flatMap(CreationPriority.init(rawValue:))
+            budgets[category] = CreationBudget(used: dots[category] ?? 0,
+                                               allowed: priority.map { allotments[$0.rawValue] } ?? 0,
+                                               priority: priority)
         }
         return budgets
     }
 
-    private static func overspend(_ budgets: [TraitCategory: CreationBudget]) -> Int {
-        budgets.values.reduce(0) { $0 + max($1.used - $1.allowed, 0) }
+    /// Gives a category a priority. The category that had it swaps to this one's old priority, or has none.
+    func setPriority(_ priority: CreationPriority, for category: TraitCategory, skills: Bool) {
+        guard var state = creation else { return }
+        var priorities = skills ? state.skillPriorities : state.attributePriorities
+        let old = priorities[category]
+        if let other = priorities.first(where: { $0.value == priority.rawValue && $0.key != category })?.key {
+            priorities[other] = old
+        }
+        priorities[category] = priority.rawValue
+        if skills {
+            state.skillPriorities = priorities
+        } else {
+            state.attributePriorities = priorities
+        }
+        creation = state
+    }
+
+    /// Whether the player still has to choose which favoured Attribute takes the clan's dot.
+    var needsFavoredAttribute: Bool {
+        isInCreation && clanEntry != nil && creation?.favoredAttribute == nil
+    }
+
+    /// Puts the clan's free dot on one of its favoured Attributes, moving it from any other.
+    func chooseFavoredAttribute(_ kind: AttributeKind) {
+        guard var state = creation, state.favoredAttribute != kind else { return }
+        if let old = state.favoredAttribute, let attribute = attributes.first(where: { $0.kind == old }) {
+            attribute.rating = max(attribute.rating - 1, 1)
+        }
+        if let attribute = attributes.first(where: { $0.kind == kind }) {
+            attribute.rating = min(attribute.rating + 1, 5)
+        }
+        state.favoredAttribute = kind
+        creation = state
+    }
+
+    /// Takes the clan's dot back off, e.g. when the clan changes.
+    func clearFavoredAttribute() {
+        guard var state = creation, let old = state.favoredAttribute else { return }
+        if let attribute = attributes.first(where: { $0.kind == old }) {
+            attribute.rating = max(attribute.rating - 1, 1)
+        }
+        state.favoredAttribute = nil
+        creation = state
+    }
+
+    /// The lowest rating an Attribute can be set to: 2 for the one with the clan's dot during creation.
+    func minimumRating(of kind: AttributeKind) -> Int {
+        creation?.favoredAttribute == kind ? 2 : 1
     }
 }
 
@@ -352,24 +449,41 @@ extension Character {
             if !problems.isDisjoint(with: area) { return .problem }
             return done ? .done : .inProgress
         }
+        /// e.g. "Physical (primary) 5 of 5 · Mental (secondary) 2 of 4 · Social: choose a priority".
         func describe(_ budgets: [TraitCategory: CreationBudget]) -> String {
-            budgets.sorted { $0.value.allowed > $1.value.allowed }
-                .map { "\($0.key.name) \($0.value.used) of \($0.value.allowed)" }
+            guard budgets.values.contains(where: { $0.priority != nil }) else {
+                return "Choose a priority for each category"
+            }
+            // By priority; categories without one keep the sheet's order
+            let order = TraitCategory.allCases
+            return budgets.sorted {
+                ($0.value.priority?.rawValue ?? 3, order.firstIndex(of: $0.key) ?? 0)
+                    < ($1.value.priority?.rawValue ?? 3, order.firstIndex(of: $1.key) ?? 0)
+            }
+                .map { category, budget in
+                    guard let priority = budget.priority else { return "\(category.name): choose a priority" }
+                    return "\(category.name) (\(priority.name.lowercased())) \(budget.used) of \(budget.allowed)"
+                }
                 .joined(separator: " · ")
         }
         func isSpent(_ budgets: [TraitCategory: CreationBudget]) -> Bool {
-            budgets.values.allSatisfy { $0.remaining == 0 }
+            budgets.values.allSatisfy { $0.priority != nil && $0.remaining == 0 }
         }
+        let attributeProblems = Set(TraitCategory.allCases.map(CreationProblem.attributesOverBudget))
+        let skillProblems = Set(TraitCategory.allCases.map(CreationProblem.skillsOverBudget))
 
         let aspirationCount = aspirations.filter { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }.count
         let hasConcept = !concept.trimmingCharacters(in: .whitespaces).isEmpty
 
-        let touchstone = touchstones.first { $0.level == 6 }?.text.trimmingCharacters(in: .whitespaces) ?? ""
+        // On Humanity 6, or 7 for the Ventrue
+        let touchstoneLevel = clanEntry?.bane.firstTouchstoneHumanity ?? 6
+        let touchstone = touchstones.first { $0.level == touchstoneLevel }?.text.trimmingCharacters(in: .whitespaces) ?? ""
         var missing: [String] = []
         if clan.isEmpty { missing.append("clan") }
+        if needsFavoredAttribute { missing.append("the clan's favoured Attribute") }
         if mask.isEmpty { missing.append("Mask") }
         if dirge.isEmpty { missing.append("Dirge") }
-        if touchstone.isEmpty { missing.append("Touchstone") }
+        if touchstone.isEmpty { missing.append("Touchstone on Humanity \(touchstoneLevel)") }
         var kindredDetail = "Disciplines \(report.disciplines.used) of \(report.disciplines.allowed)"
         if !missing.isEmpty {
             kindredDetail = "Needs " + missing.joined(separator: ", ") + " · " + kindredDetail
@@ -397,9 +511,9 @@ extension Character {
                          detail: "A concept and three Aspirations (\(aspirationCount) of 3)",
                          status: hasConcept && aspirationCount >= 3 ? .done : .inProgress),
             CreationStep(number: 2, title: "Attributes", detail: describe(report.attributes),
-                         status: status(done: isSpent(report.attributes), problemsIn: [.attributesOverBudget])),
+                         status: status(done: isSpent(report.attributes), problemsIn: attributeProblems)),
             CreationStep(number: 3, title: "Skills", detail: describe(report.skills),
-                         status: status(done: isSpent(report.skills), problemsIn: [.skillsOverBudget])),
+                         status: status(done: isSpent(report.skills), problemsIn: skillProblems)),
             CreationStep(number: 4, title: "Skill Specialties",
                          detail: "\(report.specialties.used) of \(report.specialties.allowed)",
                          status: status(done: report.specialties.remaining == 0, problemsIn: [.tooManySpecialties])),

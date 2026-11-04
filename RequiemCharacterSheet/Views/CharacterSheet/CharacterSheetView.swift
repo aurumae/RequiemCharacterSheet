@@ -17,6 +17,8 @@ struct CharacterSheetView: View {
     @State private var saveErrorMessage: String?
     /// Shown for a few seconds when Experiences first fall below zero.
     @State private var showsNegativeExperienceNotice = false
+    /// During guided creation, asks which favoured Attribute takes the clan's dot.
+    @State private var choosingFavoredAttribute = false
 
     var body: some View {
         BackgroundView {
@@ -28,7 +30,9 @@ struct CharacterSheetView: View {
                 List {
                     // GUIDED CREATION CHECKLIST
                     if character.isInCreation {
-                        CreationPanelView(character: character)
+                        CreationPanelView(character: character) {
+                            choosingFavoredAttribute = true
+                        }
                     }
 
                     // CHARACTER SECTION
@@ -38,7 +42,7 @@ struct CharacterSheetView: View {
                     Section(header: Text("ATTRIBUTES").themedText(.sectionHeader)) {
                         // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
                         ForEach(TraitCategory.allCases, id: \.self) { category in
-                            Section(header: Text(category.name).themedText(.subsectionHeader)) {
+                            Section(header: CategoryHeader(title: category.name, character: character, category: category, skills: false)) {
                                 ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
                                     AttributeRowView(character: character, attribute: attribute)
                                 }
@@ -108,6 +112,24 @@ struct CharacterSheetView: View {
             .padding(.horizontal)
             // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border
             .padding(.bottom, 26)
+        }
+        // Choosing a clan during guided creation asks where its free Attribute dot goes
+        .onChange(of: character.clanSource) {
+            if character.needsFavoredAttribute {
+                choosingFavoredAttribute = true
+            }
+        }
+        .confirmationDialog(
+            "\(character.clan) Favoured Attribute",
+            isPresented: $choosingFavoredAttribute,
+            titleVisibility: .visible
+        ) {
+            ForEach(character.clanEntry?.favoredAttributes ?? [], id: \.self) { kind in
+                Button(kind.name) { character.chooseFavoredAttribute(kind) }
+            }
+            Button("Not Now", role: .cancel) {}
+        } message: {
+            Text("The clan gives one free dot to one of these. It doesn't count against your 5, 4 and 3 Attribute dots.")
         }
         // Log every change to a trait, and charge for it in XP Mode
         .background(TraitChangeRecorder(character: character, onExperiencesBelowZero: showNegativeExperienceNotice))

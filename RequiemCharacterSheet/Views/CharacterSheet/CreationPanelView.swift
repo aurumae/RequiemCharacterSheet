@@ -10,6 +10,8 @@ import SwiftUI
 struct CreationPanelView: View {
     @Environment(\.theme) private var theme
     let character: Character
+    /// Asks which favoured Attribute takes the clan's dot.
+    let chooseFavoredAttribute: () -> Void
     @State private var showingUnfinishedReminder = false
     @State private var showingFinish = false
     @State private var showingLeaveConfirmation = false
@@ -33,6 +35,26 @@ struct CreationPanelView: View {
                 CreationStepRow(step: step)
             }
 
+            if let clan = character.clanEntry {
+                // The clan's free dot, chosen by the player and changeable
+                Button(action: chooseFavoredAttribute) {
+                    HStack {
+                        Text("\(clan.name) dot")
+                            .themedText(.traitName)
+                        Spacer()
+                        Text(character.creation?.favoredAttribute?.name ?? "Choose")
+                            .themedText(.detail)
+                            .foregroundStyle(character.needsFavoredAttribute ? theme.caution : theme.muted)
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(theme.muted)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Chooses which favoured Attribute takes the clan's free dot")
+            }
+
             ForEach(character.creationReport.problems.map(\.description).sorted(), id: \.self) { problem in
                 RowWarning(problem)
             }
@@ -53,6 +75,7 @@ struct CreationPanelView: View {
                     .background(RoundedRectangle(cornerRadius: 8).fill(theme.accent))
             }
             .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
             // Breaking a rule (e.g. after changing clan) has to be fixed first
             .disabled(!character.creationReport.isWithinLimits)
             .opacity(character.creationReport.isWithinLimits ? 1 : 0.4)
@@ -73,6 +96,7 @@ struct CreationPanelView: View {
             .foregroundStyle(theme.muted)
             .frame(maxWidth: .infinity)
             .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
             .confirmationDialog("Leave guided creation?", isPresented: $showingLeaveConfirmation, titleVisibility: .visible) {
                 Button("Leave Guided Creation", role: .destructive) {
                     character.leaveCreation()

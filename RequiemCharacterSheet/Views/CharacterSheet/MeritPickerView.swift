@@ -29,7 +29,7 @@ struct MeritPickerView: View {
         return nameMatches + summaryMatches
     }
 
-    private static let categoryOrder: [MeritEntry.Category] = [.mental, .physical, .social, .fighting, .vampire, .covenant, .other, .supernatural]
+    private static let categoryOrder: [MeritEntry.Category] = [.vampire, .covenant, .mental, .physical, .social, .fighting, .other, .supernatural]
 
     var body: some View {
         NavigationStack {

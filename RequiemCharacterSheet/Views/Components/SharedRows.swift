@@ -235,6 +235,8 @@ struct TapToEditText<Display: View>: View {
     @Binding var text: String
     /// Font for the placeholder and the text field.
     var font: ThemeTextStyle = .body
+    /// The field grows to show several lines, e.g. for an Aspiration. Return still ends editing.
+    var multiline = false
     /// How the text is shown when it isn't being edited.
     @ViewBuilder let display: (String) -> Display
 
@@ -243,18 +245,27 @@ struct TapToEditText<Display: View>: View {
     @FocusState private var isFocused: Bool
 
     /// - Parameter beginsEditing: Start with the field open, e.g. for a row that was just added.
-    init(placeholder: String, text: Binding<String>, font: ThemeTextStyle = .body, beginsEditing: Bool = false,
-         @ViewBuilder display: @escaping (String) -> Display) {
+    init(placeholder: String, text: Binding<String>, font: ThemeTextStyle = .body, multiline: Bool = false,
+         beginsEditing: Bool = false, @ViewBuilder display: @escaping (String) -> Display) {
         self.placeholder = placeholder
         self._text = text
         self.font = font
+        self.multiline = multiline
         self.display = display
         self._isEditing = State(initialValue: beginsEditing)
     }
 
     var body: some View {
         if isEditing {
-            TextField(placeholder, text: $draft)
+            TextField(placeholder, text: $draft, axis: multiline ? .vertical : .horizontal)
+                .lineLimit(multiline ? 1...8 : 1...1)
+                // A multi-line field puts a line break in on Return; take it as Done instead
+                .onChange(of: draft) {
+                    if multiline, draft.contains("\n") {
+                        draft = draft.replacingOccurrences(of: "\n", with: "")
+                        finishEditing()
+                    }
+                }
                 .font(theme.font(font, dynamicTypeSize: dynamicTypeSize))
                 .textFieldStyle(.roundedBorder)
                 .submitLabel(.done)

@@ -10,16 +10,20 @@ import SwiftUI
 
 struct AspirationsView: View {
     let character: Character
+    /// An Aspiration that was just added, which opens for typing.
+    @State private var newAspirationID: UUID?
 
     var body: some View {
         Section(header: Text("ASPIRATIONS").themedText(.sectionHeader)) {
             ForEach(character.aspirations) { aspiration in
-                AspirationRowView(aspiration: aspiration)
+                AspirationRowView(aspiration: aspiration, beginsEditing: aspiration.id == newAspirationID)
             }
             .onDelete(perform: deleteAspiration)
 
             AddRowButton("Add Aspiration") {
-                character.aspirations.append(Aspiration())
+                let aspiration = Aspiration()
+                newAspirationID = aspiration.id
+                character.aspirations.append(aspiration)
             }
         }
     }

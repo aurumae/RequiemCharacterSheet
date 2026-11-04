@@ -6,7 +6,7 @@
 import Foundation
 
 /// The three categories every attribute and skill belongs to.
-enum TraitCategory: String, CaseIterable, Codable {
+enum TraitCategory: String, CaseIterable, Codable, CodingKeyRepresentable {
     case mental, physical, social
 
     /// "Mental", "Physical" or "Social".

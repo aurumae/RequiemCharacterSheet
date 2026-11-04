@@ -15,6 +15,7 @@ struct DotsRowView: View {
     var rowIndex: Int
     var maxRating: Int
     var maxEditableRating: Int
+    var minEditableRating: Int = 0
     var dotsPerRow: Int = 5
     var isInteractive: Bool = true
     var allowsResetToZero: Bool = false
@@ -28,7 +29,8 @@ struct DotsRowView: View {
                     isFilled: index <= totalRating,
                     // Dots above the base rating come from bonuses and are drawn in ink
                     fillColor: index <= rating ? theme.accent : theme.ink,
-                    action: isInteractive && index <= maxEditableRating ? { tap(index) } : nil
+                    // Dots below the minimum can't be tapped, as tapping one would take dots away
+                    action: isInteractive && index <= maxEditableRating && index >= minEditableRating ? { tap(index) } : nil
                 )
                 // Empty dots that can't be bought now (e.g. past the starting dots in guided creation) are faded
                 .opacity(isInteractive && index > maxEditableRating && index > totalRating ? 0.35 : 1)
@@ -40,7 +42,7 @@ struct DotsRowView: View {
 
     private func tap(_ index: Int) {
         // Tapping the only filled dot clears it, where zero is allowed
-        if allowsResetToZero && index == 1 && rating == 1 {
+        if allowsResetToZero && minEditableRating == 0 && index == 1 && rating == 1 {
             rating = 0
         } else {
             rating = index

@@ -3347,7 +3347,8 @@
         "name": "The Aloof Curse",
         "summary": "First Touchstone sits on Humanity 7, so the first Humanity loss detaches it; others go on dots 6 down to 2.",
         "humanityThreshold": 6,
-        "page": 28
+        "page": 28,
+        "firstTouchstoneHumanity": 7
       },
       "summary": "Domineering aristocrats who seek control over people, wealth and institutions."
     }
