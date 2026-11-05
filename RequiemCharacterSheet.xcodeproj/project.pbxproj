@@ -54,6 +54,7 @@
 		BC2B4492309CC46200720F0C /* IMFellEnglish-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */; };
 		BC2B4494309CCD2C00720F0C /* Cinzel-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */; };
 		BC2B4496309CCD2D00720F0C /* Cinzel-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */; };
+		BC2B4498309CDF5D00720F0C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4497309CDF5D00720F0C /* AboutView.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -167,6 +168,7 @@
 		BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "IMFellEnglish-OFL.txt"; sourceTree = "<group>"; };
 		BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cinzel-Medium.ttf"; sourceTree = "<group>"; };
 		BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cinzel-OFL.txt"; sourceTree = "<group>"; };
+		BC2B4497309CDF5D00720F0C /* AboutView.swift */ = {isa = PBXFileReference; path = AboutView.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 			children = (
 				BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */,
 				BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */,
+				BC2B4497309CDF5D00720F0C /* AboutView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -678,6 +681,7 @@
 				BC6D36A82C9A600C008D03F7 /* BoxFillType.swift in Sources */,
 				BC2B442E3099806A00720F0C /* TraitDefinitions.swift in Sources */,
 				BC6D36A22C9A3261008D03F7 /* HealthBoxesView.swift in Sources */,
+				BC2B4498309CDF5D00720F0C /* AboutView.swift in Sources */,
 				BC2B4450309A452F00720F0C /* CatalogFormatting.swift in Sources */,
 				BC6D36B42C9CF418008D03F7 /* Skill.swift in Sources */,
 				BC6D36BC2C9D0792008D03F7 /* CharacterInfoRowView.swift in Sources */,
@@ -875,7 +879,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.RequiemCharacterSheet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -913,7 +917,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.RequiemCharacterSheet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

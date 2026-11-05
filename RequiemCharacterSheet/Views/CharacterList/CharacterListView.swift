@@ -14,6 +14,7 @@ struct CharacterListView: View {
     @State private var pendingDeletion: CharacterSummary?
     @State private var errorAlert: ErrorAlert?
     @State private var choosingNewCharacter = false
+    @State private var showingAbout = false
 
     var body: some View {
         NavigationStack {
@@ -71,6 +72,16 @@ struct CharacterListView: View {
                     }
                     .listStyle(.grouped)
                     .pageBorderEdge()
+
+                    // The Dark Pack notice and the bundled fonts' licences
+                    Button("About") {
+                        showingAbout = true
+                    }
+                    .themedText(.label)
+                    .padding(.vertical, 6)
+                    .sheet(isPresented: $showingAbout) {
+                        AboutView()
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 26)
