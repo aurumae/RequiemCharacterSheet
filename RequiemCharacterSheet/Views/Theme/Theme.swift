@@ -19,8 +19,12 @@ struct Theme {
     var caution: Color
     /// The display face used for headings and trait names.
     var displayFontName: String
-    /// Draws letters the display face doesn't have, such as the ú in Crúac, instead of the system font.
-    var displayFallbackFontName: String
+    /// Draws letters the display face doesn't have (e.g. accented ones) instead of the system font, whose
+    /// letters can look out of place. `nil` when the display face has every letter the app needs.
+    var displayFallbackFontName: String?
+    /// Draws the display face's digits instead, e.g. for level numerals beside a face whose old-style numerals
+    /// rise and fall. `nil` to keep the display face's own.
+    var numeralFontName: String?
     /// The small-caps face used for subheadings such as Mental, Physical and Social.
     var subheadingFontName: String
     var borderImageName: String
@@ -46,12 +50,24 @@ struct Theme {
         }
     }
 
-    /// The display face, falling back to `displayFallbackFontName` for missing letters. Caslon Antique has no
-    /// lowercase accented letters, and the system font's are so much taller that "Crúac" reads as "CrÚac".
-    /// `Font.custom` can't take a fallback, so this scales the font for the text size itself.
+    /// The display face, with its digits from `numeralFontName` and any missing letters from
+    /// `displayFallbackFontName`. `Font.custom` can't take fallbacks, so this scales the font for the text size itself.
     private func displayFont(size: CGFloat, relativeTo textStyle: UIFont.TextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {
-        let fallback = UIFontDescriptor(name: displayFallbackFontName, size: size)
-        let descriptor = UIFontDescriptor(name: displayFontName, size: size).addingAttributes([.cascadeList: [fallback]])
+        var descriptor = UIFontDescriptor(name: displayFontName, size: size)
+        var cascade: [UIFontDescriptor] = []
+        if let numeralFontName {
+            // Leaving the digits out of the display face's characters makes them come from the next font in line
+            var characters = CTFontCopyCharacterSet(CTFontCreateWithName(displayFontName as CFString, size, nil)) as CharacterSet
+            characters.subtract(CharacterSet(charactersIn: "0123456789"))
+            descriptor = descriptor.addingAttributes([.characterSet: characters])
+            cascade.append(UIFontDescriptor(name: numeralFontName, size: size))
+        }
+        if let displayFallbackFontName {
+            cascade.append(UIFontDescriptor(name: displayFallbackFontName, size: size))
+        }
+        if !cascade.isEmpty {
+            descriptor = descriptor.addingAttributes([.cascadeList: cascade])
+        }
         let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(dynamicTypeSize))
         let scaled = UIFontMetrics(forTextStyle: textStyle).scaledFont(for: UIFont(descriptor: descriptor, size: size), compatibleWith: traits)
         return Font(scaled as CTFont)
@@ -75,9 +91,13 @@ struct Theme {
         // Dark enough for small text on the white rows (WCAG 4.5:1): 5.2:1 and 5.3:1
         muted: Color(red: 108/255, green: 108/255, blue: 112/255),
         caution: Color(red: 140/255, green: 100/255, blue: 8/255),
-        displayFontName: "CaslonAntique",
-        displayFallbackFontName: "MrsEavesRoman",
-        subheadingFontName: "MrsEavesSmallCaps",
+        // Both under the SIL Open Font License; the licences are bundled beside them in Fonts/.
+        // IM Fell English has every accented letter, so no fallback face is needed.
+        displayFontName: "IM_FELL_English_Roman",
+        displayFallbackFontName: nil,
+        // IM Fell's numerals are old-style, which makes a column of ratings look uneven; Cinzel's sit level
+        numeralFontName: "Cinzel-Medium",
+        subheadingFontName: "Cinzel-Medium",
         borderImageName: "VtRBorder_NewStyle",
         logoImageName: "VtR 2nd ED Logo"
     )

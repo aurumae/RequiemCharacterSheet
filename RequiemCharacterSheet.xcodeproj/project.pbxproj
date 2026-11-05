@@ -50,6 +50,10 @@
 		BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4481309C0DD400720F0C /* dark-eras-companion.json */; };
 		BC2B4484309C0E2300720F0C /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */; };
 		BC2B4486309C0E9200720F0C /* BloodlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4485309C0E9200720F0C /* BloodlineTests.swift */; };
+		BC2B4490309CC46200720F0C /* IMFellEnglish-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2B448F309CC46200720F0C /* IMFellEnglish-Regular.ttf */; };
+		BC2B4492309CC46200720F0C /* IMFellEnglish-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */; };
+		BC2B4494309CCD2C00720F0C /* Cinzel-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */; };
+		BC2B4496309CCD2D00720F0C /* Cinzel-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -87,9 +91,6 @@
 		BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCB158D42C986812003B6A8F /* Preview Assets.xcassets */; };
 		BCB158DF2C986812003B6A8F /* CharacterRulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158DE2C986812003B6A8F /* CharacterRulesTests.swift */; };
 		BCB158E92C986812003B6A8F /* RequiemCharacterSheetUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB158E82C986812003B6A8F /* RequiemCharacterSheetUITests.swift */; };
-		BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158F82C986A67003B6A8F /* MrsEavesSmallCaps.otf */; };
-		BCB158FC2C986A67003B6A8F /* cas_antn.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158F92C986A67003B6A8F /* cas_antn.ttf */; };
-		BCB158FD2C986A67003B6A8F /* MrsEavesRoman.otf in Resources */ = {isa = PBXBuildFile; fileRef = BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */; };
 		BCB159052C987143003B6A8F /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159042C987143003B6A8F /* Attribute.swift */; };
 		BCB159072C987161003B6A8F /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159062C987161003B6A8F /* Character.swift */; };
 		BCB1590A2C987230003B6A8F /* AttributeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159092C987230003B6A8F /* AttributeRowView.swift */; };
@@ -161,7 +162,11 @@
 		BC2B447D309B564700720F0C /* CreationPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationPanelView.swift; sourceTree = "<group>"; };
 		BC2B4481309C0DD400720F0C /* dark-eras-companion.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-companion.json"; sourceTree = "<group>"; };
 		BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogChoiceRow.swift; sourceTree = "<group>"; };
-		BC2B4485309C0E9200720F0C /* BloodlineTests.swift */ = {isa = PBXFileReference; path = BloodlineTests.swift; sourceTree = "<group>"; };
+		BC2B4485309C0E9200720F0C /* BloodlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodlineTests.swift; sourceTree = "<group>"; };
+		BC2B448F309CC46200720F0C /* IMFellEnglish-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "IMFellEnglish-Regular.ttf"; sourceTree = "<group>"; };
+		BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "IMFellEnglish-OFL.txt"; sourceTree = "<group>"; };
+		BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cinzel-Medium.ttf"; sourceTree = "<group>"; };
+		BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cinzel-OFL.txt"; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -203,9 +208,6 @@
 		BCB158DE2C986812003B6A8F /* CharacterRulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterRulesTests.swift; sourceTree = "<group>"; };
 		BCB158E42C986812003B6A8F /* RequiemCharacterSheetUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RequiemCharacterSheetUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB158E82C986812003B6A8F /* RequiemCharacterSheetUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCharacterSheetUITests.swift; sourceTree = "<group>"; };
-		BCB158F82C986A67003B6A8F /* MrsEavesSmallCaps.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrsEavesSmallCaps.otf; sourceTree = "<group>"; };
-		BCB158F92C986A67003B6A8F /* cas_antn.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = cas_antn.ttf; sourceTree = "<group>"; };
-		BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrsEavesRoman.otf; sourceTree = "<group>"; };
 		BCB159002C986E22003B6A8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BCB159042C987143003B6A8F /* Attribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		BCB159062C987161003B6A8F /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
@@ -426,9 +428,10 @@
 		BCB158F72C986A3F003B6A8F /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				BCB158F92C986A67003B6A8F /* cas_antn.ttf */,
-				BCB158FA2C986A67003B6A8F /* MrsEavesRoman.otf */,
-				BCB158F82C986A67003B6A8F /* MrsEavesSmallCaps.otf */,
+				BC2B448F309CC46200720F0C /* IMFellEnglish-Regular.ttf */,
+				BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */,
+				BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */,
+				BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -579,14 +582,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC2B444A309A3C3500720F0C /* cofd-core.json in Resources */,
+				BC2B4492309CC46200720F0C /* IMFellEnglish-OFL.txt in Resources */,
 				BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */,
 				BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */,
 				BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */,
-				BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */,
-				BCB158FD2C986A67003B6A8F /* MrsEavesRoman.otf in Resources */,
 				BC2B4440309A30A600720F0C /* thousand-years-of-night.json in Resources */,
 				BC2B443E309A30A500720F0C /* vtr2e-core.json in Resources */,
-				BCB158FC2C986A67003B6A8F /* cas_antn.ttf in Resources */,
+				BC2B4494309CCD2C00720F0C /* Cinzel-Medium.ttf in Resources */,
+				BC2B4490309CC46200720F0C /* IMFellEnglish-Regular.ttf in Resources */,
+				BC2B4496309CCD2D00720F0C /* Cinzel-OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
