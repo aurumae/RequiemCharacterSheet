@@ -1,8 +1,18 @@
 # Android parity with iOS 1.3
 
-Reviewed 5 November 2026. **Bring Android up to iOS commit `611b295` before preparing the Play release candidate.** Keep the native Kotlin/Compose app, Android 16 minimum and existing shared repository. This is an implementation plan; the fetched changes have not yet been merged into either working checkout.
+Updated 5 November 2026. **Android alpha 7 implements the iOS 1.3 changes at `611b295`.** The Kotlin/Compose app, Android 16 minimum and shared repository are retained. [Integration PR #1](https://github.com/aurumae/RequiemCharacterSheet/pull/1) brings both native apps together; the numbered sections below retain the scope and acceptance criteria used for the implementation.
 
-The accepted Android application remains `1d0c798` (`0.4.0-alpha.6`), with release documentation at `1351f1b` on `android/guided-creation`. Its previous iOS baseline was `506ea78`. Fetching `origin` brought in six commits through `611b295`. The original Xcode checkout remains on its existing branch and files.
+The last build accepted on the physical Galaxy S24 FE is `1d0c798` (`0.4.0-alpha.6`). Its iOS baseline was `506ea78`. The new `0.5.0-alpha.7` (version code 7) incorporates all six upstream commits through `611b295` and retains the alpha 6 debug signing identity. Physical acceptance of alpha 7 on the S24 FE remains the next user check.
+
+## Delivery status
+
+- Implemented schema 10, all four catalogs, bloodline rules and pickers, replacement fonts and offline licences, and the Android readability/editing changes below. Shared fixtures cover Morbus, a custom bloodline and unfinished creation, plus historical migration.
+- Local validation: 205 Swift host tests, 44 JVM rules/storage tests, all 13 Android emulator interaction tests, and bidirectional save exchange pass. The new shared bloodline scenario checks 12 actions, alongside the existing 37-action ordinary-play and 71-action creation scenarios. Android lint reports no errors (seven dependency/SDK warnings).
+- GitHub CI builds/tests the real Xcode app and its test targets, the Kotlin app, and the cross-platform save exchange. All three jobs passed for implementation commit `d3eedc6`; final follow-up changes must also pass before merge.
+- An Android 16 emulator upgrade from alpha 6 preserved all bytes of three synthetic legacy save files through installation and first launch. The APK contains the exact tracked IM Fell English/Cinzel fonts and full notices, with no Caslon Antique or Mrs Eaves resources.
+- Physical S24 FE acceptance and release-specific checks remain separate from the automated evidence. Export/import, Android privacy, backup rules and release signing are still outstanding.
+
+Opening an unchanged older file does not migrate it. The first real edit writes schema 10; alpha 6 cannot read that updated file, so retain a backup before testing.
 
 ## What changed
 
@@ -111,11 +121,11 @@ Use an Android 16 emulator for the minimum supported version and the Galaxy S24 
 
 | Release concern | Status after reviewing iOS 1.3 |
 | --- | --- |
-| Font embedding permissions | Resolved for the supplied replacement fonts. Android replacement, licence packaging and About presentation still need implementation. |
-| Dark Pack attribution | iOS now has a permanent About page; Android already has the launch notice and a basic About dialog. Expand it and retain the existing notices. |
+| Font embedding permissions | Resolved. Android uses the tracked replacement fonts and full notices; both licences are available offline in About. |
+| Dark Pack attribution | Android now has a permanent About page with version, Dark Pack and font pages, plus the existing launch notice. |
 | Artwork and catalog provenance | Still a separate release review; a font licence does not cover the logo, border or book material. Include the newly added Dark Eras Companion material. |
-| Save compatibility | New prerequisite: upgrade Android to schema 10 before the release candidate and before implementing cross-platform import. |
+| Save compatibility | Schema 10 and legacy migration are implemented and tested in both directions. User-facing export/import remains outstanding. |
 | Privacy, backup and signing migration | Still outstanding. The fetched changes do not add Android policy text, export/import, backup rules or release signing. |
 | Store screenshots | Capture the updated Android app after the new typography and pickers land. Existing screenshots describe the older appearance. |
 
-No new architecture or separate repository is needed. The first implementation slice is upstream integration plus schema 10 and catalog compatibility; the next slices add bloodline behaviour, fonts/About, and Android accessibility polish.
+Both apps remain native in one repository. After alpha 7 device acceptance, resume release preparation with character export/import and signing migration, privacy access and explicit backup rules.

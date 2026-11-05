@@ -1,8 +1,8 @@
 # Phase 6 Google Play release guide
 
-Prepared 5 November 2026 for Requiem Character Sheet. The Android baseline is `1d0c798`, version `0.4.0-alpha.6`, now accepted on the Galaxy S24 FE. This guide covers the remaining work from developer registration through the first public release and subsequent updates. It includes the internal distribution and upgrade checks previously listed as phase 5; those checks still need to happen through Google Play.
+Prepared 5 November 2026 for Requiem Character Sheet. The last physical-device-accepted Android baseline is `1d0c798`, version `0.4.0-alpha.6`. The current parity build is `0.5.0-alpha.7` (code 7), awaiting Galaxy S24 FE acceptance. This guide covers the remaining work from developer registration through the first public release and subsequent updates. It includes the internal distribution and upgrade checks previously listed as phase 5; those checks still need to happen through Google Play.
 
-**iOS 1.3 review, 5 November:** upstream `611b295` replaces the fonts with supplied OFL-licensed alternatives, adds font licences and Dark Pack information to About, and introduces bloodlines with character schema 10. The font-permission concern is resolved for the replacements; Android still needs to adopt them. Complete the [iOS 1.3 parity plan](ios-1.3-parity-plan.md) before the release candidate. The baseline and test results below describe alpha 6, not the unimplemented update.
+**Parity update, 5 November:** Android now implements iOS 1.3 (`611b295`), including schema 10, bloodlines, new pickers and the supplied OFL fonts. Both fonts and full notices are packaged and readable offline in About; the old fonts are absent. The [parity record](ios-1.3-parity-plan.md) distinguishes completed automated checks from pending physical-device acceptance.
 
 You are creating a new developer account. The main route below assumes a **personal account** for this independent project. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
 
@@ -13,19 +13,19 @@ Our proposed first release is free, without advertisements, purchases, accounts 
 | Area | Current position | Work before public release |
 | --- | --- | --- |
 | Character sheet | Guided creation, ordinary play and advancement accepted on your S24 FE | Retest the build delivered by Play |
-| Rules and saves | 195 Swift tests, 40 JVM tests and 11 emulator tests passed for alpha 6; shared save exchange passed | Run checks against the final release commit |
-| New iOS parity | iOS 1.3 uses schema 10, catalog bloodlines and Cachexy; Android alpha 6 reads through schema 9 | Implement and test the [parity update](ios-1.3-parity-plan.md) before release |
-| Fonts and notices | IM Fell English Regular and Cinzel Medium have supplied OFL 1.1 licences; Android still bundles Caslon Antique/Mrs Eaves | Replace old resources, bundle both full notices and expose them in About |
+| Rules and saves | Alpha 7: 205 Swift host tests, 44 JVM rules/storage tests, 13 emulator interaction tests and shared save exchange pass; Xcode CI passes | Run checks against the final release commit; complete physical acceptance |
+| New iOS parity | Alpha 7 reads schemas 1–10, writes 10, and implements bloodlines/Cachexy and identity pickers | Accept the [parity update](ios-1.3-parity-plan.md) on the S24 FE |
+| Fonts and notices | IM Fell English Regular and Cinzel Medium, both full OFL notices and offline About pages are implemented; old fonts removed | Retain notices and recheck the final release package |
 | Android support | `minSdk`, `targetSdk` and `compileSdk` are 36 | Keep Android 16 minimum; recheck Play requirements at submission |
 | Identity | Package is `ie.requiem.sheet`; label is Requiem Character Sheet | Confirm the permanent package and public publisher name |
 | Signing | All delivered alphas use a debug certificate | Create an upload key and use Play App Signing |
-| Privacy | Repository links to an iOS policy; About currently contains Dark Pack information only | Publish an Android policy and add an accessible in-app link |
+| Privacy | Repository links to an iOS policy; About includes version, Dark Pack and font information | Publish an Android policy and add an accessible in-app link |
 | Character portability | JSON files are private to the app; no export/import screen | Provide a tested route for transferring alpha characters |
 | Backup | Manifest does not specify backup behaviour | Configure and test cloud backup and device transfer explicitly |
 | Store graphics | Android QA screenshots and a 216 × 216 launcher source exist | Prepare proper store graphics and suitable screenshots |
 | Distribution | APK sideloading has been tested | Internal Play test, closed test, production access and public review |
 
-The code findings above come from [app configuration](../android/app/build.gradle.kts), [the manifest](../android/app/src/main/AndroidManifest.xml), [character storage](../android/app/src/main/java/ie/requiem/sheet/CharacterFiles.kt), [About this app](../android/app/src/main/java/ie/requiem/sheet/MainActivity.kt), and [the existing privacy-policy link](../README.md).
+The code findings above come from [app configuration](../android/app/build.gradle.kts), [the manifest](../android/app/src/main/AndroidManifest.xml), [character storage](../android/app/src/main/java/ie/requiem/sheet/CharacterFiles.kt), [About this app](../android/app/src/main/java/ie/requiem/sheet/AboutSheet.kt), and [the existing privacy-policy link](../README.md).
 
 ## 2 Finish setting up your developer account
 
@@ -47,7 +47,7 @@ The current Dark Pack agreement expressly includes character sheets and mobile c
 
 **Font permissions are resolved for the new choices.** iOS 1.3 uses IM Fell English Regular and Cinzel Medium, both under the supplied SIL Open Font License 1.1. The selected static fonts and their licence files in `VtrAppAssets/Cinzel,IM_Fell_English/` exactly match the files committed to the iOS project at `611b295`. They may be bundled with the app with their copyright and licence information; no separate embedding licence purchase is needed. [Official OFL mobile-app guidance, question 1.20](https://openfontlicense.org/ofl-faq/)
 
-The Android work is still required: replace all three old font resources, use the new typography, include both complete supplied licence notices in the shipped package and make them readable offline in **About this app**. Verify that the built artifact contains no Caslon Antique or Mrs Eaves font files. The new iOS About screen supplies the reference for the app/version, Dark Pack and font-licence pages; keep Android's existing five-second, tap-dismissible launch notice.
+Android alpha 7 completes the font replacement: its resources are generated from the tracked iOS font/licence files, both complete notices are readable offline in **About this app**, and an APK inspection confirmed the absence of Caslon Antique and Mrs Eaves. About also supplies the Android version/build and Dark Pack pages; the five-second, tap-dismissible launch notice is retained. Recheck the final release artifact when packaging it.
 
 Before submission, retain the permissions and provenance for the remaining bundled material: the Requiem logo, parchment border, skull artwork and catalog text, including the newly added Dark Eras Companion material. Retain book references and review summaries against their sources. The new font licences do not cover those other assets.
 
@@ -59,9 +59,9 @@ Keep a dated copy or link to the applicable agreement and any separate permissio
 
 Keep `ie.requiem.sheet` unless you want a different identifier before first registration or it is unavailable. This identifier determines which Android application receives updates; it is separate from the editable store title. Play package names are permanent and cannot be reused. [Create and configure a Play app](https://support.google.com/googleplay/android-developer/answer/9859152)
 
-For the first release candidate, I suggest a user-facing version such as `1.0.0-rc1`. Use the next unused integer version code above 6, and increment it for each newly uploaded build. The public release can be `1.0.0`; its code must continue increasing. Promoting an already uploaded, unchanged artifact between tracks does not require rebuilding it. We should decide the version before building the candidate so its metadata, screenshots and release notes agree.
+For the first release candidate, I suggest a user-facing version such as `1.0.0-rc1`. Use the next unused integer version code above 7, and increment it for each newly uploaded build. The public release can be `1.0.0`; its code must continue increasing. Promoting an already uploaded, unchanged artifact between tracks does not require rebuilding it. We should decide the version before building the candidate so its metadata, screenshots and release notes agree.
 
-Keep the code in the existing combined repository. Integrate the accepted Android branch history into the intended release branch, reconcile any newer iOS/catalog changes, then tag the exact release commit. Continue iOS feature work separately and use the shared tests to detect differences. A public release should be reproducible from its tag without relying on uncommitted files in a worktree.
+Keep the code in the existing combined repository. The Android/iOS integration is tracked in [PR #1](https://github.com/aurumae/RequiemCharacterSheet/pull/1). Reconcile any later iOS/catalog changes, then tag the exact release commit. Continue iOS feature work separately and use the shared tests to detect differences. A public release should be reproducible from its tag without relying on uncommitted files in a worktree.
 
 For subsequent development builds, consider an application ID suffix such as `.debug` and an obvious development label. That lets development and Play installations coexist. Introduce it only after the current alpha's data has been preserved; changing an identifier does not transfer its private files.
 
@@ -72,7 +72,7 @@ For subsequent development builds, consider an application ID suffix such as `.d
 My recommended transition is:
 
 1. After the schema 10 parity update, add character export and import with the shared v10 format and legacy migration support, preserving character IDs, custom bloodlines, creation progress, damage, paid-dot ledger and history. Reject unsupported future files without altering them.
-2. Deliver one final migration alpha signed with the **existing debug key**, so it updates alpha 6 normally.
+2. Deliver one final migration alpha signed with the **existing debug key**, so it updates the installed alpha normally.
 3. Export every character to a user-selected location outside the app's private directory. Keep a second copy.
 4. Verify the exported files by importing them into a separate test installation and comparing the saved values.
 5. Only after verification, remove the old installation if needed and install the Play test version.
@@ -298,7 +298,7 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [ ] Public publisher details and trader status reviewed.
 - [ ] Permanent package name and initial markets chosen.
 - [x] Replacement font permissions identified: IM Fell English and Cinzel, supplied OFL 1.1 notices verified.
-- [ ] Android uses the replacement fonts, includes their complete notices and exposes them in About; old fonts absent from the package.
+- [x] Android uses the replacement fonts, includes their complete notices and exposes them in About; old fonts absent from the package.
 - [ ] Remaining artwork/catalog permissions and Dark Pack presentation reviewed.
 - [ ] iOS 1.3 parity accepted, including schema 10 migration, bloodlines and cross-platform exchange.
 - [ ] Android privacy policy published and linked inside the app.
@@ -315,4 +315,4 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [ ] Final release reviewed, publishing settings understood and launch approved.
 - [ ] Public listing/install verified; support and maintenance routine in place.
 
-The next engineering task is the [iOS 1.3 parity update](ios-1.3-parity-plan.md), beginning with the upstream merge and schema 10 contract. After its device acceptance, resume **character export/import and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.
+After physical-device acceptance of [alpha 7](ios-1.3-parity-plan.md), the next engineering tasks are **character export/import and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.

@@ -27,10 +27,7 @@ internal fun AboutSheet(dismiss: () -> Unit) {
     val resources = LocalResources.current
     val paragraphs = remember(page, resources) {
         val resource = when (page) { "fell" -> R.raw.im_fell_english_ofl; "cinzel" -> R.raw.cinzel_ofl; else -> null }
-        resource?.let { resources.openRawResource(it).bufferedReader().use { reader -> reader.readText() }
-            .replace("\r\n", "\n").split(Regex("\n\\s*\n"))
-            .map { paragraph -> paragraph.lines().filterNot { line -> line.isNotBlank() && line.all { it == '-' } }.joinToString(" ").trim() }
-            .filter { it.isNotEmpty() } }.orEmpty()
+        resource?.let { resources.openRawResource(it).bufferedReader().use { reader -> licenceParagraphs(reader.readText()) } }.orEmpty()
     }
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
         // Register inside the dialog so Back navigates a licence before closing About.
@@ -74,4 +71,19 @@ private fun AboutLink(title: String, subtitle: String, open: () -> Unit) {
         SheetText(subtitle, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
     }
     SheetRule()
+}
+
+// Preserve licence headings even when the source places their body on the next line.
+private fun licenceParagraphs(text: String): List<String> = buildList {
+    val lines = mutableListOf<String>()
+    fun flush() { if (lines.isNotEmpty()) { add(lines.joinToString(" ")); lines.clear() } }
+    text.lineSequence().forEach { raw ->
+        val line = raw.trim()
+        when {
+            line.isEmpty() || line.all { it == '-' } -> flush()
+            line.length < 45 && line == line.uppercase() && line.any { it.isLetter() } -> { flush(); add(line) }
+            else -> lines.add(line)
+        }
+    }
+    flush()
 }

@@ -45,8 +45,9 @@ class BlankSheetUiTest {
         awaitLibrary()
         ui.onNodeWithTag("character-library").performScrollToNode(hasText("About this app"))
         ui.onNodeWithText("About this app").performClick()
+        ui.onNodeWithText("Dark Pack").performClick()
         ui.onNodeWithText("This is unofficial Fan Content permitted under the Dark Pack. This app is not official World of Darkness material.").assertExists()
-        ui.onNodeWithText("Close").performClick()
+        ui.onNodeWithText("Done").performClick()
         ui.onNodeWithTag("character-library").performScrollToNode(hasText("New blank sheet"))
         ui.onNodeWithText("New blank sheet").performClick()
         ui.waitUntil(8_000) { ui.onAllNodesWithContentDescription("Character name").fetchSemanticsNodes().isNotEmpty() }
@@ -58,7 +59,12 @@ class BlankSheetUiTest {
         ui.onNode(hasText("0") and hasAnyAncestor(hasTestTag("rating-menu"))).assertDoesNotExist()
         ui.onNode(hasText("6") and hasAnyAncestor(hasTestTag("rating-menu"))).assertDoesNotExist()
         ui.onNodeWithText("3").performClick()
+        // Let the overdraft notice clear before tapping the bottom Health row.
+        ui.waitUntil(6_000) {
+            ui.onAllNodesWithText("Your available Experiences are now below zero.").fetchSemanticsNodes().isEmpty()
+        }
         sheetNode(hasContentDescription("Health box 8 of 8")).performClick()
+        ui.onNodeWithContentDescription("Health box 8 of 8").assert(hasStateDescription("bashing"))
         ui.onNodeWithContentDescription("Health box 7 of 8").assert(hasStateDescription("unmarked"))
         sheetNode(hasContentDescription("-4 XP available")).assertExists()
         ui.activityRule.scenario.recreate()
