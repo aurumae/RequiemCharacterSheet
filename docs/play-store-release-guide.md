@@ -4,7 +4,7 @@ Prepared 5 November 2026 for Requiem Character Sheet. The accepted Android basel
 
 **Parity update, 5 November:** Android now implements iOS 1.3 (`611b295`), including schema 10, bloodlines, new pickers and the supplied OFL fonts. Both fonts and full notices are packaged and readable offline in About; the old fonts are absent. The [parity record](ios-1.3-parity-plan.md) records the passing automated checks and user-confirmed physical-device acceptance; a full TalkBack session remains unconfirmed.
 
-You are creating a new developer account. The main route below assumes a **personal account** for this independent project. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
+The developer account has been created and authenticated, as confirmed by the user. The main route below assumes a **personal account** for this independent project; the account type has not been separately confirmed. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
 
 Our proposed first release is free, without advertisements, purchases, accounts or a backend. Keep Android 16 as the minimum. Start recruiting compatible testers while preparing the release: account verification and the closed test will determine much of the schedule.
 
@@ -294,7 +294,8 @@ The known platform registration cost is US$25. Signing tools, our existing build
 
 ## 17 Release checklist
 
-- [ ] Account type, identity, contacts and device verification complete.
+- [x] Developer account created and authenticated (confirmed by the user).
+- [ ] Account type recorded and any remaining Console identity, contact or device-verification tasks completed.
 - [ ] Public publisher details and trader status reviewed.
 - [ ] Permanent package name and initial markets chosen.
 - [x] Replacement font permissions identified: IM Fell English and Cinzel, supplied OFL 1.1 notices verified.
