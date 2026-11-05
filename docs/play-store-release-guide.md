@@ -2,6 +2,8 @@
 
 Prepared 5 November 2026 for Requiem Character Sheet. The Android baseline is `1d0c798`, version `0.4.0-alpha.6`, now accepted on the Galaxy S24 FE. This guide covers the remaining work from developer registration through the first public release and subsequent updates. It includes the internal distribution and upgrade checks previously listed as phase 5; those checks still need to happen through Google Play.
 
+**iOS 1.3 review, 5 November:** upstream `611b295` replaces the fonts with supplied OFL-licensed alternatives, adds font licences and Dark Pack information to About, and introduces bloodlines with character schema 10. The font-permission concern is resolved for the replacements; Android still needs to adopt them. Complete the [iOS 1.3 parity plan](ios-1.3-parity-plan.md) before the release candidate. The baseline and test results below describe alpha 6, not the unimplemented update.
+
 You are creating a new developer account. The main route below assumes a **personal account** for this independent project. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
 
 Our proposed first release is free, without advertisements, purchases, accounts or a backend. Keep Android 16 as the minimum. Start recruiting compatible testers while preparing the release: account verification and the closed test will determine much of the schedule.
@@ -12,6 +14,8 @@ Our proposed first release is free, without advertisements, purchases, accounts 
 | --- | --- | --- |
 | Character sheet | Guided creation, ordinary play and advancement accepted on your S24 FE | Retest the build delivered by Play |
 | Rules and saves | 195 Swift tests, 40 JVM tests and 11 emulator tests passed for alpha 6; shared save exchange passed | Run checks against the final release commit |
+| New iOS parity | iOS 1.3 uses schema 10, catalog bloodlines and Cachexy; Android alpha 6 reads through schema 9 | Implement and test the [parity update](ios-1.3-parity-plan.md) before release |
+| Fonts and notices | IM Fell English Regular and Cinzel Medium have supplied OFL 1.1 licences; Android still bundles Caslon Antique/Mrs Eaves | Replace old resources, bundle both full notices and expose them in About |
 | Android support | `minSdk`, `targetSdk` and `compileSdk` are 36 | Keep Android 16 minimum; recheck Play requirements at submission |
 | Identity | Package is `ie.requiem.sheet`; label is Requiem Character Sheet | Confirm the permanent package and public publisher name |
 | Signing | All delivered alphas use a debug certificate | Create an upload key and use Play App Signing |
@@ -41,7 +45,11 @@ Also complete the **trader-status declaration** when available. Google's current
 
 The current Dark Pack agreement expressly includes character sheets and mobile character generators, with free distribution and no in-app purchases or other monetised transactions. It also covers Chronicles of Darkness material. Our proposed route is therefore **free, with no ads or purchases**. A commercial release would require a separate permissions review. Keep the Dark Pack logo, required legal notice and clear unofficial status in the app and its promotion. The agreement limits reproduction of source material; the notice alone does not authorise unrestricted copying. [Dark Pack agreement](https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement)
 
-Before submission, collect the permissions and provenance for the actual bundled assets: the Requiem logo, parchment border, skull artwork, Caslon Antique and Mrs Eaves font files, and catalog text. Check that font licences permit embedding in an Android app. Retain the existing book references and review summaries against their sources. This is a review of the material already shipped, not a request to replace the visual style.
+**Font permissions are resolved for the new choices.** iOS 1.3 uses IM Fell English Regular and Cinzel Medium, both under the supplied SIL Open Font License 1.1. The selected static fonts and their licence files in `VtrAppAssets/Cinzel,IM_Fell_English/` exactly match the files committed to the iOS project at `611b295`. They may be bundled with the app with their copyright and licence information; no separate embedding licence purchase is needed. [Official OFL mobile-app guidance, question 1.20](https://openfontlicense.org/ofl-faq/)
+
+The Android work is still required: replace all three old font resources, use the new typography, include both complete supplied licence notices in the shipped package and make them readable offline in **About this app**. Verify that the built artifact contains no Caslon Antique or Mrs Eaves font files. The new iOS About screen supplies the reference for the app/version, Dark Pack and font-licence pages; keep Android's existing five-second, tap-dismissible launch notice.
+
+Before submission, retain the permissions and provenance for the remaining bundled material: the Requiem logo, parchment border, skull artwork and catalog text, including the newly added Dark Eras Companion material. Retain book references and review summaries against their sources. The new font licences do not cover those other assets.
 
 Keep a dated copy or link to the applicable agreement and any separate permissions. Google provides an advance-notice route for third-party intellectual-property documentation; use it if needed to explain the licensed fan content before review. The listing must identify you as the publisher and clearly describe the app as unofficial. [Google's intellectual-property policy](https://support.google.com/googleplay/android-developer/answer/9888072) · [Advance notice to app review](https://support.google.com/googleplay/android-developer/answer/6320428)
 
@@ -63,7 +71,7 @@ For subsequent development builds, consider an application ID suffix such as `.d
 
 My recommended transition is:
 
-1. Add character export and import, preserving the existing schema, character IDs, creation progress, damage, paid-dot ledger and history.
+1. After the schema 10 parity update, add character export and import with the shared v10 format and legacy migration support, preserving character IDs, custom bloodlines, creation progress, damage, paid-dot ledger and history. Reject unsupported future files without altering them.
 2. Deliver one final migration alpha signed with the **existing debug key**, so it updates alpha 6 normally.
 3. Export every character to a user-selected location outside the app's private directory. Keep a second copy.
 4. Verify the exported files by importing them into a separate test installation and comparing the saved values.
@@ -271,7 +279,8 @@ Review privacy declarations when adding SDKs, online features, accounts or new f
 | --- | --- | --- |
 | Registration, legal identity and account verification | You | Console tasks complete |
 | Publisher name, markets, audience and trader declaration | You, with the guide as preparation | Accurate account and app settings |
-| Artwork/font permissions and final legal/privacy wording | You | Rights records and approved public policy |
+| Artwork/catalog permissions and final legal/privacy wording | You | Rights records and approved public policy |
+| iOS 1.3 parity, replacement fonts and licence presentation | Us working in the Android codebase | Schema 10 exchange passes; new fonts/notices are in the app and old fonts are absent |
 | Alpha migration, export/import and backup configuration | Us working in the Android codebase | Restored files match originals |
 | Release build and signing integration | Us; you retain control of credentials | Signed AAB and reproducible build notes |
 | Store text, screenshots and graphics | We can prepare; you review | Complete store listing assets |
@@ -279,16 +288,19 @@ Review privacy declarations when adding SDKs, online features, accounts or new f
 | Rules, UI, compatibility and update verification | Us and testers | Passing tests and device evidence |
 | Declarations, submission and launch | You as publisher | Console approval and verified public listing |
 
-**Suggested sequence:** finish account verification and recruit testers now; prepare migration, privacy and signing together; run internal Play installation/update tests; run the qualifying closed test; apply for production access; complete public review and launch. A planning allowance of roughly **four to six weeks** is sensible for a new personal account once preparation and recruitment are underway. Verification, finding compatible testers or review requests may extend it; it is not a guaranteed Google turnaround.
+**Suggested sequence:** finish account verification and recruit testers now; complete and accept the iOS 1.3 parity update; prepare migration, privacy and signing together; run internal Play installation/update tests; run the qualifying closed test; apply for production access; complete public review and launch. A planning allowance of roughly **four to six weeks** is sensible for a new personal account once preparation and recruitment are underway. Parity implementation, verification, finding compatible testers or review requests may extend it; it is not a guaranteed Google turnaround.
 
-The known platform registration cost is US$25. Signing tools and our existing build tools do not require a separate purchase. Budget separately for any missing font/artwork rights and optional domain or hosting services. A simple public support/privacy site is enough; this offline release does not need an app backend.
+The known platform registration cost is US$25. Signing tools, our existing build tools and the supplied OFL replacement fonts do not require a separate purchase. Budget separately for any remaining artwork/content rights and optional domain or hosting services. A simple public support/privacy site is enough; this offline release does not need an app backend.
 
 ## 17 Release checklist
 
 - [ ] Account type, identity, contacts and device verification complete.
 - [ ] Public publisher details and trader status reviewed.
 - [ ] Permanent package name and initial markets chosen.
-- [ ] Asset/font permissions and Dark Pack presentation reviewed.
+- [x] Replacement font permissions identified: IM Fell English and Cinzel, supplied OFL 1.1 notices verified.
+- [ ] Android uses the replacement fonts, includes their complete notices and exposes them in About; old fonts absent from the package.
+- [ ] Remaining artwork/catalog permissions and Dark Pack presentation reviewed.
+- [ ] iOS 1.3 parity accepted, including schema 10 migration, bloodlines and cross-platform exchange.
 - [ ] Android privacy policy published and linked inside the app.
 - [ ] Backup and device-transfer behaviour explicitly configured and tested.
 - [ ] Alpha characters exported or otherwise preserved and restore verified.
@@ -303,4 +315,4 @@ The known platform registration cost is US$25. Signing tools and our existing bu
 - [ ] Final release reviewed, publishing settings understood and launch approved.
 - [ ] Public listing/install verified; support and maintenance routine in place.
 
-The next engineering task is a release-preparation change covering **character migration/export and import, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.
+The next engineering task is the [iOS 1.3 parity update](ios-1.3-parity-plan.md), beginning with the upstream merge and schema 10 contract. After its device acceptance, resume **character export/import and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.

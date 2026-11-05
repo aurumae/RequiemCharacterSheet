@@ -1,6 +1,6 @@
 # Android port plan
 
-**Revised 5 November 2026.** The parity baseline is iOS commit `506ea78` on `main`, 12 commits after the initial review at `a51e9af`.
+**Revised 5 November 2026.** The accepted Android alpha 6 matches the earlier iOS baseline `506ea78`. The new target is iOS 1.3 at `611b295`, fetched from GitHub but not yet integrated. Follow the [iOS 1.3 parity update plan](ios-1.3-parity-plan.md) next: schema 10, bloodlines/Cachexy, identity pickers, OFL fonts, About and accessibility. The original milestones and delivered behaviour below remain a record of the alpha 6 baseline.
 
 Build the Android app in Kotlin and Jetpack Compose in an `android/` directory beside the Xcode project. Continue developing the iOS app in Swift and SwiftUI. Give both apps the same book catalogs, character-file format and examples of correct rules behavior. This lets a book correction reach both apps in one edit and gives each platform control over how players use the sheet.
 
@@ -9,7 +9,7 @@ Build the Android app in Kotlin and Jetpack Compose in an `android/` directory b
 Keep both apps in the existing `aurumae/RequiemCharacterSheet` repository, with `main` as the integration branch. A fork or separate repository would add a synchronization step each time a catalog, save format or shared test case changes. Keep the Xcode project in its current location. Android Studio opens the new sibling `android/` directory. Put shared save examples and rules test cases in `shared/fixtures/`; both builds read the existing catalogs from their current location.
 
 1. **Day-to-day work.** Start each feature from an up-to-date `main` and merge it through a small pull request. The first shared branch is `shared/save-contract`; the phone editor can follow on `android/blank-sheet`. Merge each when its tests pass so the next piece starts with the latest iOS changes. You can keep Xcode open on your own iOS branch. On one machine, use a second Git worktree for simultaneous Android work; on separate machines, use ordinary clones of the same remote. [Git worktrees](https://git-scm.com/docs/git-worktree)
-2. **While Android catches up.** Ship iOS features as they are ready. For a feature that affects both apps, include a sample character or rules example showing the new behavior. If Android support will follow, link an Android parity issue to the original pull request and record which save version each app supports. For example, if iOS introduces schema 10, commit a v10 fixture and verify the v9 Android reader refuses to overwrite it until v10 support lands.
+2. **While Android catches up.** Ship iOS features as they are ready. For a feature that affects both apps, include a sample character or rules example showing the new behavior. If Android support will follow, link an Android parity issue to the original pull request and record which save version each app supports. iOS 1.3 now writes schema 10; alpha 6's v9 reader refuses to overwrite it. The next update must add shared v10 fixtures and move the future-schema refusal case to v11.
 3. **Checks and releases.** Run the affected platform’s tests for platform-only edits and both suites for shared rules, catalogs or saves once both runners exist. Tag builds by platform, for example `ios/v1.2.0` and `android/v0.1.0-alpha.1`. Each app can ship from its own tested commit on its own schedule.
 
 ## What the Android app needs to reproduce
@@ -36,13 +36,14 @@ Use the sheet view as the screen inventory. The character model computes sheet v
 
 ## Character compatibility
 
-Use app-private storage with one JSON file per character UUID. **Write schema 9 and read versions 1–9.** Keep the existing coverage for unversioned saves, legacy damage boxes, named skills, older clan-bane state, catalog/custom sources, nested UUIDs and ordered marks. Preserve fractional seconds in Foundation timestamps, including log dates. The old iOS UserDefaults migration belongs to iOS. [Swift character codec](../RequiemCharacterSheet/Models/Character.swift) · [Swift Foundation date representation](https://github.com/swiftlang/swift-foundation/blob/main/Sources/FoundationEssentials/Date.swift)
+Use app-private storage with one JSON file per character UUID. **Alpha 6 writes schema 9 and reads versions 1–9; the next parity update must write schema 10 and read versions 1–10.** Keep the existing coverage for unversioned saves, legacy damage boxes, named skills, older clan-bane state, catalog/custom sources, nested UUIDs and ordered marks. Preserve fractional seconds in Foundation timestamps, including log dates. The old iOS UserDefaults migration belongs to iOS. [Swift character codec](../RequiemCharacterSheet/Models/Character.swift) · [Swift Foundation date representation](https://github.com/swiftlang/swift-foundation/blob/main/Sources/FoundationEssentials/Date.swift)
 
 | Save introduced | Compatibility check |
 | --- | --- |
 | v7 | Preserve rituals, Devotions, the chosen Mystery, Coils and Scales, including custom entries. Older saves default to empty collections and no chosen Mystery. |
 | v8 | Preserve `xpMode`, `changeLog` and `paidDots`. A purchased dot belongs to a trait key such as `attribute:stamina` or `merit:<row UUID>`. Match Swift’s UUID spelling in keys so a later refund finds that purchase. Older saves retain their earned Experiences, all available to spend. |
 | v9 | Preserve optional `creation`, the two category-priority maps, the favoured Attribute, bonus XP and the optional creation flag on log entries. Include both an early v9 guided save with no priority maps and a current mid-creation save. Missing maps mean the choices are still unassigned. An absent creation object means an ordinary sheet. |
+| v10 (next update) | Store `bloodline` as a catalog/custom source; link known legacy names, retain custom names and unknown IDs, and preserve all existing character state. Exchange Morbus, custom and mid-creation examples. Reject future v11 files without rewriting them. |
 
 Serialize file operations off the UI thread, use atomic replacement and compare decoded, normalized contents before updating the edit timestamp. Preserve unsupported or damaged files and explain their status in the list. Persist accepted edits during use, flush pending changes on Save and Back, and surface write failures. Restore the open character by UUID after Android recreates the process. A background callback alone is insufficient to protect a player's edits. [Android saved state](https://developer.android.com/topic/libraries/architecture/saving-states) · [AtomicFile and concurrency](https://developer.android.com/reference/android/util/AtomicFile)
 
@@ -65,7 +66,7 @@ Carry the recent iOS interaction fixes into Android acceptance testing. A typed 
 
 ## Visual alignment before the remaining sheet sections
 
-The 15 iOS App Store screenshots supplied on 4 November 2026 are the visual reference. The `android/visual-parity` branch establishes this appearance for the existing Android library, sheet and change log before the rest of milestone 3 is added.
+The 15 iOS App Store screenshots supplied on 4 November 2026 were the visual reference for the accepted alpha. The `android/visual-parity` branch established the appearance below. **The next update supersedes its font choices with IM Fell English Regular and Cinzel Medium and follows the new iOS pickers and contrast changes**, as detailed in the [iOS 1.3 plan](ios-1.3-parity-plan.md).
 
 - Use the original `VtRBorder_NewStyle` paper and centered logo, Caslon Antique for section headings and trait labels, Mrs Eaves Small Caps for categories, and Mrs Eaves Roman as Caslon’s accented-letter fallback. The primary ink color is `#581A12`; section bands are `#F2F2F7`.
 - Use flat white rows with subtle separators. Character names, clan/covenant details and relative edit times follow reference 01. Save confirms without leaving the sheet; Back saves and returns to the library.
@@ -102,7 +103,7 @@ Implemented on `android/guided-creation`, based on accepted milestone 3, in the 
 
 Validation: 195 Swift tests, 40 JVM rules/storage tests and 11 emulator interaction tests pass, along with bidirectional file exchange and the 71-action creation comparison. Android lint has no errors and the same seven SDK/dependency warnings. Manual checks cover normal and enlarged text, rank selection in landscape, upgrading from alpha 5 with every saved field retained across three synthetic characters, and restoring an unfinished sheet and its scroll position from Recents after process termination. Priorities, the clan dot, ratings and change history remain unchanged on restoration. The debug delivery is `0.4.0-alpha.6`, signed with the same certificate as the previous alpha.
 
-Guided creation is accepted on the Galaxy S24 FE. Phase 6 is now preparation for public Google Play release, documented in the [detailed release guide](play-store-release-guide.md). The phase 5 internal Play distribution and upgrade checks remain prerequisites within that guide. The developer is creating a new Play account; the guide's main path assumes a personal account and explains the organisation alternative. Local Android branches remain stacked in delivery order; the original Xcode checkout stays available for independent Swift development.
+Guided creation is accepted on the Galaxy S24 FE. Complete the [iOS 1.3 parity update](ios-1.3-parity-plan.md) before resuming public Google Play release preparation in the [detailed release guide](play-store-release-guide.md). The phase 5 internal Play distribution and upgrade checks remain prerequisites within that guide. The developer is creating a new Play account; the guide's main path assumes a personal account and explains the organisation alternative. Local Android branches remain stacked in delivery order; the original Xcode checkout stays available for independent Swift development.
 
 ## Keeping the two versions together
 

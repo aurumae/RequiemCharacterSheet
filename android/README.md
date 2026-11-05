@@ -4,6 +4,8 @@ Open this directory in Android Studio and run the **app** configuration. The Kot
 
 Alpha 6, including guided creation, is accepted on the Galaxy S24 FE. See the [phase 6 Google Play release guide](../docs/play-store-release-guide.md) for account setup, signing, preserving alpha characters, privacy, store assets, testing and publication. The current APKs are debug builds; moving to Play signing requires a separate data-migration step.
 
+**Next update:** iOS 1.3 at `611b295` has been fetched and reviewed. Follow the [parity plan](../docs/ios-1.3-parity-plan.md) for schema 10, Morbus/Cachexy, new pickers, replacement OFL fonts, About and accessibility before release preparation. These changes are not yet implemented on Android; the instructions and capabilities below describe alpha 6.
+
 To build and install the debug APK with JDK 21 or Android Studio’s bundled JDK, set up Android SDK Platform 36 and Build Tools 36.0.0, then run from the repository root:
 
 ```sh
