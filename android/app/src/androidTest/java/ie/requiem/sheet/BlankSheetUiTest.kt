@@ -25,13 +25,18 @@ class BlankSheetUiTest {
         ui.onNodeWithTag("character-library").assertExists()
     }
 
+    private fun sheetNode(matcher: SemanticsMatcher): SemanticsNodeInteraction {
+        ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
+        return ui.onNode(matcher)
+    }
+
     @Test fun playSaveReopenAndRefund() {
         val name = "Test " + UUID.randomUUID().toString().take(8)
         fun awaitText(value: String) = ui.waitUntil(8_000) { ui.onAllNodesWithText(value).fetchSemanticsNodes().isNotEmpty() }
         fun awaitLibrary() = ui.waitUntil(8_000) { ui.onAllNodesWithTag("character-library").fetchSemanticsNodes().isNotEmpty() }
         fun tapStaminaDot(level: Int) {
             val cell = 24 * ui.activity.resources.displayMetrics.density
-            ui.onNodeWithContentDescription("Stamina").performScrollTo().performTouchInput {
+            sheetNode(hasContentDescription("Stamina")).performTouchInput {
                 click(Offset(width - (5 - level + .5f) * cell, height / 2f))
             }
         }
@@ -48,16 +53,16 @@ class BlankSheetUiTest {
         ui.onNodeWithContentDescription("Character name").performTextInput(name)
         ui.onNodeWithContentDescription("Character name").performImeAction()
         tapStaminaDot(2)
-        ui.onNodeWithText("XP Mode").performScrollTo().performClick()
-        ui.onNodeWithContentDescription("Stamina").performClick()
-        ui.onNodeWithText("0").assertDoesNotExist()
-        ui.onNodeWithText("6").assertDoesNotExist()
+        sheetNode(hasText("XP Mode")).performClick()
+        sheetNode(hasContentDescription("Stamina")).performClick()
+        ui.onNode(hasText("0") and hasAnyAncestor(hasTestTag("rating-menu"))).assertDoesNotExist()
+        ui.onNode(hasText("6") and hasAnyAncestor(hasTestTag("rating-menu"))).assertDoesNotExist()
         ui.onNodeWithText("3").performClick()
-        ui.onNodeWithContentDescription("Health box 8 of 8").performScrollTo().performClick()
+        sheetNode(hasContentDescription("Health box 8 of 8")).performClick()
         ui.onNodeWithContentDescription("Health box 7 of 8").assert(hasStateDescription("unmarked"))
-        ui.onNodeWithContentDescription("-4 XP available").assertExists()
+        sheetNode(hasContentDescription("-4 XP available")).assertExists()
         ui.activityRule.scenario.recreate()
-        awaitText(name)
+        sheetNode(hasContentDescription("Character name")).assertTextContains(name)
         ui.onNodeWithText("Save").performClick()
         awaitText("Saved")
         ui.onNodeWithContentDescription("Character name").assertExists()
@@ -66,16 +71,16 @@ class BlankSheetUiTest {
         ui.onNodeWithTag("character-library").performScrollToNode(hasText(name))
         ui.onNodeWithText(name).performClick()
         awaitText(name)
-        ui.onNodeWithContentDescription("Health box 8 of 8").assert(hasStateDescription("bashing"))
-        ui.onNodeWithText("Change Log").performScrollTo().performClick()
+        sheetNode(hasContentDescription("Health box 8 of 8")).assert(hasStateDescription("bashing"))
+        sheetNode(hasText("Change Log")).performClick()
         ui.onNodeWithText("Spent 4").assertExists()
         ui.onNodeWithText("Free").assertExists()
         ui.onNodeWithText("Done").performClick()
         // The same row also supports TalkBack's adjustment action.
-        ui.onNodeWithContentDescription("Stamina").performScrollTo()
+        sheetNode(hasContentDescription("Stamina"))
             .performSemanticsAction(SemanticsActions.SetProgress) { it(2f) }
-        ui.onNodeWithContentDescription("0 XP available").assertExists()
-        ui.onNodeWithText("Change Log").performScrollTo().performClick()
+        sheetNode(hasContentDescription("0 XP available")).assertExists()
+        sheetNode(hasText("Change Log")).performClick()
         ui.onNodeWithText("Refunded 4").assertExists()
     }
 }

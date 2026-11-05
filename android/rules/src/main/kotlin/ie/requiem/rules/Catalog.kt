@@ -39,6 +39,8 @@ class Catalog(files: Map<String, String>) {
 
     fun entries(kind: CatalogKind): Map<String, JsonObject> = byId.getValue(kind)
 
+    fun names(kind: CatalogKind): List<String> = entries(kind).values.map { it.getValue("name").jsonPrimitive.content }
+
     fun name(kind: CatalogKind, source: TraitSource): String = source.custom
         ?: entries(kind)[source.catalog]?.get("name")?.jsonPrimitive?.content
         ?: source.catalog.orEmpty()

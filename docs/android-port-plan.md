@@ -1,6 +1,6 @@
 # Android port plan
 
-**Revised 4 November 2026.** The parity baseline is iOS commit `506ea78` on `main`, 12 commits after the initial review at `a51e9af`.
+**Revised 5 November 2026.** The parity baseline is iOS commit `506ea78` on `main`, 12 commits after the initial review at `a51e9af`.
 
 Build the Android app in Kotlin and Jetpack Compose in an `android/` directory beside the Xcode project. Continue developing the iOS app in Swift and SwiftUI. Give both apps the same book catalogs, character-file format and examples of correct rules behavior. This lets a book correction reach both apps in one edit and gives each platform control over how players use the sheet.
 
@@ -75,6 +75,17 @@ The 15 iOS App Store screenshots supplied on 4 November 2026 are the visual refe
 A five-second, tap-dismissible Dark Pack notice appears on launch, using the same text and logo as iOS; the text also remains accessible from About this app. The timer survives rotation.
 
 The Android resources are exports of the supplied artwork and fonts; the screenshot files themselves remain outside the repository. The app module contains the theme, shared controls and native sheet layouts. Continue using those components for new sections.
+
+## Milestone 3 delivery slices
+
+Visual alignment is accepted on the Galaxy S24 FE. The first functional slice is on `android/core-sheet`:
+
+1. **Character details, Attributes and Skills.** All nine identity fields, catalog choices for Mask/Dirge and Clan/Covenant, custom text, nine Attributes, 24 Skills, and multiple editable Specialties. The shared rating control supplies compact dots, legal name menus and accessibility adjustments. A section menu navigates the longer sheet. Attribute bonuses use the book effects, excluding bonuses that only apply to dice rolls. All committed rating changes use the paid-dot ledger; Specialty renames do not charge XP. `core-advancement.json` exercises the same sequence in Swift and Kotlin.
+2. **Powers and personal traits.** Disciplines and Merits with searchable catalog choices, details, custom entries and prerequisite warnings; Aspirations and the Bane picker with its three-entry limit and clan-bane switch.
+3. **Play trackers and Humanity.** Willpower marks, Blood Potency/Vitae, Armor and derived values, Humanity and Touchstones, Beats and earned Experiences. Humanity and Blood Potency losses never refund XP.
+4. **Sorcery and advancement completion.** Rituals, Devotions, Mysteries, Coils and Scales, including free ritual slots and the dependent XP prices. Verify complete ordinary play and advancement before calling milestone 3 finished.
+
+The first slice does not enable guided creation or editing the remaining sections. Existing saved data in those sections stays intact. The original Xcode checkout remains on its own branch; integrate the reviewed Android branches into `main` in their existing order.
 
 ## Keeping the two versions together
 

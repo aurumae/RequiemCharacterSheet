@@ -1,0 +1,16 @@
+[
+  {"kind":"attribute","id":"wits","rating":2,"xpMode":false,"cost":0,"available":0,"paidLevels":[]},
+  {"kind":"attribute","id":"wits","rating":4,"xpMode":true,"cost":8,"available":-8,"paidLevels":[3,4]},
+  {"kind":"attribute","id":"wits","rating":3,"xpMode":true,"cost":-4,"available":-4,"paidLevels":[3]},
+  {"kind":"skill","id":"occult","rating":3,"xpMode":true,"cost":6,"available":-10,"paidLevels":[1,2,3]},
+  {"kind":"specialty","id":"occult","specialties":["Ghosts"],"xpMode":true,"cost":1,"available":-11,"paidLevels":[1]},
+  {"kind":"specialty","id":"occult","specialties":["Ghosts","Wards"],"xpMode":true,"cost":1,"available":-12,"paidLevels":[1,2]},
+  {"kind":"specialty","id":"occult","specialties":["Spirits","Wards"],"xpMode":true,"cost":null,"available":-12,"paidLevels":[1,2]},
+  {"kind":"specialty","id":"occult","specialties":["Spirits"],"xpMode":true,"cost":-1,"available":-11,"paidLevels":[1]},
+  {"kind":"skill","id":"occult","rating":1,"xpMode":false,"cost":0,"available":-11,"paidLevels":[1]},
+  {"kind":"skill","id":"occult","rating":0,"xpMode":true,"cost":-2,"available":-9,"paidLevels":[]},
+  {"kind":"specialty","id":"occult","specialties":[],"xpMode":false,"cost":0,"available":-9,"paidLevels":[]},
+  {"kind":"specialty","id":"occult","specialties":["Wards"],"xpMode":false,"cost":0,"available":-9,"paidLevels":[]},
+  {"kind":"specialty","id":"occult","specialties":[],"xpMode":true,"cost":0,"available":-9,"paidLevels":[]},
+  {"kind":"attribute","id":"wits","rating":1,"xpMode":true,"cost":-4,"available":-5,"paidLevels":[]}
+]

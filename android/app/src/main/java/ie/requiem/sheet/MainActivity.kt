@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -48,7 +49,9 @@ private fun Requiem(model: SheetModel) {
     val state by model.ui.collectAsStateWithLifecycle()
     var about by rememberSaveable { mutableStateOf(false) }
     val snack = remember { SnackbarHostState() }
+    val focus = LocalFocusManager.current
     val c = state.character
+    var requestedSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<SheetSection?>(null) }
     val window = LocalWindowInfo.current.containerSize
     val sideInset = if (window.width > window.height) with(LocalDensity.current) { (window.width * .08f).toDp() } else 16.dp
     var announced by rememberSaveable(c?.id?.toString()) { mutableIntStateOf(0) }
@@ -62,17 +65,18 @@ private fun Requiem(model: SheetModel) {
     LaunchedEffect(state.savedNotice) {
         if (state.savedNotice > 0) { saved = true; delay(1500); saved = false }
     }
-    BackHandler(enabled = c != null) { model.close() }
+    BackHandler(enabled = c != null) { focus.clearFocus(); model.close() }
     PageBackground {
         Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = sideInset).padding(top = 20.dp, bottom = 40.dp)) {
             if (c != null) Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = model::close, enabled = !state.busy, modifier = Modifier.semantics { contentDescription = "Back" }) {
+                IconButton(onClick = { focus.clearFocus(); model.close() }, enabled = !state.busy, modifier = Modifier.semantics { contentDescription = "Back" }) {
                     SheetIcon(SheetSymbol.Back, SheetColors.ink)
                 }
+                SheetSectionMenu { focus.clearFocus(); requestedSection = it }
                 Spacer(Modifier.weight(1f))
                 if (c.creation == null) {
                     XpBadge(c.xpMode, c.experiencesAvailable, !state.busy) { model.edit(ie.requiem.rules.SheetEdit.XpMode(!c.xpMode)) }
-                    TextButton(onClick = model::save, enabled = !state.busy && !saved) { Text(if (saved) "Saved" else "Save") }
+                    TextButton(onClick = { focus.clearFocus(); model.save() }, enabled = !state.busy && !saved) { Text(if (saved) "Saved" else "Save") }
                 }
             }
             LogoHeader()
@@ -85,7 +89,7 @@ private fun Requiem(model: SheetModel) {
                 }
             }
             when {
-                c != null -> key(c.id) { SheetEditor(c, model.catalog, state.busy, model::edit) }
+                c != null -> key(c.id) { SheetEditor(c, model.catalog, state.busy, model::edit, requestedSection) { requestedSection = null } }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 else -> Library(state.rows, model) { about = true }
             }
@@ -99,6 +103,19 @@ private fun Requiem(model: SheetModel) {
             Text(stringResource(R.string.dark_pack_disclaimer))
         }
     }, confirmButton = { TextButton(onClick = { about = false }) { Text("Close") } })
+}
+
+@Composable
+private fun SheetSectionMenu(select: (SheetSection) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { expanded = true }) { Text("Sections") }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            SheetSection.entries.forEach { section ->
+                DropdownMenuItem(text = { Text(section.title) }, onClick = { expanded = false; select(section) })
+            }
+        }
+    }
 }
 
 @Composable

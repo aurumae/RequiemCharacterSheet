@@ -50,6 +50,42 @@ struct SaveContractTests {
         }
     }
 
+    @Test func coreAdvancementMatchesThePhoneEditor() throws {
+        struct Step: Decodable {
+            let kind, id: String
+            let rating, cost: Int?
+            let specialties: [String]?
+            let xpMode: Bool
+            let available: Int
+            let paidLevels: [Int]
+        }
+        let steps = try JSONDecoder().decode([Step].self, from: SaveFixtures.resource("core-advancement"))
+        var character = Character()
+        var costs: [Int] = []
+        for step in steps {
+            character.xpMode = step.xpMode
+            let before = character.traitSnapshot
+            switch step.kind {
+            case "attribute":
+                let attribute = try #require(character.attributes.first { $0.kind.rawValue == step.id })
+                attribute.rating = try #require(step.rating)
+            case "skill":
+                let skill = try #require(character.skills.first { $0.skillID.rawValue == step.id })
+                skill.rating = try #require(step.rating)
+            default:
+                let skill = try #require(character.skills.first { $0.skillID.rawValue == step.id })
+                skill.specialties = try #require(step.specialties)
+            }
+            character.recordChanges(since: before)
+            character = try JSONDecoder().decode(Character.self, from: encoder.encode(character))
+            if let cost = step.cost { costs.append(cost) }
+            #expect(character.changeLog.map(\.experiences) == costs)
+            #expect(character.experiencesAvailable == step.available)
+            let key = TraitKey(try #require(TraitKind(rawValue: step.kind)), step.id)
+            #expect((character.paidDots[key] ?? [:]).keys.sorted() == step.paidLevels)
+        }
+    }
+
     @Test func currentFixturesMatchWhatSwiftWrites() throws {
         if let path = Self.exchange {
             let c = Catalog.bundled

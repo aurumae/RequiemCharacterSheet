@@ -77,15 +77,8 @@ data class CreationState(
 }
 
 // These IDs also specify the order in the iOS sheet and its writer.
-internal val attributeIds = listOf(
-    "intelligence", "wits", "resolve", "strength", "dexterity", "stamina",
-    "presence", "manipulation", "composure",
-)
-internal val coreSkillIds = listOf(
-    "academics", "computer", "crafts", "investigation", "medicine", "occult", "politics", "science",
-    "athletics", "brawl", "drive", "firearms", "larceny", "stealth", "survival", "weaponry",
-    "animal-ken", "empathy", "expression", "intimidation", "persuasion", "socialize", "streetwise", "subterfuge",
-)
+internal val attributeIds = attributeDefinitions.map { it.id }
+internal val coreSkillIds = skillDefinitions.map { it.id }
 
 internal const val CURRENT_SCHEMA = 9
 

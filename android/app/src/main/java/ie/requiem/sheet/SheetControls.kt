@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.DpSize
 import ie.requiem.rules.*
 
-internal enum class SheetSymbol { Back, More, Add, Chevron }
+internal enum class SheetSymbol { Back, More, Add, Chevron, Choose }
 @Composable
 internal fun SheetIcon(symbol: SheetSymbol, color: Color = SheetColors.accent) {
     Canvas(Modifier.size(22.dp)) {
@@ -34,6 +34,10 @@ internal fun SheetIcon(symbol: SheetSymbol, color: Color = SheetColors.accent) {
             SheetSymbol.Chevron -> {
                 drawLine(color, Offset(w * .35f, h * .25f), Offset(w * .6f, h * .5f), stroke)
                 drawLine(color, Offset(w * .6f, h * .5f), Offset(w * .35f, h * .75f), stroke)
+            }
+            SheetSymbol.Choose -> for (y in listOf(.25f, .5f, .75f)) {
+                drawCircle(color, 1.dp.toPx(), Offset(w * .15f, h * y))
+                drawLine(color, Offset(w * .35f, h * y), Offset(w * .85f, h * y), stroke)
             }
             SheetSymbol.More -> for (y in listOf(.2f, .5f, .8f)) drawCircle(color, 1.7.dp.toPx(), Offset(w / 2, h * y))
             SheetSymbol.Add -> {
