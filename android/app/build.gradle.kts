@@ -10,8 +10,8 @@ android {
         applicationId = "ie.requiem.sheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 2
-        versionName = "0.2.0-alpha.2"
+        versionCode = 3
+        versionName = "0.2.1-alpha.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }
@@ -32,6 +32,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation(platform("androidx.compose:compose-bom:2025.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")

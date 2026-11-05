@@ -68,9 +68,11 @@ The 15 iOS App Store screenshots supplied on 4 November 2026 are the visual refe
 
 - Use the original `VtRBorder_NewStyle` paper and centered logo, Caslon Antique for section headings and trait labels, Mrs Eaves Small Caps for categories, and Mrs Eaves Roman as Caslon’s accented-letter fallback. The primary ink color is `#581A12`; section bands are `#F2F2F7`.
 - Use flat white rows with subtle separators. Character names, clan/covenant details and relative edit times follow reference 01. Save confirms without leaving the sheet; Back saves and returns to the library.
-- Keep editing on the sheet, as requested. Draw red base dots, black bonus dots, and square damage marks. Each direct target has at least 48 dp of space. Ratings stack below labels and Health wraps on small screens; the logo contracts in landscape and above the keyboard.
+- Keep editing on the sheet, as requested. Draw red base dots, black bonus dots, and square damage marks. The 5 November refinement uses the iOS spacing: 20 dp marks on a 24 dp pitch. Tap the attribute or skill name for a dropdown of legal base ratings with full-sized menu rows. Attributes start at 1 and skills at 0; both cap at max(5, Blood Potency), never above 10. Ratings stack below labels and Health wraps on small screens; the logo contracts in landscape and above the keyboard.
 - Present the XP badge, earned/spent/available values and a separate dated Change Log using references 09–10. Keep the paper theme light even when Android is in dark mode. Android supplies its keyboard, menus, dialog behavior and accessibility actions.
 - References 03–06, 08, and 11–14 also define the styles for the remaining Attributes, Skills, powers, Humanity, sorcery and creation screens. Their unfinished editing features remain in the milestones above; this visual pass does not enable guided creation.
+
+A five-second, tap-dismissible Dark Pack notice appears on launch, using the same text and logo as iOS; the text also remains accessible from About this app. The timer survives rotation.
 
 The Android resources are exports of the supplied artwork and fonts; the screenshot files themselves remain outside the repository. The app module contains the theme, shared controls and native sheet layouts. Continue using those components for new sections.
 

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Requiem Character Sheet</string>
+    <string name="dark_pack_copyright">Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit worldofdarkness.com.</string>
+    <string name="dark_pack_disclaimer">This is unofficial Fan Content permitted under the Dark Pack. This app is not official World of Darkness material.</string>
     <style name="Theme.Requiem" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>

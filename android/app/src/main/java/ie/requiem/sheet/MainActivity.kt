@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -36,7 +37,8 @@ class MainActivity : ComponentActivity() {
         // The reference is a light paper sheet, including when the device is in dark mode.
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT))
-        setContent { SheetTheme { Requiem(model) } }
+        val sheetModel = model
+        setContent { SheetTheme { LaunchWithDarkPack { Requiem(sheetModel) } } }
     }
     override fun onStop() { super.onStop(); model.flush() }
 }
@@ -90,11 +92,11 @@ private fun Requiem(model: SheetModel) {
         }
         SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))
     }
-    if (about) AlertDialog(onDismissRequest = { about = false }, title = { Text("About Requiem") }, text = {
+    if (about) AlertDialog(onDismissRequest = { about = false }, title = { Text("About this app") }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Image(painterResource(R.drawable.dark_pack), "Dark Pack", Modifier.size(72.dp))
-            Text("This is unofficial Fan Content permitted under the Dark Pack. This app is not official World of Darkness material.")
-            Text("Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit worldofdarkness.com.")
+            Text(stringResource(R.string.dark_pack_copyright))
+            Text(stringResource(R.string.dark_pack_disclaimer))
         }
     }, confirmButton = { TextButton(onClick = { about = false }) { Text("Close") } })
 }
@@ -161,7 +163,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
                 Text("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
             }
         }
-        item { TextButton(onClick = about) { Text("About Requiem") } }
+        item { TextButton(onClick = about) { Text("About this app") } }
     }
     val selected = rows.firstOrNull { it.id.toString() == confirmId }
     if (selected != null) AlertDialog(onDismissRequest = { confirmId = null },

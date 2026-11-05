@@ -12,7 +12,7 @@ sealed interface SheetEdit {
 }
 
 val CharacterSave.stamina: Int get() = attributes.first { it.attribute == "stamina" }.rating
-val CharacterSave.staminaCap: Int get() = bloodPotency.coerceIn(5, 10)
+val CharacterSave.staminaCap: Int get() = legalRatings(RatingKind.Attribute, bloodPotency).last
 
 fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundationNow()): CharacterSave {
     if (creation != null) return this
