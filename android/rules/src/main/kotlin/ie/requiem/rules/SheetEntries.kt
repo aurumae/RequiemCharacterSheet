@@ -75,7 +75,7 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
     return entries.sortedWith(compareBy<BookEntry> { rank(it) }.thenBy { if (needle.isEmpty() || searchable(it.name).contains(needle)) 0 else 1 }
         .thenBy { if (kind == EntryKind.Ritual) it.dots else 0 }.thenBy { it.name }).map { e ->
         val group = when (kind) {
-            EntryKind.Discipline -> if (e.id in ownDisciplines) "In-clan for ${catalog.name(CatalogKind.clans, clan)}" else "Other Disciplines"
+            EntryKind.Discipline -> if (e.id in ownDisciplines) "In-clan for ${inClanGroupName(catalog)}" else "Other Disciplines"
             EntryKind.Merit -> if (needle.isNotEmpty()) "Merits" else if (e.category == "supernatural") "Supernatural (not for Kindred)" else e.category.replaceFirstChar { it.uppercaseChar() }
             EntryKind.Ritual -> catalog.name(CatalogKind.disciplines, TraitSource(catalog = e.discipline))
             EntryKind.Devotion -> if (rank(e) == 0) "You have the Disciplines" else "Other Devotions"
@@ -96,7 +96,7 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
             else -> ""
         }.ifEmpty { null }
         CatalogOption(e, if (kind == EntryKind.Coil && !choosingMystery) e.coilName else e.name, group,
-            !choosingMystery && e.id in owned && !(kind == EntryKind.Merit && e.repeatable), details, warning, if (choosingMystery) null else creationEntryRejection(SheetEdit.AddEntry(kind, e.source()), catalog))
+            !choosingMystery && e.id in owned && !(kind == EntryKind.Merit && e.repeatable), details, warning, if (choosingMystery) null else (if (kind == EntryKind.Discipline) reasonCantLearn(e, catalog) else null) ?: creationEntryRejection(SheetEdit.AddEntry(kind, e.source()), catalog))
     }
 }
 fun BookEntry.source(): TraitSource = TraitSource(catalog = id)

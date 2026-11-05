@@ -80,7 +80,7 @@ data class CreationState(
 internal val attributeIds = attributeDefinitions.map { it.id }
 internal val coreSkillIds = skillDefinitions.map { it.id }
 
-internal const val CURRENT_SCHEMA = 9
+internal const val CURRENT_SCHEMA = 10
 
 // Seconds since 2001-01-01 UTC. Retain the Double read from disk, including its fraction.
 internal fun foundationNow(): Double = (System.currentTimeMillis() - 978_307_200_000L) / 1000.0
@@ -98,7 +98,7 @@ data class CharacterSave(
     val dirge: String = "",
     val concept: String = "",
     val clan: TraitSource = TraitSource(custom = ""),
-    val bloodline: String = "",
+    val bloodline: TraitSource = TraitSource(custom = ""),
     val covenant: TraitSource = TraitSource(custom = ""),
     val attributes: List<Attribute> = attributeIds.map { Attribute(it) },
     val skills: List<Skill> = coreSkillIds.map { Skill(it) },

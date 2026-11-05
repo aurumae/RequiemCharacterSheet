@@ -6,7 +6,7 @@ fun CharacterSave.covenantStatus(id: String, catalog: Catalog): Int {
     val name = catalog.name(CatalogKind.covenants, TraitSource(catalog = id))
     return merits.filter { it.source.catalog == "covenant-status" && it.qualifier.equals(name, ignoreCase = true) }.maxOfOrNull { it.rating } ?: 0
 }
-fun CharacterSave.inClanDisciplines(catalog: Catalog): List<String> = catalog.entry(CatalogKind.clans, clan)?.raw?.strings("disciplines").orEmpty()
+fun CharacterSave.inClanDisciplines(catalog: Catalog): List<String> = (catalog.entry(CatalogKind.bloodlines, bloodline) ?: catalog.entry(CatalogKind.clans, clan))?.raw?.strings("disciplines").orEmpty()
 fun CharacterSave.ritualDisciplines(catalog: Catalog): List<BookEntry> = disciplines.mapNotNull { catalog.entry(CatalogKind.disciplines, it.source) }.filter { it.isRitualDiscipline }.distinctBy { it.id }
 fun CharacterSave.showsRituals(catalog: Catalog): Boolean = rituals.isNotEmpty() || ritualDisciplines(catalog).isNotEmpty()
 val CharacterSave.showsCoils: Boolean get() = covenant.catalog == "ordo-dracul" || mystery != TraitSource(custom = "") || coils.isNotEmpty() || scales.isNotEmpty()

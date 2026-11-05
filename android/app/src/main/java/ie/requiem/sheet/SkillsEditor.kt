@@ -27,7 +27,7 @@ internal fun SkillEditor(definition: TraitDefinition, skill: Skill, c: Character
             edit(SheetEdit.SkillRating(skill.skill, it))
         }
         skill.specialties.forEachIndexed { index, specialty ->
-            Text(specialty, Modifier.fillMaxWidth().heightIn(min = 48.dp)
+            SheetText(specialty, Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 .clickable(enabled = editable) { previous = specialty; draft = specialty; editing = index }
                 .padding(horizontal = 8.dp, vertical = 12.dp)
                 .semantics { contentDescription = "${definition.name} specialty: $specialty" },
@@ -36,7 +36,7 @@ internal fun SkillEditor(definition: TraitDefinition, skill: Skill, c: Character
         Box(Modifier.fillMaxWidth().heightIn(min = 40.dp).clickable(enabled = editable && c.canAddSpecialty) { previous = ""; draft = ""; editing = -1 }
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .semantics { contentDescription = "Add ${definition.name} specialty" }) {
-            Text(if (c.canAddSpecialty) "Add Specialty" else "3 starting Specialties chosen", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+            SheetText(if (c.canAddSpecialty) "Add Specialty" else "3 starting Specialties chosen", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
         }
     }
     if (editing != null && editable) {
@@ -49,21 +49,21 @@ internal fun SkillEditor(definition: TraitDefinition, skill: Skill, c: Character
             editing = null
         }
         AlertDialog(onDismissRequest = { editing = null },
-            title = { Text(if (adding) "Add Specialty" else "Edit Specialty") },
+            title = { SheetText(if (adding) "Add Specialty" else "Edit Specialty") },
             text = {
                 Column {
-                    Text(definition.name, Modifier.padding(bottom = 8.dp))
-                    OutlinedTextField(value = draft, onValueChange = { draft = it }, singleLine = true, label = { Text("Specialty") },
+                    SheetText(definition.name, Modifier.padding(bottom = 8.dp))
+                    OutlinedTextField(value = draft, onValueChange = { draft = it }, singleLine = true, label = { SheetText("Specialty") },
                         modifier = Modifier.fillMaxWidth().focusRequester(focus).testTag("specialty-input"),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = { if (!adding || draft.isNotBlank()) commit(draft) }))
                     LaunchedEffect(Unit) { focus.requestFocus() }
                 }
-            }, confirmButton = { TextButton(onClick = { commit(draft) }, enabled = !adding || draft.isNotBlank()) { Text(if (adding) "Add" else "Save") } },
+            }, confirmButton = { TextButton(onClick = { commit(draft) }, enabled = !adding || draft.isNotBlank()) { SheetText(if (adding) "Add" else "Save") } },
             dismissButton = {
                 Row {
-                    if (!adding) TextButton(onClick = { commit("") }) { Text("Delete") }
-                    TextButton(onClick = { editing = null }) { Text("Cancel") }
+                    if (!adding) TextButton(onClick = { commit("") }) { SheetText("Delete") }
+                    TextButton(onClick = { editing = null }) { SheetText("Cancel") }
                 }
             })
     }

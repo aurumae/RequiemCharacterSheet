@@ -25,6 +25,10 @@ import ie.requiem.rules.*
 
 @Composable
 internal fun CharacterDetailRow(field: CharacterDetail, c: CharacterSave, catalog: Catalog, editable: Boolean, edit: (SheetEdit) -> Unit) {
+    if (field in listOf(CharacterDetail.Clan, CharacterDetail.Bloodline, CharacterDetail.Covenant)) {
+        IdentityRow(field, c, catalog, editable, edit)
+        return
+    }
     val kind = field.catalogKind
     val value = field.value(c, catalog)
     var draft by rememberSaveable(field) { mutableStateOf(value) }
@@ -42,11 +46,11 @@ internal fun CharacterDetailRow(field: CharacterDetail, c: CharacterSave, catalo
             cursorBrush = SolidColor(SheetColors.accent),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
-            modifier = modifier.heightIn(min = 48.dp).onFocusChanged { focused = it.isFocused }
+            modifier = modifier.revealWhileEditing(draft).heightIn(min = 48.dp).onFocusChanged { focused = it.isFocused }
                 .semantics { contentDescription = if (field == CharacterDetail.Name) "Character name" else field.label },
             decorationBox = { text ->
                 Box(Modifier.fillMaxWidth(), contentAlignment = if (stacked) Alignment.CenterStart else Alignment.CenterEnd) {
-                    if (draft.isBlank()) Text("Tap to edit", style = MaterialTheme.typography.bodyMedium, color = SheetColors.muted)
+                    if (draft.isBlank()) SheetText("Tap to edit", style = MaterialTheme.typography.bodyMedium, color = SheetColors.muted)
                     text()
                 }
             })
@@ -56,11 +60,11 @@ internal fun CharacterDetailRow(field: CharacterDetail, c: CharacterSave, catalo
             modifier = Modifier.semantics { contentDescription = "Choose ${field.label}" }) { SheetIcon(SheetSymbol.Choose) }
     }
     if (stacked) Column(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp, vertical = 8.dp)) {
-        Text("${field.label}:", style = LocalSheetType.current.label)
+        SheetText("${field.label}:", style = LocalSheetType.current.label)
         Row(verticalAlignment = Alignment.CenterVertically) { input(Modifier.weight(1f)); chooser() }
     } else Row(Modifier.fillMaxWidth().background(Color.White).heightIn(min = 60.dp).padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("${field.label}:", style = LocalSheetType.current.label)
+        SheetText("${field.label}:", style = LocalSheetType.current.label)
         input(Modifier.weight(1f))
         chooser()
     }
@@ -77,21 +81,21 @@ internal fun CatalogChoiceSheet(title: String, choices: List<String>, selected: 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).imePadding()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Choose $title", Modifier.weight(1f), style = LocalSheetType.current.section)
-                TextButton(onClick = onDismiss) { Text("Done") }
+                SheetText("Choose $title", Modifier.weight(1f), style = LocalSheetType.current.section)
+                TextButton(onClick = onDismiss) { SheetText("Done") }
             }
             OutlinedTextField(value = search, onValueChange = { search = it }, singleLine = true,
-                label = { Text("Search $title") }, modifier = Modifier.fillMaxWidth(),
+                label = { SheetText("Search $title") }, modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done))
-            Text("You can also type your own on the sheet.", Modifier.padding(vertical = 8.dp),
+            SheetText("You can also type your own on the sheet.", Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-            if (filtered.isEmpty()) Text("No matching entries", Modifier.padding(vertical = 16.dp))
+            if (filtered.isEmpty()) SheetText("No matching entries", Modifier.padding(vertical = 16.dp))
             LazyColumn(Modifier.weight(1f, fill = false)) {
                 items(filtered, key = { it }) { name ->
                     Row(Modifier.fillMaxWidth().clickable { onChoose(name) }.heightIn(min = 56.dp).padding(vertical = 8.dp)
                         .semantics { this.selected = name == selected }, verticalAlignment = Alignment.CenterVertically) {
-                        Text(name, Modifier.weight(1f), style = LocalSheetType.current.label)
-                        if (name == selected) Text("✓", color = SheetColors.accent)
+                        SheetText(name, Modifier.weight(1f), style = LocalSheetType.current.label)
+                        if (name == selected) SheetText("✓", color = SheetColors.accent)
                     }
                     SheetRule()
                 }

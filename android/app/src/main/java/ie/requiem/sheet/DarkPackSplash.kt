@@ -36,18 +36,18 @@ internal fun LaunchWithDarkPack(content: @Composable () -> Unit) {
         }
         Box(Modifier.fillMaxSize().background(Color.White).testTag("dark-pack-splash")
             .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null,
-                onClickLabel = "Continue to app") { dismissed = true }) {
+                role = androidx.compose.ui.semantics.Role.Button, onClickLabel = "Continue to app") { dismissed = true }) {
             Column(Modifier.fillMaxSize().safeDrawingPadding().verticalScroll(rememberScrollState()).padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Image(painterResource(R.drawable.dark_pack), "Dark Pack", Modifier.size(150.dp))
                 Spacer(Modifier.height(28.dp))
-                Text(stringResource(R.string.dark_pack_copyright), textAlign = TextAlign.Center,
+                SheetText(stringResource(R.string.dark_pack_copyright), textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall)
                 Spacer(Modifier.height(20.dp))
-                Text(stringResource(R.string.dark_pack_disclaimer), textAlign = TextAlign.Center,
+                SheetText(stringResource(R.string.dark_pack_disclaimer), textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall)
                 Spacer(Modifier.height(28.dp))
-                Text("Tap anywhere to continue", color = SheetColors.muted, textAlign = TextAlign.Center,
+                SheetText("Tap anywhere to continue", color = SheetColors.muted, textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall)
             }
         }

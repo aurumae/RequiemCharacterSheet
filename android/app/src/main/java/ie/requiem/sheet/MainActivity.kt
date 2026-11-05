@@ -59,7 +59,7 @@ private fun Requiem(model: SheetModel) {
     LaunchedEffect(state.overdraft) {
         if (state.overdraft > announced) {
             announced = state.overdraft
-            snack.showSnackbar("Your available Experiences are now below zero.")
+            snack.showSnackbar("Your available Experiences are now below zero.", withDismissAction = true)
         }
     }
     LaunchedEffect(state.savedNotice) {
@@ -77,14 +77,14 @@ private fun Requiem(model: SheetModel) {
                 if (c.creation == null) {
                     XpBadge(c.xpMode, c.experiencesAvailable, !state.busy) { model.edit(ie.requiem.rules.SheetEdit.XpMode(!c.xpMode)) }
                 }
-                TextButton(onClick = { focus.clearFocus(); model.save() }, enabled = !state.busy && !saved) { Text(if (saved) "Saved" else "Save") }
+                TextButton(onClick = { focus.clearFocus(); model.save() }, enabled = !state.busy && !saved) { SheetText(if (saved) "Saved" else "Save") }
             }
             LogoHeader()
             state.error?.let {
                 Surface(color = MaterialTheme.colorScheme.errorContainer) {
                     Column(Modifier.fillMaxWidth().padding(12.dp)) {
-                        Text(it, Modifier.semantics { liveRegion = LiveRegionMode.Polite })
-                        TextButton(onClick = { if (c == null) model.refresh() else model.flush() }) { Text("Retry") }
+                        SheetText(it, Modifier.semantics { liveRegion = LiveRegionMode.Polite })
+                        TextButton(onClick = { if (c == null) model.refresh() else model.flush() }) { SheetText("Retry") }
                     }
                 }
             }
@@ -96,23 +96,17 @@ private fun Requiem(model: SheetModel) {
         }
         SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))
     }
-    if (about) AlertDialog(onDismissRequest = { about = false }, title = { Text("About this app") }, text = {
-        Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Image(painterResource(R.drawable.dark_pack), "Dark Pack", Modifier.size(72.dp))
-            Text(stringResource(R.string.dark_pack_copyright))
-            Text(stringResource(R.string.dark_pack_disclaimer))
-        }
-    }, confirmButton = { TextButton(onClick = { about = false }) { Text("Close") } })
+    if (about) AboutSheet { about = false }
 }
 
 @Composable
 private fun SheetSectionMenu(sections: List<SheetSection>, select: (SheetSection) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     Box {
-        TextButton(onClick = { expanded = true }) { Text("Sections") }
+        TextButton(onClick = { expanded = true }) { SheetText("Sections") }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             sections.forEach { section ->
-                DropdownMenuItem(text = { Text(section.title) }, onClick = { expanded = false; select(section) })
+                DropdownMenuItem(text = { SheetText(section.title) }, onClick = { expanded = false; select(section) })
             }
         }
     }
@@ -129,7 +123,7 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
             role = Role.Switch
             if (interactive) onClick(label = "Toggle XP Mode") { toggle(); true }
         }, contentAlignment = Alignment.Center) {
-        Text(if (enabled) "XP $available" else "XP Off",
+        SheetText(if (enabled) "XP $available" else "XP Off",
             Modifier.border(1.dp, ink, CircleShape)
                 .background(if (enabled) ink else Color.White, CircleShape).padding(horizontal = 8.dp, vertical = 3.dp),
             color = if (enabled) Color.White else ink,
@@ -140,10 +134,10 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
 @Composable
 private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit) {
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
-    LazyColumn(Modifier.fillMaxSize().testTag("character-library")) {
+    LazyColumn(Modifier.fillMaxSize().pageEdges().testTag("character-library"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
         item { SectionBand("CHARACTERS") }
         if (rows.isEmpty()) item {
-            Text("Start with a blank sheet or follow guided character creation.",
+            SheetText("Start with a blank sheet or follow guided character creation.",
                 Modifier.fillMaxWidth().background(Color.White).padding(12.dp), color = SheetColors.muted)
         }
         items(rows, key = { it.id.toString() }) { row ->
@@ -153,12 +147,12 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
                 Column(Modifier.weight(1f).clickable(enabled = row.problem == null, onClickLabel = "Open sheet") {
                     model.open(row.id)
                 }.padding(horizontal = 8.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                    Text(title, style = LocalSheetType.current.label)
-                    if (row.details.isNotEmpty()) Text(row.details, style = MaterialTheme.typography.bodyMedium)
-                    if (row.guided) Text("Guided creation · In progress", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-                    if (row.problem != null) Text(row.problem, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    SheetText(title, style = LocalSheetType.current.label)
+                    if (row.details.isNotEmpty()) SheetText(row.details, style = MaterialTheme.typography.bodyMedium)
+                    if (row.guided) SheetText("Guided creation · In progress", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    if (row.problem != null) SheetText(row.problem, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     else row.edited?.let {
-                        Text("Edited " + DateUtils.getRelativeTimeSpanString((it * 1000).toLong() + 978_307_200_000L,
+                        SheetText("Edited " + DateUtils.getRelativeTimeSpanString((it * 1000).toLong() + 978_307_200_000L,
                             System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
                             style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     }
@@ -168,7 +162,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
                         SheetIcon(SheetSymbol.More, SheetColors.muted)
                     }
                     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                        DropdownMenuItem(text = { Text("Delete character") }, onClick = { menu = false; confirmId = row.id.toString() })
+                        DropdownMenuItem(text = { SheetText("Delete character") }, onClick = { menu = false; confirmId = row.id.toString() })
                     }
                 }
             }
@@ -178,16 +172,16 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
             Row(Modifier.fillMaxWidth().background(Color.White).clickable(onClick = { model.create() }).padding(8.dp).heightIn(min = 48.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SheetIcon(SheetSymbol.Add)
-                Text("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
+                SheetText("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
             }
         }
         item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
-        item { TextButton(onClick = about) { Text("About this app") } }
+        item { TextButton(onClick = about) { SheetText("About this app") } }
     }
     val selected = rows.firstOrNull { it.id.toString() == confirmId }
     if (selected != null) AlertDialog(onDismissRequest = { confirmId = null },
-        title = { Text("Delete character?") },
-        text = { Text("“${selected.name.ifBlank { "Unnamed character" }}” will be removed from this device.") },
-        confirmButton = { TextButton(onClick = { confirmId = null; model.delete(selected.id) }) { Text("Delete") } },
-        dismissButton = { TextButton(onClick = { confirmId = null }) { Text("Cancel") } })
+        title = { SheetText("Delete character?") },
+        text = { SheetText("“${selected.name.ifBlank { "Unnamed character" }}” will be removed from this device.") },
+        confirmButton = { TextButton(onClick = { confirmId = null; model.delete(selected.id) }) { SheetText("Delete") } },
+        dismissButton = { TextButton(onClick = { confirmId = null }) { SheetText("Cancel") } })
 }

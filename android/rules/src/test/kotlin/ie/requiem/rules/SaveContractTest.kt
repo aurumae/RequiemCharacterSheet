@@ -57,7 +57,7 @@ class SaveContractTest {
     }
 
     @Test fun readsAllBooksAndResolvesNamesAsSwiftDoes() {
-        assertEquals(setOf("vtr2e-core", "cofd-core", "thousand-years-of-night"), catalog.books.keys)
+        assertEquals(setOf("vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion"), catalog.books.keys)
         assertTrue(CatalogKind.entries.all { catalog.entries(it).isNotEmpty() })
         System.getProperty("exchangeDir")?.let { path ->
             val expected = Json.decodeFromString<Map<String, List<String>>>(File(path, "catalog-ids.json").readText())
@@ -118,7 +118,7 @@ class SaveContractTest {
     }
 
     @Test fun openingAnOldSaveKeepsItsTimestampAndDoesNotRequestAWrite() {
-        for (name in listOf("v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided")) {
+        for (name in listOf("v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided", "v9-advanced", "v9-guided")) {
             val text = fixture(name)
             val c = codec.decode(text)
             assertNull(codec.encodeEdit(c, c, at = 800_000_100.0))
@@ -141,10 +141,10 @@ class SaveContractTest {
 
     @Test fun exchangesCurrentCharactersAndPreservesHiddenState() {
         val exchange = System.getProperty("exchangeDir")?.let(::File)
-        for (name in listOf("v9-advanced", "v9-guided")) {
+        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus")) {
             val text = exchange?.resolve("swift-$name.json")?.readText() ?: fixture(name)
             val original = codec.decode(text)
-            if (name == "v9-advanced") {
+            if (name != "v10-guided") {
                 val merit = original.merits.single { it.source.catalog == "defensive-combat" }
                 val key = "merit:" + merit.id.toString().uppercase()
                 assertEquals(1, original.paidDots[key]?.get(1))
@@ -180,7 +180,7 @@ class SaveContractTest {
     }
 
     @Test fun futureAndDamagedSavesCannotEnterTheEditPath() {
-        assertEquals(10, assertThrows(UnsupportedSchema::class.java) { codec.decode(fixture("v10-future")) }.version)
+        assertEquals(11, assertThrows(UnsupportedSchema::class.java) { codec.decode(fixture("v11-future")) }.version)
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"id":"broken"}""") }
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"healthTrack":["lost"]}""") }
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"paidDots":{"broken":{"1":3}}}""") }

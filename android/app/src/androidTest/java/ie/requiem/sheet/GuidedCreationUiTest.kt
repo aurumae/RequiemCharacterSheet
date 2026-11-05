@@ -55,8 +55,9 @@ class GuidedCreationUiTest {
         return name
     }
     private fun clan(name: String, favored: String) {
-        jump("Character"); sheet(hasContentDescription("Clan")).performTextInput(name)
-        ui.onNodeWithContentDescription("Clan").performImeAction()
+        jump("Character"); sheet(hasContentDescription("Clan")).performClick()
+        ui.onNodeWithTag("identity-search").performTextInput(name)
+        ui.onNodeWithTag("identity-option-${name.lowercase()}").performClick()
         ui.onNodeWithTag("favored-$favored").performClick()
     }
     private fun reopen(name: String) {

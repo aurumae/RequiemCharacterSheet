@@ -47,12 +47,12 @@ class CharacterFilesTest {
         val file = File(temp.root, "${guided.id.toString().uppercase()}.json").apply { writeText(guidedText) }
         val opened = repo.open(guided.id)
         assertSame(opened, repo.persist(opened, opened.saved))
-        val future = File(temp.root, "${UUID.randomUUID()}.json").apply { writeText(fixture("v10-future")) }
+        val future = File(temp.root, "${UUID.randomUUID()}.json").apply { writeText(fixture("v11-future")) }
         val broken = File(temp.root, "${UUID.randomUUID()}.json").apply { writeText("{") }
         assertEquals(2, repo.library().count { it.problem != null })
         assertEquals(true, repo.library().first().guided)
         assertEquals(guidedText, file.readText())
-        assertEquals(fixture("v10-future"), future.readText())
+        assertEquals(fixture("v11-future"), future.readText())
         assertEquals("{", broken.readText())
     }
 
@@ -88,8 +88,8 @@ class CharacterFilesTest {
         assertEquals(id, session.saved.id)
         assertSame(session, repo.persist(session, session.saved))
         assertEquals(fixture("v1-unversioned"), old.readText())
-        old.writeText(fixture("v10-future"))
+        old.writeText(fixture("v11-future"))
         assertThrows(IllegalStateException::class.java) { repo.persist(session, session.saved.copy(name = "edit")) }
-        assertEquals(fixture("v10-future"), old.readText())
+        assertEquals(fixture("v11-future"), old.readText())
     }
 }

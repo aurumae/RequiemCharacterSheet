@@ -103,46 +103,46 @@ internal fun TextPrompt(title: String, label: String, initial: String, multiline
     commit: (String) -> Unit, dismiss: () -> Unit) {
     var draft by rememberSaveable { mutableStateOf(initial) }
     val focus = remember { FocusRequester() }
-    AlertDialog(onDismissRequest = dismiss, title = { Text(title) }, text = {
-        OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { Text(label) }, singleLine = !multiline,
+    AlertDialog(onDismissRequest = dismiss, title = { SheetText(title) }, text = {
+        OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { SheetText(label) }, singleLine = !multiline,
             minLines = if (multiline) 3 else 1, maxLines = if (multiline) 8 else 1,
-            modifier = Modifier.fillMaxWidth().focusRequester(focus).testTag("text-prompt"),
+            modifier = Modifier.fillMaxWidth().focusRequester(focus).revealWhileEditing(draft).testTag("text-prompt"),
             keyboardOptions = KeyboardOptions(imeAction = if (multiline) ImeAction.Default else ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { if (allowEmpty || draft.isNotBlank()) commit(draft.trim()) }))
         LaunchedEffect(Unit) { focus.requestFocus() }
-    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = allowEmpty || draft.isNotBlank()) { Text("Done") } },
-        dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } })
+    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = allowEmpty || draft.isNotBlank()) { SheetText("Done") } },
+        dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }
 
 @Composable
 private fun NumberPrompt(title: String, initial: Int, legal: IntRange, commit: (Int) -> Unit, dismiss: () -> Unit) {
     var draft by rememberSaveable { mutableStateOf(initial.toString()) }
     val value = draft.toIntOrNull()
-    AlertDialog(onDismissRequest = dismiss, title = { Text(title) }, text = {
-        OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { Text(title) }, singleLine = true,
-            isError = value == null || value !in legal, supportingText = { Text("${legal.first}–${legal.last}") },
+    AlertDialog(onDismissRequest = dismiss, title = { SheetText(title) }, text = {
+        OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { SheetText(title) }, singleLine = true,
+            isError = value == null || value !in legal, supportingText = { SheetText("${legal.first}–${legal.last}") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { if (value != null && value in legal) commit(value) }), modifier = Modifier.testTag("number-prompt"))
-    }, confirmButton = { TextButton(onClick = { value?.let(commit) }, enabled = value != null && value in legal) { Text("Done") } },
-        dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } })
+    }, confirmButton = { TextButton(onClick = { value?.let(commit) }, enabled = value != null && value in legal) { SheetText("Done") } },
+        dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }
 
 @Composable
 private fun QualifierDialog(entry: BookEntry, initial: String, action: String, commit: (String) -> Unit, dismiss: () -> Unit) {
     var draft by rememberSaveable { mutableStateOf(initial) }
     val options = entry.qualifierOptions
-    AlertDialog(onDismissRequest = dismiss, title = { Text(entry.name) }, text = {
+    AlertDialog(onDismissRequest = dismiss, title = { SheetText(entry.name) }, text = {
         Column(Modifier.verticalScroll(rememberScrollState())) {
-            Text(entry.qualifierPrompt.orEmpty())
+            SheetText(entry.qualifierPrompt.orEmpty())
             if (options.isNotEmpty()) options.forEach { option ->
                 Row(Modifier.fillMaxWidth().clickable { draft = option }, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                    RadioButton(selected = draft == option, onClick = { draft = option }); Text(option)
+                    RadioButton(selected = draft == option, onClick = { draft = option }); SheetText(option)
                 }
-            } else OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { Text(entry.qualifierPrompt ?: "Qualifier") }, singleLine = true,
+            } else OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { SheetText(entry.qualifierPrompt ?: "Qualifier") }, singleLine = true,
                 modifier = Modifier.fillMaxWidth().testTag("qualifier-input"))
         }
-    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = options.isEmpty() || draft in options) { Text(action) } },
-        dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } })
+    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = options.isEmpty() || draft in options) { SheetText(action) } },
+        dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }
 
 @Composable
@@ -157,46 +157,47 @@ private fun CustomEntryDialog(kind: EntryKind, row: SheetEntry?, c: CharacterSav
     var cost by rememberSaveable { mutableStateOf((devotion?.customExperienceCost ?: 1).toString()) }
     val legalCost = cost.toIntOrNull()?.takeIf { it in 1..20 }
     val source = if (kind == EntryKind.Merit) catalog.parseMerit(name).first else catalog.source(kind.catalogKind, name)
-    val blocked = if (row == null) c.creationEntryRejection(SheetEdit.AddEntry(kind, source,
+    val restriction = if (row == null && kind == EntryKind.Discipline) catalog.entry(CatalogKind.disciplines, source)?.let { c.reasonCantLearn(it, catalog) } else null
+    val blocked = restriction ?: if (row == null) c.creationEntryRejection(SheetEdit.AddEntry(kind, source,
         ritualDiscipline = catalog.source(CatalogKind.disciplines, discipline), ritualDots = dots), catalog) else if (kind == EntryKind.Ritual && !c.creationAllowsEdit(
             SheetEdit.CustomRitual(row.id, catalog.source(CatalogKind.disciplines, discipline), dots), catalog))
         "The ritual must fit its Discipline's starting dots" else if (kind == EntryKind.Devotion && !c.creationAllowsEdit(
             SheetEdit.CustomDevotionCost(row.id, legalCost ?: 1), catalog)) "Devotions are learned with Experiences after creation" else null
     val focus = remember { FocusRequester() }
-    AlertDialog(onDismissRequest = dismiss, title = { Text(if (row == null) "Custom ${kind.title}" else "Edit ${kind.title}") }, text = {
+    AlertDialog(onDismissRequest = dismiss, title = { SheetText(if (row == null) "Custom ${kind.title}" else "Edit ${kind.title}") }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(if (kind == EntryKind.Bane) "Describe the Bane" else "${kind.title} name") },
+            OutlinedTextField(value = name, onValueChange = { name = it }, label = { SheetText(if (kind == EntryKind.Bane) "Describe the Bane" else "${kind.title} name") },
                 singleLine = kind != EntryKind.Bane, minLines = if (kind == EntryKind.Bane) 3 else 1, maxLines = 6,
-                modifier = Modifier.fillMaxWidth().focusRequester(focus).testTag("custom-name"))
+                modifier = Modifier.fillMaxWidth().focusRequester(focus).revealWhileEditing(name).testTag("custom-name"))
             if (kind == EntryKind.Ritual) {
-                OutlinedTextField(value = discipline, onValueChange = { discipline = it }, label = { Text("Ritual Discipline") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                OutlinedTextField(value = discipline, onValueChange = { discipline = it }, label = { SheetText("Ritual Discipline") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                 ChoiceMenu("Choose Discipline", discipline, catalog.bookEntries(CatalogKind.disciplines).filter { it.isRitualDiscipline }.map { it.name }) { discipline = it }
                 val rank = c.disciplines.filter { it.source == catalog.source(CatalogKind.disciplines, discipline) }.maxOfOrNull { it.rating } ?: 0
                 val maxDots = if (c.creation == null) 5 else maxOf(row?.rating ?: 1, rank).coerceAtMost(5)
                 ChoiceMenu("Ritual dots", dots.toString(), (1..maxDots).map { it.toString() }) { dots = it.toInt() }
             }
-            if (kind == EntryKind.Devotion) OutlinedTextField(value = cost, onValueChange = { cost = it }, label = { Text("Experience cost (1–20)") }, singleLine = true,
+            if (kind == EntryKind.Devotion) OutlinedTextField(value = cost, onValueChange = { cost = it }, label = { SheetText("Experience cost (1–20)") }, singleLine = true,
                 isError = legalCost == null, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth().testTag("devotion-cost"))
             blocked?.let { WarningText(it) }
             LaunchedEffect(Unit) { focus.requestFocus() }
         }
     }, confirmButton = { TextButton(onClick = { onCommit(name.trim(), discipline.trim(), dots, legalCost ?: 1) },
-        enabled = blocked == null && name.isNotBlank() && (kind != EntryKind.Devotion || legalCost != null) && (kind != EntryKind.Ritual || discipline.isNotBlank())) { Text(if (row == null) "Add" else "Done") } },
-        dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } })
+        enabled = blocked == null && name.isNotBlank() && (kind != EntryKind.Devotion || legalCost != null) && (kind != EntryKind.Ritual || discipline.isNotBlank())) { SheetText(if (row == null) "Add" else "Done") } },
+        dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }
 
 @Composable
 internal fun ChoiceMenu(label: String, value: String, choices: List<String>, choose: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     Box {
-        TextButton(onClick = { expanded = true }) { Text("$label: $value") }
+        TextButton(onClick = { expanded = true }) { SheetText("$label: $value") }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            choices.forEach { choice -> DropdownMenuItem(text = { Text(choice) }, onClick = { expanded = false; choose(choice) }) }
+            choices.forEach { choice -> DropdownMenuItem(text = { SheetText(choice) }, onClick = { expanded = false; choose(choice) }) }
         }
     }
 }
 @Composable
 private fun ConfirmRemoval(name: String, remove: () -> Unit, dismiss: () -> Unit) {
-    AlertDialog(onDismissRequest = dismiss, title = { Text("Remove entry?") }, text = { Text("Remove “$name” from this character?") },
-        confirmButton = { TextButton(onClick = remove) { Text("Remove") } }, dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } })
+    AlertDialog(onDismissRequest = dismiss, title = { SheetText("Remove entry?") }, text = { SheetText("Remove “$name” from this character?") },
+        confirmButton = { TextButton(onClick = remove) { SheetText("Remove") } }, dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }

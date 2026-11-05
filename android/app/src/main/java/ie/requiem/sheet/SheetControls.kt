@@ -51,8 +51,8 @@ internal fun SheetIcon(symbol: SheetSymbol, color: Color = SheetColors.accent) {
 }
 
 @Composable
-internal fun RatingDot(filled: Boolean, bonus: Boolean = false) {
-    Canvas(Modifier.size(20.dp)) {
+internal fun RatingDot(filled: Boolean, bonus: Boolean = false, diameter: androidx.compose.ui.unit.Dp = 20.dp) {
+    Canvas(Modifier.size(diameter)) {
         val radius = size.minDimension / 2 - 0.6.dp.toPx()
         drawCircle(if (!filled) Color.White else if (bonus) SheetColors.ink else SheetColors.accent, radius)
         drawCircle(SheetColors.ink, radius, style = Stroke(1.dp.toPx()))
@@ -114,8 +114,8 @@ internal fun TraitRatingControl(
             Box(modifier.heightIn(min = 48.dp).clickable(enabled = editable || onNameClick != null) { if (onNameClick != null) onNameClick() else expanded = true },
                 contentAlignment = Alignment.CenterStart) {
                 Column(Modifier.padding(top = 8.dp, bottom = 8.dp, end = 4.dp)) {
-                    Text(label, style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
-                    if (note != null) Text(note, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    SheetText(label, style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
+                    if (note != null) SheetText(note, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                 }
             }
         }
@@ -147,8 +147,8 @@ internal fun TraitRatingControl(
         DropdownMenu(expanded = expanded && editable, onDismissRequest = { expanded = false },
             modifier = Modifier.widthIn(min = 144.dp).testTag("rating-menu")) {
             allowedValues.forEach { value ->
-                DropdownMenuItem(text = { Text(value.toString()) }, modifier = Modifier.semantics { selected = value == base },
-                    trailingIcon = { if (value == base) Text("✓", Modifier.clearAndSetSemantics {}) },
+                DropdownMenuItem(text = { SheetText(value.toString()) }, modifier = Modifier.semantics { selected = value == base },
+                    trailingIcon = { if (value == base) SheetText("✓", Modifier.clearAndSetSemantics {}) },
                     onClick = { select(value); expanded = false })
             }
         }
@@ -159,18 +159,19 @@ internal fun TraitRatingControl(
 @Composable
 internal fun HealthTrack(c: CharacterSave, catalog: Catalog, editable: Boolean, edit: (SheetEdit) -> Unit) {
     val total = c.health(catalog).coerceAtLeast(0)
+    val scale = LocalDensity.current.fontScale.coerceAtLeast(1f)
     CompactTargets {
         FlowRow(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)) {
             repeat(total) { index ->
                 val damage = c.healthTrack.getOrElse(index) { Damage.none }
                 val mark = if (damage == Damage.none) "unmarked" else damage.name
-                Column(Modifier.width(24.dp).height(52.dp)
+                Column(Modifier.width(24.dp * scale).height(52.dp * scale)
                     .clickable(enabled = editable, role = Role.Button, onClickLabel = "Cycle damage") { edit(SheetEdit.Mark(index)) }
                     .semantics { contentDescription = "Health box ${index + 1} of $total"; stateDescription = mark },
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)) {
-                    RatingDot(true)
-                    Canvas(Modifier.size(20.dp)) {
+                    RatingDot(true, diameter = 20.dp * scale)
+                    Canvas(Modifier.size(20.dp * scale)) {
                         val stroke = 1.dp.toPx()
                         drawRect(Color.White)
                         drawRect(SheetColors.ink, style = Stroke(stroke))

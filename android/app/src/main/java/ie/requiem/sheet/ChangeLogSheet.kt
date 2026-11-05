@@ -27,8 +27,8 @@ internal fun ChangeLogSheet(c: CharacterSave, catalog: Catalog, dismiss: () -> U
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = SheetColors.band) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Change Log", Modifier.weight(1f).semantics { heading() }, style = MaterialTheme.typography.titleMedium)
-            TextButton(onClick = dismiss) { Text("Done") }
+            SheetText("Change Log", Modifier.weight(1f).semantics { heading() }, style = MaterialTheme.typography.titleMedium)
+            TextButton(onClick = dismiss) { SheetText("Done") }
         }
         LazyColumn(Modifier.fillMaxWidth(), contentPadding = PaddingValues(20.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -42,7 +42,7 @@ internal fun ChangeLogSheet(c: CharacterSave, catalog: Catalog, dismiss: () -> U
                 }
             }
             if (days.isEmpty()) item {
-                Text("Changes to your character’s traits appear here.", Modifier.padding(vertical = 16.dp),
+                SheetText("Changes to your character’s traits appear here.", Modifier.padding(vertical = 16.dp),
                     color = SheetColors.muted, style = MaterialTheme.typography.bodyMedium)
             }
             days.forEach { (day, changes) ->
@@ -68,15 +68,15 @@ internal fun ChangeLogSheet(c: CharacterSave, catalog: Catalog, dismiss: () -> U
                         Row(Modifier.fillMaxWidth().padding(12.dp).semantics(mergeDescendants = true) {},
                             verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Column(Modifier.weight(1f)) {
-                                Text(c.changeName(change, catalog), style = LocalSheetType.current.trait)
-                                Text("$changeText  · " +
+                                SheetText(c.changeName(change, catalog), style = LocalSheetType.current.trait)
+                                SheetText("$changeText  · " +
                                     instant(change.date).atZone(zone).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
                                     style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                             }
                             Column(Modifier.widthIn(max = 112.dp), horizontalAlignment = Alignment.End) {
-                                Text(amount, style = MaterialTheme.typography.bodySmall,
+                                SheetText(amount, style = MaterialTheme.typography.bodySmall,
                                     color = if (change.experiences == 0) SheetColors.muted else SheetColors.accent)
-                                if (!change.xpMode && change.duringCreation != true) Text("XP Mode off",
+                                if (!change.xpMode && change.duringCreation != true) SheetText("XP Mode off",
                                     style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                             }
                         }

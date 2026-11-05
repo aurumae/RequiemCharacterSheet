@@ -1,8 +1,5 @@
 package ie.requiem.sheet
 
-import android.graphics.Typeface
-import android.graphics.fonts.Font as AndroidFont
-import android.graphics.fonts.FontFamily as AndroidFontFamily
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,14 +20,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 
-// Match the shipped iOS Theme.requiem, including its accented-character fallback.
+// Match the iOS 1.3 theme. Display digits use Cinzel lining numerals in SheetText.
 internal object SheetColors {
     val accent = Color(0xFF581A12)
     val ink = Color.Black
-    val muted = Color(0xFF6D6D73)
+    val muted = Color(0xFF6C6C70)
     val band = Color(0xFFF2F2F7)
     val rule = Color(0xFFE7E7EA)
-    val caution = Color(0xFF805D08)
+    val caution = Color(0xFF8C6408)
 }
 internal data class SheetType(val display: FontFamily, val smallCaps: FontFamily) {
     val label get() = TextStyle(fontFamily = display, fontSize = 22.sp, lineHeight = 28.sp, color = SheetColors.accent)
@@ -45,10 +42,8 @@ internal val LocalSheetType = staticCompositionLocalOf { SheetType(FontFamily.Se
 internal fun SheetTheme(content: @Composable () -> Unit) {
     val resources = LocalResources.current
     val type = remember(resources) {
-        fun family(resource: Int) = AndroidFontFamily.Builder(AndroidFont.Builder(resources, resource).build()).build()
-        val display = Typeface.CustomFallbackBuilder(family(R.font.caslon_antique))
-            .addCustomFallback(family(R.font.mrs_eaves_roman)).setSystemFallback("serif").build()
-        SheetType(FontFamily(display), FontFamily(Font(R.font.mrs_eaves_small_caps)))
+        SheetType(FontFamily(Font(R.font.im_fell_english)),
+            FontFamily(Font(R.font.cinzel_medium, androidx.compose.ui.text.font.FontWeight.Medium)))
     }
     CompositionLocalProvider(LocalSheetType provides type) {
         MaterialTheme(colorScheme = lightColorScheme(
@@ -89,13 +84,13 @@ internal fun LogoHeader() {
 
 @Composable
 internal fun SectionBand(title: String) {
-    Text(title, Modifier.fillMaxWidth().background(SheetColors.band).padding(horizontal = 8.dp, vertical = 8.dp)
+    SheetText(title, Modifier.fillMaxWidth().background(SheetColors.band).padding(horizontal = 8.dp, vertical = 8.dp)
         .semantics { heading() }, style = LocalSheetType.current.section)
 }
 
 @Composable
 internal fun SubsectionLabel(title: String) {
-    Text(title, Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp).semantics { heading() },
+    SheetText(title, Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp).semantics { heading() },
         style = LocalSheetType.current.subsection)
 }
 

@@ -134,7 +134,7 @@ private fun CharacterSave.editDetail(field: CharacterDetail, text: String, catal
     CharacterDetail.Name -> copy(name = text); CharacterDetail.Player -> copy(player = text)
     CharacterDetail.Chronicle -> copy(chronicle = text); CharacterDetail.Mask -> copy(mask = text)
     CharacterDetail.Dirge -> copy(dirge = text); CharacterDetail.Concept -> copy(concept = text)
-    CharacterDetail.Bloodline -> copy(bloodline = text)
+    CharacterDetail.Bloodline -> copy(bloodline = catalog.source(CatalogKind.bloodlines, text))
     CharacterDetail.Covenant -> copy(covenant = catalog.source(CatalogKind.covenants, text))
     CharacterDetail.Clan -> {
         val source = catalog.source(CatalogKind.clans, text)
@@ -147,6 +147,7 @@ private fun CharacterSave.editDetail(field: CharacterDetail, text: String, catal
 private fun CharacterSave.addEntry(a: SheetEdit.AddEntry, catalog: Catalog): CharacterSave {
     val entry = catalog.entry(a.kind.catalogKind, a.source)
     if (a.source.catalog != null && entry == null) return this
+    if (a.kind == EntryKind.Discipline && entry != null && reasonCantLearn(entry, catalog) != null) return this
     val owned = entryRows(a.kind, catalog)
     if (owned.any { it.id == a.id } || (a.source.catalog != null && owned.any { it.source == a.source } && !(a.kind == EntryKind.Merit && entry?.repeatable == true))) return this
     return when (a.kind) {

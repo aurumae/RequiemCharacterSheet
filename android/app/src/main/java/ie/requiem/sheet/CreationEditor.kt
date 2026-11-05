@@ -26,7 +26,7 @@ internal fun CreationPanel(c: CharacterSave, catalog: Catalog, editable: Boolean
     SectionBand("CHARACTER CREATION")
     Column(Modifier.fillMaxWidth().background(Color.White).padding(8.dp)) {
         val done = steps.count { it.status == CreationStepStatus.Done }
-        Text("$done of 7 steps done", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+        SheetText("$done of 7 steps done", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
         LinearProgressIndicator(progress = { done / 7f }, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
             color = SheetColors.accent, trackColor = Color(0xFFE5E5EA), gapSize = 0.dp, drawStopIndicator = {})
     }
@@ -43,8 +43,8 @@ internal fun CreationPanel(c: CharacterSave, catalog: Catalog, editable: Boolean
             verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Box(Modifier.width(24.dp).padding(top = 3.dp)) { CreationStepMark(step.status) }
             Column {
-                Text("${step.number}. ${step.title}", style = LocalSheetType.current.trait)
-                Text(step.detail, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                SheetText("${step.number}. ${step.title}", style = LocalSheetType.current.trait)
+                SheetText(step.detail, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
             }
         }
         SheetRule()
@@ -52,16 +52,16 @@ internal fun CreationPanel(c: CharacterSave, catalog: Catalog, editable: Boolean
     if (c.favoredAttributes(catalog).isNotEmpty()) Row(Modifier.fillMaxWidth().background(Color.White)
         .clickable(enabled = editable) { navigate("creation|favored") }.padding(8.dp).heightIn(min = 48.dp)
         .semantics { contentDescription = "Choose the clan's favoured Attribute" }, verticalAlignment = Alignment.CenterVertically) {
-        Text("${catalog.name(CatalogKind.clans, c.clan)} dot", Modifier.weight(1f), style = LocalSheetType.current.trait)
-        Text(c.creation?.favoredAttribute?.let(::traitName) ?: "Choose", color = SheetColors.accent)
+        SheetText("${catalog.name(CatalogKind.clans, c.clan)} dot", Modifier.weight(1f), style = LocalSheetType.current.trait)
+        SheetText(c.creation?.favoredAttribute?.let(::traitName) ?: "Choose", color = SheetColors.accent)
         SheetIcon(SheetSymbol.Chevron)
     }
     Column(Modifier.fillMaxWidth().background(Color.White).padding(8.dp)) {
         report.problems.sortedBy { it.description }.forEach { WarningText(it.description) }
         Button(enabled = editable && report.withinLimits, onClick = {
             navigate(if (steps.all { it.status == CreationStepStatus.Done }) "creation|finish" else "creation|reminder")
-        }, modifier = Modifier.fillMaxWidth().testTag("finish-creation")) { Text("Finish Creation") }
-        TextButton(onClick = { navigate("creation|leave") }, enabled = editable, modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("Leave Guided Creation") }
+        }, modifier = Modifier.fillMaxWidth().testTag("finish-creation")) { SheetText("Finish Creation") }
+        TextButton(onClick = { navigate("creation|leave") }, enabled = editable, modifier = Modifier.align(Alignment.CenterHorizontally)) { SheetText("Leave Guided Creation") }
     }
 }
 
@@ -100,12 +100,12 @@ internal fun CategoryHeader(category: TraitCategory, skills: Boolean, c: Charact
                     contentDescription = description
                     stateDescription = budget.priority?.let { "${it.title}, ${budget.remaining} dots left" } ?: "Not chosen"
                 }) {
-                Text(budget.priority?.let { "${it.title} · ${if (budget.remaining < 0) "${-budget.remaining} over" else "${budget.remaining} left"}" } ?: "Choose priority",
+                SheetText(budget.priority?.let { "${it.title} · ${if (budget.remaining < 0) "${-budget.remaining} over" else "${budget.remaining} left"}" } ?: "Choose priority",
                     color = if (budget.remaining < 0) SheetColors.caution else SheetColors.accent)
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 CreationPriority.entries.forEach { priority ->
-                    DropdownMenuItem(text = { Text("${priority.title}: ${allotments[priority.ordinal]} dots") },
+                    DropdownMenuItem(text = { SheetText("${priority.title}: ${allotments[priority.ordinal]} dots") },
                         modifier = Modifier.semantics { selected = budget.priority == priority },
                         onClick = { expanded = false; edit(SheetEdit.Priority(category, priority, skills)) })
                 }
@@ -124,46 +124,46 @@ internal fun CreationDialogs(route: String, c: CharacterSave, catalog: Catalog, 
     val state = c.creation ?: return
     val parts = route.split('|')
     when (parts[1]) {
-        "favored" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { Text("${catalog.name(CatalogKind.clans, c.clan)} Favoured Attribute") }, text = {
+        "favored" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { SheetText("${catalog.name(CatalogKind.clans, c.clan)} Favoured Attribute") }, text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Text("The clan gives one free dot to one of these. It doesn't count against your 5, 4 and 3 Attribute dots.")
+                SheetText("The clan gives one free dot to one of these. It doesn't count against your 5, 4 and 3 Attribute dots.")
                 c.favoredAttributes(catalog).forEach { id ->
-                    TextButton(onClick = { edit(SheetEdit.FavoredAttribute(id)); navigate(null) }, modifier = Modifier.fillMaxWidth().testTag("favored-$id")) { Text(traitName(id)) }
+                    TextButton(onClick = { edit(SheetEdit.FavoredAttribute(id)); navigate(null) }, modifier = Modifier.fillMaxWidth().testTag("favored-$id")) { SheetText(traitName(id)) }
                 }
             }
-        }, confirmButton = { TextButton(onClick = { navigate(null) }) { Text("Not Now") } })
-        "leave" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { Text("Leave guided creation?") },
-            text = { Text("The character keeps everything so far, without the starting-dot limits, as if made with a blank sheet. No bonus Experiences are awarded.") },
-            confirmButton = { TextButton(onClick = { edit(SheetEdit.LeaveCreation); navigate(null) }) { Text("Leave Guided Creation") } },
-            dismissButton = { TextButton(onClick = { navigate(null) }) { Text("Cancel") } })
-        "reminder" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { Text("Some steps aren't done") }, text = {
+        }, confirmButton = { TextButton(onClick = { navigate(null) }) { SheetText("Not Now") } })
+        "leave" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { SheetText("Leave guided creation?") },
+            text = { SheetText("The character keeps everything so far, without the starting-dot limits, as if made with a blank sheet. No bonus Experiences are awarded.") },
+            confirmButton = { TextButton(onClick = { edit(SheetEdit.LeaveCreation); navigate(null) }) { SheetText("Leave Guided Creation") } },
+            dismissButton = { TextButton(onClick = { navigate(null) }) { SheetText("Cancel") } })
+        "reminder" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { SheetText("Some steps aren't done") }, text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 c.creationSteps(catalog).filter { it.status != CreationStepStatus.Done }.forEach { step ->
-                    Text("${step.title}: ${step.detail}", Modifier.padding(bottom = 8.dp))
+                    SheetText("${step.title}: ${step.detail}", Modifier.padding(bottom = 8.dp))
                 }
             }
-        }, confirmButton = { TextButton(onClick = { navigate("creation|finish|anyway") }, enabled = c.creationReport(catalog).withinLimits) { Text("Finish Anyway") } },
-            dismissButton = { TextButton(onClick = { navigate(null) }) { Text("Keep Going") } })
+        }, confirmButton = { TextButton(onClick = { navigate("creation|finish|anyway") }, enabled = c.creationReport(catalog).withinLimits) { SheetText("Finish Anyway") } },
+            dismissButton = { TextButton(onClick = { navigate(null) }) { SheetText("Keep Going") } })
         "finish" -> ModalBottomSheet(onDismissRequest = { navigate(null) },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
             Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
                 ModalHeading("Finish Creation", "Cancel") { navigate(null) }
                 LazyColumn(Modifier.weight(1f, fill = false).testTag("creation-ranks")) {
-                    item { Text("If your Storyteller allows a more experienced vampire, choose how experienced. The bonus Experiences are added when you finish, and XP Mode turns on.", Modifier.padding(vertical = 12.dp)) }
+                    item { SheetText("If your Storyteller allows a more experienced vampire, choose how experienced. The bonus Experiences are added when you finish, and XP Mode turns on.", Modifier.padding(vertical = 12.dp)) }
                     item { SubsectionLabel("Experienced Kindred") }
                     items(CreationRules.ranks) { (name, bonus) ->
                         Row(Modifier.fillMaxWidth().selectable(selected = state.bonusExperiences == bonus, role = Role.RadioButton,
                             onClick = { edit(SheetEdit.CreationBonus(bonus)) }).testTag("creation-rank-$bonus").padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(selected = state.bonusExperiences == bonus, onClick = null)
-                            Text(name, Modifier.weight(1f).padding(horizontal = 8.dp), style = LocalSheetType.current.trait)
-                            if (bonus > 0) Text("+$bonus", color = SheetColors.muted)
+                            SheetText(name, Modifier.weight(1f).padding(horizontal = 8.dp), style = LocalSheetType.current.trait)
+                            if (bonus > 0) SheetText("+$bonus", color = SheetColors.muted)
                         }
                     }
                 }
                 Button(onClick = { edit(SheetEdit.FinishCreation(allowIncomplete = parts.getOrNull(2) == "anyway")); navigate(null) },
                     enabled = c.creationReport(catalog).withinLimits && CreationRules.ranks.any { it.second == state.bonusExperiences },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).testTag("confirm-finish-creation")) { Text("Finish") }
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).testTag("confirm-finish-creation")) { SheetText("Finish") }
             }
         }
     }

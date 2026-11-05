@@ -54,7 +54,7 @@ fun CharacterSave.bookDetail(entry: BookEntry, catalog: Catalog, rating: Int = 0
     }
     when (entry.kind) {
         CatalogKind.disciplines -> {
-            if (entry.id in inClanDisciplines(catalog)) fact("Clan", "In-clan for ${catalog.name(CatalogKind.clans, clan)}")
+            if (entry.id in inClanDisciplines(catalog)) fact("Clan", "In-clan for ${inClanGroupName(catalog)}")
             e.obj("ritualRules")?.let { rules ->
                 fact("Learned with", "${catalog.name(CatalogKind.covenants, TraitSource(catalog = rules.str("covenant").orEmpty()))} Status ${rules.int("covenantStatusMinimum", 1)}")
                 val cost = rules.obj("castingCost")

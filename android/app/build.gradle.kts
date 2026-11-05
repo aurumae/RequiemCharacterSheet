@@ -10,11 +10,11 @@ android {
         applicationId = "ie.requiem.sheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 6
-        versionName = "0.4.0-alpha.6"
+        versionCode = 7
+        versionName = "0.5.0-alpha.7"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildFeatures { compose = true }
+    buildFeatures { compose = true; buildConfig = true }
     sourceSets["test"].resources.srcDir("../../shared/fixtures")
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -36,4 +36,30 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+}
+
+// Package the same unmodified font files and full notices used by Xcode.
+abstract class SheetResourcesTask : DefaultTask() {
+    @get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val fontDirectory: DirectoryProperty
+    @get:OutputDirectory abstract val outputDirectory: DirectoryProperty
+    @TaskAction fun generate() {
+        val output = outputDirectory.get().asFile
+        output.deleteRecursively()
+        val files = mapOf("IMFellEnglish-Regular.ttf" to "font/im_fell_english.ttf",
+            "Cinzel-Medium.ttf" to "font/cinzel_medium.ttf", "IMFellEnglish-OFL.txt" to "raw/im_fell_english_ofl.txt",
+            "Cinzel-OFL.txt" to "raw/cinzel_ofl.txt")
+        files.forEach { (source, target) ->
+            val destination = output.resolve(target)
+            destination.parentFile.mkdirs()
+            fontDirectory.file(source).get().asFile.copyTo(destination, overwrite = true)
+        }
+    }
+}
+val sheetResources = tasks.register<SheetResourcesTask>("sheetResources") {
+    fontDirectory.set(layout.projectDirectory.dir("../../RequiemCharacterSheet/Fonts"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/sheetResources"))
+}
+androidComponents.onVariants { variant ->
+    variant.sources.res?.addGeneratedSourceDirectory(sheetResources, SheetResourcesTask::outputDirectory)
 }

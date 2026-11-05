@@ -60,14 +60,14 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                 val title = catalog.name(CatalogKind.disciplines, discipline).ifBlank { "Other Rituals" }
                 SubsectionLabel(title)
                 val rank = discipline.catalog?.let { c.disciplineRating(it) } ?: 0
-                if (rank > 0) Text("Known: ${group.size} · Free with $title dots: $rank", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
+                if (rank > 0) SheetText("Known: ${group.size} · Free with $title dots: $rank", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
                     style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                 group.forEach { ritual -> rows.firstOrNull { it.id == ritual.id }?.let { key(it.id) { row(it) } } }
             }
         } else rows.forEach { key(it.id) { row(it) } }
-        if (kind == EntryKind.Bane && c.banes.size >= 3) Text("A vampire can have at most 3 Banes.", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
+        if (kind == EntryKind.Bane && c.banes.size >= 3) SheetText("A vampire can have at most 3 Banes.", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
             style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-        else if (c.creation != null && kind in listOf(EntryKind.Devotion, EntryKind.Scale, EntryKind.Coil)) Text(
+        else if (c.creation != null && kind in listOf(EntryKind.Devotion, EntryKind.Scale, EntryKind.Coil)) SheetText(
             if (kind == EntryKind.Coil) "Choose your Mystery above to add its Coil." else "Learn ${kind.title}s with Experiences after creation.",
             Modifier.fillMaxWidth().background(Color.White).padding(8.dp), style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
         else AddSheetRow("Add ${kind.title}", editable) { overlay = "pick|${kind.name}" }
@@ -78,7 +78,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
         if (target != null) { keys.indexOf(target.itemKey).takeIf { it >= 0 }?.let { list.scrollToItem(it) }; localSection = null; onSectionHandled() }
     }
     Column(Modifier.fillMaxSize()) {
-        LazyColumn(state = list, modifier = Modifier.weight(1f).testTag("character-sheet")) {
+        LazyColumn(state = list, modifier = Modifier.weight(1f).pageEdges().testTag("character-sheet"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
             if (c.creation != null) item("creation") {
                 CreationPanel(c, catalog, editable, navigate = { overlay = it }, jump = { localSection = it })
                 Spacer(Modifier.height(16.dp))
@@ -111,7 +111,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                 item("skills-${category.name}") {
                     if (category == TraitCategory.Mental) SectionBand("SKILLS")
                     CategoryHeader(category, true, c, catalog, editable, edit)
-                    Text("(${category.unskilledPenalty} unskilled)", Modifier.fillMaxWidth().background(Color.White).padding(start = 8.dp, bottom = 4.dp),
+                    SheetText("(${category.unskilledPenalty} unskilled)", Modifier.fillMaxWidth().background(Color.White).padding(start = 8.dp, bottom = 4.dp),
                         style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     skillDefinitions.filter { it.category == category }.forEach { definition ->
                         key(definition.id) { SkillEditor(definition, c.skills.first { it.skill == definition.id }, c, editable, catalog, edit) }
@@ -125,10 +125,10 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             if (c.showsCoils) item("coils") {
                 band("COILS OF THE DRAGON")
                 Row(Modifier.fillMaxWidth().background(Color.White).padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("Mystery", Modifier.weight(1f), style = LocalSheetType.current.label)
-                    TextButton(onClick = { overlay = "mysteryPick" }, enabled = editable) { Text(catalog.name(CatalogKind.mysteries, c.mystery).ifBlank { "Choose" }) }
+                    SheetText("Mystery", Modifier.weight(1f), style = LocalSheetType.current.label)
+                    TextButton(onClick = { overlay = "mysteryPick" }, enabled = editable) { SheetText(catalog.name(CatalogKind.mysteries, c.mystery).ifBlank { "Choose" }) }
                 }
-                if (!c.mystery.custom.isNullOrBlank()) TextButton(onClick = { overlay = "mysteryEdit" }, enabled = editable) { Text("Edit Mystery name") }
+                if (!c.mystery.custom.isNullOrBlank()) TextButton(onClick = { overlay = "mysteryEdit" }, enabled = editable) { SheetText("Edit Mystery name") }
                 entries(EntryKind.Coil)
                 SubsectionLabel("Scales"); entries(EntryKind.Scale)
             }
@@ -141,7 +141,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                 } }
                 AddSheetRow("Add Aspiration", editable) { overlay = "aspAdd" }
             }
-            item("banes") { band("BANES"); ClanBaneRow(c, catalog, editable, edit); entries(EntryKind.Bane) }
+            item("banes") { band("BANES"); ClanBaneRow(c, catalog, editable, edit); BloodlineBaneRow(c, catalog); entries(EntryKind.Bane) }
             item("health") {
                 Spacer(Modifier.height(16.dp))
                 SectionBand("HEALTH")
@@ -181,8 +181,8 @@ private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetE
                 onValueChange = { edit(SheetEdit.XpMode(it)) }).padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("XP Mode", style = LocalSheetType.current.label)
-                    Text(if (c.creation != null) "Starting dots are free." else if (c.xpMode)
+                    SheetText("XP Mode", style = LocalSheetType.current.label)
+                    SheetText(if (c.creation != null) "Starting dots are free." else if (c.xpMode)
                         "Raising a trait spends Experiences. Lowering a paid trait refunds it, except Humanity and Blood Potency."
                         else "Changes are free, e.g. Storyteller awards or entering an existing character.",
                         style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
@@ -199,8 +199,8 @@ private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetE
             SheetRule()
             Row(Modifier.fillMaxWidth().clickable { showLog() }.heightIn(min = 56.dp).padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically) {
-                Text("Change Log", Modifier.weight(1f), style = LocalSheetType.current.trait)
-                Text(c.changeLog.size.toString(), color = SheetColors.muted, style = MaterialTheme.typography.bodySmall)
+                SheetText("Change Log", Modifier.weight(1f), style = LocalSheetType.current.trait)
+                SheetText(c.changeLog.size.toString(), color = SheetColors.muted, style = MaterialTheme.typography.bodySmall)
                 SheetIcon(SheetSymbol.Chevron, SheetColors.muted)
             }
         }
@@ -211,7 +211,7 @@ private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetE
 internal fun ValueRow(label: String, value: Int, description: String = "$label $value", caution: Boolean = false) {
     Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(8.dp).clearAndSetSemantics { contentDescription = description },
         verticalAlignment = Alignment.CenterVertically) {
-        Text(label, Modifier.weight(1f), style = LocalSheetType.current.label)
-        Text(value.toString(), style = LocalSheetType.current.label, color = if (caution) SheetColors.caution else SheetColors.accent)
+        SheetText(label, Modifier.weight(1f), style = LocalSheetType.current.label)
+        SheetText(value.toString(), style = LocalSheetType.current.label, color = if (caution) SheetColors.caution else SheetColors.accent)
     }
 }

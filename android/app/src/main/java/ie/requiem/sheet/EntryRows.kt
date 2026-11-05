@@ -27,29 +27,29 @@ internal fun PowerEntryRow(kind: EntryKind, row: SheetEntry, editable: Boolean, 
                     edit(SheetEdit.EntryRating(kind, row.id, it))
                 } else Row(Modifier.fillMaxWidth().clickable(enabled = row.known || editable, onClick = open).heightIn(min = 48.dp).padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text(row.name.ifBlank { "Tap to edit ${kind.title}" }, Modifier.weight(1f), style = LocalSheetType.current.trait)
-                    row.rating?.let { Text("•".repeat(it.coerceIn(0, 10)), color = SheetColors.accent, style = MaterialTheme.typography.bodySmall) }
+                    SheetText(row.name.ifBlank { "Tap to edit ${kind.title}" }, Modifier.weight(1f), style = LocalSheetType.current.trait)
+                    row.rating?.let { SheetText("•".repeat(it.coerceIn(0, 10)), color = SheetColors.accent, style = MaterialTheme.typography.bodySmall) }
                 }
             }
             Box {
                 IconButton(onClick = { menu = true }, modifier = Modifier.semantics { contentDescription = "Options for ${row.name.ifBlank { kind.title }}" }) { SheetIcon(SheetSymbol.More, SheetColors.muted) }
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                    if (row.known || editable) DropdownMenuItem(text = { Text(if (row.known) "Details" else "Edit") }, onClick = { menu = false; open() })
-                    if (editable && row.choices.isNotEmpty()) DropdownMenuItem(text = { Text("Set rating") }, onClick = { menu = false; ratings = true })
-                    if (editable && editQualifier != null) DropdownMenuItem(text = { Text("Edit qualifier") }, onClick = { menu = false; editQualifier() })
-                    if (editable) DropdownMenuItem(text = { Text("Delete") }, onClick = { menu = false; remove() })
+                    if (row.known || editable) DropdownMenuItem(text = { SheetText(if (row.known) "Details" else "Edit") }, onClick = { menu = false; open() })
+                    if (editable && row.choices.isNotEmpty()) DropdownMenuItem(text = { SheetText("Set rating") }, onClick = { menu = false; ratings = true })
+                    if (editable && editQualifier != null) DropdownMenuItem(text = { SheetText("Edit qualifier") }, onClick = { menu = false; editQualifier() })
+                    if (editable) DropdownMenuItem(text = { SheetText("Delete") }, onClick = { menu = false; remove() })
                 }
                 DropdownMenu(expanded = ratings && editable, onDismissRequest = { ratings = false }) {
-                    row.choices.forEach { value -> DropdownMenuItem(text = { Text(value.toString()) }, onClick = { ratings = false; edit(SheetEdit.EntryRating(kind, row.id, value)) }) }
+                    row.choices.forEach { value -> DropdownMenuItem(text = { SheetText(value.toString()) }, onClick = { ratings = false; edit(SheetEdit.EntryRating(kind, row.id, value)) }) }
                 }
             }
         }
         Column(Modifier.padding(horizontal = 8.dp)) {
             if (kind == EntryKind.Bane && row.known) {
-                Text(row.summary, style = MaterialTheme.typography.bodySmall)
-                Text(row.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                SheetText(row.summary, style = MaterialTheme.typography.bodySmall)
+                SheetText(row.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
             }
-            row.notes.forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted) }
+            row.notes.forEach { SheetText(it, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted) }
             row.warnings.forEach { WarningText(it) }
         }
         SheetRule()
@@ -61,7 +61,7 @@ internal fun AddSheetRow(title: String, enabled: Boolean, click: () -> Unit) {
     Row(Modifier.fillMaxWidth().background(Color.White).clickable(enabled = enabled, onClick = click).heightIn(min = 52.dp).padding(8.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         SheetIcon(SheetSymbol.Add, if (enabled) SheetColors.accent else SheetColors.muted)
-        Text(title, color = if (enabled) SheetColors.accent else SheetColors.muted)
+        SheetText(title, color = if (enabled) SheetColors.accent else SheetColors.muted)
     }
 }
 
@@ -69,13 +69,13 @@ internal fun AddSheetRow(title: String, enabled: Boolean, click: () -> Unit) {
 internal fun WrittenRow(text: String, placeholder: String, editable: Boolean, description: String, open: () -> Unit, remove: () -> Unit) {
     var menu by remember { mutableStateOf(false) }
     Row(Modifier.fillMaxWidth().background(Color.White), verticalAlignment = Alignment.Top) {
-        Text(text.ifBlank { placeholder }, Modifier.weight(1f).clickable(enabled = editable, onClick = open).heightIn(min = 56.dp).padding(8.dp)
+        SheetText(text.ifBlank { placeholder }, Modifier.weight(1f).clickable(enabled = editable, onClick = open).heightIn(min = 56.dp).padding(8.dp)
             .semantics { contentDescription = description }, style = LocalSheetType.current.trait)
         if (editable) Box {
             IconButton(onClick = { menu = true }, modifier = Modifier.semantics { contentDescription = "Options for $description" }) { SheetIcon(SheetSymbol.More, SheetColors.muted) }
             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                DropdownMenuItem(text = { Text("Edit") }, onClick = { menu = false; open() })
-                DropdownMenuItem(text = { Text("Delete") }, onClick = { menu = false; remove() })
+                DropdownMenuItem(text = { SheetText("Edit") }, onClick = { menu = false; open() })
+                DropdownMenuItem(text = { SheetText("Delete") }, onClick = { menu = false; remove() })
             }
         }
     }

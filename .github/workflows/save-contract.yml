@@ -26,3 +26,30 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: scripts/check-save-contract
+
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Choose an available iPhone simulator
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, subprocess
+          devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "--json"]))["devices"]
+          phone = next(d for runtime, group in devices.items() if ".iOS-" in runtime for d in group if d["name"].startswith("iPhone") and d["isAvailable"])
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              output.write("REQUIEM_SIMULATOR=" + phone["udid"] + "\n")
+          PYTHON
+      - name: Build and test the Xcode app
+        run: >-
+          xcodebuild test -project RequiemCharacterSheet.xcodeproj
+          -scheme RequiemCharacterSheet
+          -destination "platform=iOS Simulator,id=$REQUIEM_SIMULATOR"
+          -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
+          -resultBundlePath ios-test-results.xcresult
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: requiem-ios-test-results
+          path: ios-test-results.xcresult

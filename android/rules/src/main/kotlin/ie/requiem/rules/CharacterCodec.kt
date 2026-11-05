@@ -113,6 +113,7 @@ class CharacterCodec(private val catalog: Catalog) {
             row[key] = json.encodeToJsonElement(source)
         }
         link(fields, "clan", CatalogKind.clans)
+        link(fields, "bloodline", CatalogKind.bloodlines)
         link(fields, "covenant", CatalogKind.covenants)
         link(fields, "mystery", CatalogKind.mysteries)
         for (kind in listOf(CatalogKind.disciplines, CatalogKind.merits, CatalogKind.banes)) {

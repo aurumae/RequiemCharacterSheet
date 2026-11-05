@@ -21,8 +21,8 @@ enum SaveFixtures {
 
 @MainActor
 struct SaveContractTests {
-    private static let current = ["v9-advanced", "v9-guided"]
-    private static let historical = ["v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided"]
+    private static let current = ["v10-advanced", "v10-guided", "v10-morbus"]
+    private static let historical = ["v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided", "v9-advanced", "v9-guided"]
     private static let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"]
     private let encoder = JSONEncoder()
 
@@ -180,7 +180,7 @@ struct SaveContractTests {
                        "covenants": c.covenants.all.map(\.id), "banes": c.banes.all.map(\.id),
                        "rituals": c.rituals.all.map(\.id), "devotions": c.devotions.all.map(\.id),
                        "mysteries": c.mysteries.all.map(\.id), "scales": c.scales.all.map(\.id),
-                       "archetypes": c.archetypes.all.map(\.id)]
+                       "archetypes": c.archetypes.all.map(\.id), "bloodlines": c.bloodlines.all.map(\.id)]
             let url = URL(fileURLWithPath: path).appendingPathComponent("catalog-ids.json")
             try encoder.encode(ids).write(to: url)
         }
@@ -235,11 +235,11 @@ struct SaveContractTests {
                 #expect(character.creation?.favoredAttribute == nil)
             }
         }
-        let future = try SaveFixtures.data("v10-future")
+        let future = try SaveFixtures.data("v11-future")
         let id = UUID()
         let url = directory.appendingPathComponent(id.uuidString + ".json")
         try future.write(to: url)
-        #expect(throws: CharacterStoreError.newerFormat(version: 10)) { try store.load(id) }
+        #expect(throws: CharacterStoreError.newerFormat(version: 11)) { try store.load(id) }
         #expect(try Data(contentsOf: url) == future)
     }
 
@@ -421,5 +421,54 @@ struct GuidedCreationContractTests {
             if checkpoint == "finished" { #expect(!c.isInCreation); #expect(c.experiencesAvailable == 15); c.finishCreation(bonusExperiences: 100); #expect(c.experiences == 15) }
             if checkpoint == "advanced" { #expect(c.experiencesAvailable == 10); #expect(c.changeLog.suffix(5).allSatisfy { $0.duringCreation == nil }) }
         }
+    }
+}
+
+/// The bloodline, creation and refund boundary shared with the Android engine.
+@MainActor
+struct BloodlineContractTests {
+    private struct Step: Decodable {
+        let action: String
+        let text: String?
+        let rating: Int?
+        let available, logCount: Int
+    }
+    @Test func bloodlineAdvancementMatchesAndroid() throws {
+        let encoder = JSONEncoder()
+        let steps = try JSONDecoder().decode([Step].self, from: SaveFixtures.resource("bloodline-advancement"))
+        var c = Character()
+        c.xpMode = true
+        let id = UUID(uuidString: "40000000-0000-0000-0000-000000000001")!
+        let entry = try #require(Catalog.bundled.disciplines.entry("cachexy"))
+        for (index, step) in steps.enumerated() {
+            let before = c.traitSnapshot
+            switch step.action {
+            case "clan": c.clan = step.text!
+            case "bloodline": c.bloodline = step.text!
+            case "add":
+                if c.reasonCantLearn(entry) == nil { c.disciplines.append(Discipline(id: id, source: .catalog(entry.id), rating: 1)) }
+            case "rating": try #require(c.disciplines.first { $0.id == id }).rating = step.rating!
+            case "remove": c.disciplines.removeAll { $0.id == id }
+            default: Issue.record("Unsupported bloodline action")
+            }
+            c.recordChanges(since: before, at: Date(timeIntervalSinceReferenceDate: 800000000.25 + Double(index)))
+            c = try JSONDecoder().decode(Character.self, from: encoder.encode(c))
+            #expect(c.experiencesAvailable == step.available)
+            #expect(c.changeLog.count == step.logCount)
+        }
+        if let path = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] {
+            try encoder.encode(c).write(to: URL(fileURLWithPath: path).appendingPathComponent("swift-bloodline.json"))
+        }
+    }
+    @Test func readsKotlinBloodline() throws {
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1",
+              let path = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] else { return }
+        let file = try Data(contentsOf: URL(fileURLWithPath: path).appendingPathComponent("kotlin-bloodline.json"))
+        let c = try JSONDecoder().decode(Character.self, from: file)
+        #expect(c.bloodlineSource == .catalog("morbus"))
+        #expect(c.disciplineRating("cachexy") == 2)
+        #expect(c.experiencesAvailable == -6)
+        #expect(c.changeLog.map(\.experiences) == [3, 3, 4, -7, -3, 3, 3])
+        #expect(try JSONSerialization.jsonObject(with: JSONEncoder().encode(c)) as? NSDictionary == JSONSerialization.jsonObject(with: file) as? NSDictionary)
     }
 }
