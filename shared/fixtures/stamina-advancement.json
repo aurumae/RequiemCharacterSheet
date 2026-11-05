@@ -1,0 +1,66 @@
+[
+  {
+    "delta": 1,
+    "xpMode": false,
+    "rating": 2,
+    "cost": 0,
+    "available": 0,
+    "paidLevels": []
+  },
+  {
+    "delta": 1,
+    "xpMode": true,
+    "rating": 3,
+    "cost": 4,
+    "available": -4,
+    "paidLevels": [
+      3
+    ]
+  },
+  {
+    "delta": -1,
+    "xpMode": true,
+    "rating": 2,
+    "cost": -4,
+    "available": 0,
+    "paidLevels": []
+  },
+  {
+    "delta": 1,
+    "xpMode": true,
+    "rating": 3,
+    "cost": 4,
+    "available": -4,
+    "paidLevels": [
+      3
+    ]
+  },
+  {
+    "delta": -1,
+    "xpMode": false,
+    "rating": 2,
+    "cost": 0,
+    "available": -4,
+    "paidLevels": []
+  },
+  {
+    "delta": 3,
+    "xpMode": true,
+    "rating": 5,
+    "cost": 12,
+    "available": -16,
+    "paidLevels": [
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "delta": -4,
+    "xpMode": true,
+    "rating": 1,
+    "cost": -12,
+    "available": -4,
+    "paidLevels": []
+  }
+]
