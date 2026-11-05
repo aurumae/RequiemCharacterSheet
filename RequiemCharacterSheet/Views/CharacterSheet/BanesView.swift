@@ -29,8 +29,24 @@ struct BanesView: View {
                 )
             }
 
+            if let bloodline = character.bloodlineEntry {
+                // Always in effect, alongside the clan's bane
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(bloodline.bane.name)
+                        .themedText(.traitName)
+                    Text(bloodline.bane.summary)
+                        .themedText(.detail)
+                    Text("\(bloodline.name) bloodline bane · \(bloodline.source.citation())")
+                        .themedText(.detail)
+                        .foregroundStyle(theme.muted)
+                }
+                .padding(.vertical, 4)
+                .accessibilityElement(children: .combine)
+            }
+
             ForEach(character.banes) { bane in
                 BaneRowView(bane: bane, beginsEditing: bane.id == newCustomBaneID)
+                    .editingRow(bane.id)
             }
             .onDelete(perform: deleteBane)
 

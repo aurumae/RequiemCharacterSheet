@@ -37,7 +37,7 @@ struct DisciplinePickerView: View {
                 let others = matchingEntries.filter { !character.inClanDisciplines.contains($0.id) }
 
                 if !inClan.isEmpty {
-                    Section(header: Text("In-clan for the \(character.clan)").themedText(.subsectionHeader)) {
+                    Section(header: Text("In-clan for the \(character.inClanGroupName)").themedText(.subsectionHeader)) {
                         ForEach(inClan) { entry in
                             row(for: entry)
                         }
@@ -85,8 +85,9 @@ struct DisciplinePickerView: View {
     @ViewBuilder
     private func row(for entry: DisciplineEntry) -> some View {
         let isOwned = owned.contains(entry.id)
-        // During guided creation, only Disciplines that fit the three starting dots
-        let fits = character.creationAllows(.discipline(entry))
+        // Bloodline Disciplines only for that bloodline; during guided creation, only what fits the starting dots
+        let restriction = character.reasonCantLearn(entry)
+        let fits = restriction == nil && character.creationAllows(.discipline(entry))
         Button {
             choose(entry)
         } label: {
@@ -98,7 +99,7 @@ struct DisciplinePickerView: View {
                         .themedText(.detail)
                         .foregroundStyle(.primary)
                     if !fits, !isOwned {
-                        Label(creationReason(for: entry), systemImage: "nosign")
+                        Label(restriction ?? creationReason(for: entry), systemImage: "nosign")
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)
                     }

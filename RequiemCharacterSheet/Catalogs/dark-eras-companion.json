@@ -1,0 +1,86 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras-companion",
+    "name": "Dark Eras Companion"
+  },
+  "bloodlines": [
+    {
+      "id": "morbus",
+      "name": "Morbus",
+      "nickname": "The Afflicted",
+      "parentClans": ["mekhet"],
+      "source": { "book": "dark-eras-companion", "page": 95 },
+      "summary": "Mekhet who carry and spread disease, often passing themselves off as ordinary Shadows.",
+      "disciplines": ["auspex", "celerity", "cachexy", "obfuscate"],
+      "bane": {
+        "name": "The Unclean Curse",
+        "summary": "Healthy mortal blood can't sustain them; they must feed on the diseased, though Kindred blood still nourishes. They also keep the Mekhet bane.",
+        "page": 95
+      }
+    }
+  ],
+  "disciplines": [
+    {
+      "id": "cachexy",
+      "name": "Cachexy",
+      "kind": "powers",
+      "bloodline": "morbus",
+      "source": { "book": "dark-eras-companion", "page": 112 },
+      "summary": "Sense, spread and worsen the diseases the vampire has carried.",
+      "powers": [
+        {
+          "id": "cachexy-diagnose",
+          "name": "Diagnose",
+          "dots": [1, 1],
+          "cost": {},
+          "action": "instant",
+          "dicePool": { "attribute": "intelligence", "skill": "medicine", "includesDiscipline": true },
+          "summary": "Sense who nearby carries a disease, including hidden infections.",
+          "page": 112
+        },
+        {
+          "id": "cachexy-contaminate",
+          "name": "Contaminate",
+          "dots": [2, 2],
+          "cost": { "vitae": { "fixed": 1 }, "note": "Spilled on the object or area" },
+          "action": "instant",
+          "duration": "One night",
+          "summary": "Taint an object or small area so that anyone touching it risks infection.",
+          "page": 112
+        },
+        {
+          "id": "cachexy-inflame",
+          "name": "Inflame",
+          "dots": [3, 3],
+          "cost": { "vitae": { "fixed": 1 } },
+          "action": "instant",
+          "dicePool": { "attribute": "wits", "skill": "survival", "includesDiscipline": true, "resistance": "− target's Stamina" },
+          "summary": "Make a mortal's illness flare up, penalising their rolls for a few turns.",
+          "page": 112
+        },
+        {
+          "id": "cachexy-plague-bearer",
+          "name": "Plague-Bearer",
+          "dots": [4, 4],
+          "cost": { "vitae": { "fixed": 1 }, "note": "Per turn" },
+          "action": "instant",
+          "dicePool": { "attribute": "intelligence", "skill": "medicine", "includesDiscipline": true },
+          "summary": "Spread a chosen disease to people around the vampire, turn after turn.",
+          "page": 112
+        },
+        {
+          "id": "cachexy-accelerate-disease",
+          "name": "Accelerate Disease",
+          "dots": [5, 5],
+          "cost": { "willpower": { "fixed": 1 } },
+          "action": "instant",
+          "dicePool": { "attribute": "wits", "skill": "survival", "includesDiscipline": true, "resistance": "− target's Stamina" },
+          "summary": "Drive a victim's disease to deal lethal damage within minutes; not on Kindred.",
+          "page": 113
+        }
+      ]
+    }
+  ]
+}

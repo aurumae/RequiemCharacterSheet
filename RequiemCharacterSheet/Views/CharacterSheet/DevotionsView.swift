@@ -18,6 +18,7 @@ struct DevotionsView: View {
         Section(header: Text("DEVOTIONS").themedText(.sectionHeader)) {
             ForEach(character.devotions) { devotion in
                 DevotionRowView(devotion: devotion, character: character, beginsEditing: devotion.id == newCustomDevotionID)
+                    .editingRow(devotion.id)
             }
             .onDelete { character.devotions.remove(atOffsets: $0) }
 

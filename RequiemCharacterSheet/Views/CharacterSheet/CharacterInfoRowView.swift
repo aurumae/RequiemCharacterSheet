@@ -39,5 +39,6 @@ struct CharacterInfoRowView: View {
             }
         }
         .padding(.vertical, 4)
+        .editingRow("info-\(label)")
     }
 }

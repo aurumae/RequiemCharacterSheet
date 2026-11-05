@@ -47,6 +47,9 @@
 		BC2B447A309AC90400720F0C /* CreationRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4479309AC90400720F0C /* CreationRules.swift */; };
 		BC2B447C309AC93B00720F0C /* CreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B447B309AC93B00720F0C /* CreationTests.swift */; };
 		BC2B447E309B564700720F0C /* CreationPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B447D309B564700720F0C /* CreationPanelView.swift */; };
+		BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4481309C0DD400720F0C /* dark-eras-companion.json */; };
+		BC2B4484309C0E2300720F0C /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */; };
+		BC2B4486309C0E9200720F0C /* BloodlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4485309C0E9200720F0C /* BloodlineTests.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -156,6 +159,9 @@
 		BC2B4479309AC90400720F0C /* CreationRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationRules.swift; sourceTree = "<group>"; };
 		BC2B447B309AC93B00720F0C /* CreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationTests.swift; sourceTree = "<group>"; };
 		BC2B447D309B564700720F0C /* CreationPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationPanelView.swift; sourceTree = "<group>"; };
+		BC2B4481309C0DD400720F0C /* dark-eras-companion.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-companion.json"; sourceTree = "<group>"; };
+		BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogChoiceRow.swift; sourceTree = "<group>"; };
+		BC2B4485309C0E9200720F0C /* BloodlineTests.swift */ = {isa = PBXFileReference; path = BloodlineTests.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -303,6 +309,7 @@
 				BC2B446F309AA1A400720F0C /* CoilsView.swift */,
 				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 				BC2B447D309B564700720F0C /* CreationPanelView.swift */,
+				BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -336,6 +343,7 @@
 				BC2B443D309A30A500720F0C /* vtr2e-core.json */,
 				BC2B443F309A30A600720F0C /* thousand-years-of-night.json */,
 				BC2B4449309A3C3500720F0C /* cofd-core.json */,
+				BC2B4481309C0DD400720F0C /* dark-eras-companion.json */,
 			);
 			path = Catalogs;
 			sourceTree = "<group>";
@@ -402,6 +410,7 @@
 				BC2B4465309A9BB700720F0C /* SorceryTests.swift */,
 				BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */,
 				BC2B447B309AC93B00720F0C /* CreationTests.swift */,
+				BC2B4485309C0E9200720F0C /* BloodlineTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -571,6 +580,7 @@
 			files = (
 				BC2B444A309A3C3500720F0C /* cofd-core.json in Resources */,
 				BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */,
+				BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */,
 				BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */,
 				BCB158FB2C986A67003B6A8F /* MrsEavesSmallCaps.otf in Resources */,
 				BCB158FD2C986A67003B6A8F /* MrsEavesRoman.otf in Resources */,
@@ -655,6 +665,7 @@
 				BC6D36C62C9D1866008D03F7 /* SplashScreenView.swift in Sources */,
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
 				BC2B4472309AADC300720F0C /* Experience.swift in Sources */,
+				BC2B4484309C0E2300720F0C /* CatalogChoiceRow.swift in Sources */,
 				BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */,
 				BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */,
 				BC2B446A309AA14400720F0C /* CatalogPickerView.swift in Sources */,
@@ -683,6 +694,7 @@
 				BC2B4466309A9BB700720F0C /* SorceryTests.swift in Sources */,
 				BC2B444C309A3E1B00720F0C /* EffectsTests.swift in Sources */,
 				BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */,
+				BC2B4486309C0E9200720F0C /* BloodlineTests.swift in Sources */,
 				BC2B4448309A316800720F0C /* CatalogTests.swift in Sources */,
 				BC2B444E309A3F3000720F0C /* ClanBaneTests.swift in Sources */,
 				BC2B445E309A4E1F00720F0C /* MeritRulesTests.swift in Sources */,

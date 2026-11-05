@@ -22,6 +22,7 @@ struct CoilsView: View {
 
             ForEach(character.coils) { coil in
                 CoilRowView(coil: coil, character: character, beginsEditing: coil.id == newCustomCoilID)
+                    .editingRow(coil.id)
             }
             .onDelete { character.coils.remove(atOffsets: $0) }
 
@@ -30,6 +31,7 @@ struct CoilsView: View {
             Section(header: Text("Scales").themedText(.subsectionHeader)) {
                 ForEach(character.scales) { scale in
                     ScaleRowView(scale: scale, character: character, beginsEditing: scale.id == newCustomScaleID)
+                        .editingRow(scale.id)
                 }
                 .onDelete { character.scales.remove(atOffsets: $0) }
 

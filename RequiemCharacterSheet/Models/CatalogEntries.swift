@@ -39,6 +39,7 @@ struct CatalogFile: Decodable {
     let merits: [MeritEntry]
     let banes: [BaneEntry]
     let clans: [ClanEntry]
+    let bloodlines: [BloodlineEntry]
     let covenants: [CovenantEntry]
     let rituals: [RitualEntry]
     let devotions: [DevotionEntry]
@@ -47,7 +48,7 @@ struct CatalogFile: Decodable {
     let archetypes: [ArchetypeEntry]
 
     enum CodingKeys: CodingKey {
-        case format, version, book, disciplines, merits, banes, clans, covenants
+        case format, version, book, disciplines, merits, banes, clans, bloodlines, covenants
         case rituals, devotions, mysteries, scales, archetypes
     }
 
@@ -61,6 +62,7 @@ struct CatalogFile: Decodable {
         merits = try container.decode(.merits, default: [])
         banes = try container.decode(.banes, default: [])
         clans = try container.decode(.clans, default: [])
+        bloodlines = try container.decode(.bloodlines, default: [])
         covenants = try container.decode(.covenants, default: [])
         rituals = try container.decode(.rituals, default: [])
         devotions = try container.decode(.devotions, default: [])
@@ -83,9 +85,11 @@ struct DisciplineEntry: CatalogEntry {
     let effects: [Effect]
     /// For Ritual Disciplines (Crúac, Theban Sorcery): who may learn it and how its rituals work.
     let ritualRules: RitualRules?
+    /// The bloodline it belongs to, for a Discipline only that bloodline can learn, e.g. Cachexy for the Morbus.
+    let bloodline: CatalogEntryID?
 
     enum CodingKeys: CodingKey {
-        case id, name, kind, source, summary, powers, effects, ritualRules
+        case id, name, kind, source, summary, powers, effects, ritualRules, bloodline
     }
 
     init(from decoder: Decoder) throws {
@@ -98,6 +102,7 @@ struct DisciplineEntry: CatalogEntry {
         powers = try container.decode(.powers, default: [])
         effects = try container.decodeEffects(.effects)
         ritualRules = try container.decodeIfPresent(RitualRules.self, forKey: .ritualRules)
+        bloodline = try container.decodeIfPresent(CatalogEntryID.self, forKey: .bloodline)
     }
 
     enum Kind: String, Decodable {
@@ -371,6 +376,27 @@ struct ClanBane: Decodable {
         grantsExtraBane = try container.decode(.grantsExtraBane, default: false)
         firstTouchstoneHumanity = try container.decode(.firstTouchstoneHumanity, default: 6)
     }
+}
+
+/// A bloodline: a lineage within a clan, with its own Disciplines and bane.
+struct BloodlineEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    let nickname: String?
+    /// The clans it descends from.
+    let parentClans: [CatalogEntryID]
+    let source: SourceReference
+    let summary: String
+    /// In-clan Disciplines for its members, in place of the parent clan's.
+    let disciplines: [CatalogEntryID]
+    /// Suffered as well as the parent clan's bane.
+    let bane: BloodlineBane
+}
+
+struct BloodlineBane: Decodable {
+    let name: String
+    let summary: String
+    let page: Int?
 }
 
 struct CovenantEntry: CatalogEntry {

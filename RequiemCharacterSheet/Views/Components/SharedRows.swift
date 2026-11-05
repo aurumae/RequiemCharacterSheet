@@ -230,6 +230,9 @@ struct TapToEditNumberRow: View {
 /// losing focus), not on every keystroke, so names that link to the catalog don't change mid-word.
 struct TapToEditText<Display: View>: View {
     @Environment(\.theme) private var theme
+    @Environment(\.revealEditingField) private var revealEditingField
+    /// The list row this field is in, so the list can scroll it clear of the keyboard.
+    @Environment(\.editingRow) private var editingRow
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let placeholder: String
     @Binding var text: String
@@ -264,6 +267,9 @@ struct TapToEditText<Display: View>: View {
                     if multiline, draft.contains("\n") {
                         draft = draft.replacingOccurrences(of: "\n", with: "")
                         finishEditing()
+                    } else if multiline {
+                        // Keep a growing field above the keyboard
+                        reveal()
                     }
                 }
                 .font(theme.font(font, dynamicTypeSize: dynamicTypeSize))
@@ -274,9 +280,24 @@ struct TapToEditText<Display: View>: View {
                 .onAppear {
                     draft = text
                     isFocused = true
+                    // Once the keyboard is up, scroll the field into the upper part of the screen. The list
+                    // adjusts for the keyboard itself after it appears, so scroll again once that's done.
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(400))
+                        reveal()
+                        try? await Task.sleep(for: .milliseconds(500))
+                        reveal()
+                    }
                 }
                 .onChange(of: isFocused) { _, focused in
                     if !focused { finishEditing() }
+                }
+                // Also once the keyboard has finished appearing, e.g. after a picker closes
+                .task {
+                    for await _ in NotificationCenter.default.notifications(named: UIResponder.keyboardDidShowNotification) {
+                        try? await Task.sleep(for: .milliseconds(200))
+                        reveal()
+                    }
                 }
         } else {
             Button {
@@ -292,6 +313,12 @@ struct TapToEditText<Display: View>: View {
             }
             .buttonStyle(.plain)
             .accessibilityHint("Double-tap to edit")
+        }
+    }
+
+    private func reveal() {
+        if let editingRow {
+            revealEditingField(editingRow)
         }
     }
 

@@ -32,7 +32,7 @@ struct DisciplineDetailView: View {
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)
                         if character.inClanDisciplines.contains(entry.id) {
-                            Text("In-clan for the \(character.clan)")
+                            Text("In-clan for the \(character.inClanGroupName)")
                                 .themedText(.detail)
                                 .foregroundStyle(theme.accent)
                         }

@@ -27,6 +27,7 @@ struct RitualsView: View {
                     }
                     ForEach(group.rituals) { ritual in
                         RitualRowView(ritual: ritual, character: character, beginsEditing: ritual.id == newCustomRitualID)
+                            .editingRow(ritual.id)
                     }
                     .onDelete { offsets in
                         let removed = offsets.map { group.rituals[$0].id }

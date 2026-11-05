@@ -70,6 +70,7 @@ struct CharacterListView: View {
                         }
                     }
                     .listStyle(.grouped)
+                    .pageBorderEdge()
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 26)

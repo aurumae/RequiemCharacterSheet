@@ -23,7 +23,8 @@ final class Character: Codable {
     /// - 7: adds `rituals`, `devotions`, `mystery`, `coils` and `scales`.
     /// - 8: adds `xpMode`, `changeLog` and `paidDots`.
     /// - 9: adds `creation`.
-    static let currentSchemaVersion = 9
+    /// - 10: bloodline saved as a catalog id or custom text (`TraitSource`) instead of a name.
+    static let currentSchemaVersion = 10
 
     /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
     static let maxBanes = 3
@@ -66,7 +67,8 @@ final class Character: Codable {
             }
         }
     }
-    var bloodline: String
+    /// The bloodline: a catalog entry or custom text. Empty custom text if none.
+    var bloodlineSource: TraitSource
     /// The covenant: a catalog entry or custom text.
     var covenantSource: TraitSource
 
@@ -155,7 +157,7 @@ final class Character: Codable {
         try container.encode(dirge, forKey: .dirge)
         try container.encode(concept, forKey: .concept)
         try container.encode(clanSource, forKey: .clan)
-        try container.encode(bloodline, forKey: .bloodline)
+        try container.encode(bloodlineSource, forKey: .bloodline)
         try container.encode(covenantSource, forKey: .covenant)
 
         try container.encode(bloodPotency, forKey: .bloodPotency)
@@ -227,7 +229,8 @@ final class Character: Codable {
         dirge = try container.decode(.dirge, default: "")
         concept = try container.decode(.concept, default: "")
         clanSource = try container.decodeTraitSource(.clan, in: Catalog.bundled.clans)
-        bloodline = try container.decode(.bloodline, default: "")
+        // Saves before version 10 stored a name, which is linked to the catalog if it matches
+        bloodlineSource = try container.decodeTraitSource(.bloodline, in: Catalog.bundled.bloodlines)
         covenantSource = try container.decodeTraitSource(.covenant, in: Catalog.bundled.covenants)
 
         bloodPotency = try container.decode(.bloodPotency, default: 1)
@@ -285,7 +288,7 @@ final class Character: Codable {
         dirge = ""
         concept = ""
         clanSource = .custom("")
-        bloodline = ""
+        bloodlineSource = .custom("")
         covenantSource = .custom("")
 
         bloodPotency = 1
@@ -379,6 +382,16 @@ final class Character: Codable {
     var covenant: String {
         get { Catalog.bundled.covenants.name(of: covenantSource) }
         set { covenantSource = Catalog.bundled.covenants.source(named: newValue) }
+    }
+
+    /// The bloodline's name as shown on the sheet. Setting it links to the catalog bloodline with that name, if there is one.
+    var bloodline: String {
+        get { Catalog.bundled.bloodlines.name(of: bloodlineSource) }
+        set { bloodlineSource = Catalog.bundled.bloodlines.source(named: newValue) }
+    }
+
+    var bloodlineEntry: BloodlineEntry? {
+        bloodlineSource.catalogID.flatMap { Catalog.bundled.bloodlines.entry($0) }
     }
 
     /// The Ordo Dracul Mystery's name. Setting it links to the catalog Mystery with that name, if there is one.
