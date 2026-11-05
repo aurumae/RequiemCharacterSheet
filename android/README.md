@@ -2,6 +2,8 @@
 
 Open this directory in Android Studio and run the **app** configuration. The Kotlin/Compose app supports Android 16 and later (minimum API 36). It stores characters on the device and works offline. The Galaxy S24 FE on Android 17 is the first physical test device.
 
+Alpha 6, including guided creation, is accepted on the Galaxy S24 FE. See the [phase 6 Google Play release guide](../docs/play-store-release-guide.md) for account setup, signing, preserving alpha characters, privacy, store assets, testing and publication. The current APKs are debug builds; moving to Play signing requires a separate data-migration step.
+
 To build and install the debug APK with JDK 21 or Android Studio’s bundled JDK, set up Android SDK Platform 36 and Build Tools 36.0.0, then run from the repository root:
 
 ```sh
