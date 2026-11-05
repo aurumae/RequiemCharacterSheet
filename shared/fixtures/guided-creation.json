@@ -1,0 +1,401 @@
+[
+  {
+    "action": "detail",
+    "field": "Name",
+    "text": "Guided contract"
+  },
+  {
+    "action": "attribute",
+    "id": "wits",
+    "rating": 5,
+    "accepted": false
+  },
+  {
+    "action": "priority",
+    "category": "Mental",
+    "value": 0,
+    "skills": false
+  },
+  {
+    "action": "attribute",
+    "id": "wits",
+    "rating": 5
+  },
+  {
+    "action": "attribute",
+    "id": "intelligence",
+    "rating": 2
+  },
+  {
+    "action": "attribute",
+    "id": "resolve",
+    "rating": 2,
+    "accepted": false
+  },
+  {
+    "action": "priority",
+    "category": "Social",
+    "value": 0,
+    "skills": false,
+    "withinLimits": false,
+    "overspend": 5
+  },
+  {
+    "action": "attribute",
+    "id": "intelligence",
+    "rating": 3,
+    "accepted": false
+  },
+  {
+    "action": "priority",
+    "category": "Mental",
+    "value": 1,
+    "skills": false,
+    "overspend": 1
+  },
+  {
+    "action": "attribute",
+    "id": "wits",
+    "rating": 4,
+    "withinLimits": true
+  },
+  {
+    "action": "priority",
+    "category": "Physical",
+    "value": 2,
+    "skills": false
+  },
+  {
+    "action": "detail",
+    "field": "Clan",
+    "text": "Ventrue"
+  },
+  {
+    "action": "favored",
+    "id": "presence"
+  },
+  {
+    "action": "attribute",
+    "id": "presence",
+    "rating": 5
+  },
+  {
+    "action": "attribute",
+    "id": "manipulation",
+    "rating": 3
+  },
+  {
+    "action": "attribute",
+    "id": "composure",
+    "rating": 2,
+    "accepted": false
+  },
+  {
+    "action": "favored",
+    "id": "resolve"
+  },
+  {
+    "action": "detail",
+    "field": "Clan",
+    "text": "Daeva"
+  },
+  {
+    "action": "favored",
+    "id": "dexterity"
+  },
+  {
+    "action": "attribute",
+    "id": "strength",
+    "rating": 3
+  },
+  {
+    "action": "attribute",
+    "id": "dexterity",
+    "rating": 3
+  },
+  {
+    "action": "attribute",
+    "id": "stamina",
+    "rating": 2,
+    "accepted": false
+  },
+  {
+    "action": "priority",
+    "category": "Physical",
+    "value": 0,
+    "skills": false,
+    "withinLimits": false,
+    "overspend": 2
+  },
+  {
+    "action": "finish",
+    "anyway": true,
+    "accepted": false
+  },
+  {
+    "action": "priority",
+    "category": "Social",
+    "value": 0,
+    "skills": false,
+    "withinLimits": true,
+    "checkpoint": "mid"
+  },
+  {
+    "action": "detail",
+    "field": "Clan",
+    "text": "Ventrue"
+  },
+  {
+    "action": "favored",
+    "id": "presence"
+  },
+  {
+    "action": "priority",
+    "category": "Mental",
+    "value": 0,
+    "skills": true
+  },
+  {
+    "action": "priority",
+    "category": "Physical",
+    "value": 1,
+    "skills": true
+  },
+  {
+    "action": "priority",
+    "category": "Social",
+    "value": 2,
+    "skills": true
+  },
+  {
+    "action": "skill",
+    "id": "academics",
+    "rating": 5
+  },
+  {
+    "action": "skill",
+    "id": "occult",
+    "rating": 5
+  },
+  {
+    "action": "skill",
+    "id": "politics",
+    "rating": 1
+  },
+  {
+    "action": "skill",
+    "id": "athletics",
+    "rating": 4
+  },
+  {
+    "action": "skill",
+    "id": "brawl",
+    "rating": 3
+  },
+  {
+    "action": "skill",
+    "id": "persuasion",
+    "rating": 4
+  },
+  {
+    "action": "skill",
+    "id": "socialize",
+    "rating": 1,
+    "accepted": false
+  },
+  {
+    "action": "specialty",
+    "id": "academics",
+    "text": "History"
+  },
+  {
+    "action": "specialty",
+    "id": "occult",
+    "text": "Ghosts"
+  },
+  {
+    "action": "specialty",
+    "id": "brawl",
+    "text": "Grappling"
+  },
+  {
+    "action": "specialty",
+    "id": "brawl",
+    "text": "Biting",
+    "accepted": false
+  },
+  {
+    "action": "detail",
+    "field": "Concept",
+    "text": "Night archivist"
+  },
+  {
+    "action": "detail",
+    "field": "Mask",
+    "text": "Authoritarian"
+  },
+  {
+    "action": "detail",
+    "field": "Dirge",
+    "text": "Conspirator"
+  },
+  {
+    "action": "aspiration",
+    "text": "Find the folio",
+    "row": 0
+  },
+  {
+    "action": "aspiration",
+    "text": "Protect the coterie",
+    "row": 1
+  },
+  {
+    "action": "aspiration",
+    "text": "Reconnect with family",
+    "row": 2
+  },
+  {
+    "action": "touchstone",
+    "value": 6,
+    "text": "The family estate"
+  },
+  {
+    "action": "add",
+    "kind": "Discipline",
+    "source": "dominate",
+    "row": 10
+  },
+  {
+    "action": "rate",
+    "kind": "Discipline",
+    "row": 10,
+    "rating": 2
+  },
+  {
+    "action": "add",
+    "kind": "Discipline",
+    "source": "cruac",
+    "row": 11,
+    "accepted": false
+  },
+  {
+    "action": "add",
+    "kind": "Merit",
+    "source": "covenant-status",
+    "row": 12,
+    "qualifier": "Circle of the Crone"
+  },
+  {
+    "action": "add",
+    "kind": "Discipline",
+    "source": "cruac",
+    "row": 11
+  },
+  {
+    "action": "add",
+    "kind": "Ritual",
+    "source": "rigor-mortis",
+    "row": 13
+  },
+  {
+    "action": "add",
+    "kind": "Ritual",
+    "source": "pangs-of-proserpina",
+    "row": 14,
+    "accepted": false
+  },
+  {
+    "action": "add",
+    "kind": "Devotion",
+    "source": "body-of-will",
+    "row": 15,
+    "accepted": false
+  },
+  {
+    "action": "add",
+    "kind": "Scale",
+    "source": "day-wake-conditioning",
+    "row": 16,
+    "accepted": false
+  },
+  {
+    "action": "add",
+    "kind": "Merit",
+    "source": "resources",
+    "row": 17
+  },
+  {
+    "action": "rate",
+    "kind": "Merit",
+    "row": 17,
+    "rating": 4
+  },
+  {
+    "action": "number",
+    "field": "BloodPotency",
+    "value": 2
+  },
+  {
+    "action": "number",
+    "field": "Humanity",
+    "value": 8,
+    "accepted": false
+  },
+  {
+    "action": "check",
+    "done": 6
+  },
+  {
+    "action": "touchstone",
+    "value": 7,
+    "text": "The family estate",
+    "done": 7,
+    "checkpoint": "ready"
+  },
+  {
+    "action": "bonus",
+    "value": 15,
+    "available": 0
+  },
+  {
+    "action": "finish",
+    "available": 15,
+    "checkpoint": "finished"
+  },
+  {
+    "action": "finish",
+    "accepted": false,
+    "available": 15
+  },
+  {
+    "action": "attribute",
+    "id": "stamina",
+    "rating": 2,
+    "available": 11
+  },
+  {
+    "action": "attribute",
+    "id": "stamina",
+    "rating": 1,
+    "available": 15
+  },
+  {
+    "action": "number",
+    "field": "BloodPotency",
+    "value": 1,
+    "available": 15
+  },
+  {
+    "action": "number",
+    "field": "BloodPotency",
+    "value": 2,
+    "available": 10
+  },
+  {
+    "action": "number",
+    "field": "BloodPotency",
+    "value": 1,
+    "available": 10,
+    "checkpoint": "advanced"
+  }
+]

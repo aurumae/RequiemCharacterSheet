@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1F143D41BC34BF6B184F400 /* SaveContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F401 /* SaveContractTests.swift */; };
+		A1F143D41BC34BF6B184F402 /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F403 /* fixtures */; };
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
 		BC2B4428309660A900720F0C /* CharacterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4427309660A900720F0C /* CharacterStoreTests.swift */; };
 		BC2B442A309662A300720F0C /* CharacterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4429309662A300720F0C /* CharacterListView.swift */; };
@@ -121,6 +123,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A1F143D41BC34BF6B184F401 /* SaveContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveContractTests.swift; sourceTree = "<group>"; };
+		A1F143D41BC34BF6B184F403 /* fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fixtures; path = shared/fixtures; sourceTree = SOURCE_ROOT; };
 		BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDecodingTests.swift; sourceTree = "<group>"; };
 		BC2B4427309660A900720F0C /* CharacterStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStoreTests.swift; sourceTree = "<group>"; };
 		BC2B4429309662A300720F0C /* CharacterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterListView.swift; sourceTree = "<group>"; };
@@ -415,6 +419,8 @@
 				BC2B4465309A9BB700720F0C /* SorceryTests.swift */,
 				BC2B4475309AAE0E00720F0C /* ExperienceTests.swift */,
 				BC2B447B309AC93B00720F0C /* CreationTests.swift */,
+				A1F143D41BC34BF6B184F401 /* SaveContractTests.swift */,
+				A1F143D41BC34BF6B184F403 /* fixtures */,
 				BC2B4485309C0E9200720F0C /* BloodlineTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
@@ -601,6 +607,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1F143D41BC34BF6B184F402 /* fixtures in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -697,6 +704,7 @@
 				BC2B4456309A457C00720F0C /* CatalogFormattingTests.swift in Sources */,
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
 				BC2B447C309AC93B00720F0C /* CreationTests.swift in Sources */,
+				A1F143D41BC34BF6B184F400 /* SaveContractTests.swift in Sources */,
 				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
 				BC2B4476309AAE0E00720F0C /* ExperienceTests.swift in Sources */,
 				BC2B4466309A9BB700720F0C /* SorceryTests.swift in Sources */,

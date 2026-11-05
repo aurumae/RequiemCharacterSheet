@@ -1,0 +1,430 @@
+{
+  "armor" : 1,
+  "aspirations" : [
+    {
+      "id" : "98F0DF5F-55D1-5F18-BA27-5CDD455D981C",
+      "text" : "Find the missing folio"
+    }
+  ],
+  "attributes" : [
+    {
+      "attribute" : "intelligence",
+      "rating" : 1
+    },
+    {
+      "attribute" : "wits",
+      "rating" : 1
+    },
+    {
+      "attribute" : "resolve",
+      "rating" : 1
+    },
+    {
+      "attribute" : "strength",
+      "rating" : 1
+    },
+    {
+      "attribute" : "dexterity",
+      "rating" : 1
+    },
+    {
+      "attribute" : "stamina",
+      "rating" : 3
+    },
+    {
+      "attribute" : "presence",
+      "rating" : 1
+    },
+    {
+      "attribute" : "manipulation",
+      "rating" : 1
+    },
+    {
+      "attribute" : "composure",
+      "rating" : 1
+    }
+  ],
+  "banes" : [
+    {
+      "id" : "5409D18E-01D9-56BA-9516-6C4C7BC301F7",
+      "source" : {
+        "custom" : "No shadow in moonlight"
+      }
+    }
+  ],
+  "beats" : 3,
+  "bloodPotency" : 1,
+  "bloodline" : {
+    "custom" : "Custom bloodline"
+  },
+  "changeLog" : [
+    {
+      "date" : 81000001.75,
+      "experiences" : 1,
+      "from" : 0,
+      "id" : "E56BEA88-F17A-5B65-8794-C5143114DCCB",
+      "name" : "Defensive Combat (Brawl)",
+      "to" : 1,
+      "trait" : "merit:6260DB81-B0D8-5DC0-8BF2-1B35754B6736",
+      "xpMode" : true
+    }
+  ],
+  "chronicle" : "Dublin by Night",
+  "clan" : {
+    "catalog" : "ventrue"
+  },
+  "clanBaneActive" : false,
+  "coils" : [
+    {
+      "id" : "58DA62CD-744C-55D8-9826-949A33312969",
+      "mystery" : {
+        "catalog" : "mystery-of-the-wyrm"
+      },
+      "rating" : 2
+    }
+  ],
+  "concept" : "Night archivist",
+  "covenant" : {
+    "catalog" : "ordo-dracul"
+  },
+  "createdAt" : 81000001.125,
+  "currentVitae" : 8,
+  "devotions" : [
+    {
+      "customExperienceCost" : 1,
+      "id" : "EB2CE6D1-BFD8-56AA-89BB-20DEB4F55F1E",
+      "source" : {
+        "catalog" : "gargoyles-vigilance-advanced"
+      }
+    },
+    {
+      "customExperienceCost" : 3,
+      "id" : "24E9E5C2-F4F2-56D1-A7E2-D67D34C7FF38",
+      "source" : {
+        "custom" : "Unpublished power"
+      }
+    }
+  ],
+  "dirge" : "Survivor",
+  "disciplines" : [
+    {
+      "id" : "F343E545-7566-5DE4-9D5E-C4B5688B6B67",
+      "rating" : 2,
+      "source" : {
+        "catalog" : "resilience"
+      }
+    },
+    {
+      "id" : "F9057634-1AB2-57BA-9321-0B3A4DDC1C6C",
+      "rating" : 2,
+      "source" : {
+        "catalog" : "cruac"
+      }
+    }
+  ],
+  "experiences" : 0,
+  "healthTrack" : [
+    "bashing",
+    "lethal",
+    "aggravated",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+  ],
+  "humanity" : 5,
+  "id" : "A3FF6992-0E95-5FF5-AFCF-25719A70562D",
+  "mask" : "Scholar",
+  "merits" : [
+    {
+      "id" : "6260DB81-B0D8-5DC0-8BF2-1B35754B6736",
+      "qualifier" : "Brawl",
+      "rating" : 1,
+      "source" : {
+        "catalog" : "defensive-combat"
+      }
+    }
+  ],
+  "modifiedAt" : 81000002.375,
+  "mystery" : {
+    "catalog" : "mystery-of-the-wyrm"
+  },
+  "name" : "Róisín Vale",
+  "paidDots" : {
+    "merit:6260DB81-B0D8-5DC0-8BF2-1B35754B6736" : {
+      "1" : 1
+    }
+  },
+  "player" : "Aoife",
+  "rituals" : [
+    {
+      "customDiscipline" : {
+        "custom" : ""
+      },
+      "customDots" : 1,
+      "id" : "6918B2D7-973B-55DD-A7A2-583A31B033DD",
+      "source" : {
+        "catalog" : "pangs-of-proserpina"
+      }
+    },
+    {
+      "customDiscipline" : {
+        "catalog" : "cruac"
+      },
+      "customDots" : 2,
+      "id" : "DE5E697F-705F-5AF3-A034-02C70D7753EC",
+      "source" : {
+        "custom" : "Chorus"
+      }
+    }
+  ],
+  "scales" : [
+    {
+      "id" : "0AF4C9A7-484C-5744-94A0-7C891E2541C9",
+      "source" : {
+        "catalog" : "day-wake-conditioning"
+      }
+    }
+  ],
+  "schemaVersion" : 10,
+  "size" : 5,
+  "skillList" : "vampire-core",
+  "skills" : [
+    {
+      "rating" : 0,
+      "skill" : "academics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "computer",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "crafts",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "investigation",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "medicine",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "occult",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "politics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "science",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "athletics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 2,
+      "skill" : "brawl",
+      "specialties" : [
+        "Clinches",
+        "Throws"
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "drive",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "firearms",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "larceny",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "stealth",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "survival",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "weaponry",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "animal-ken",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "empathy",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "expression",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "intimidation",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "persuasion",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "socialize",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "streetwise",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "subterfuge",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 1,
+      "skill" : "piloting",
+      "specialties" : [
+        "Blimps"
+      ]
+    }
+  ],
+  "touchstones" : [
+    {
+      "id" : "20700517-F5FD-5B3D-8DA2-72CD1CB6E54C",
+      "level" : 1,
+      "text" : ""
+    },
+    {
+      "id" : "2CBBE13C-0EEA-514E-90DF-DC9B4F00A454",
+      "level" : 2,
+      "text" : ""
+    },
+    {
+      "id" : "7654E423-0408-5336-BA94-4A60743F4254",
+      "level" : 3,
+      "text" : ""
+    },
+    {
+      "id" : "50A68E3B-BDA7-59C3-A29C-5C5D4A19C898",
+      "level" : 4,
+      "text" : ""
+    },
+    {
+      "id" : "6ED01C85-812F-5113-BAB2-0B80A3DFD2B2",
+      "level" : 5,
+      "text" : ""
+    },
+    {
+      "id" : "D8DCF328-4545-557E-A4A8-BCBB566CD699",
+      "level" : 6,
+      "text" : ""
+    },
+    {
+      "id" : "7E36C0AC-98C8-548D-9363-7B29122D3C37",
+      "level" : 7,
+      "text" : "Keeper of the accounts"
+    },
+    {
+      "id" : "1570C940-3720-5B1C-8480-4E162F5F4155",
+      "level" : 8,
+      "text" : ""
+    },
+    {
+      "id" : "157371AE-D4CE-5556-97D7-2760A50EE8FF",
+      "level" : 9,
+      "text" : ""
+    },
+    {
+      "id" : "60CE7E7B-AC94-5A67-AEA7-A9397BACDA11",
+      "level" : 10,
+      "text" : ""
+    }
+  ],
+  "willpowerTrack" : [
+    "spent",
+    "none"
+  ],
+  "xpMode" : true
+}

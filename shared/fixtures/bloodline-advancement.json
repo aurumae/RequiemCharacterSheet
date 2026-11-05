@@ -1,0 +1,70 @@
+[
+  {
+    "action": "clan",
+    "text": "Mekhet",
+    "available": 0,
+    "logCount": 0
+  },
+  {
+    "action": "add",
+    "available": 0,
+    "logCount": 0
+  },
+  {
+    "action": "bloodline",
+    "text": "Morbus",
+    "available": 0,
+    "logCount": 0
+  },
+  {
+    "action": "add",
+    "available": -3,
+    "logCount": 1
+  },
+  {
+    "action": "rating",
+    "rating": 2,
+    "available": -6,
+    "logCount": 2
+  },
+  {
+    "action": "bloodline",
+    "text": "Khaibit",
+    "available": -6,
+    "logCount": 2
+  },
+  {
+    "action": "rating",
+    "rating": 3,
+    "available": -10,
+    "logCount": 3
+  },
+  {
+    "action": "rating",
+    "rating": 1,
+    "available": -3,
+    "logCount": 4
+  },
+  {
+    "action": "bloodline",
+    "text": "Morbus",
+    "available": -3,
+    "logCount": 4
+  },
+  {
+    "action": "remove",
+    "available": 0,
+    "logCount": 5
+  },
+  {
+    "action": "add",
+    "available": -3,
+    "logCount": 6
+  },
+  {
+    "action": "rating",
+    "rating": 2,
+    "available": -6,
+    "logCount": 7
+  }
+]

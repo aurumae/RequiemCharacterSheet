@@ -42,11 +42,16 @@ struct Catalog {
     }
 
     /// The catalogs bundled with the app.
-    static let bundled = Catalog(files: bundledFiles())
+    #if SWIFT_PACKAGE
+    static let bundled = Catalog(files: bundledFiles(in: .module))
+    #else
+    static let bundled = Catalog(files: bundledFiles(in: .main))
+    #endif
 
     /// Every catalog file in the app bundle. The core rulebook comes first so its entries take precedence.
-    private static func bundledFiles(in bundle: Bundle = .main) -> [CatalogFile] {
+    private static func bundledFiles(in bundle: Bundle) -> [CatalogFile] {
         let urls = (bundle.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
+            .map { $0 as URL }
             .sorted { lhs, rhs in
                 let isCore = { (url: URL) in url.deletingPathExtension().lastPathComponent == "vtr2e-core" }
                 return isCore(lhs) != isCore(rhs) ? isCore(lhs) : lhs.lastPathComponent < rhs.lastPathComponent

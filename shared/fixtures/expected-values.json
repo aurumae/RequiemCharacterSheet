@@ -1,0 +1,9 @@
+{
+  "v1-unversioned":    {"health":7,  "willpower":5, "availableXP":4,  "guided":false},
+  "v6-clan-bane":      {"health":6,  "willpower":2, "availableXP":0,  "guided":false},
+  "v7-sorcery":        {"health":10, "willpower":2, "availableXP":6,  "guided":false},
+  "v8-paid":           {"health":10, "willpower":2, "availableXP":-1, "guided":false},
+  "v9-early-guided":   {"health":6,  "willpower":2, "availableXP":0,  "guided":true},
+  "v9-advanced":       {"health":10, "willpower":2, "availableXP":-1, "guided":false},
+  "v9-guided":         {"health":6,  "willpower":2, "availableXP":0,  "guided":true}
+}
