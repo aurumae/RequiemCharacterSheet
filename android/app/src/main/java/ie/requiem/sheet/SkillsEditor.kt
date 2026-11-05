@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import ie.requiem.rules.*
 
 @Composable
-internal fun SkillEditor(definition: TraitDefinition, skill: Skill, c: CharacterSave, editable: Boolean, edit: (SheetEdit) -> Unit) {
+internal fun SkillEditor(definition: TraitDefinition, skill: Skill, c: CharacterSave, editable: Boolean, catalog: Catalog, edit: (SheetEdit) -> Unit) {
     var editing by rememberSaveable { mutableStateOf<Int?>(null) }
     var previous by rememberSaveable { mutableStateOf("") }
     var draft by rememberSaveable { mutableStateOf("") }
     Column(Modifier.fillMaxWidth().background(Color.White)) {
-        TraitRatingControl(definition.name, skill.rating, 0, legalRatings(RatingKind.Skill, c.bloodPotency), editable) {
+        TraitRatingControl(definition.name, skill.rating, 0, legalRatings(RatingKind.Skill, c.bloodPotency), editable, allowedValues = c.skillChoices(skill.skill, catalog)) {
             edit(SheetEdit.SkillRating(skill.skill, it))
         }
         skill.specialties.forEachIndexed { index, specialty ->
@@ -33,10 +33,10 @@ internal fun SkillEditor(definition: TraitDefinition, skill: Skill, c: Character
                 .semantics { contentDescription = "${definition.name} specialty: $specialty" },
                 style = MaterialTheme.typography.bodySmall)
         }
-        Box(Modifier.fillMaxWidth().heightIn(min = 40.dp).clickable(enabled = editable) { previous = ""; draft = ""; editing = -1 }
+        Box(Modifier.fillMaxWidth().heightIn(min = 40.dp).clickable(enabled = editable && c.canAddSpecialty) { previous = ""; draft = ""; editing = -1 }
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .semantics { contentDescription = "Add ${definition.name} specialty" }) {
-            Text("Add Specialty", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+            Text(if (c.canAddSpecialty) "Add Specialty" else "3 starting Specialties chosen", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
         }
     }
     if (editing != null && editable) {

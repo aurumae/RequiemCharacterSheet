@@ -76,8 +76,8 @@ private fun Requiem(model: SheetModel) {
                 Spacer(Modifier.weight(1f))
                 if (c.creation == null) {
                     XpBadge(c.xpMode, c.experiencesAvailable, !state.busy) { model.edit(ie.requiem.rules.SheetEdit.XpMode(!c.xpMode)) }
-                    TextButton(onClick = { focus.clearFocus(); model.save() }, enabled = !state.busy && !saved) { Text(if (saved) "Saved" else "Save") }
                 }
+                TextButton(onClick = { focus.clearFocus(); model.save() }, enabled = !state.busy && !saved) { Text(if (saved) "Saved" else "Save") }
             }
             LogoHeader()
             state.error?.let {
@@ -143,7 +143,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
     LazyColumn(Modifier.fillMaxSize().testTag("character-library")) {
         item { SectionBand("CHARACTERS") }
         if (rows.isEmpty()) item {
-            Text("Create a blank sheet to start your chronicle.",
+            Text("Start with a blank sheet or follow guided character creation.",
                 Modifier.fillMaxWidth().background(Color.White).padding(12.dp), color = SheetColors.muted)
         }
         items(rows, key = { it.id.toString() }) { row ->
@@ -155,7 +155,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
                 }.padding(horizontal = 8.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                     Text(title, style = LocalSheetType.current.label)
                     if (row.details.isNotEmpty()) Text(row.details, style = MaterialTheme.typography.bodyMedium)
-                    if (row.guided) Text("Guided · Read-only", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    if (row.guided) Text("Guided creation · In progress", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     if (row.problem != null) Text(row.problem, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     else row.edited?.let {
                         Text("Edited " + DateUtils.getRelativeTimeSpanString((it * 1000).toLong() + 978_307_200_000L,
@@ -163,7 +163,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
                             style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     }
                 }
-                if (!row.guided && row.problem == null) Box {
+                if (row.problem == null) Box {
                     IconButton(onClick = { menu = true }, modifier = Modifier.semantics { contentDescription = "Options for $title" }) {
                         SheetIcon(SheetSymbol.More, SheetColors.muted)
                     }
@@ -175,12 +175,13 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
             SheetRule()
         }
         item {
-            Row(Modifier.fillMaxWidth().background(Color.White).clickable(onClick = model::create).padding(8.dp).heightIn(min = 48.dp),
+            Row(Modifier.fillMaxWidth().background(Color.White).clickable(onClick = { model.create() }).padding(8.dp).heightIn(min = 48.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SheetIcon(SheetSymbol.Add)
                 Text("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
             }
         }
+        item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
         item { TextButton(onClick = about) { Text("About this app") } }
     }
     val selected = rows.firstOrNull { it.id.toString() == confirmId }

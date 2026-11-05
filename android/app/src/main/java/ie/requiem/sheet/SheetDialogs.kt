@@ -21,6 +21,7 @@ import java.util.UUID
 @Composable
 internal fun SheetDialogs(route: String?, c: CharacterSave, catalog: Catalog, edit: (SheetEdit) -> Unit, navigate: (String?) -> Unit) {
     if (route == null) return
+    if (route.startsWith("creation|")) { CreationDialogs(route, c, catalog, edit, navigate); return }
     val parts = route.split('|'); val type = parts[0]
     fun close() = navigate(null)
     key(route) {
@@ -155,6 +156,12 @@ private fun CustomEntryDialog(kind: EntryKind, row: SheetEntry?, c: CharacterSav
     var dots by rememberSaveable { mutableIntStateOf(ritual?.customDots ?: 1) }
     var cost by rememberSaveable { mutableStateOf((devotion?.customExperienceCost ?: 1).toString()) }
     val legalCost = cost.toIntOrNull()?.takeIf { it in 1..20 }
+    val source = if (kind == EntryKind.Merit) catalog.parseMerit(name).first else catalog.source(kind.catalogKind, name)
+    val blocked = if (row == null) c.creationEntryRejection(SheetEdit.AddEntry(kind, source,
+        ritualDiscipline = catalog.source(CatalogKind.disciplines, discipline), ritualDots = dots), catalog) else if (kind == EntryKind.Ritual && !c.creationAllowsEdit(
+            SheetEdit.CustomRitual(row.id, catalog.source(CatalogKind.disciplines, discipline), dots), catalog))
+        "The ritual must fit its Discipline's starting dots" else if (kind == EntryKind.Devotion && !c.creationAllowsEdit(
+            SheetEdit.CustomDevotionCost(row.id, legalCost ?: 1), catalog)) "Devotions are learned with Experiences after creation" else null
     val focus = remember { FocusRequester() }
     AlertDialog(onDismissRequest = dismiss, title = { Text(if (row == null) "Custom ${kind.title}" else "Edit ${kind.title}") }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -164,14 +171,17 @@ private fun CustomEntryDialog(kind: EntryKind, row: SheetEntry?, c: CharacterSav
             if (kind == EntryKind.Ritual) {
                 OutlinedTextField(value = discipline, onValueChange = { discipline = it }, label = { Text("Ritual Discipline") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                 ChoiceMenu("Choose Discipline", discipline, catalog.bookEntries(CatalogKind.disciplines).filter { it.isRitualDiscipline }.map { it.name }) { discipline = it }
-                ChoiceMenu("Ritual dots", dots.toString(), (1..5).map { it.toString() }) { dots = it.toInt() }
+                val rank = c.disciplines.filter { it.source == catalog.source(CatalogKind.disciplines, discipline) }.maxOfOrNull { it.rating } ?: 0
+                val maxDots = if (c.creation == null) 5 else maxOf(row?.rating ?: 1, rank).coerceAtMost(5)
+                ChoiceMenu("Ritual dots", dots.toString(), (1..maxDots).map { it.toString() }) { dots = it.toInt() }
             }
             if (kind == EntryKind.Devotion) OutlinedTextField(value = cost, onValueChange = { cost = it }, label = { Text("Experience cost (1–20)") }, singleLine = true,
                 isError = legalCost == null, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth().testTag("devotion-cost"))
+            blocked?.let { WarningText(it) }
             LaunchedEffect(Unit) { focus.requestFocus() }
         }
     }, confirmButton = { TextButton(onClick = { onCommit(name.trim(), discipline.trim(), dots, legalCost ?: 1) },
-        enabled = name.isNotBlank() && (kind != EntryKind.Devotion || legalCost != null) && (kind != EntryKind.Ritual || discipline.isNotBlank())) { Text(if (row == null) "Add" else "Done") } },
+        enabled = blocked == null && name.isNotBlank() && (kind != EntryKind.Devotion || legalCost != null) && (kind != EntryKind.Ritual || discipline.isNotBlank())) { Text(if (row == null) "Add" else "Done") } },
         dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } })
 }
 

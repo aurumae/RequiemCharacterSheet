@@ -24,25 +24,28 @@ private fun CharacterSave.traitSnapshot(catalog: Catalog): Map<String, TraitLeve
     add("bloodPotency:bloodPotency", bloodPotency, "Blood Potency")
 }
 
+internal fun CharacterSave.traitLevels(catalog: Catalog): Map<String, Int> = traitSnapshot(catalog).mapValues { it.value.level }
+
 /** One recorder for every committed edit, matching Swift's snapshot order and paid levels. */
 internal fun CharacterSave.recordChanges(before: CharacterSave, catalog: Catalog, at: Double): CharacterSave {
     val old = before.traitSnapshot(catalog); val new = traitSnapshot(catalog)
     val keys = (old.keys + new.keys).sortedWith(compareBy<String> { kindOrder.indexOf(it.substringBefore(':')) }.thenBy { it.substringAfter(':') })
     val ledger = paidDots.toMutableMap(); val log = changeLog.toMutableList()
+    val charge = xpMode && creation == null
     for (key in keys) {
         val from = old[key]?.level ?: 0; val to = new[key]?.level ?: 0
         if (from == to) continue
         val paid = ledger[key].orEmpty().toMutableMap()
         var cost = 0
-        if (to > from && xpMode) for (level in from + 1..to) {
+        if (to > from && charge) for (level in from + 1..to) {
             val purchase = experienceCost(key, catalog)
             paid[level] = purchase; cost += purchase
         } else if (to < from) for (level in to + 1..from) {
             val removed = paid.remove(level) ?: 0
-            if (xpMode && key.substringBefore(':') !in setOf("humanity", "bloodPotency")) cost -= removed
+            if (charge && key.substringBefore(':') !in setOf("humanity", "bloodPotency")) cost -= removed
         }
         if (paid.isEmpty()) ledger.remove(key) else ledger[key] = paid
-        log += TraitChange(UUID.randomUUID(), at, key, new[key]?.name ?: old.getValue(key).name, from, to, cost, xpMode)
+        log += TraitChange(UUID.randomUUID(), at, key, new[key]?.name ?: old.getValue(key).name, from, to, cost, charge, if (creation != null) true else null)
     }
     return copy(paidDots = ledger, changeLog = log)
 }

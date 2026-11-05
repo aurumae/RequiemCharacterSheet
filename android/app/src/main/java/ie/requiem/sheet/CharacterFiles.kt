@@ -35,8 +35,8 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
 
     fun open(id: UUID): OpenSheet = read(id, files().first { it.first == id }.second)
 
-    fun create(): OpenSheet {
-        val c = CharacterSave()
+    fun create(guided: Boolean = false): OpenSheet {
+        val c = CharacterSave(creation = if (guided) CreationState() else null)
         val text = codec.encode(c)
         val file = File(directory, "${c.id}.json")
         check(!file.exists())
@@ -47,7 +47,6 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
     fun persist(session: OpenSheet, edited: CharacterSave): OpenSheet {
         val text = codec.encodeEdit(session.saved, edited, (System.currentTimeMillis() - 978_307_200_000L) / 1000.0)
             ?: return session
-        check(session.saved.creation == null && edited.creation == null) { "Guided sheets are read-only" }
         check(session.file.readText() == session.text) { "The file changed after it was opened" }
         val saved = codec.decode(text)
         write(session.file, text)
@@ -56,7 +55,6 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
 
     fun delete(id: UUID) {
         val session = open(id)
-        check(session.saved.creation == null)
         Files.delete(session.file.toPath())
     }
 

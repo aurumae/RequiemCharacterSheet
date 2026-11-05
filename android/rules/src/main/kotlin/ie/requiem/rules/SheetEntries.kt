@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class SheetEntry(val id: UUID, val source: TraitSource, val name: String, val rating: Int? = null,
     val choices: List<Int> = emptyList(), val qualifier: String? = null, val summary: String = "", val citation: String = "",
-    val notes: List<String> = emptyList(), val warnings: List<String> = emptyList(), val known: Boolean = false)
+    val notes: List<String> = emptyList(), val warnings: List<String> = emptyList(), val known: Boolean = false, val visibleDots: Int = 0)
 
 fun CharacterSave.entryRows(kind: EntryKind, catalog: Catalog): List<SheetEntry> {
     fun row(id: UUID, source: TraitSource, rating: Int? = null, qualifier: String? = null, customChoices: List<Int> = emptyList()): SheetEntry {
@@ -14,7 +14,7 @@ fun CharacterSave.entryRows(kind: EntryKind, catalog: Catalog): List<SheetEntry>
         val base = if (kind == EntryKind.Coil) entry?.coilName ?: catalog.name(kind.catalogKind, source) else catalog.name(kind.catalogKind, source)
         val name = base + (qualifier?.let { " ($it)" } ?: "")
         val choices = if (kind == EntryKind.Merit && entry != null) listOf(0) + entry.ratings else customChoices
-        return SheetEntry(id, source, name, rating, choices, qualifier, entry?.summary.orEmpty(), entry?.citation.orEmpty(), known = entry != null)
+        return SheetEntry(id, source, name, rating, choices, qualifier, entry?.summary.orEmpty(), entry?.citation.orEmpty(), known = entry != null, visibleDots = choices.maxOrNull() ?: 0)
     }
     return when (kind) {
         EntryKind.Discipline -> disciplines.map { d ->
@@ -40,11 +40,21 @@ fun CharacterSave.entryRows(kind: EntryKind, catalog: Catalog): List<SheetEntry>
             }, warnings = listOfNotNull(coilWarning(coil, catalog)))
         }
         EntryKind.Scale -> scales.map { s -> row(s.id, s.source).copy(notes = listOf(experiencesText(catalog.entry(CatalogKind.scales, s.source)?.let(::scaleCost) ?: 2))) }
+    }.map { row ->
+        if (creation == null || row.choices.isEmpty()) row else {
+            val maximum = when (kind) {
+                EntryKind.Ritual -> maxOf(row.rating ?: 1, rituals.firstOrNull { it.id == row.id }?.let { ritual ->
+                    disciplines.filter { it.source == ritual.discipline(catalog) }.maxOfOrNull { it.rating }
+                } ?: 0)
+                else -> creationMaximum("${kind.name.lowercase(Locale.ROOT)}:${row.id.swiftKey()}", row.visibleDots, catalog)
+            }
+            row.copy(choices = row.choices.filter { it <= maximum })
+        }
     }
 }
 fun experiencesText(value: Int): String = "$value ${if (value == 1) "Experience" else "Experiences"}"
 
-data class CatalogOption(val entry: BookEntry, val title: String, val group: String, val owned: Boolean, val details: List<String>, val warning: String?)
+data class CatalogOption(val entry: BookEntry, val title: String, val group: String, val owned: Boolean, val details: List<String>, val warning: String?, val blockedReason: String? = null)
 private val meritOrder = listOf("vampire", "covenant", "mental", "physical", "social", "fighting", "other", "supernatural")
 private fun searchable(value: String): String = Normalizer.normalize(value.lowercase(Locale.ROOT), Normalizer.Form.NFD).replace(Regex("\\p{M}+"), "").replace('’', '\'')
 fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: String = "", choosingMystery: Boolean = false): List<CatalogOption> {
@@ -86,7 +96,7 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
             else -> ""
         }.ifEmpty { null }
         CatalogOption(e, if (kind == EntryKind.Coil && !choosingMystery) e.coilName else e.name, group,
-            !choosingMystery && e.id in owned && !(kind == EntryKind.Merit && e.repeatable), details, warning)
+            !choosingMystery && e.id in owned && !(kind == EntryKind.Merit && e.repeatable), details, warning, if (choosingMystery) null else creationEntryRejection(SheetEdit.AddEntry(kind, e.source()), catalog))
     }
 }
 fun BookEntry.source(): TraitSource = TraitSource(catalog = id)

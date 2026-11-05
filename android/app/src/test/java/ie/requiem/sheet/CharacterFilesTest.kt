@@ -46,9 +46,7 @@ class CharacterFilesTest {
         val guided = codec.decode(guidedText)
         val file = File(temp.root, "${guided.id.toString().uppercase()}.json").apply { writeText(guidedText) }
         val opened = repo.open(guided.id)
-        val actions = listOf(SheetEdit.Rename("changed"), SheetEdit.XpMode(true), SheetEdit.Stamina(1), SheetEdit.Mark(0))
-        actions.forEach { assertSame(opened.saved, opened.saved.edit(it, catalog)) }
-        assertThrows(IllegalStateException::class.java) { repo.persist(opened, guided.copy(name = "changed")) }
+        assertSame(opened, repo.persist(opened, opened.saved))
         val future = File(temp.root, "${UUID.randomUUID()}.json").apply { writeText(fixture("v10-future")) }
         val broken = File(temp.root, "${UUID.randomUUID()}.json").apply { writeText("{") }
         assertEquals(2, repo.library().count { it.problem != null })
@@ -56,6 +54,30 @@ class CharacterFilesTest {
         assertEquals(guidedText, file.readText())
         assertEquals(fixture("v10-future"), future.readText())
         assertEquals("{", broken.readText())
+    }
+
+    @Test fun guidedSheetsResumeFinishOnceAndCanBeDeleted() {
+        val repo = repository()
+        val started = repo.create(guided = true)
+        val draft = started.saved.edit(SheetEdit.Detail(CharacterDetail.Clan, "Ventrue"), catalog)
+            .edit(SheetEdit.FavoredAttribute("presence"), catalog)
+            .edit(SheetEdit.Priority(TraitCategory.Social, CreationPriority.Primary, false), catalog)
+            .edit(SheetEdit.AttributeRating("presence", 4), catalog)
+            .edit(SheetEdit.CreationBonus(15), catalog)
+        repo.persist(started, draft)
+        val reopened = repository().open(started.saved.id)
+        assertEquals(draft.creation, reopened.saved.creation)
+        assertEquals(draft.attributes, reopened.saved.attributes)
+        assertTrue(reopened.saved.changeLog.all { it.duringCreation == true && it.experiences == 0 })
+        val finish = reopened.saved.edit(SheetEdit.FinishCreation(true), catalog)
+        repo.persist(reopened, finish)
+        val finished = repository().open(started.saved.id)
+        assertNull(finished.saved.creation)
+        assertEquals(15, finished.saved.experiencesAvailable)
+        assertSame(finished.saved, finished.saved.edit(SheetEdit.FinishCreation(true), catalog))
+        val other = repo.create(guided = true)
+        repo.delete(other.saved.id)
+        assertFalse(repo.library().any { it.id == other.saved.id })
     }
 
     @Test fun staleSessionCannotReplaceANewerFileAndUnchangedLegacyIsNeverRewritten() {

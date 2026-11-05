@@ -17,14 +17,14 @@ import androidx.compose.ui.unit.dp
 import ie.requiem.rules.*
 
 internal enum class SheetSection(val title: String, val itemKey: String) {
-    Character("Character", "character"), Attributes("Attributes", "attributes"), Skills("Skills", "skills-Mental"),
+    Creation("Character Creation", "creation"), Character("Character", "character"), Attributes("Attributes", "attributes"), Skills("Skills", "skills-Mental"),
     Disciplines("Disciplines", "disciplines"), Devotions("Devotions", "devotions"), Rituals("Rituals", "rituals"),
     Coils("Coils of the Dragon", "coils"), Merits("Merits", "merits"), Aspirations("Aspirations", "aspirations"), Banes("Banes", "banes"),
     Health("Health", "health"), Willpower("Willpower", "willpower"), BloodPotency("Blood Potency", "blood-potency"),
     Vitae("Vitae", "vitae"), Humanity("Humanity", "humanity"), Advantages("Advantages", "advantages"), Experience("Experience", "experience");
     companion object {
         fun available(c: CharacterSave, catalog: Catalog): List<SheetSection> = entries.filter {
-            (it != Rituals || c.showsRituals(catalog)) && (it != Coils || c.showsCoils)
+            (it != Creation || c.creation != null) && (it != Rituals || c.showsRituals(catalog)) && (it != Coils || c.showsCoils)
         }
     }
 }
@@ -32,10 +32,17 @@ internal enum class SheetSection(val title: String, val itemKey: String) {
 @Composable
 internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit: (SheetEdit) -> Unit,
     section: SheetSection?, onSectionHandled: () -> Unit) {
-    val editable = c.creation == null && !busy
+    val editable = !busy
     var log by rememberSaveable { mutableStateOf(false) }
     var overlay by rememberSaveable { mutableStateOf<String?>(null) }
     val list = rememberLazyListState()
+    var localSection by rememberSaveable { mutableStateOf<SheetSection?>(null) }
+    var previousClan by rememberSaveable { mutableStateOf(c.clan.catalog ?: c.clan.custom.orEmpty()) }
+    LaunchedEffect(c.clan) {
+        val clan = c.clan.catalog ?: c.clan.custom.orEmpty()
+        if (clan != previousClan && c.needsFavoredAttribute(catalog)) overlay = "creation|favored"
+        previousClan = clan
+    }
     val keys = SheetSection.available(c, catalog).flatMap { if (it == SheetSection.Skills) TraitCategory.entries.map { category -> "skills-${category.name}" } else listOf(it.itemKey) }
     @Composable fun entries(kind: EntryKind) {
         val rows = c.entryRows(kind, catalog)
@@ -60,16 +67,22 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
         } else rows.forEach { key(it.id) { row(it) } }
         if (kind == EntryKind.Bane && c.banes.size >= 3) Text("A vampire can have at most 3 Banes.", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
             style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+        else if (c.creation != null && kind in listOf(EntryKind.Devotion, EntryKind.Scale, EntryKind.Coil)) Text(
+            if (kind == EntryKind.Coil) "Choose your Mystery above to add its Coil." else "Learn ${kind.title}s with Experiences after creation.",
+            Modifier.fillMaxWidth().background(Color.White).padding(8.dp), style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
         else AddSheetRow("Add ${kind.title}", editable) { overlay = "pick|${kind.name}" }
     }
     @Composable fun band(title: String) { Spacer(Modifier.height(16.dp)); SectionBand(title) }
-    LaunchedEffect(section) {
-        if (section != null) { keys.indexOf(section.itemKey).takeIf { it >= 0 }?.let { list.scrollToItem(it) }; onSectionHandled() }
+    LaunchedEffect(section, localSection) {
+        val target = localSection ?: section
+        if (target != null) { keys.indexOf(target.itemKey).takeIf { it >= 0 }?.let { list.scrollToItem(it) }; localSection = null; onSectionHandled() }
     }
     Column(Modifier.fillMaxSize()) {
-        if (c.creation != null) Text("Guided creation · Read-only", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
-            color = SheetColors.muted)
         LazyColumn(state = list, modifier = Modifier.weight(1f).testTag("character-sheet")) {
+            if (c.creation != null) item("creation") {
+                CreationPanel(c, catalog, editable, navigate = { overlay = it }, jump = { localSection = it })
+                Spacer(Modifier.height(16.dp))
+            }
             item("character") {
                 SectionBand("CHARACTER")
                 CharacterDetail.entries.forEach { field ->
@@ -81,12 +94,13 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             item("attributes") {
                 SectionBand("ATTRIBUTES")
                 TraitCategory.entries.forEach { category ->
-                    SubsectionLabel(category.title)
+                    CategoryHeader(category, false, c, catalog, editable, edit)
                     attributeDefinitions.filter { it.category == category }.forEach { definition ->
                         val attribute = c.attributes.first { it.attribute == definition.id }
                         key(definition.id) {
                             TraitRatingControl(definition.name, attribute.rating, c.attributeBonus(definition.id, catalog) + c.rollBonus(definition.id, catalog),
-                                legalRatings(RatingKind.Attribute, c.bloodPotency), editable) { edit(SheetEdit.AttributeRating(definition.id, it)) }
+                                legalRatings(RatingKind.Attribute, c.bloodPotency), editable, allowedValues = c.attributeChoices(definition.id, catalog),
+                                note = if (c.creation?.favoredAttribute == definition.id) "Includes the ${catalog.name(CatalogKind.clans, c.clan)} dot" else null) { edit(SheetEdit.AttributeRating(definition.id, it)) }
                         }
                         SheetRule()
                     }
@@ -96,11 +110,11 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             TraitCategory.entries.forEach { category ->
                 item("skills-${category.name}") {
                     if (category == TraitCategory.Mental) SectionBand("SKILLS")
-                    SubsectionLabel(category.title)
+                    CategoryHeader(category, true, c, catalog, editable, edit)
                     Text("(${category.unskilledPenalty} unskilled)", Modifier.fillMaxWidth().background(Color.White).padding(start = 8.dp, bottom = 4.dp),
                         style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     skillDefinitions.filter { it.category == category }.forEach { definition ->
-                        key(definition.id) { SkillEditor(definition, c.skills.first { it.skill == definition.id }, c, editable, edit) }
+                        key(definition.id) { SkillEditor(definition, c.skills.first { it.skill == definition.id }, c, editable, catalog, edit) }
                         SheetRule()
                     }
                 }
@@ -137,7 +151,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             item("willpower") { band("WILLPOWER"); WillpowerTrack(c, editable, edit) }
             item("blood-potency") {
                 band("BLOOD POTENCY")
-                TraitRatingControl("Blood Potency", c.bloodPotency, 0, 0..10, editable) { edit(SheetEdit.Number(NumberField.BloodPotency, it)) }
+                TraitRatingControl("Blood Potency", c.bloodPotency, 0, 0..10, editable, allowedValues = (0..c.creationMaximum("bloodPotency:bloodPotency", 10, catalog)).toList()) { edit(SheetEdit.Number(NumberField.BloodPotency, it)) }
             }
             item("vitae") {
                 band("VITAE")
@@ -161,8 +175,9 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
 
 @Composable
 private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetEdit) -> Unit, number: (NumberField) -> Unit, showLog: () -> Unit) {
+        val xpEnabled = c.xpMode && c.creation == null
         Column(Modifier.background(Color.White)) {
-            Row(Modifier.fillMaxWidth().toggleable(value = c.xpMode, enabled = editable, role = Role.Switch,
+            Row(Modifier.fillMaxWidth().toggleable(value = xpEnabled, enabled = editable && c.creation == null, role = Role.Switch,
                 onValueChange = { edit(SheetEdit.XpMode(it)) }).padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
@@ -172,7 +187,7 @@ private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetE
                         else "Changes are free, e.g. Storyteller awards or entering an existing character.",
                         style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                 }
-                Switch(checked = c.xpMode, onCheckedChange = null, enabled = editable)
+                Switch(checked = xpEnabled, onCheckedChange = null, enabled = editable && c.creation == null)
             }
             SheetRule()
             NumberCounter(c, NumberField.Beats, editable, edit) { number(NumberField.Beats) }

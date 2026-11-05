@@ -48,7 +48,7 @@ Serialize file operations off the UI thread, use atomic replacement and compare 
 
 ## Order of work
 
-Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet` and has run successfully on the Galaxy S24 FE. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 is implemented on the stacked `android/core-sheet` and `android/ordinary-play` branches.
+Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet` and has run successfully on the Galaxy S24 FE. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 is implemented on the stacked `android/core-sheet` and `android/ordinary-play` branches, and milestone 4 on `android/guided-creation`.
 
 | Milestone | Implementation | Done when |
 | --- | --- | --- |
@@ -85,9 +85,23 @@ Visual alignment and the first functional slice are accepted on the Galaxy S24 F
 3. **Play trackers and Humanity.** Willpower marks, Blood Potency/Vitae, Armor and derived values, Humanity and Touchstones, Beats and earned Experiences. Humanity and Blood Potency losses never refund XP.
 4. **Sorcery and advancement completion.** Rituals, Devotions, Mysteries, Coils and Scales, including free ritual slots and the dependent XP prices. The shared 37-action `ordinary-play.json` sequence verifies purchases, refunds, ritual allowances, Scale prices, custom Devotions and nonrefundable losses in Swift and Kotlin.
 
-Milestone 3 now supports entering, playing and advancing an existing vampire offline. Guided creation remains read-only and is the next milestone. The original Xcode checkout remains on its own branch; integrate the reviewed Android branches into `main` in their existing order.
+Milestone 3 now supports entering, playing and advancing an existing vampire offline. Guided creation is implemented in milestone 4 below. The original Xcode checkout remains on its own branch; integrate the reviewed Android branches into `main` in their existing order.
 
-Validation for this delivery: 193 Swift tests, 29 JVM tests, eight emulator interaction tests, and bidirectional Swift/Kotlin file exchange pass. Android lint has no errors; its seven existing warnings concern newer SDK and dependency versions. The device tests cover powers, qualifiers, Merit rating gaps, multiline Aspirations, Banes, Touchstones, Willpower, Vitae, Beats, sorcery prices, rotation and reopening. Manual emulator checks cover normal and enlarged text, upgrading over alpha 4 without changing a saved field, and restoring the open sheet and scroll position from Recents after process termination. Health, Willpower, paid dots and the change log survived without replaying a purchase. Physical-device acceptance remains on the Galaxy S24 FE.
+Validation for this delivery: 193 Swift tests, 29 JVM tests, eight emulator interaction tests, and bidirectional Swift/Kotlin file exchange pass. Android lint has no errors; its seven existing warnings concern newer SDK and dependency versions. The device tests cover powers, qualifiers, Merit rating gaps, multiline Aspirations, Banes, Touchstones, Willpower, Vitae, Beats, sorcery prices, rotation and reopening. Manual emulator checks cover normal and enlarged text, upgrading over alpha 4 without changing a saved field, and restoring the open sheet and scroll position from Recents after process termination. Health, Willpower, paid dots and the change log survived without replaying a purchase. This delivery is accepted on the Galaxy S24 FE.
+
+## Milestone 4: guided creation
+
+Implemented on `android/guided-creation`, based on accepted milestone 3, in the sibling `RequiemCharacterSheet-creation` worktree. The library offers both Blank Sheet and Guided character creation. Existing v9 guided saves are editable, including early saves without assigned priorities.
+
+- The seven-step checklist and category menus follow iOS references 13–14. Each category needs an explicit priority; selecting an occupied priority swaps assignments. Limits are enforced both by the controls and by the rules module.
+- The clan’s favoured Attribute dot is chosen explicitly, can be moved, and is excluded from the 5/4/3 budget. Changing clan removes it only when the new clan does not favour that Attribute. Ventrue’s first Touchstone is at Humanity 7.
+- Merits, Disciplines, Specialties, Blood Potency, Humanity, ritual allowances and the chosen Mystery’s Coil enforce their creation limits. Unavailable catalog choices explain the reason. Devotions and Scales wait until after creation. Priority and clan changes can produce problems; those remain visible and fixable instead of silently discarding choices.
+- Broken rules block Finish. Legal unfinished steps offer Keep Going or Finish Anyway. Rank selection is saved without granting XP until Finish; Finish grants it once and enables XP Mode. Leave keeps all applied traits and grants no bonus. Creation changes are free and labelled Creation in the log; later purchases use the existing paid-dot ledger.
+- The shared `guided-creation.json` fixture runs 71 actions through both real rule engines, comparing every budget, problem, checklist detail and log cost. Four checkpoints exercise compatibility before and after finishing. The Swift checks remain in the existing Xcode test target as well as the host package.
+
+Validation: 195 Swift tests, 40 JVM rules/storage tests and 11 emulator interaction tests pass, along with bidirectional file exchange and the 71-action creation comparison. Android lint has no errors and the same seven SDK/dependency warnings. Manual checks cover normal and enlarged text, rank selection in landscape, upgrading from alpha 5 with every saved field retained across three synthetic characters, and restoring an unfinished sheet and its scroll position from Recents after process termination. Priorities, the clan dot, ratings and change history remain unchanged on restoration. The debug delivery is `0.4.0-alpha.6`, signed with the same certificate as the previous alpha.
+
+The next milestone is distribution and upgrade testing, after S24 FE acceptance of guided creation. Local Android branches remain stacked in delivery order; the original Xcode checkout stays available for independent Swift development.
 
 ## Keeping the two versions together
 

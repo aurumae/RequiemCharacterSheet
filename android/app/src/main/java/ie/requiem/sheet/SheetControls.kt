@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -82,12 +83,13 @@ internal fun StaminaControl(c: CharacterSave, catalog: Catalog, editable: Boolea
 internal fun TraitRatingControl(
     label: String, base: Int, bonus: Int, legal: IntRange, editable: Boolean,
     allowedValues: List<Int> = legal.toList(), reserveFiveDots: Boolean = false,
-    onNameClick: (() -> Unit)? = null, onSelect: (Int) -> Unit,
+    onNameClick: (() -> Unit)? = null, visibleCap: Int = legal.last, note: String? = null, onSelect: (Int) -> Unit,
 ) {
     var expanded by rememberSaveable(label) { mutableStateOf(false) }
     fun select(value: Int): Boolean {
-        if (!editable || value !in legal) return false
-        onSelect(allowedValues.firstOrNull { it >= value } ?: allowedValues.last())
+        if (!editable || value !in legal || value < allowedValues.first()) return false
+        val next = allowedValues.firstOrNull { it >= value } ?: return false
+        onSelect(next)
         return true
     }
     BoxWithConstraints(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp)) {
@@ -96,12 +98,12 @@ internal fun TraitRatingControl(
         @Composable fun dots() {
             CompactTargets {
                 Column(if (reserveFiveDots) Modifier.width(minOf(maxWidth, 120.dp)) else Modifier) {
-                    (1..maxOf(legal.last, base + bonus)).chunked(dotsPerRow).forEach { values ->
+                    (1..maxOf(visibleCap, base + bonus)).chunked(dotsPerRow).forEach { values ->
                         Row {
                             values.forEach { value ->
-                                Box(Modifier.size(24.dp, 48.dp).clickable(enabled = editable && value <= legal.last) {
+                                Box(Modifier.size(24.dp, 48.dp).clickable(enabled = editable && value in allowedValues.first()..allowedValues.last()) {
                                     select(if (legal.first == 0 && base == 1 && value == 1) 0 else value)
-                                }, contentAlignment = Alignment.Center) { RatingDot(value <= base + bonus, value > base) }
+                                }.alpha(if (value > allowedValues.last() && value > base + bonus) .35f else 1f), contentAlignment = Alignment.Center) { RatingDot(value <= base + bonus, value > base) }
                             }
                         }
                     }
@@ -111,19 +113,21 @@ internal fun TraitRatingControl(
         @Composable fun name(modifier: Modifier) {
             Box(modifier.heightIn(min = 48.dp).clickable(enabled = editable || onNameClick != null) { if (onNameClick != null) onNameClick() else expanded = true },
                 contentAlignment = Alignment.CenterStart) {
-                Text(label, Modifier.padding(vertical = 8.dp, horizontal = 0.dp).padding(end = 4.dp),
-                    style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
+                Column(Modifier.padding(top = 8.dp, bottom = 8.dp, end = 4.dp)) {
+                    Text(label, style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
+                    if (note != null) Text(note, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                }
             }
         }
         Box(Modifier.fillMaxWidth().clearAndSetSemantics {
             contentDescription = label
-            stateDescription = "$base base, $bonus bonus"
+            stateDescription = "$base base, $bonus bonus" + (note?.let { ", $it" } ?: "")
             if (editable || onNameClick != null) onClick(label = if (onNameClick != null) "Open $label" else "Choose $label rating") {
                 if (onNameClick != null) onNameClick() else expanded = true; true
             }
             if (editable) {
-                progressBarRangeInfo = ProgressBarRangeInfo(base.toFloat(), legal.first.toFloat()..legal.last.toFloat(),
-                    (legal.last - legal.first - 1).coerceAtLeast(0))
+                progressBarRangeInfo = ProgressBarRangeInfo(base.toFloat(), allowedValues.first().toFloat()..allowedValues.last().toFloat(),
+                    (allowedValues.last() - allowedValues.first() - 1).coerceAtLeast(0))
                 setProgress { select(Math.round(it).coerceIn(legal)) }
                 customActions = buildList {
                     add(CustomAccessibilityAction("Choose $label rating") { expanded = true; true })

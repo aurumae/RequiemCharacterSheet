@@ -38,16 +38,16 @@ internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, ch
                 options.groupBy { it.group }.forEach { (group, rows) ->
                     item("group-$group") { SubsectionLabel(group) }
                     items(rows, key = { it.entry.id }) { option ->
-                        Column(Modifier.fillMaxWidth().clickable(enabled = !option.owned) { choose(option.entry) }
+                        Column(Modifier.fillMaxWidth().clickable(enabled = !option.owned && option.blockedReason == null) { choose(option.entry) }
                             .testTag("catalog-${option.entry.id}").padding(vertical = 12.dp)
-                            .semantics(mergeDescendants = true) { if (option.owned) stateDescription = "Already on the sheet" }) {
+                            .semantics(mergeDescendants = true) { stateDescription = if (option.owned) "Already on the sheet" else option.blockedReason.orEmpty() }) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(option.title, Modifier.weight(1f), style = LocalSheetType.current.trait)
                                 if (option.owned) Text("✓", color = SheetColors.accent)
                             }
                             option.details.forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = SheetColors.accent) }
                             if (option.entry.summary.isNotBlank()) Text(option.entry.summary, style = MaterialTheme.typography.bodySmall)
-                            option.warning?.let { WarningText(it) }
+                            option.blockedReason?.let { WarningText(it) } ?: option.warning?.let { WarningText(it) }
                             Text(option.entry.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                         }
                         SheetRule()

@@ -90,15 +90,14 @@ class CoreSheetTest {
         assertEquals(unknown.clan, unknown.edit(SheetEdit.Detail(CharacterDetail.Player, "Sam"), catalog).clan)
     }
 
-    @Test fun blankSpecialtiesStaleEditsAndGuidedActionsAreIgnored() {
+    @Test fun blankSpecialtiesStaleEditsAndUnassignedCreationRatingsAreIgnored() {
         val c = CharacterSave()
         assertSame(c, c.edit(SheetEdit.AddSpecialty("occult", " \n "), catalog))
         val added = c.edit(SheetEdit.AddSpecialty("occult", " Ghosts "), catalog)
         assertEquals(listOf("Ghosts"), added.skills.first { it.skill == "occult" }.specialties)
         assertSame(added, added.edit(SheetEdit.ReplaceSpecialty("occult", 0, "Old text", "Replacement"), catalog))
         val guided = c.copy(creation = CreationState())
-        listOf(SheetEdit.AttributeRating("strength", 4), SheetEdit.SkillRating("occult", 3),
-            SheetEdit.AddSpecialty("occult", "Ghosts"), SheetEdit.Detail(CharacterDetail.Clan, "Ventrue"))
+        listOf(SheetEdit.AttributeRating("strength", 4), SheetEdit.SkillRating("occult", 3), SheetEdit.XpMode(true))
             .forEach { assertSame(guided, guided.edit(it, catalog)) }
     }
 }

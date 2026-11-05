@@ -4,6 +4,11 @@ import java.util.UUID
 
 /** Committed player actions. Loading, rendering and saving never replay an edit. */
 sealed interface SheetEdit {
+    data class Priority(val category: TraitCategory, val priority: CreationPriority, val skills: Boolean) : SheetEdit
+    data class FavoredAttribute(val id: String) : SheetEdit
+    data class CreationBonus(val experiences: Int) : SheetEdit
+    data class FinishCreation(val allowIncomplete: Boolean = false) : SheetEdit
+    data object LeaveCreation : SheetEdit
     data class Rename(val name: String) : SheetEdit
     data class Detail(val field: CharacterDetail, val text: String) : SheetEdit
     data class XpMode(val enabled: Boolean) : SheetEdit
@@ -51,8 +56,9 @@ val CharacterSave.stamina: Int get() = attributeRating("stamina")
 val CharacterSave.staminaCap: Int get() = legalRatings(RatingKind.Attribute, bloodPotency).last
 
 fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundationNow()): CharacterSave {
-    if (creation != null) return this
-    val next = applyEdit(action, catalog)
+    if (!creationAllowsEdit(action, catalog)) return this
+    val applied = applyEdit(action, catalog)
+    val next = if (applied.creation != null && applied.xpMode) applied.copy(xpMode = false) else applied
     if (next == this) return this
     // Remove invisible marks immediately: an edit made before the next write must not
     // resurrect a box discarded by reducing Health or Willpower.
@@ -62,7 +68,14 @@ fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundat
         .recordChanges(this, catalog, at)
 }
 
-private fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog): CharacterSave = when (action) {
+internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog): CharacterSave = when (action) {
+    is SheetEdit.Priority -> setPriority(action)
+    is SheetEdit.FavoredAttribute -> chooseFavoredAttribute(action.id, catalog)
+    is SheetEdit.CreationBonus -> if (creation != null && CreationRules.ranks.any { it.second == action.experiences }) copy(creation = creation.copy(bonusExperiences = action.experiences)) else this
+    is SheetEdit.FinishCreation -> if (creation != null && creationReport(catalog).withinLimits &&
+        (action.allowIncomplete || creationSteps(catalog).all { it.status == CreationStepStatus.Done }) && CreationRules.ranks.any { it.second == creation.bonusExperiences })
+        copy(creation = null, experiences = (experiences.toLong() + creation.bonusExperiences).coerceAtMost(Int.MAX_VALUE.toLong()).toInt(), xpMode = true) else this
+    SheetEdit.LeaveCreation -> if (creation == null) this else copy(creation = null, xpMode = false)
     is SheetEdit.Rename -> copy(name = action.name)
     is SheetEdit.Detail -> editDetail(action.field, action.text, catalog)
     is SheetEdit.XpMode -> copy(xpMode = action.enabled)
@@ -125,7 +138,8 @@ private fun CharacterSave.editDetail(field: CharacterDetail, text: String, catal
     CharacterDetail.Covenant -> copy(covenant = catalog.source(CatalogKind.covenants, text))
     CharacterDetail.Clan -> {
         val source = catalog.source(CatalogKind.clans, text)
-        val next = copy(clan = source)
+        val changed = copy(clan = source)
+        val next = if (creation?.favoredAttribute != null && creation.favoredAttribute !in changed.favoredAttributes(catalog)) changed.chooseFavoredAttribute(null, catalog) else changed
         next.copy(clanBaneActive = clanBaneActive || (clan != source && next.clanBane(catalog)?.let { humanity <= it.threshold } == true))
     }
 }

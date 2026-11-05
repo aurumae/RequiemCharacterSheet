@@ -287,3 +287,139 @@ struct SaveContractTests {
         try #require(JSONSerialization.jsonObject(with: data) as? NSDictionary)
     }
 }
+
+/// The same edits, refusals and resumable checkpoints as the Android guided editor.
+@MainActor
+struct GuidedCreationContractTests {
+    private let encoder = JSONEncoder()
+    private var exchange: String? { ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] }
+    private func id(_ row: Int) -> UUID { UUID(uuidString: String(format: "30000000-0000-0000-0000-%012d", row))! }
+    private struct Step: Decodable {
+        let action: String
+        let field, text, category, id, kind, source, qualifier, checkpoint: String?
+        let value, rating, row, overspend, done, available: Int?
+        let skills, anyway, accepted, withinLimits: Bool?
+    }
+
+    @Test func guidedCreationMatchesTheAndroidEditor() throws {
+        let steps = try JSONDecoder().decode([Step].self, from: SaveFixtures.resource("guided-creation"))
+        var c = Character.guided()
+        var trace: [[String: Any]] = []
+        for (index, s) in steps.enumerated() {
+            let before = c.traitSnapshot
+            let original = try encoder.encode(c)
+            switch s.action {
+            case "detail":
+                switch s.field {
+                case "Name": c.name = s.text!
+                case "Clan": c.clan = s.text!
+                case "Concept": c.concept = s.text!
+                case "Mask": c.mask = s.text!
+                case "Dirge": c.dirge = s.text!
+                default: Issue.record("Unexpected detail")
+                }
+            case "priority": c.setPriority(CreationPriority(rawValue: s.value!)!, for: TraitCategory(rawValue: s.category!.lowercased())!, skills: s.skills ?? false)
+            case "attribute":
+                let kind = AttributeKind(rawValue: s.id!)!
+                if s.rating! >= c.minimumRating(of: kind), s.rating! <= c.editableMaximum(for: TraitKey(.attribute, s.id!), upTo: c.baseRatingCap) {
+                    c.attributes.first { $0.kind == kind }!.rating = s.rating!
+                }
+            case "skill":
+                if s.rating! <= c.editableMaximum(for: TraitKey(.skill, s.id!), upTo: c.baseRatingCap) {
+                    c.skills.first { $0.skillID.rawValue == s.id! }!.rating = s.rating!
+                }
+            case "specialty": if c.canAddSpecialty { c.skills.first { $0.skillID.rawValue == s.id! }!.specialties.append(s.text!) }
+            case "favored": c.chooseFavoredAttribute(AttributeKind(rawValue: s.id!)!)
+            case "aspiration":
+                if s.row! == 0 { c.aspirations[0].text = s.text! }
+                else { c.aspirations.append(Aspiration(id: id(s.row!), text: s.text!)) }
+            case "touchstone": c.touchstones.first { $0.level == s.value! }!.text = s.text!
+            case "add":
+                let source = TraitSource.catalog(s.source!)
+                switch s.kind {
+                case "Discipline":
+                    if c.creationAllows(.discipline(Catalog.bundled.disciplines.entry(s.source!))) { c.disciplines.append(Discipline(id: id(s.row!), source: source, rating: 1)) }
+                case "Merit":
+                    let entry = Catalog.bundled.merits.entry(s.source!)!
+                    let rating = entry.ratings.min() ?? 1
+                    if c.creationAllows(.merit(entry, rating: rating)) { c.merits.append(Merit(id: id(s.row!), source: source, qualifier: s.qualifier, rating: rating)) }
+                case "Ritual":
+                    let entry = Catalog.bundled.rituals.entry(s.source!)!
+                    if c.creationAllows(.ritual(discipline: .catalog(entry.discipline), dots: entry.dots)) { c.rituals.append(Ritual(id: id(s.row!), source: source)) }
+                case "Devotion": if c.canLearnDevotionsAndScales { c.devotions.append(Devotion(id: id(s.row!), source: source)) }
+                case "Scale": if c.canLearnDevotionsAndScales { c.scales.append(Scale(id: id(s.row!), source: source)) }
+                default: Issue.record("Unexpected entry")
+                }
+            case "rate":
+                let kind: TraitKind = s.kind == "Discipline" ? .discipline : .merit
+                if s.rating! <= c.editableMaximum(for: TraitKey(kind, id(s.row!).uuidString), upTo: 5) {
+                    if kind == .discipline { c.disciplines.first { $0.id == id(s.row!) }!.rating = s.rating! }
+                    else { c.merits.first { $0.id == id(s.row!) }!.rating = s.rating! }
+                }
+            case "number":
+                let bp = s.field == "BloodPotency"
+                if s.value! <= c.editableMaximum(for: TraitKey(bp ? .bloodPotency : .humanity, bp ? "bloodPotency" : "humanity"), upTo: 10) {
+                    if bp { c.bloodPotency = s.value! } else { c.humanity = s.value! }
+                }
+            case "bonus": c.creation?.bonusExperiences = s.value!
+            case "finish":
+                if c.isInCreation, c.creationReport.isWithinLimits, (s.anyway == true || c.unfinishedCreationSteps.isEmpty) { c.finishCreation(bonusExperiences: c.creation!.bonusExperiences) }
+            case "check": break
+            default: Issue.record("Unknown creation action")
+            }
+            c.recordChanges(since: before, at: Date(timeIntervalSinceReferenceDate: 800_000_000.25 + Double(index)))
+            if s.accepted == false {
+                let old = try JSONSerialization.jsonObject(with: original) as! NSDictionary
+                let new = try JSONSerialization.jsonObject(with: encoder.encode(c)) as! NSDictionary
+                #expect(old.isEqual(new), "Rejected step \(index)")
+            }
+            c = try JSONDecoder().decode(Character.self, from: encoder.encode(c))
+            if let within = s.withinLimits { #expect(c.creationReport.isWithinLimits == within, "Step \(index)") }
+            if let overspend = s.overspend { #expect(c.creationReport.overspend == overspend, "Step \(index)") }
+            if let done = s.done { #expect(c.creationSteps.filter { $0.status == .done }.count == done, "Step \(index)") }
+            if let available = s.available { #expect(c.experiencesAvailable == available, "Step \(index)") }
+            if c.isInCreation { #expect(!c.xpMode); #expect(c.paidDots.isEmpty); #expect(c.changeLog.allSatisfy { $0.duringCreation == true && $0.experiences == 0 }) }
+            trace.append(traceRow(c))
+            if let checkpoint = s.checkpoint, let exchange {
+                try encoder.encode(c).write(to: URL(fileURLWithPath: exchange).appendingPathComponent("swift-guided-\(checkpoint).json"))
+            }
+        }
+        #expect(steps.count == 71)
+        #expect(c.experiencesAvailable == 10)
+        #expect(c.changeLog.suffix(5).map(\.experiences) == [4, -4, 0, 5, 0])
+        if let exchange { try JSONSerialization.data(withJSONObject: trace, options: [.sortedKeys]).write(to: URL(fileURLWithPath: exchange).appendingPathComponent("swift-guided-trace.json")) }
+    }
+
+    private func traceRow(_ c: Character) -> [String: Any] {
+        var row: [String: Any] = ["attributes": c.attributes.map(\.rating), "skills": c.skills.map(\.rating),
+            "available": c.experiencesAvailable, "xpMode": c.xpMode, "costs": c.changeLog.map(\.experiences),
+            "creationChanges": c.changeLog.map { $0.duringCreation as Any? ?? NSNull() },
+            "favored": c.creation?.favoredAttribute?.rawValue as Any? ?? NSNull(), "bonus": c.creation?.bonusExperiences as Any? ?? NSNull(), "report": NSNull()]
+        if c.isInCreation {
+            let r = c.creationReport
+            func budgets(_ budgets: [TraitCategory: CreationBudget]) -> [[Any]] {
+                TraitCategory.allCases.map { category in let b = budgets[category]!; return [b.used, b.allowed, b.priority?.rawValue as Any? ?? NSNull()] }
+            }
+            row["report"] = ["attributes": budgets(r.attributes), "skills": budgets(r.skills), "specialties": r.specialties.used,
+                "disciplines": r.disciplines.used, "merits": r.merits.used, "problems": r.problems.map(\.description).sorted(),
+                "steps": c.creationSteps.map { step in switch step.status { case .done: "Done"; case .inProgress: "InProgress"; case .problem: "Problem" } },
+                "details": c.creationSteps.map(\.detail)]
+        }
+        return row
+    }
+
+    @Test func readsKotlinGuidedCreation() throws {
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let exchange else { return }
+        for checkpoint in ["mid", "ready", "finished", "advanced"] {
+            let data = try Data(contentsOf: URL(fileURLWithPath: exchange).appendingPathComponent("kotlin-guided-\(checkpoint).json"))
+            let c = try JSONDecoder().decode(Character.self, from: data)
+            let original = try JSONSerialization.jsonObject(with: data) as! NSDictionary
+            let roundTrip = try JSONSerialization.jsonObject(with: encoder.encode(c)) as! NSDictionary
+            #expect(original.isEqual(roundTrip))
+            if checkpoint == "mid" { #expect(c.isInCreation); #expect(c.creation?.favoredAttribute == .dexterity); #expect(c.creationReport.isWithinLimits) }
+            if checkpoint == "ready" { #expect(c.creationSteps.allSatisfy { $0.status == .done }); #expect(c.creation?.favoredAttribute == .presence) }
+            if checkpoint == "finished" { #expect(!c.isInCreation); #expect(c.experiencesAvailable == 15); c.finishCreation(bonusExperiences: 100); #expect(c.experiences == 15) }
+            if checkpoint == "advanced" { #expect(c.experiencesAvailable == 10); #expect(c.changeLog.suffix(5).allSatisfy { $0.duringCreation == nil }) }
+        }
+    }
+}

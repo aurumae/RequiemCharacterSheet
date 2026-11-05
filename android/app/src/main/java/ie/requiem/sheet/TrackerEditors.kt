@@ -95,7 +95,7 @@ internal fun HumanityRows(c: CharacterSave, catalog: Catalog, editable: Boolean,
                 .heightIn(min = 52.dp).padding(vertical = 14.dp, horizontal = 4.dp).semantics { contentDescription = "Touchstone at Humanity ${touchstone.level}" },
                 style = MaterialTheme.typography.bodySmall, color = if (touchstone.text.isBlank()) SheetColors.muted else SheetColors.ink,
                 textDecoration = if (touchstone.text.isNotBlank() && touchstone.level > c.humanity) TextDecoration.LineThrough else null)
-            Box(Modifier.size(48.dp).clickable(enabled = editable && touchstone.level in 1..10) { edit(SheetEdit.Number(NumberField.Humanity, touchstone.level)) }
+            Box(Modifier.size(48.dp).clickable(enabled = editable && touchstone.level in 1..c.creationMaximum("humanity:humanity", 10, catalog)) { edit(SheetEdit.Number(NumberField.Humanity, touchstone.level)) }
                 .semantics { contentDescription = "Humanity ${touchstone.level}"; stateDescription = if (touchstone.level <= c.humanity) "Reached" else "Not reached" },
                 contentAlignment = Alignment.Center) { RatingDot(touchstone.level <= c.humanity) }
         }

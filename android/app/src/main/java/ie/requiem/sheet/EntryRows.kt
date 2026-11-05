@@ -23,7 +23,7 @@ internal fun PowerEntryRow(kind: EntryKind, row: SheetEntry, editable: Boolean, 
             Box(Modifier.weight(1f)) {
                 if (rating != null && row.choices.isNotEmpty()) TraitRatingControl(row.name.ifBlank { kind.title }, rating, 0,
                     row.choices.first()..row.choices.last(), editable, allowedValues = row.choices,
-                    reserveFiveDots = kind == EntryKind.Merit, onNameClick = if (row.known || editable) open else null) {
+                    reserveFiveDots = kind == EntryKind.Merit, onNameClick = if (row.known || editable) open else null, visibleCap = row.visibleDots) {
                     edit(SheetEdit.EntryRating(kind, row.id, it))
                 } else Row(Modifier.fillMaxWidth().clickable(enabled = row.known || editable, onClick = open).heightIn(min = 48.dp).padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically) {

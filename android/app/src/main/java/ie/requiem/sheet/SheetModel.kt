@@ -39,7 +39,7 @@ internal class SheetModel(app: Application, private val restored: SavedStateHand
     }
 
     fun refresh() = libraryAction("Could not reload the library") { null }
-    fun create() = libraryAction("Could not create the character") { files.create() }
+    fun create(guided: Boolean = false) = libraryAction("Could not create the character") { files.create(guided) }
     fun open(id: UUID) = libraryAction("Could not open the character") { files.open(id) }
     fun delete(id: UUID) = libraryAction("Could not delete the character") { files.delete(id); null }
 

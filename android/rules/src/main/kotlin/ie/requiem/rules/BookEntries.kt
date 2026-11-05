@@ -54,7 +54,7 @@ fun Coil.displayName(catalog: Catalog): String = catalog.entry(CatalogKind.myste
 fun Ritual.discipline(catalog: Catalog): TraitSource = catalog.entry(CatalogKind.rituals, source)?.let { TraitSource(catalog = it.discipline) } ?: customDiscipline
 fun Ritual.dots(catalog: Catalog): Int = catalog.entry(CatalogKind.rituals, source)?.dots ?: customDots
 
-internal fun traitName(id: String): String = (attributeDefinitions + skillDefinitions).firstOrNull { it.id == id }?.name ?: id
+fun traitName(id: String): String = (attributeDefinitions + skillDefinitions).firstOrNull { it.id == id }?.name ?: id
 internal fun dotsText(value: Int): String = "•".repeat(value.coerceIn(0, 10))
 fun BookEntry.ratingsText(): String {
     if (ratings.isEmpty()) return ""
