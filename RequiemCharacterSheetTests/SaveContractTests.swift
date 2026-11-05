@@ -86,6 +86,92 @@ struct SaveContractTests {
         }
     }
 
+    @Test func ordinaryPlayMatchesThePhoneEditor() throws {
+        struct Step: Decodable {
+            let action: String
+            let kind, source, text, field: String?
+            let row, rating, value, index, health: Int?
+            let enabled: Bool?
+            let costs: [Int]
+            let available: Int
+        }
+        let steps = try JSONDecoder().decode([Step].self, from: SaveFixtures.resource("ordinary-play"))
+        var character = Character()
+        var expectedCosts: [Int] = []
+        var rowIDs: [Int: UUID] = [:]
+        for (index, step) in steps.enumerated() {
+            let row = step.row ?? 0
+            let id = rowIDs[row] ?? UUID(uuidString: String(format: "10000000-0000-0000-0000-%012d", row))!
+            let before = character.traitSnapshot
+            switch step.action {
+            case "clan": character.clan = step.text!
+            case "xp": character.xpMode = step.enabled!
+            case "add":
+                let source = TraitSource.catalog(step.source!)
+                switch step.kind {
+                case "Discipline": character.disciplines.append(Discipline(id: id, source: source, rating: 1))
+                case "Merit": character.merits.append(Merit(id: id, source: source, rating: Catalog.bundled.merits.entry(step.source!)?.ratings.min() ?? 1))
+                case "Ritual": character.rituals.append(Ritual(id: id, source: source))
+                case "Scale": character.scales.append(Scale(id: id, source: source))
+                default: Issue.record("Unsupported shared addition")
+                }
+            case "remove":
+                switch step.kind {
+                case "Discipline": character.disciplines.removeAll { $0.id == id }
+                case "Merit": character.merits.removeAll { $0.id == id }
+                case "Ritual": character.rituals.removeAll { $0.id == id }
+                case "Devotion": character.devotions.removeAll { $0.id == id }
+                case "Scale": character.scales.removeAll { $0.id == id }
+                default: Issue.record("Unsupported shared removal")
+                }
+            case "rate":
+                switch step.kind {
+                case "Discipline": try #require(character.disciplines.first { $0.id == id }).rating = step.rating!
+                case "Merit":
+                    let merit = try #require(character.merits.first { $0.id == id })
+                    merit.rating = merit.entry?.allowedRating(for: step.rating!) ?? step.rating!
+                case "Coil": try #require(character.coils.first { $0.id == id }).rating = step.rating!
+                default: Issue.record("Unsupported shared rating")
+                }
+            case "healthMark": character.setHealthBox(at: step.index!, to: .bashing)
+            case "mystery":
+                character.chooseMystery(.catalog(step.source!))
+                rowIDs[row] = try #require(character.coils.first { $0.mystery == .catalog(step.source!) }).id
+            case "number":
+                if step.field == "Humanity" { character.humanity = step.value! }
+                else { character.bloodPotency = step.value! }
+            case "customDevotion": character.devotions.append(Devotion(id: id, source: .custom(step.text!), customExperienceCost: step.value!))
+            case "devotionCost": try #require(character.devotions.first { $0.id == id }).customExperienceCost = step.value!
+            case "rename": try #require(character.devotions.first { $0.id == id }).name = step.text!
+            default: Issue.record("Unsupported shared action")
+            }
+            character.recordChanges(since: before, at: Date(timeIntervalSinceReferenceDate: 800_000_000.25 + Double(index)))
+            character = try JSONDecoder().decode(Character.self, from: encoder.encode(character))
+            expectedCosts += step.costs
+            #expect(character.changeLog.map(\.experiences) == expectedCosts)
+            #expect(character.experiencesAvailable == step.available)
+            if let health = step.health { #expect(character.health == health) }
+        }
+        #expect(character.experiencesAvailable == -31)
+        #expect(character.healthBoxes.allSatisfy { $0 == .none })
+        if let path = Self.exchange {
+            try encoder.encode(character).write(to: URL(fileURLWithPath: path).appendingPathComponent("swift-ordinary-play.json"))
+        }
+    }
+
+    @Test func readsKotlinOrdinaryPlay() throws {
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let path = Self.exchange else { return }
+        let data = try Data(contentsOf: URL(fileURLWithPath: path).appendingPathComponent("kotlin-ordinary-play.json"))
+        let c = try JSONDecoder().decode(Character.self, from: data)
+        #expect(c.experiencesAvailable == -31)
+        #expect(c.humanity == 5 && c.bloodPotency == 1)
+        #expect(c.disciplineRating("cruac") == 2)
+        #expect(c.coilRating("mystery-of-the-wyrm") == 2)
+        #expect(c.rituals.count == 2 && c.scales.count == 1)
+        #expect(c.healthBoxes.allSatisfy { $0 == .none })
+        #expect(try object(encoder.encode(c)) == object(data))
+    }
+
     @Test func currentFixturesMatchWhatSwiftWrites() throws {
         if let path = Self.exchange {
             let c = Catalog.bundled

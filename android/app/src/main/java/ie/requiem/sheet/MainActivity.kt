@@ -72,7 +72,7 @@ private fun Requiem(model: SheetModel) {
                 IconButton(onClick = { focus.clearFocus(); model.close() }, enabled = !state.busy, modifier = Modifier.semantics { contentDescription = "Back" }) {
                     SheetIcon(SheetSymbol.Back, SheetColors.ink)
                 }
-                SheetSectionMenu { focus.clearFocus(); requestedSection = it }
+                SheetSectionMenu(SheetSection.available(c, model.catalog)) { focus.clearFocus(); requestedSection = it }
                 Spacer(Modifier.weight(1f))
                 if (c.creation == null) {
                     XpBadge(c.xpMode, c.experiencesAvailable, !state.busy) { model.edit(ie.requiem.rules.SheetEdit.XpMode(!c.xpMode)) }
@@ -106,12 +106,12 @@ private fun Requiem(model: SheetModel) {
 }
 
 @Composable
-private fun SheetSectionMenu(select: (SheetSection) -> Unit) {
+private fun SheetSectionMenu(sections: List<SheetSection>, select: (SheetSection) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }) { Text("Sections") }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            SheetSection.entries.forEach { section ->
+            sections.forEach { section ->
                 DropdownMenuItem(text = { Text(section.title) }, onClick = { expanded = false; select(section) })
             }
         }
@@ -120,6 +120,7 @@ private fun SheetSectionMenu(select: (SheetSection) -> Unit) {
 
 @Composable
 private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, toggle: () -> Unit) {
+    val ink = if (available < 0) SheetColors.caution else SheetColors.accent
     Box(Modifier.heightIn(min = 48.dp).widthIn(min = 64.dp).clip(CircleShape)
         .clickable(enabled = interactive, role = Role.Switch, onClick = toggle)
         .clearAndSetSemantics {
@@ -129,9 +130,9 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
             if (interactive) onClick(label = "Toggle XP Mode") { toggle(); true }
         }, contentAlignment = Alignment.Center) {
         Text(if (enabled) "XP $available" else "XP Off",
-            Modifier.border(1.dp, SheetColors.accent, CircleShape)
-                .background(if (enabled) SheetColors.accent else Color.White, CircleShape).padding(horizontal = 8.dp, vertical = 3.dp),
-            color = if (enabled) Color.White else SheetColors.accent,
+            Modifier.border(1.dp, ink, CircleShape)
+                .background(if (enabled) ink else Color.White, CircleShape).padding(horizontal = 8.dp, vertical = 3.dp),
+            color = if (enabled) Color.White else ink,
             style = MaterialTheme.typography.labelSmall)
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
-import ie.requiem.rules.CharacterSave
+import ie.requiem.rules.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -20,7 +20,7 @@ import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ChangeLogSheet(c: CharacterSave, dismiss: () -> Unit) {
+internal fun ChangeLogSheet(c: CharacterSave, catalog: Catalog, dismiss: () -> Unit) {
     val zone = ZoneId.systemDefault()
     fun instant(seconds: Double) = Instant.ofEpochMilli((seconds * 1000).toLong() + 978_307_200_000L)
     val days = c.changeLog.groupBy { instant(it.date).atZone(zone).toLocalDate() }.toSortedMap(reverseOrder())
@@ -49,20 +49,36 @@ internal fun ChangeLogSheet(c: CharacterSave, dismiss: () -> Unit) {
                 item { SubsectionLabel(day.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))) }
                 items(changes.sortedByDescending { it.date }, key = { it.id.toString() }) { change ->
                     val amount = when {
+                        change.duringCreation == true -> "Creation"
                         change.experiences > 0 -> "Spent ${change.experiences}"
                         change.experiences < 0 -> "Refunded ${-change.experiences}"
+                        change.xpMode -> "No cost"
                         else -> "Free"
+                    }
+                    val changeText = when (change.trait.substringBefore(':')) {
+                        "ritual", "scale" -> if (change.to > change.from) "Learned" else "Removed"
+                        "devotion" -> when {
+                            change.from == 0 -> "Learned"
+                            change.to == 0 -> "Removed"
+                            else -> "Cost ${change.from} → ${change.to}"
+                        }
+                        else -> "${change.from} → ${change.to}"
                     }
                     Surface(shape = RoundedCornerShape(16.dp), color = Color.White) {
                         Row(Modifier.fillMaxWidth().padding(12.dp).semantics(mergeDescendants = true) {},
                             verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Column(Modifier.weight(1f)) {
-                                Text(change.name, style = LocalSheetType.current.trait)
-                                Text("${change.from} → ${change.to}  · " +
+                                Text(c.changeName(change, catalog), style = LocalSheetType.current.trait)
+                                Text("$changeText  · " +
                                     instant(change.date).atZone(zone).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
                                     style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                             }
-                            Text(amount, Modifier.widthIn(max = 112.dp), style = MaterialTheme.typography.bodySmall, color = SheetColors.accent)
+                            Column(Modifier.widthIn(max = 112.dp), horizontalAlignment = Alignment.End) {
+                                Text(amount, style = MaterialTheme.typography.bodySmall,
+                                    color = if (change.experiences == 0) SheetColors.muted else SheetColors.accent)
+                                if (!change.xpMode && change.duringCreation != true) Text("XP Mode off",
+                                    style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                            }
                         }
                     }
                 }

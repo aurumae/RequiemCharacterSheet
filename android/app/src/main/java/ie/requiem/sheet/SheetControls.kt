@@ -61,7 +61,7 @@ internal fun RatingDot(filled: Boolean, bonus: Boolean = false) {
 // Preserve the reference's 20 dp marks on a 24 dp pitch. Prevent invisible expanded
 // hit regions from overlapping adjacent marks; the trait-name menu remains full-sized.
 @Composable
-private fun CompactTargets(content: @Composable () -> Unit) {
+internal fun CompactTargets(content: @Composable () -> Unit) {
     val original = LocalViewConfiguration.current
     val compact = remember(original) {
         object : ViewConfiguration by original {
@@ -80,12 +80,14 @@ internal fun StaminaControl(c: CharacterSave, catalog: Catalog, editable: Boolea
 /** Shared by attributes and skills, with only legal base ratings in the name menu. */
 @Composable
 internal fun TraitRatingControl(
-    label: String, base: Int, bonus: Int, legal: IntRange, editable: Boolean, onSelect: (Int) -> Unit,
+    label: String, base: Int, bonus: Int, legal: IntRange, editable: Boolean,
+    allowedValues: List<Int> = legal.toList(), reserveFiveDots: Boolean = false,
+    onNameClick: (() -> Unit)? = null, onSelect: (Int) -> Unit,
 ) {
     var expanded by rememberSaveable(label) { mutableStateOf(false) }
     fun select(value: Int): Boolean {
         if (!editable || value !in legal) return false
-        onSelect(value)
+        onSelect(allowedValues.firstOrNull { it >= value } ?: allowedValues.last())
         return true
     }
     BoxWithConstraints(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp)) {
@@ -93,7 +95,7 @@ internal fun TraitRatingControl(
         val dotsPerRow = (maxWidth / 24.dp).toInt().coerceIn(1, 5)
         @Composable fun dots() {
             CompactTargets {
-                Column {
+                Column(if (reserveFiveDots) Modifier.width(minOf(maxWidth, 120.dp)) else Modifier) {
                     (1..maxOf(legal.last, base + bonus)).chunked(dotsPerRow).forEach { values ->
                         Row {
                             values.forEach { value ->
@@ -107,22 +109,26 @@ internal fun TraitRatingControl(
             }
         }
         @Composable fun name(modifier: Modifier) {
-            Box(modifier.heightIn(min = 48.dp).clickable(enabled = editable) { expanded = true },
+            Box(modifier.heightIn(min = 48.dp).clickable(enabled = editable || onNameClick != null) { if (onNameClick != null) onNameClick() else expanded = true },
                 contentAlignment = Alignment.CenterStart) {
-                Text(label, style = LocalSheetType.current.label)
+                Text(label, Modifier.padding(vertical = 8.dp, horizontal = 0.dp).padding(end = 4.dp),
+                    style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
             }
         }
         Box(Modifier.fillMaxWidth().clearAndSetSemantics {
             contentDescription = label
             stateDescription = "$base base, $bonus bonus"
+            if (editable || onNameClick != null) onClick(label = if (onNameClick != null) "Open $label" else "Choose $label rating") {
+                if (onNameClick != null) onNameClick() else expanded = true; true
+            }
             if (editable) {
-                onClick(label = "Choose $label rating") { expanded = true; true }
                 progressBarRangeInfo = ProgressBarRangeInfo(base.toFloat(), legal.first.toFloat()..legal.last.toFloat(),
                     (legal.last - legal.first - 1).coerceAtLeast(0))
                 setProgress { select(Math.round(it).coerceIn(legal)) }
                 customActions = buildList {
-                    if (base < legal.last) add(CustomAccessibilityAction("Raise $label") { select(base + 1) })
-                    if (base > legal.first) add(CustomAccessibilityAction("Lower $label") { select(base - 1) })
+                    add(CustomAccessibilityAction("Choose $label rating") { expanded = true; true })
+                    allowedValues.firstOrNull { it > base }?.let { value -> add(CustomAccessibilityAction("Raise $label") { select(value) }) }
+                    allowedValues.lastOrNull { it < base }?.let { value -> add(CustomAccessibilityAction("Lower $label") { select(value) }) }
                 }
             }
         }) {
@@ -136,7 +142,7 @@ internal fun TraitRatingControl(
         }
         DropdownMenu(expanded = expanded && editable, onDismissRequest = { expanded = false },
             modifier = Modifier.widthIn(min = 144.dp).testTag("rating-menu")) {
-            legal.forEach { value ->
+            allowedValues.forEach { value ->
                 DropdownMenuItem(text = { Text(value.toString()) }, modifier = Modifier.semantics { selected = value == base },
                     trailingIcon = { if (value == base) Text("✓", Modifier.clearAndSetSemantics {}) },
                     onClick = { select(value); expanded = false })

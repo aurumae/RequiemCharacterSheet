@@ -16,8 +16,17 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
 import ie.requiem.rules.*
 
-internal enum class SheetSection(val title: String, val itemIndex: Int) {
-    Character("Character", 0), Attributes("Attributes", 1), Skills("Skills", 2), Health("Health", 5), Experience("Experience", 6)
+internal enum class SheetSection(val title: String, val itemKey: String) {
+    Character("Character", "character"), Attributes("Attributes", "attributes"), Skills("Skills", "skills-Mental"),
+    Disciplines("Disciplines", "disciplines"), Devotions("Devotions", "devotions"), Rituals("Rituals", "rituals"),
+    Coils("Coils of the Dragon", "coils"), Merits("Merits", "merits"), Aspirations("Aspirations", "aspirations"), Banes("Banes", "banes"),
+    Health("Health", "health"), Willpower("Willpower", "willpower"), BloodPotency("Blood Potency", "blood-potency"),
+    Vitae("Vitae", "vitae"), Humanity("Humanity", "humanity"), Advantages("Advantages", "advantages"), Experience("Experience", "experience");
+    companion object {
+        fun available(c: CharacterSave, catalog: Catalog): List<SheetSection> = entries.filter {
+            (it != Rituals || c.showsRituals(catalog)) && (it != Coils || c.showsCoils)
+        }
+    }
 }
 
 @Composable
@@ -25,9 +34,37 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
     section: SheetSection?, onSectionHandled: () -> Unit) {
     val editable = c.creation == null && !busy
     var log by rememberSaveable { mutableStateOf(false) }
+    var overlay by rememberSaveable { mutableStateOf<String?>(null) }
     val list = rememberLazyListState()
+    val keys = SheetSection.available(c, catalog).flatMap { if (it == SheetSection.Skills) TraitCategory.entries.map { category -> "skills-${category.name}" } else listOf(it.itemKey) }
+    @Composable fun entries(kind: EntryKind) {
+        val rows = c.entryRows(kind, catalog)
+        @Composable fun row(item: SheetEntry) {
+            PowerEntryRow(kind, item, editable, edit,
+                open = { overlay = "${if (item.known) "detail" else "customEdit"}|${kind.name}|${item.id}" },
+                editQualifier = if (kind == EntryKind.Merit && catalog.entry(CatalogKind.merits, item.source)?.qualifierPrompt != null)
+                    ({ overlay = "qualifierEdit|${item.id}" }) else null,
+                remove = { overlay = "delete|${kind.name}|${item.id}" })
+        }
+        if (kind == EntryKind.Ritual) {
+            val groups = (c.ritualDisciplines(catalog).map { it.source() } + c.rituals.map { it.discipline(catalog) }).distinct()
+            groups.forEach { discipline ->
+                val group = c.rituals.filter { it.discipline(catalog) == discipline }.sortedBy { it.dots(catalog) }
+                val title = catalog.name(CatalogKind.disciplines, discipline).ifBlank { "Other Rituals" }
+                SubsectionLabel(title)
+                val rank = discipline.catalog?.let { c.disciplineRating(it) } ?: 0
+                if (rank > 0) Text("Known: ${group.size} · Free with $title dots: $rank", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
+                    style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                group.forEach { ritual -> rows.firstOrNull { it.id == ritual.id }?.let { key(it.id) { row(it) } } }
+            }
+        } else rows.forEach { key(it.id) { row(it) } }
+        if (kind == EntryKind.Bane && c.banes.size >= 3) Text("A vampire can have at most 3 Banes.", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
+            style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+        else AddSheetRow("Add ${kind.title}", editable) { overlay = "pick|${kind.name}" }
+    }
+    @Composable fun band(title: String) { Spacer(Modifier.height(16.dp)); SectionBand(title) }
     LaunchedEffect(section) {
-        if (section != null) { list.scrollToItem(section.itemIndex); onSectionHandled() }
+        if (section != null) { keys.indexOf(section.itemKey).takeIf { it >= 0 }?.let { list.scrollToItem(it) }; onSectionHandled() }
     }
     Column(Modifier.fillMaxSize()) {
         if (c.creation != null) Text("Guided creation · Read-only", Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
@@ -48,7 +85,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                     attributeDefinitions.filter { it.category == category }.forEach { definition ->
                         val attribute = c.attributes.first { it.attribute == definition.id }
                         key(definition.id) {
-                            TraitRatingControl(definition.name, attribute.rating, c.attributeBonus(definition.id, catalog),
+                            TraitRatingControl(definition.name, attribute.rating, c.attributeBonus(definition.id, catalog) + c.rollBonus(definition.id, catalog),
                                 legalRatings(RatingKind.Attribute, c.bloodPotency), editable) { edit(SheetEdit.AttributeRating(definition.id, it)) }
                         }
                         SheetRule()
@@ -68,24 +105,62 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                     }
                 }
             }
+            item("disciplines") { band("DISCIPLINES"); entries(EntryKind.Discipline) }
+            item("devotions") { band("DEVOTIONS"); entries(EntryKind.Devotion) }
+            if (c.showsRituals(catalog)) item("rituals") { band("RITUALS"); entries(EntryKind.Ritual) }
+            if (c.showsCoils) item("coils") {
+                band("COILS OF THE DRAGON")
+                Row(Modifier.fillMaxWidth().background(Color.White).padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Mystery", Modifier.weight(1f), style = LocalSheetType.current.label)
+                    TextButton(onClick = { overlay = "mysteryPick" }, enabled = editable) { Text(catalog.name(CatalogKind.mysteries, c.mystery).ifBlank { "Choose" }) }
+                }
+                if (!c.mystery.custom.isNullOrBlank()) TextButton(onClick = { overlay = "mysteryEdit" }, enabled = editable) { Text("Edit Mystery name") }
+                entries(EntryKind.Coil)
+                SubsectionLabel("Scales"); entries(EntryKind.Scale)
+            }
+            item("merits") { band("MERITS"); entries(EntryKind.Merit) }
+            item("aspirations") {
+                band("ASPIRATIONS")
+                c.aspirations.forEachIndexed { index, aspiration -> key(aspiration.id) {
+                    WrittenRow(aspiration.text, "Tap to write an Aspiration", editable, "Aspiration ${index + 1}",
+                        open = { overlay = "asp|${aspiration.id}" }, remove = { overlay = "deleteAsp|${aspiration.id}" })
+                } }
+                AddSheetRow("Add Aspiration", editable) { overlay = "aspAdd" }
+            }
+            item("banes") { band("BANES"); ClanBaneRow(c, catalog, editable, edit); entries(EntryKind.Bane) }
             item("health") {
                 Spacer(Modifier.height(16.dp))
                 SectionBand("HEALTH")
                 HealthTrack(c, catalog, editable, edit)
                 Spacer(Modifier.height(16.dp))
             }
+            item("willpower") { band("WILLPOWER"); WillpowerTrack(c, editable, edit) }
+            item("blood-potency") {
+                band("BLOOD POTENCY")
+                TraitRatingControl("Blood Potency", c.bloodPotency, 0, 0..10, editable) { edit(SheetEdit.Number(NumberField.BloodPotency, it)) }
+            }
+            item("vitae") {
+                band("VITAE")
+                Column(Modifier.background(Color.White)) {
+                    ValueRow("Vitae Per Turn:", c.vitaePerTurn); SheetRule(); ValueRow("Max Vitae:", c.maxVitae); SheetRule()
+                    NumberCounter(c, NumberField.Vitae, editable, edit) { overlay = "number|Vitae" }
+                }
+            }
+            item("humanity") { band("HUMANITY"); HumanityRows(c, catalog, editable, edit) { overlay = "touch|$it" } }
+            item("advantages") { band("ADVANTAGES"); Advantages(c, catalog, editable) { overlay = "number|${it.name}" } }
             item("experience") {
                 SectionBand("EXPERIENCE")
-                ExperienceSection(c, editable, edit) { log = true }
+                ExperienceSection(c, editable, edit, number = { overlay = "number|${it.name}" }) { log = true }
                 Spacer(Modifier.height(16.dp))
             }
         }
     }
-    if (log) ChangeLogSheet(c) { log = false }
+    if (log) ChangeLogSheet(c, catalog) { log = false }
+    SheetDialogs(overlay, c, catalog, edit) { overlay = it }
 }
 
 @Composable
-private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetEdit) -> Unit, showLog: () -> Unit) {
+private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetEdit) -> Unit, number: (NumberField) -> Unit, showLog: () -> Unit) {
         Column(Modifier.background(Color.White)) {
             Row(Modifier.fillMaxWidth().toggleable(value = c.xpMode, enabled = editable, role = Role.Switch,
                 onValueChange = { edit(SheetEdit.XpMode(it)) }).padding(8.dp),
@@ -93,15 +168,15 @@ private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetE
                 Column(Modifier.weight(1f)) {
                     Text("XP Mode", style = LocalSheetType.current.label)
                     Text(if (c.creation != null) "Starting dots are free." else if (c.xpMode)
-                        "Raising a trait spends Experiences; lowering it refunds what it cost."
+                        "Raising a trait spends Experiences. Lowering a paid trait refunds it, except Humanity and Blood Potency."
                         else "Changes are free, e.g. Storyteller awards or entering an existing character.",
                         style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                 }
                 Switch(checked = c.xpMode, onCheckedChange = null, enabled = editable)
             }
             SheetRule()
-            ValueRow("Earned:", c.experiences, description = "${c.experiences} Experiences earned")
-            SheetRule()
+            NumberCounter(c, NumberField.Beats, editable, edit) { number(NumberField.Beats) }
+            NumberCounter(c, NumberField.Experiences, editable, edit) { number(NumberField.Experiences) }
             ValueRow("Spent:", c.experiences - c.experiencesAvailable, description = "${c.experiences - c.experiencesAvailable} Experiences spent")
             SheetRule()
             ValueRow("Available:", c.experiencesAvailable, description = "${c.experiencesAvailable} XP available",

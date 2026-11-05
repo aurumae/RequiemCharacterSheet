@@ -1,0 +1,333 @@
+[
+  {
+    "action": "clan",
+    "text": "Daeva",
+    "costs": [],
+    "available": 0
+  },
+  {
+    "action": "xp",
+    "enabled": true,
+    "costs": [],
+    "available": 0
+  },
+  {
+    "action": "add",
+    "kind": "Discipline",
+    "source": "celerity",
+    "row": 1,
+    "costs": [
+      3
+    ],
+    "available": -3
+  },
+  {
+    "action": "add",
+    "kind": "Discipline",
+    "source": "dominate",
+    "row": 2,
+    "costs": [
+      4
+    ],
+    "available": -7
+  },
+  {
+    "action": "add",
+    "kind": "Merit",
+    "source": "giant",
+    "row": 3,
+    "health": 7,
+    "costs": [
+      3
+    ],
+    "available": -10
+  },
+  {
+    "action": "healthMark",
+    "index": 6,
+    "costs": [],
+    "available": -10
+  },
+  {
+    "action": "remove",
+    "kind": "Merit",
+    "row": 3,
+    "health": 6,
+    "costs": [
+      -3
+    ],
+    "available": -7
+  },
+  {
+    "action": "add",
+    "kind": "Merit",
+    "source": "iron-skin",
+    "row": 4,
+    "costs": [
+      2
+    ],
+    "available": -9
+  },
+  {
+    "action": "rate",
+    "kind": "Merit",
+    "row": 4,
+    "rating": 3,
+    "costs": [
+      2
+    ],
+    "available": -11
+  },
+  {
+    "action": "rate",
+    "kind": "Merit",
+    "row": 4,
+    "rating": 0,
+    "costs": [
+      -4
+    ],
+    "available": -7
+  },
+  {
+    "action": "add",
+    "kind": "Discipline",
+    "source": "cruac",
+    "row": 5,
+    "costs": [
+      4
+    ],
+    "available": -11
+  },
+  {
+    "action": "add",
+    "kind": "Ritual",
+    "source": "rigor-mortis",
+    "row": 6,
+    "costs": [
+      0
+    ],
+    "available": -11
+  },
+  {
+    "action": "add",
+    "kind": "Ritual",
+    "source": "pangs-of-proserpina",
+    "row": 7,
+    "costs": [
+      2
+    ],
+    "available": -13
+  },
+  {
+    "action": "remove",
+    "kind": "Ritual",
+    "row": 6,
+    "costs": [
+      0
+    ],
+    "available": -13
+  },
+  {
+    "action": "add",
+    "kind": "Ritual",
+    "source": "rigor-mortis",
+    "row": 8,
+    "costs": [
+      2
+    ],
+    "available": -15
+  },
+  {
+    "action": "remove",
+    "kind": "Ritual",
+    "row": 7,
+    "costs": [
+      -2
+    ],
+    "available": -13
+  },
+  {
+    "action": "rate",
+    "kind": "Discipline",
+    "row": 5,
+    "rating": 2,
+    "costs": [
+      4
+    ],
+    "available": -17
+  },
+  {
+    "action": "add",
+    "kind": "Ritual",
+    "source": "cheval",
+    "row": 9,
+    "costs": [
+      0
+    ],
+    "available": -17
+  },
+  {
+    "action": "mystery",
+    "source": "mystery-of-the-wyrm",
+    "row": 10,
+    "costs": [],
+    "available": -17
+  },
+  {
+    "action": "add",
+    "kind": "Scale",
+    "source": "kindred-sense-endowment",
+    "row": 11,
+    "costs": [
+      2
+    ],
+    "available": -19
+  },
+  {
+    "action": "rate",
+    "kind": "Coil",
+    "row": 10,
+    "rating": 2,
+    "costs": [
+      6
+    ],
+    "available": -25
+  },
+  {
+    "action": "remove",
+    "kind": "Scale",
+    "row": 11,
+    "costs": [
+      -2
+    ],
+    "available": -23
+  },
+  {
+    "action": "add",
+    "kind": "Scale",
+    "source": "kindred-sense-endowment",
+    "row": 12,
+    "costs": [
+      1
+    ],
+    "available": -24
+  },
+  {
+    "action": "number",
+    "field": "Humanity",
+    "value": 8,
+    "costs": [
+      2
+    ],
+    "available": -26
+  },
+  {
+    "action": "number",
+    "field": "Humanity",
+    "value": 5,
+    "costs": [
+      0
+    ],
+    "available": -26
+  },
+  {
+    "action": "number",
+    "field": "BloodPotency",
+    "value": 2,
+    "costs": [
+      5
+    ],
+    "available": -31
+  },
+  {
+    "action": "number",
+    "field": "BloodPotency",
+    "value": 1,
+    "costs": [
+      0
+    ],
+    "available": -31
+  },
+  {
+    "action": "customDevotion",
+    "text": "Moonless Step",
+    "value": 3,
+    "row": 13,
+    "costs": [
+      3
+    ],
+    "available": -34
+  },
+  {
+    "action": "devotionCost",
+    "row": 13,
+    "value": 5,
+    "costs": [
+      2
+    ],
+    "available": -36
+  },
+  {
+    "action": "rename",
+    "kind": "Devotion",
+    "row": 13,
+    "text": "Moonless Tread",
+    "costs": [],
+    "available": -36
+  },
+  {
+    "action": "remove",
+    "kind": "Devotion",
+    "row": 13,
+    "costs": [
+      -5
+    ],
+    "available": -31
+  },
+  {
+    "action": "xp",
+    "enabled": false,
+    "costs": [],
+    "available": -31
+  },
+  {
+    "action": "add",
+    "kind": "Merit",
+    "source": "resources",
+    "row": 14,
+    "costs": [
+      0
+    ],
+    "available": -31
+  },
+  {
+    "action": "xp",
+    "enabled": true,
+    "costs": [],
+    "available": -31
+  },
+  {
+    "action": "remove",
+    "kind": "Merit",
+    "row": 14,
+    "costs": [
+      0
+    ],
+    "available": -31
+  },
+  {
+    "action": "xp",
+    "enabled": false,
+    "costs": [],
+    "available": -31
+  },
+  {
+    "action": "remove",
+    "kind": "Discipline",
+    "row": 1,
+    "costs": [
+      0
+    ],
+    "available": -31
+  }
+]

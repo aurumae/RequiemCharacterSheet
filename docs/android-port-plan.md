@@ -48,7 +48,7 @@ Serialize file operations off the UI thread, use atomic replacement and compare 
 
 ## Order of work
 
-Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet` and has run successfully on the Galaxy S24 FE. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 extends it to the rest of ordinary play.
+Step 1 is implemented on `shared/save-contract`. Run [the exchange check](../scripts/check-save-contract) to verify compatibility after a save or catalog change. Step 2 is implemented on `android/blank-sheet` and has run successfully on the Galaxy S24 FE. The [Android build and play check](../android/README.md) covers the first installable editor; milestone 3 is implemented on the stacked `android/core-sheet` and `android/ordinary-play` branches.
 
 | Milestone | Implementation | Done when |
 | --- | --- | --- |
@@ -78,14 +78,16 @@ The Android resources are exports of the supplied artwork and fonts; the screens
 
 ## Milestone 3 delivery slices
 
-Visual alignment is accepted on the Galaxy S24 FE. The first functional slice is on `android/core-sheet`:
+Visual alignment and the first functional slice are accepted on the Galaxy S24 FE. Slice 1 is on `android/core-sheet`; slices 2–4 are implemented on `android/ordinary-play`, in the sibling `RequiemCharacterSheet-play` worktree:
 
-1. **Character details, Attributes and Skills.** All nine identity fields, catalog choices for Mask/Dirge and Clan/Covenant, custom text, nine Attributes, 24 Skills, and multiple editable Specialties. The shared rating control supplies compact dots, legal name menus and accessibility adjustments. A section menu navigates the longer sheet. Attribute bonuses use the book effects, excluding bonuses that only apply to dice rolls. All committed rating changes use the paid-dot ledger; Specialty renames do not charge XP. `core-advancement.json` exercises the same sequence in Swift and Kotlin.
+1. **Character details, Attributes and Skills.** All nine identity fields, catalog choices for Mask/Dirge and Clan/Covenant, custom text, nine Attributes, 24 Skills, and multiple editable Specialties. The shared rating control supplies compact dots, legal name menus and accessibility adjustments. A section menu navigates the longer sheet. Attribute dots display base and bonus ratings separately. Derived values exclude bonuses that only apply to dice rolls; combat pools include them. All committed rating changes use the paid-dot ledger; Specialty renames do not charge XP. `core-advancement.json` exercises the same sequence in Swift and Kotlin.
 2. **Powers and personal traits.** Disciplines and Merits with searchable catalog choices, details, custom entries and prerequisite warnings; Aspirations and the Bane picker with its three-entry limit and clan-bane switch.
 3. **Play trackers and Humanity.** Willpower marks, Blood Potency/Vitae, Armor and derived values, Humanity and Touchstones, Beats and earned Experiences. Humanity and Blood Potency losses never refund XP.
-4. **Sorcery and advancement completion.** Rituals, Devotions, Mysteries, Coils and Scales, including free ritual slots and the dependent XP prices. Verify complete ordinary play and advancement before calling milestone 3 finished.
+4. **Sorcery and advancement completion.** Rituals, Devotions, Mysteries, Coils and Scales, including free ritual slots and the dependent XP prices. The shared 37-action `ordinary-play.json` sequence verifies purchases, refunds, ritual allowances, Scale prices, custom Devotions and nonrefundable losses in Swift and Kotlin.
 
-The first slice does not enable guided creation or editing the remaining sections. Existing saved data in those sections stays intact. The original Xcode checkout remains on its own branch; integrate the reviewed Android branches into `main` in their existing order.
+Milestone 3 now supports entering, playing and advancing an existing vampire offline. Guided creation remains read-only and is the next milestone. The original Xcode checkout remains on its own branch; integrate the reviewed Android branches into `main` in their existing order.
+
+Validation for this delivery: 193 Swift tests, 29 JVM tests, eight emulator interaction tests, and bidirectional Swift/Kotlin file exchange pass. Android lint has no errors; its seven existing warnings concern newer SDK and dependency versions. The device tests cover powers, qualifiers, Merit rating gaps, multiline Aspirations, Banes, Touchstones, Willpower, Vitae, Beats, sorcery prices, rotation and reopening. Manual emulator checks cover normal and enlarged text, upgrading over alpha 4 without changing a saved field, and restoring the open sheet and scroll position from Recents after process termination. Health, Willpower, paid dots and the change log survived without replaying a purchase. Physical-device acceptance remains on the Galaxy S24 FE.
 
 ## Keeping the two versions together
 

@@ -15,7 +15,7 @@ class CoreSheetUiTest {
     }
     private fun jump(section: String) {
         ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performClick()
+        ui.onNodeWithText(section).performScrollTo().performClick()
     }
     private fun rating(name: String, value: Int) {
         sheetNode(hasContentDescription(name)).performClick()
