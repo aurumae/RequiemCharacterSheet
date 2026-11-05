@@ -1,8 +1,8 @@
 # Phase 6 Google Play release guide
 
-Prepared 5 November 2026 for Requiem Character Sheet. The last physical-device-accepted Android baseline is `1d0c798`, version `0.4.0-alpha.6`. The current parity build is `0.5.0-alpha.7` (code 7), awaiting Galaxy S24 FE acceptance. This guide covers the remaining work from developer registration through the first public release and subsequent updates. It includes the internal distribution and upgrade checks previously listed as phase 5; those checks still need to happen through Google Play.
+Prepared 5 November 2026 for Requiem Character Sheet. The accepted Android baseline is `4c14885`, version `0.5.0-alpha.7` (code 7), integrated into `main` as `8581eef`. On 5 November 2026 the user confirmed that it works as expected on the Galaxy S24 FE running Android 17. This guide covers the remaining work from developer registration through the first public release and subsequent updates. It includes the internal distribution and upgrade checks previously listed as phase 5; those checks still need to happen through Google Play.
 
-**Parity update, 5 November:** Android now implements iOS 1.3 (`611b295`), including schema 10, bloodlines, new pickers and the supplied OFL fonts. Both fonts and full notices are packaged and readable offline in About; the old fonts are absent. The [parity record](ios-1.3-parity-plan.md) distinguishes completed automated checks from pending physical-device acceptance.
+**Parity update, 5 November:** Android now implements iOS 1.3 (`611b295`), including schema 10, bloodlines, new pickers and the supplied OFL fonts. Both fonts and full notices are packaged and readable offline in About; the old fonts are absent. The [parity record](ios-1.3-parity-plan.md) records the passing automated checks and user-confirmed physical-device acceptance; a full TalkBack session remains unconfirmed.
 
 You are creating a new developer account. The main route below assumes a **personal account** for this independent project. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
 
@@ -13,8 +13,8 @@ Our proposed first release is free, without advertisements, purchases, accounts 
 | Area | Current position | Work before public release |
 | --- | --- | --- |
 | Character sheet | Guided creation, ordinary play and advancement accepted on your S24 FE | Retest the build delivered by Play |
-| Rules and saves | Alpha 7: 205 Swift host tests, 44 JVM rules/storage tests, 13 emulator interaction tests and shared save exchange pass; Xcode CI passes | Run checks against the final release commit; complete physical acceptance |
-| New iOS parity | Alpha 7 reads schemas 1–10, writes 10, and implements bloodlines/Cachexy and identity pickers | Accept the [parity update](ios-1.3-parity-plan.md) on the S24 FE |
+| Rules and saves | Alpha 7: 205 Swift host tests, 44 JVM rules/storage tests, 13 emulator interaction tests and shared save exchange pass; Xcode CI passes | Run checks against the final release commit and Play-delivered build |
+| New iOS parity | Alpha 7 reads schemas 1–10, writes 10, and implements bloodlines/Cachexy and identity pickers | Accepted on the S24 FE; retest the Play release build |
 | Fonts and notices | IM Fell English Regular and Cinzel Medium, both full OFL notices and offline About pages are implemented; old fonts removed | Retain notices and recheck the final release package |
 | Android support | `minSdk`, `targetSdk` and `compileSdk` are 36 | Keep Android 16 minimum; recheck Play requirements at submission |
 | Identity | Package is `ie.requiem.sheet`; label is Requiem Character Sheet | Confirm the permanent package and public publisher name |
@@ -288,7 +288,7 @@ Review privacy declarations when adding SDKs, online features, accounts or new f
 | Rules, UI, compatibility and update verification | Us and testers | Passing tests and device evidence |
 | Declarations, submission and launch | You as publisher | Console approval and verified public listing |
 
-**Suggested sequence:** finish account verification and recruit testers now; complete and accept the iOS 1.3 parity update; prepare migration, privacy and signing together; run internal Play installation/update tests; run the qualifying closed test; apply for production access; complete public review and launch. A planning allowance of roughly **four to six weeks** is sensible for a new personal account once preparation and recruitment are underway. Parity implementation, verification, finding compatible testers or review requests may extend it; it is not a guaranteed Google turnaround.
+**Suggested sequence:** finish account verification and recruit testers now; with the iOS 1.3 parity alpha accepted, prepare migration, privacy and signing together; run internal Play installation/update tests; run the qualifying closed test; apply for production access; complete public review and launch. A planning allowance of roughly **four to six weeks** is sensible for a new personal account once preparation and recruitment are underway. Remaining release engineering, verification, finding compatible testers or review requests may extend it; it is not a guaranteed Google turnaround.
 
 The known platform registration cost is US$25. Signing tools, our existing build tools and the supplied OFL replacement fonts do not require a separate purchase. Budget separately for any remaining artwork/content rights and optional domain or hosting services. A simple public support/privacy site is enough; this offline release does not need an app backend.
 
@@ -300,7 +300,7 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [x] Replacement font permissions identified: IM Fell English and Cinzel, supplied OFL 1.1 notices verified.
 - [x] Android uses the replacement fonts, includes their complete notices and exposes them in About; old fonts absent from the package.
 - [ ] Remaining artwork/catalog permissions and Dark Pack presentation reviewed.
-- [ ] iOS 1.3 parity accepted, including schema 10 migration, bloodlines and cross-platform exchange.
+- [x] iOS 1.3 parity accepted: schema 10 migration and cross-platform exchange pass; user confirmed alpha 7 works as expected on the S24 FE on 5 November 2026.
 - [ ] Android privacy policy published and linked inside the app.
 - [ ] Backup and device-transfer behaviour explicitly configured and tested.
 - [ ] Alpha characters exported or otherwise preserved and restore verified.
@@ -315,4 +315,4 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [ ] Final release reviewed, publishing settings understood and launch approved.
 - [ ] Public listing/install verified; support and maintenance routine in place.
 
-After physical-device acceptance of [alpha 7](ios-1.3-parity-plan.md), the next engineering tasks are **character export/import and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.
+With [alpha 7 accepted on the S24 FE](ios-1.3-parity-plan.md), the next engineering tasks are **character export/import and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.

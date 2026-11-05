@@ -2,7 +2,7 @@
 
 Open this directory in Android Studio and run the **app** configuration. The Kotlin/Compose app supports Android 16 and later (minimum API 36). It stores characters on the device and works offline. The Galaxy S24 FE on Android 17 is the first physical test device.
 
-The current build is **0.5.0-alpha.7 (version code 7)**, matching iOS 1.3. Alpha 6, including guided creation, is the last build accepted on the physical Galaxy S24 FE; alpha 7 awaits that device check. See the [phase 6 Google Play release guide](../docs/play-store-release-guide.md) for account setup, signing, preserving alpha characters, privacy, store assets, testing and publication. The current APKs are debug builds; moving to Play signing requires a separate data-migration step.
+The current build is **0.5.0-alpha.7 (version code 7)**, matching iOS 1.3. Alpha 7 was accepted on the physical Galaxy S24 FE running Android 17 on 5 November 2026; the user reported that the app works as expected. See the [phase 6 Google Play release guide](../docs/play-store-release-guide.md) for account setup, signing, preserving alpha characters, privacy, store assets, testing and publication. The current APKs are debug builds; moving to Play signing requires a separate data-migration step.
 
 Alpha 7 adds schema 10, Morbus/Cachexy, searchable identity pickers, IM Fell English/Cinzel fonts, offline licences in About and readability improvements. See the [parity implementation and acceptance record](../docs/ios-1.3-parity-plan.md). An in-place emulator upgrade preserved three unchanged legacy saves byte for byte. Back up valuable characters before testing: the first real edit writes schema 10, which alpha 6 cannot read.
 
