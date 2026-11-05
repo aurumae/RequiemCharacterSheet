@@ -24,9 +24,30 @@ struct CharacterInfoView: View {
             CharacterInfoRowView(label: "Mask:", text: $character.mask, choices: archetypes)
             CharacterInfoRowView(label: "Dirge:", text: $character.dirge, choices: archetypes)
             CharacterInfoRowView(label: "Concept:", text: $character.concept)
-            CharacterInfoRowView(label: "Clan:", text: $character.clan)
-            CharacterInfoRowView(label: "Bloodline:", text: $character.bloodline)
-            CharacterInfoRowView(label: "Covenant:", text: $character.covenant)
+            CatalogChoiceRow(
+                label: "Clan:", value: character.clan, isCustom: character.clanSource.catalogID == nil,
+                setCustomText: { character.clan = $0 },
+                pickerTitle: "Choose Clan", searchPrompt: "Search clans",
+                sections: character.clanPickerSections, customTitle: "Custom Clan"
+            ) { id in
+                character.clanSource = id.map { .catalog($0) } ?? .custom("")
+            }
+            CatalogChoiceRow(
+                label: "Bloodline:", value: character.bloodline, isCustom: character.bloodlineSource.catalogID == nil,
+                setCustomText: { character.bloodline = $0 },
+                pickerTitle: "Choose Bloodline", searchPrompt: "Search bloodlines",
+                sections: character.bloodlinePickerSections, customTitle: "Custom Bloodline", noneTitle: "No Bloodline"
+            ) { id in
+                character.bloodlineSource = id.map { .catalog($0) } ?? .custom("")
+            }
+            CatalogChoiceRow(
+                label: "Covenant:", value: character.covenant, isCustom: character.covenantSource.catalogID == nil,
+                setCustomText: { character.covenant = $0 },
+                pickerTitle: "Choose Covenant", searchPrompt: "Search covenants",
+                sections: character.covenantPickerSections, customTitle: "Custom Covenant", noneTitle: "Unaligned"
+            ) { id in
+                character.covenantSource = id.map { .catalog($0) } ?? .custom("")
+            }
         }
     }
 }

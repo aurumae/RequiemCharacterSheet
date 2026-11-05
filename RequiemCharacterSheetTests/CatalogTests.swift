@@ -15,8 +15,9 @@ struct CatalogTests {
     // MARK: - Bundled data
 
     @Test func bundledCatalogsLoad() {
-        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night"])
-        #expect(catalog.disciplines.all.count == 13)
+        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion"])
+        #expect(catalog.disciplines.all.count == 14)
+        #expect(catalog.bloodlines.all.count == 1)
         // 85 from Vampire: The Requiem, plus 72 from Chronicles of Darkness that Requiem doesn't reprint
         #expect(catalog.merits.all.count == 157)
         #expect(catalog.banes.all.count == 14)

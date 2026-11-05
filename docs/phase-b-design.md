@@ -358,6 +358,21 @@ Other changes:
 - Capped Merits' dots sit at the left of the five-dot column.
 - Aspirations are tap-to-edit, multi-line, and shown in the trait-name style. Return ends editing.
 
+**Bloodlines and pickers (2026-11-05).**
+- **Bloodlines** are catalog entries (`bloodlines`): parent clans, nickname, in-clan Disciplines (which replace the clan's), and a bloodline bane shown alongside the clan bane.
+  - The first is the Morbus from the Dark Eras Companion (p. 95), with its Discipline **Cachexy** (pp. 112–113).
+  - A Discipline with a `bloodline` can only be chosen by that bloodline's members.
+  - Character schema 10 saves the bloodline as a catalog id or custom text. Older typed names link if they match.
+- **Clan, Bloodline and Covenant** are chosen from pickers like Add Discipline: each entry has a short description, followed by a custom option (and "No Bloodline" / "Unaligned").
+- **The clan's favoured-Attribute prompt** is an alert, shown once the clan picker has closed.
+
+**Polish.**
+- The sheet and the character list fade softly at their top and bottom edges.
+- The list leaves room to scroll the last row clear of the page border, and taps near the bottom of the screen reach the list before the system's home gesture.
+- A field opening for editing is scrolled into the upper part of the screen, clear of the keyboard, and a growing Aspiration stays in view.
+  - Lists scroll only to whole rows, so every row with a text field is identified with `editingRow(_:)`, and each Touchstone is its own row.
+  - The sheet's minimum row height is 36pt, since this iOS's taller default would otherwise space the Touchstones out. Other rows are taller anyway; a few headers and "Add" rows lost under 2pt.
+
 Still open: B6 (catalog import and export template).
 
 ## Open questions

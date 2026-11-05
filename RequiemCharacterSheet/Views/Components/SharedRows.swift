@@ -230,6 +230,9 @@ struct TapToEditNumberRow: View {
 /// losing focus), not on every keystroke, so names that link to the catalog don't change mid-word.
 struct TapToEditText<Display: View>: View {
     @Environment(\.theme) private var theme
+    @Environment(\.revealEditingField) private var revealEditingField
+    /// The list row this field is in, so the list can scroll it clear of the keyboard.
+    @Environment(\.editingRow) private var editingRow
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let placeholder: String
     @Binding var text: String
@@ -237,6 +240,9 @@ struct TapToEditText<Display: View>: View {
     var font: ThemeTextStyle = .body
     /// The field grows to show several lines, e.g. for an Aspiration. Return still ends editing.
     var multiline = false
+    /// What VoiceOver calls the field, e.g. "Name", with its text read as the value. Without one, the text
+    /// itself is read, which suits fields whose text says what they are (trait names, Aspirations).
+    var accessibilityName: String?
     /// How the text is shown when it isn't being edited.
     @ViewBuilder let display: (String) -> Display
 
@@ -245,9 +251,10 @@ struct TapToEditText<Display: View>: View {
     @FocusState private var isFocused: Bool
 
     /// - Parameter beginsEditing: Start with the field open, e.g. for a row that was just added.
-    init(placeholder: String, text: Binding<String>, font: ThemeTextStyle = .body, multiline: Bool = false,
-         beginsEditing: Bool = false, @ViewBuilder display: @escaping (String) -> Display) {
+    init(placeholder: String, accessibilityName: String? = nil, text: Binding<String>, font: ThemeTextStyle = .body,
+         multiline: Bool = false, beginsEditing: Bool = false, @ViewBuilder display: @escaping (String) -> Display) {
         self.placeholder = placeholder
+        self.accessibilityName = accessibilityName
         self._text = text
         self.font = font
         self.multiline = multiline
@@ -264,19 +271,38 @@ struct TapToEditText<Display: View>: View {
                     if multiline, draft.contains("\n") {
                         draft = draft.replacingOccurrences(of: "\n", with: "")
                         finishEditing()
+                    } else if multiline {
+                        // Keep a growing field above the keyboard
+                        reveal()
                     }
                 }
                 .font(theme.font(font, dynamicTypeSize: dynamicTypeSize))
                 .textFieldStyle(.roundedBorder)
                 .submitLabel(.done)
+                .modifier(NamedField(name: accessibilityName, value: nil))
                 .focused($isFocused)
                 .onSubmit(finishEditing)
                 .onAppear {
                     draft = text
                     isFocused = true
+                    // Once the keyboard is up, scroll the field into the upper part of the screen. The list
+                    // adjusts for the keyboard itself after it appears, so scroll again once that's done.
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(400))
+                        reveal()
+                        try? await Task.sleep(for: .milliseconds(500))
+                        reveal()
+                    }
                 }
                 .onChange(of: isFocused) { _, focused in
                     if !focused { finishEditing() }
+                }
+                // Also once the keyboard has finished appearing, e.g. after a picker closes
+                .task {
+                    for await _ in NotificationCenter.default.notifications(named: UIResponder.keyboardDidShowNotification) {
+                        try? await Task.sleep(for: .milliseconds(200))
+                        reveal()
+                    }
                 }
         } else {
             Button {
@@ -292,6 +318,13 @@ struct TapToEditText<Display: View>: View {
             }
             .buttonStyle(.plain)
             .accessibilityHint("Double-tap to edit")
+            .modifier(NamedField(name: accessibilityName, value: text.isEmpty ? "Empty" : text))
+        }
+    }
+
+    private func reveal() {
+        if let editingRow {
+            revealEditingField(editingRow)
         }
     }
 
@@ -304,8 +337,8 @@ struct TapToEditText<Display: View>: View {
 
 extension TapToEditText where Display == ModifiedContent<Text, ThemedTextModifier> {
     /// Shows the text in the given style when it isn't being edited.
-    init(_ placeholder: String, text: Binding<String>, font: ThemeTextStyle = .body) {
-        self.init(placeholder: placeholder, text: text, font: font) {
+    init(_ placeholder: String, accessibilityName: String? = nil, text: Binding<String>, font: ThemeTextStyle = .body) {
+        self.init(placeholder: placeholder, accessibilityName: accessibilityName, text: text, font: font) {
             Text($0).modifier(ThemedTextModifier(style: font))
         }
     }
@@ -361,5 +394,25 @@ struct CreationNote: View {
         Text(text)
             .themedText(.detail)
             .foregroundStyle(theme.muted)
+    }
+}
+
+/// Gives a field its name for VoiceOver, e.g. "Name", with the entered text as its value.
+private struct NamedField: ViewModifier {
+    let name: String?
+    let value: String?
+
+    func body(content: Content) -> some View {
+        if let name {
+            if let value {
+                content
+                    .accessibilityLabel(name)
+                    .accessibilityValue(value)
+            } else {
+                content.accessibilityLabel(name)
+            }
+        } else {
+            content
+        }
     }
 }

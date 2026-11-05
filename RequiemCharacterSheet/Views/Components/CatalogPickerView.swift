@@ -131,6 +131,7 @@ struct CatalogPickerView: View {
                     ForEach(item.details, id: \.self) { detail in
                         Text(detail)
                             .themedText(.detail)
+                            .accessibilityLabel(detail.spokenForVoiceOver)
                     }
                     if let reason = item.unavailableReason {
                         Label(reason, systemImage: "nosign")
@@ -177,7 +178,7 @@ struct DotsText: View {
 
     var body: some View {
         Text(String(repeating: "●", count: count))
-            .font(.system(size: 12))
+            .font(.caption2)
             .foregroundStyle(theme.accent)
             .accessibilityLabel("\(count) \(count == 1 ? "dot" : "dots")")
     }
@@ -211,6 +212,7 @@ struct CatalogDetailView<Extra: View>: View {
                         ForEach(facts) { fact in
                             (Text("\(fact.label): ").bold() + Text(fact.value))
                                 .themedText(.detail)
+                                .accessibilityLabel("\(fact.label): \(fact.value.spokenForVoiceOver)")
                         }
                         ForEach(warnings, id: \.self) { warning in
                             Label(warning, systemImage: "exclamationmark.triangle")

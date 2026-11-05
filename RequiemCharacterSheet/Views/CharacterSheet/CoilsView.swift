@@ -22,6 +22,7 @@ struct CoilsView: View {
 
             ForEach(character.coils) { coil in
                 CoilRowView(coil: coil, character: character, beginsEditing: coil.id == newCustomCoilID)
+                    .editingRow(coil.id)
             }
             .onDelete { character.coils.remove(atOffsets: $0) }
 
@@ -30,6 +31,7 @@ struct CoilsView: View {
             Section(header: Text("Scales").themedText(.subsectionHeader)) {
                 ForEach(character.scales) { scale in
                     ScaleRowView(scale: scale, character: character, beginsEditing: scale.id == newCustomScaleID)
+                        .editingRow(scale.id)
                 }
                 .onDelete { character.scales.remove(atOffsets: $0) }
 
@@ -74,6 +76,7 @@ struct CoilsView: View {
             if isCustomMystery {
                 TapToEditText(
                     placeholder: "Mystery Name",
+                    accessibilityName: "Mystery",
                     text: Binding(get: { character.mystery }, set: { name in
                         character.renameMystery(to: name)
                         editsCustomMystery = false
@@ -110,6 +113,9 @@ struct CoilsView: View {
                         Image(systemName: "chevron.up.chevron.down")
                             .font(.caption)
                     }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Mystery")
+                    .accessibilityValue(character.mysteryEntry?.name ?? "Not chosen")
                 }
             }
             .foregroundStyle(theme.accent)
@@ -314,7 +320,7 @@ struct MysteryDetailView: View {
                         }
                     }
                     .padding(.vertical, 4)
-                    .opacity(tier.dots <= rating ? 1 : 0.5)
+                    .opacity(tier.dots <= rating ? 1 : 0.7)
                     .accessibilityElement(children: .combine)
                     .accessibilityValue(tier.dots <= rating ? "Learned" : "Not learned")
                 }

@@ -6,9 +6,8 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>cas_antn.ttf</string>
-		<string>MrsEavesRoman.otf</string>
-		<string>MrsEavesSmallCaps.otf</string>
+		<string>IMFellEnglish-Regular.ttf</string>
+		<string>Cinzel-Medium.ttf</string>
 	</array>
 </dict>
 </plist>

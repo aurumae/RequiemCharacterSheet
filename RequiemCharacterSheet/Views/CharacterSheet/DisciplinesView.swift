@@ -21,6 +21,7 @@ struct DisciplinesView: View {
         Section(header: Text("DISCIPLINES").themedText(.sectionHeader)) {
             ForEach(character.disciplines) { discipline in
                 DisciplineRowView(discipline: discipline, character: character, beginsEditing: discipline.id == newCustomDisciplineID)
+                    .editingRow(discipline.id)
             }
             .onDelete(perform: deleteDiscipline)
 

@@ -14,6 +14,7 @@ struct CharacterListView: View {
     @State private var pendingDeletion: CharacterSummary?
     @State private var errorAlert: ErrorAlert?
     @State private var choosingNewCharacter = false
+    @State private var showingAbout = false
 
     var body: some View {
         NavigationStack {
@@ -28,7 +29,7 @@ struct CharacterListView: View {
                             if store.summaries.isEmpty {
                                 Text("No characters yet")
                                     .themedText(.body)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(theme.muted)
                             }
 
                             ForEach(store.summaries) { summary in
@@ -70,6 +71,17 @@ struct CharacterListView: View {
                         }
                     }
                     .listStyle(.grouped)
+                    .pageBorderEdge()
+
+                    // The Dark Pack notice and the bundled fonts' licences
+                    Button("About") {
+                        showingAbout = true
+                    }
+                    .themedText(.label)
+                    .padding(.vertical, 6)
+                    .sheet(isPresented: $showingAbout) {
+                        AboutView()
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 26)
@@ -119,7 +131,7 @@ struct CharacterListView: View {
                     if let modifiedAt = summary.modifiedAt {
                         Text("Edited \(modifiedAt, format: .relative(presentation: .named))")
                             .themedText(.detail)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(theme.muted)
                     }
                 }
                 .padding(.vertical, 4)
@@ -133,7 +145,7 @@ struct CharacterListView: View {
                     .themedText(.body)
                 Text("It may be damaged, or saved by a newer version of the app.")
                     .themedText(.detail)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.muted)
             }
             .padding(.vertical, 4)
         }

@@ -27,87 +27,99 @@ struct CharacterSheetView: View {
                 LogoHeader()
                 Spacer(minLength: 20)
                 
-                List {
-                    // GUIDED CREATION CHECKLIST
-                    if character.isInCreation {
-                        CreationPanelView(character: character) {
-                            choosingFavoredAttribute = true
+                ScrollViewReader { proxy in
+                    List {
+                        // GUIDED CREATION CHECKLIST
+                        if character.isInCreation {
+                            CreationPanelView(character: character) {
+                                choosingFavoredAttribute = true
+                            }
                         }
-                    }
 
-                    // CHARACTER SECTION
-                    CharacterInfoView(character: character)
+                        // CHARACTER SECTION
+                        CharacterInfoView(character: character)
                     
-                    // ATTRIBUTES SECTION
-                    Section(header: Text("ATTRIBUTES").themedText(.sectionHeader)) {
-                        // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
-                        ForEach(TraitCategory.allCases, id: \.self) { category in
-                            Section(header: CategoryHeader(title: category.name, character: character, category: category, skills: false)) {
-                                ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
-                                    AttributeRowView(character: character, attribute: attribute)
+                        // ATTRIBUTES SECTION
+                        Section(header: Text("ATTRIBUTES").themedText(.sectionHeader)) {
+                            // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
+                            ForEach(TraitCategory.allCases, id: \.self) { category in
+                                Section(header: CategoryHeader(title: category.name, character: character, category: category, skills: false)) {
+                                    ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
+                                        AttributeRowView(character: character, attribute: attribute)
+                                    }
                                 }
                             }
                         }
-                    }
                     
-                    // SKILLS SECTION
-                    SkillsView(character: character)
+                        // SKILLS SECTION
+                        SkillsView(character: character)
                     
-                    // DISCIPLINES SECTION
-                    DisciplinesView(character: character)
+                        // DISCIPLINES SECTION
+                        DisciplinesView(character: character)
 
-                    // DEVOTIONS, RITUALS and COILS SECTIONS
-                    DevotionsView(character: character)
-                    if character.showsRituals {
-                        RitualsView(character: character)
-                    }
-                    if character.showsCoils {
-                        CoilsView(character: character)
-                    }
+                        // DEVOTIONS, RITUALS and COILS SECTIONS
+                        DevotionsView(character: character)
+                        if character.showsRituals {
+                            RitualsView(character: character)
+                        }
+                        if character.showsCoils {
+                            CoilsView(character: character)
+                        }
                     
-                    // MERITS SECTION
-                    MeritsView(character: character)
+                        // MERITS SECTION
+                        MeritsView(character: character)
                     
-                    // ASPIRATIONS SECTION
-                    AspirationsView(character: character)
+                        // ASPIRATIONS SECTION
+                        AspirationsView(character: character)
 
-                    // BANES SECTION
-                    BanesView(character: character)
+                        // BANES SECTION
+                        BanesView(character: character)
                     
-                    // HEALTH SECTION
-                    Section(header: Text("HEALTH").themedText(.sectionHeader)) {
-                        HealthView(character: character)
-                    }
+                        // HEALTH SECTION
+                        Section(header: Text("HEALTH").themedText(.sectionHeader)) {
+                            HealthView(character: character)
+                        }
                     
-                    // WILLPOWER SECTION
-                    Section(header: Text("WILLPOWER").themedText(.sectionHeader)) {
-                        WillpowerView(character: character)
-                    }
+                        // WILLPOWER SECTION
+                        Section(header: Text("WILLPOWER").themedText(.sectionHeader)) {
+                            WillpowerView(character: character)
+                        }
                     
-                    // BLOOD POTENCY SECTION
-                    Section(header: Text("BLOOD POTENCY").themedText(.sectionHeader)) {
-                        BloodPotencyView(character: character)
-                    }
-                    // VITAE SECTION
-                    Section(header: Text("VITAE").themedText(.sectionHeader)) {
-                        VitaeView(character: character)
-                    }
+                        // BLOOD POTENCY SECTION
+                        Section(header: Text("BLOOD POTENCY").themedText(.sectionHeader)) {
+                            BloodPotencyView(character: character)
+                        }
+                        // VITAE SECTION
+                        Section(header: Text("VITAE").themedText(.sectionHeader)) {
+                            VitaeView(character: character)
+                        }
                     
-                    // HUMANITY SECTION
-                    Section(header: Text("HUMANITY").themedText(.sectionHeader)) {
-                        HumanityView(character: character)
-                    }
+                        // HUMANITY SECTION
+                        Section(header: Text("HUMANITY").themedText(.sectionHeader)) {
+                            HumanityView(character: character)
+                        }
                     
-                    // DERIVED ATTRIBUTES SECTION
-                    DerivedAttributesView(character: character)
+                        // DERIVED ATTRIBUTES SECTION
+                        DerivedAttributesView(character: character)
 
-                    // EXPERIENCE SECTION
-                    ExperienceView(character: character)
+                        // EXPERIENCE SECTION
+                        ExperienceView(character: character)
+                    }
+                    .listStyle(.grouped)
+                    .background(Color.clear)
+                    // Scrolling ends text editing
+                    .scrollDismissesKeyboard(.immediately)
+                    .pageBorderEdge()
+                    // A field opening for editing is scrolled clear of the keyboard
+                    // Rows can be shorter than this iOS's tall default, so Humanity's Touchstone rows stay compact.
+                    // Other rows are taller than this anyway.
+                    .environment(\.defaultMinListRowHeight, 36)
+                    .environment(\.revealEditingField) { row in
+                        withAnimation {
+                            proxy.scrollTo(row.id, anchor: UnitPoint(x: 0.5, y: row.anchor))
+                        }
+                    }
                 }
-                .listStyle(.grouped)
-                .background(Color.clear)
-                // Scrolling ends text editing
-                .scrollDismissesKeyboard(.immediately)
             }
             .padding(.horizontal)
             // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border
@@ -115,14 +127,18 @@ struct CharacterSheetView: View {
         }
         // Choosing a clan during guided creation asks where its free Attribute dot goes
         .onChange(of: character.clanSource) {
-            if character.needsFavoredAttribute {
-                choosingFavoredAttribute = true
+            // The clan is usually chosen in a picker; ask once it has closed, as an alert can't show over it
+            Task {
+                try? await Task.sleep(for: .milliseconds(700))
+                if character.needsFavoredAttribute {
+                    choosingFavoredAttribute = true
+                }
             }
         }
-        .confirmationDialog(
+        // An alert, not a menu: it always sits in the middle of the screen and always shows "Not Now"
+        .alert(
             "\(character.clan) Favoured Attribute",
-            isPresented: $choosingFavoredAttribute,
-            titleVisibility: .visible
+            isPresented: $choosingFavoredAttribute
         ) {
             ForEach(character.clanEntry?.favoredAttributes ?? [], id: \.self) { kind in
                 Button(kind.name) { character.chooseFavoredAttribute(kind) }

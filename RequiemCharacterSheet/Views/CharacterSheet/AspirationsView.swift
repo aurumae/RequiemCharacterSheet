@@ -17,6 +17,7 @@ struct AspirationsView: View {
         Section(header: Text("ASPIRATIONS").themedText(.sectionHeader)) {
             ForEach(character.aspirations) { aspiration in
                 AspirationRowView(aspiration: aspiration, beginsEditing: aspiration.id == newAspirationID)
+                    .editingRow(aspiration.id)
             }
             .onDelete(perform: deleteAspiration)
 

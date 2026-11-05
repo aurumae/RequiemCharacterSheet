@@ -17,8 +17,10 @@ struct HumanityView: View {
         character.editableMaximum(for: TraitKey(.humanity, "humanity"), upTo: 10)
     }
 
+    /// Each Touchstone is its own list row, so the one being edited can be scrolled clear of the keyboard
+    /// (lists scroll to whole rows). The rows are packed closely with no separators, to read as one track.
     var body: some View {
-        VStack(spacing: 4) {
+        Group {
             if let cap = character.humanityCap {
                 // A warning only when Humanity is above the limit, e.g. just after learning a dot of Crúac
                 if character.humanity > cap.limit {
@@ -30,11 +32,13 @@ struct HumanityView: View {
                         .foregroundStyle(theme.muted)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                Spacer().frame(height: 4)
             }
             ForEach(character.touchstones.sorted(by: { $0.level > $1.level })) { touchstone in
                 HumanityRowView(touchstone: touchstone, humanity: $character.humanity, maxHumanity: maxHumanity)
+                    .editingRow(touchstone.id)
             }
         }
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
     }
 }

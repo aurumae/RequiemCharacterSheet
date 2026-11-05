@@ -97,8 +97,21 @@ extension Character {
         dice(for: pool, disciplineRating: 0)
     }
 
-    /// The Disciplines the character's clan has in-clan, if the clan is from the catalog.
+    /// The character's in-clan Disciplines: their bloodline's, or else their clan's, if from the catalog.
+    /// Why the character can't learn a catalog Discipline, e.g. one only a bloodline has (Cachexy, the Morbus).
+    func reasonCantLearn(_ entry: DisciplineEntry) -> String? {
+        guard let bloodline = entry.bloodline, bloodlineSource != .catalog(bloodline) else { return nil }
+        let name = Catalog.bundled.bloodlines.entry(bloodline)?.name ?? bloodline
+        return "Only the \(name) bloodline can learn \(entry.name)"
+    }
+
+    /// Who the in-clan Disciplines belong to, e.g. "Mekhet", or "Morbus" for that bloodline.
+    var inClanGroupName: String {
+        bloodlineEntry?.name ?? clan
+    }
+
     var inClanDisciplines: Set<CatalogEntryID> {
-        Set(clanEntry?.disciplines ?? [])
+        // A bloodline's Disciplines replace its parent clan's
+        Set(bloodlineEntry?.disciplines ?? clanEntry?.disciplines ?? [])
     }
 }

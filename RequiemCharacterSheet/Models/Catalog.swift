@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Reference data for Disciplines, Merits, Banes, Clans, Covenants, rituals, Devotions, Mysteries and Scales,
+/// Reference data for Disciplines, Merits, Banes, Clans, Bloodlines, Covenants, rituals, Devotions, Mysteries and Scales,
 /// merged from every catalog file.
 struct Catalog {
     let books: [Book]
@@ -13,6 +13,7 @@ struct Catalog {
     let merits: CatalogIndex<MeritEntry>
     let banes: CatalogIndex<BaneEntry>
     let clans: CatalogIndex<ClanEntry>
+    let bloodlines: CatalogIndex<BloodlineEntry>
     let covenants: CatalogIndex<CovenantEntry>
     let rituals: CatalogIndex<RitualEntry>
     let devotions: CatalogIndex<DevotionEntry>
@@ -27,6 +28,7 @@ struct Catalog {
         merits = CatalogIndex(files.flatMap(\.merits))
         banes = CatalogIndex(files.flatMap(\.banes))
         clans = CatalogIndex(files.flatMap(\.clans))
+        bloodlines = CatalogIndex(files.flatMap(\.bloodlines))
         covenants = CatalogIndex(files.flatMap(\.covenants))
         rituals = CatalogIndex(files.flatMap(\.rituals))
         devotions = CatalogIndex(files.flatMap(\.devotions))

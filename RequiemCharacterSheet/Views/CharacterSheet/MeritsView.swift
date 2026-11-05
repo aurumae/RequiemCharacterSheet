@@ -21,6 +21,7 @@ struct MeritsView: View {
         Section(header: Text("MERITS").themedText(.sectionHeader)) {
             ForEach(character.merits) { merit in
                 MeritRowView(merit: merit, character: character, beginsEditing: merit.id == newCustomMeritID)
+                    .editingRow(merit.id)
             }
             .onDelete(perform: deleteMerit)
 

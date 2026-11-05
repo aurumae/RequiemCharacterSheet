@@ -46,6 +46,7 @@ struct CreationPanelView: View {
                             .themedText(.detail)
                             .foregroundStyle(character.needsFavoredAttribute ? theme.caution : theme.muted)
                         Image(systemName: "chevron.right")
+                            .accessibilityHidden(true)
                             .font(.caption)
                             .foregroundStyle(theme.muted)
                     }
@@ -117,6 +118,7 @@ private struct CreationStepRow: View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
             icon
                 .frame(width: 20)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(step.number). \(step.title)")
                     .themedText(.traitName)
@@ -182,7 +184,9 @@ private struct FinishCreationView: View {
                                         .themedText(.detail)
                                         .foregroundStyle(theme.muted)
                                 }
+                                // The row says "selected" itself
                                 Image(systemName: bonusExperiences == rank.experiences ? "checkmark.circle.fill" : "circle")
+                                    .accessibilityHidden(true)
                                     .foregroundStyle(theme.accent)
                             }
                             .contentShape(Rectangle())
