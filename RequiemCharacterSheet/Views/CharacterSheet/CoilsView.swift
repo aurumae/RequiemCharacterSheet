@@ -76,6 +76,7 @@ struct CoilsView: View {
             if isCustomMystery {
                 TapToEditText(
                     placeholder: "Mystery Name",
+                    accessibilityName: "Mystery",
                     text: Binding(get: { character.mystery }, set: { name in
                         character.renameMystery(to: name)
                         editsCustomMystery = false
@@ -112,6 +113,9 @@ struct CoilsView: View {
                         Image(systemName: "chevron.up.chevron.down")
                             .font(.caption)
                     }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Mystery")
+                    .accessibilityValue(character.mysteryEntry?.name ?? "Not chosen")
                 }
             }
             .foregroundStyle(theme.accent)
@@ -316,7 +320,7 @@ struct MysteryDetailView: View {
                         }
                     }
                     .padding(.vertical, 4)
-                    .opacity(tier.dots <= rating ? 1 : 0.5)
+                    .opacity(tier.dots <= rating ? 1 : 0.7)
                     .accessibilityElement(children: .combine)
                     .accessibilityValue(tier.dots <= rating ? "Learned" : "Not learned")
                 }

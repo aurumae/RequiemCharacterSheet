@@ -136,7 +136,7 @@ struct MeritPickerView: View {
                         Text(entry.name)
                             .themedText(.traitName)
                         Text(entry.ratingsText)
-                            .font(.system(size: 12))
+                            .font(.caption2)
                             .foregroundStyle(theme.accent)
                             .accessibilityLabel(ratingsAccessibilityLabel(entry))
                     }

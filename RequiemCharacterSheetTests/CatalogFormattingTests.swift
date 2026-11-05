@@ -88,4 +88,12 @@ struct CatalogFormattingTests {
     @Test func newCharactersStartWithoutDisciplines() {
         #expect(Character().disciplines.isEmpty)
     }
+
+    @Test func dotsAndArrowsAreSpokenAsWords() {
+        #expect("Crúac ••".spokenForVoiceOver == "Crúac 2 dots")
+        #expect("●".spokenForVoiceOver == "1 dot")
+        #expect("•–•••".spokenForVoiceOver == "1 dot to 3 dots")
+        #expect("1 → 3".spokenForVoiceOver == "1 to 3")
+        #expect("Beast's Hunger (Mystery of the Wyrm ••)".spokenForVoiceOver == "Beast's Hunger (Mystery of the Wyrm 2 dots)")
+    }
 }

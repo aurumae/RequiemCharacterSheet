@@ -10,6 +10,8 @@ import SwiftUI
 
 /// One health box, showing the damage marked in it.
 struct HealthBoxView: View {
+    /// Grows with the text size, so the mark inside stays readable.
+    @ScaledMetric(relativeTo: .body) private var boxSize: CGFloat = 20
     @Environment(\.theme) private var theme
     let damageType: HealthBoxFillType
     var isPenalty: Bool = false
@@ -19,14 +21,14 @@ struct HealthBoxView: View {
             .fill(Color.clear)
             .overlay(
                 Text(symbol(for: damageType))
-                    .font(.system(size: 14))
+                    .font(.system(size: boxSize * 0.7))
                     .foregroundStyle(theme.ink)
                     .bold()
             )
             .overlay(
                 Rectangle().stroke(isPenalty ? theme.accent : theme.ink, lineWidth: isPenalty ? 3 : 1)
             )
-            .frame(width: 20, height: 20)
+            .frame(width: boxSize, height: boxSize)
             .contentShape(Rectangle())
     }
 

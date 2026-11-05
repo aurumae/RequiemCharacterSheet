@@ -18,6 +18,7 @@ struct SplashScreenView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 150) // Adjust as needed
+                .accessibilityLabel("Dark Pack logo")
 
             // Legal Notice Text
             Text("Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit worldofdarkness.com.")

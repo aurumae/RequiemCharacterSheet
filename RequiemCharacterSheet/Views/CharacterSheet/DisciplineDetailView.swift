@@ -57,7 +57,8 @@ struct DisciplineDetailView: View {
                     Section(header: Text("Higher dots").themedText(.subsectionHeader)) {
                         ForEach(higherPowers) { power in
                             PowerRow(power: power, discipline: entry, rating: rating, character: character)
-                                .opacity(0.5)
+                                // Dimmed but still readable
+                                .opacity(0.7)
                         }
                     }
                 }
@@ -102,7 +103,7 @@ extension DisciplineDetailView {
                     Spacer()
                     DotsText(ritual.dots)
                 }
-                .opacity(ritual.dots <= rating ? 1 : 0.5)
+                .opacity(ritual.dots <= rating ? 1 : 0.7)
             }
         }
     }
@@ -110,6 +111,7 @@ extension DisciplineDetailView {
     private func fact(_ label: String, _ value: String) -> some View {
         (Text("\(label): ").bold() + Text(value))
             .themedText(.detail)
+            .accessibilityLabel("\(label): \(value.spokenForVoiceOver)")
     }
 }
 
@@ -132,7 +134,7 @@ private struct PowerRow: View {
                     .themedText(.traitName)
                 Spacer()
                 Text(dotsText)
-                    .font(.system(size: 12))
+                    .font(.caption2)
                     .foregroundStyle(theme.accent)
                     .accessibilityLabel(dotsAccessibilityLabel)
             }
@@ -188,5 +190,6 @@ private struct PowerRow: View {
     private func detail(_ label: String, _ value: String) -> some View {
         (Text("\(label): ").bold() + Text(value))
             .themedText(.detail)
+            .accessibilityLabel("\(label): \(value.spokenForVoiceOver)")
     }
 }

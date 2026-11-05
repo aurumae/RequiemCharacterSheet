@@ -74,6 +74,7 @@ struct ExperienceView: View {
                         .themedText(.detail)
                         .foregroundStyle(theme.muted)
                     Image(systemName: "chevron.right")
+                        .accessibilityHidden(true)
                         .font(.caption)
                         .foregroundStyle(theme.muted)
                 }
@@ -148,6 +149,7 @@ private struct ChangeLogRow: View {
                     .themedText(.traitName)
                 HStack(spacing: 6) {
                     Text(change.changeText)
+                        .accessibilityLabel(change.changeText.spokenForVoiceOver)
                     Text(change.date.formatted(date: .omitted, time: .shortened))
                         .foregroundStyle(theme.muted)
                 }
@@ -214,5 +216,8 @@ struct NegativeExperienceNotice: View {
             .padding(.vertical, 10)
             .background(Capsule().fill(theme.caution))
             .shadow(radius: 4)
+            // Tapping dismisses it early
+            .accessibilityAddTraits(.isButton)
+            .accessibilityHint("Double-tap to dismiss")
     }
 }

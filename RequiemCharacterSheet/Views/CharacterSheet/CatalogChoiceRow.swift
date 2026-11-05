@@ -46,6 +46,7 @@ struct CatalogChoiceRow: View {
             if editsCustom {
                 TapToEditText(
                     placeholder: "\(trimmedLabel) name",
+                    accessibilityName: trimmedLabel,
                     text: Binding(get: { isCustom ? value : "" }, set: { text in
                         setCustomText(text)
                         editsCustom = false
@@ -104,14 +105,14 @@ struct CatalogChoiceRow: View {
 }
 
 extension Character {
-    /// Clans for the picker, each with its nickname, favoured Attributes and in-clan Disciplines.
+    /// Clans for the picker, each with its favoured Attributes and in-clan Disciplines.
     func clanPickerSections() -> [CatalogPickerSection] {
         let items = Catalog.bundled.clans.all.sorted { $0.name < $1.name }.map { clan in
             let attributes = clan.favoredAttributes.map(\.name).joined(separator: " or ")
             let disciplines = clan.disciplines.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")
             return CatalogPickerItem(
                 id: clan.id,
-                name: clan.nickname.map { "\(clan.name) (\($0))" } ?? clan.name,
+                name: clan.name,
                 summary: clan.summary,
                 details: ["Favoured: \(attributes)", "Disciplines: \(disciplines)"],
                 citation: clan.source.citation(),
@@ -125,7 +126,7 @@ extension Character {
         let items = Catalog.bundled.covenants.all.sorted { $0.name < $1.name }.map { covenant in
             CatalogPickerItem(
                 id: covenant.id,
-                name: covenant.nickname.map { "\(covenant.name) (\($0))" } ?? covenant.name,
+                name: covenant.name,
                 summary: covenant.summary,
                 citation: covenant.source.citation(),
                 isOwned: covenantSource == .catalog(covenant.id)
@@ -143,7 +144,7 @@ extension Character {
             let fits = clanEntry.map { bloodline.parentClans.contains($0.id) } ?? true
             return CatalogPickerItem(
                 id: bloodline.id,
-                name: bloodline.nickname.map { "\(bloodline.name) (\($0))" } ?? bloodline.name,
+                name: bloodline.name,
                 summary: bloodline.summary,
                 details: ["Parent clan: \(parents)", "Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"],
                 warning: fits ? nil : "A bloodline of the \(parents)",

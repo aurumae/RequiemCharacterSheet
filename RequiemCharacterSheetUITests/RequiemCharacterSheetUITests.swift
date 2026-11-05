@@ -23,12 +23,14 @@ final class RequiemCharacterSheetUITests: XCTestCase {
         // Create a character on a blank sheet and give it a name
         app.buttons["New Character"].tap()
         app.buttons["Blank Sheet"].tap()
-        let nameField = app.buttons["Tap to edit"].firstMatch
+        // VoiceOver names the field "Name", with what's typed as its value
+        let nameField = app.buttons["Name"].firstMatch
         XCTAssertTrue(nameField.waitForExistence(timeout: 5))
         nameField.tap()
         app.textFields.firstMatch.typeText("\(characterName)\n")
         // The name is saved once editing ends and it shows on the sheet
-        XCTAssertTrue(app.buttons[characterName].waitForExistence(timeout: 5))
+        let saved = NSPredicate(format: "value == %@", characterName)
+        XCTAssertEqual(XCTWaiter.wait(for: [expectation(for: saved, evaluatedWith: app.buttons["Name"].firstMatch)], timeout: 5), .completed)
 
         // Going back keeps the changes
         app.navigationBars.buttons["Characters"].tap()
@@ -41,7 +43,7 @@ final class RequiemCharacterSheetUITests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
 
         // Delete it again, confirming when asked
-        row.swipeLeft()
+        revealDelete(on: row, in: app)
         app.buttons["Delete"].tap()
         app.buttons["Delete \(characterName)"].tap()
         XCTAssertTrue(row.waitForNonExistence(timeout: 5))
@@ -72,9 +74,19 @@ final class RequiemCharacterSheetUITests: XCTestCase {
         app.navigationBars.buttons["Characters"].tap()
         let row = app.staticTexts["Unnamed Character"].firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
-        row.swipeLeft()
+        revealDelete(on: row, in: app)
         app.buttons["Delete"].tap()
         app.buttons["Delete Unnamed Character"].tap()
+    }
+
+    /// Swipes the row to show its Delete button, swiping again if the first swipe didn't open it.
+    @MainActor
+    private func revealDelete(on row: XCUIElement, in app: XCUIApplication) {
+        row.swipeLeft()
+        if !app.buttons["Delete"].waitForExistence(timeout: 2) {
+            row.swipeLeft(velocity: .fast)
+        }
+        XCTAssertTrue(app.buttons["Delete"].waitForExistence(timeout: 2))
     }
 
     /// Launches the app and taps through the splash screen to the character list.

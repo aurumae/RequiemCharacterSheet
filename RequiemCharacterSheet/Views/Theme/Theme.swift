@@ -15,7 +15,7 @@ struct Theme {
     var ink: Color
     /// Placeholders and secondary text.
     var muted: Color
-    /// Gentle warnings that last, such as Experiences below zero. Yellow, dark enough to read on the page.
+    /// Gentle warnings that last, such as Experiences below zero. A dark gold, readable as text and behind white.
     var caution: Color
     /// The display face used for headings and trait names.
     var displayFontName: String
@@ -72,8 +72,9 @@ struct Theme {
     static let requiem = Theme(
         accent: Color(red: 88/255, green: 26/255, blue: 18/255),
         ink: .black,
-        muted: .gray,
-        caution: Color(red: 184/255, green: 134/255, blue: 11/255),
+        // Dark enough for small text on the white rows (WCAG 4.5:1): 5.2:1 and 5.3:1
+        muted: Color(red: 108/255, green: 108/255, blue: 112/255),
+        caution: Color(red: 140/255, green: 100/255, blue: 8/255),
         displayFontName: "CaslonAntique",
         displayFallbackFontName: "MrsEavesRoman",
         subheadingFontName: "MrsEavesSmallCaps",

@@ -69,7 +69,7 @@ struct MeritDetailView: View {
                                         .themedText(.traitName)
                                     Spacer()
                                     Text(String(repeating: "●", count: maneuver.dots))
-                                        .font(.system(size: 12))
+                                        .font(.caption2)
                                         .foregroundStyle(theme.accent)
                                         .accessibilityLabel("\(maneuver.dots) \(maneuver.dots == 1 ? "dot" : "dots")")
                                 }
@@ -77,7 +77,7 @@ struct MeritDetailView: View {
                                     .themedText(.body)
                             }
                             .padding(.vertical, 4)
-                            .opacity(maneuver.dots <= merit.rating ? 1 : 0.5)
+                            .opacity(maneuver.dots <= merit.rating ? 1 : 0.7)
                             .accessibilityElement(children: .combine)
                         }
                     }
@@ -113,5 +113,6 @@ struct MeritDetailView: View {
     private func detail(_ label: String, _ value: String) -> some View {
         (Text("\(label): ").bold() + Text(value))
             .themedText(.detail)
+            .accessibilityLabel("\(label): \(value.spokenForVoiceOver)")
     }
 }

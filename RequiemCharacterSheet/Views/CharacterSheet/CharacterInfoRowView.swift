@@ -23,7 +23,7 @@ struct CharacterInfoRowView: View {
 
             Spacer()
 
-            TapToEditText("Tap to edit", text: $text)
+            TapToEditText("Tap to edit", accessibilityName: label.trimmingCharacters(in: CharacterSet(charactersIn: ":")), text: $text)
 
             if !choices.isEmpty {
                 Menu {

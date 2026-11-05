@@ -75,14 +75,14 @@ struct DotsRatingView: View {
                 } label: {
                     HStack(spacing: 4) {
                         Text("\(totalRating)")
-                            .font(.system(size: 22))
+                            .font(.title2)
                             .foregroundStyle(theme.ink)
 
                         Text("(\(rating))")
-                            .font(.system(size: 22))
+                            .font(.title2)
                             .foregroundStyle(theme.accent)
                     }
-                    .frame(width: dotRowsWidth, alignment: .center)
+                    .frame(minWidth: dotRowsWidth, alignment: .center)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.borderless)
@@ -113,6 +113,12 @@ struct DotsRatingView: View {
             rating: $rating,
             range: max(allowsResetToZero ? 0 : 1, minEditableRating)...max(maxEditableRating, minEditableRating)
         ))
+        // Above the dots that fit, the total opens a rating picker; VoiceOver users can do the same
+        .accessibilityActions {
+            if showsOverflowTotal, totalRating > maxRating, isInteractive, let onOverflowTap {
+                Button("Choose a rating", action: onOverflowTap)
+            }
+        }
     }
 
     private var accessibilityValue: String {

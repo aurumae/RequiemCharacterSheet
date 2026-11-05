@@ -10,6 +10,8 @@ import SwiftUI
 
 /// One willpower box, showing whether it's been spent.
 struct WillpowerBoxView: View {
+    /// Grows with the text size, so the mark inside stays readable.
+    @ScaledMetric(relativeTo: .body) private var boxSize: CGFloat = 20
     @Environment(\.theme) private var theme
     let state: WillpowerBoxFillType
 
@@ -18,14 +20,14 @@ struct WillpowerBoxView: View {
             .fill(Color.clear)
             .overlay(
                 Text(state == .spent ? "/" : "")
-                    .font(.system(size: 14))
+                    .font(.system(size: boxSize * 0.7))
                     .foregroundStyle(theme.ink)
                     .bold()
             )
             .overlay(
                 Rectangle().stroke(theme.ink, lineWidth: 1)
             )
-            .frame(width: 20, height: 20)
+            .frame(width: boxSize, height: boxSize)
             .contentShape(Rectangle())
     }
 }

@@ -25,3 +25,16 @@ extension KeyedDecodingContainer {
         try decodeIfPresent(T.self, forKey: key) ?? defaultValue()
     }
 }
+
+extension String {
+    /// The text as VoiceOver should say it: dots as a count ("Crúac 2 dots" for "Crúac ••") and arrows as "to"
+    /// ("1 to 3" for "1 → 3"), rather than "bullet bullet" or "right arrow".
+    var spokenForVoiceOver: String {
+        var spoken = replacingOccurrences(of: " → ", with: " to ")
+        while let range = spoken.range(of: "[•●]+", options: .regularExpression) {
+            let count = spoken[range].count
+            spoken.replaceSubrange(range, with: "\(count) \(count == 1 ? "dot" : "dots")")
+        }
+        return spoken.replacingOccurrences(of: "–", with: " to ")
+    }
+}

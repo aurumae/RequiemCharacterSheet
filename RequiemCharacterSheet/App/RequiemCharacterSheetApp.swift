@@ -33,6 +33,9 @@ struct RequiemCharacterSheetApp: App {
                         .onTapGesture {
                             Task { await dismissSplash(fadeOut: 0.4, pause: 0.2, fadeIn: 0.4) }
                         }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityHint("Double-tap to skip")
                         .accessibilityAction(named: "Skip") {
                             Task { await dismissSplash(fadeOut: 0.4, pause: 0.2, fadeIn: 0.4) }
                         }

@@ -28,7 +28,7 @@ struct CharacterListView: View {
                             if store.summaries.isEmpty {
                                 Text("No characters yet")
                                     .themedText(.body)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(theme.muted)
                             }
 
                             ForEach(store.summaries) { summary in
@@ -120,7 +120,7 @@ struct CharacterListView: View {
                     if let modifiedAt = summary.modifiedAt {
                         Text("Edited \(modifiedAt, format: .relative(presentation: .named))")
                             .themedText(.detail)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(theme.muted)
                     }
                 }
                 .padding(.vertical, 4)
@@ -134,7 +134,7 @@ struct CharacterListView: View {
                     .themedText(.body)
                 Text("It may be damaged, or saved by a newer version of the app.")
                     .themedText(.detail)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.muted)
             }
             .padding(.vertical, 4)
         }
