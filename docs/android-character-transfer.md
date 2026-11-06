@@ -21,7 +21,7 @@ A validated pending import is stored atomically in the app's private, non-backed
 
 Only export snapshots are exposed through FileProvider. App-private character storage and the pending journal remain inaccessible through that provider. The activity reuses its existing instance for incoming files, avoiding two independent sheet writers. The GitHub iOS UI-test skip flag is unchanged.
 
-Shared coverage lives in `shared/fixtures/character-transfer.json`, `CharacterDocumentTest.kt` and `SaveContractTests.swift`. The exchange test uses the actual iOS store export/import APIs, covering advanced, unfinished guided, Morbus and older paid-dot saves. It checks unchanged bytes and copies whose only altered fields are ID and name. No iOS production code, catalog, fonts, schema, package manifest or workflow was changed.
+Shared coverage lives in `shared/fixtures/character-transfer.json`, `CharacterDocumentTest.kt` and `SaveContractTests.swift`. The exchange test uses the actual iOS store export/import APIs, covering advanced, unfinished guided, Morbus and older paid-dot saves. It checks unchanged bytes and copies whose only altered fields are ID and name. No iOS production code, catalog, fonts, schema, Swift package definition or workflow was changed.
 
 ## S24 FE acceptance checklist
 
@@ -35,3 +35,22 @@ Shared coverage lives in `shared/fixtures/character-transfer.json`, `CharacterDo
 8. Save all valuable characters outside the app and verify a restore before the later signing transition. Do not uninstall alpha 7/8 merely to test this feature.
 
 PDF export remains shelved. Explicit system-backup rules, Android privacy access, release signing and Play-delivered migration tests remain separate release tasks.
+
+## Validation record, 6 November 2026
+
+Implementation commit: `31be565`. The final local checks passed: 220 Swift host tests, five
+Kotlin-to-Swift consumer tests, 54 JVM rules/storage tests and all 18 Android 16 emulator tests.
+Build and lint passed with no errors and seven existing SDK/dependency update warnings.
+The new interaction tests cover picker cancellation, import, library long-press export, URI grants,
+Save to file, focused edits before external import, duplicate choices, rotation, identical files,
+invalid/future files, journal recovery and a save-picker result after model recreation.
+
+Manual emulator checks used the real Android document picker and share sheet. An iOS fixture
+imported and exported byte for byte with the `.vtrcharacter` extension intact. The duplicate dialog
+remained readable at 150% text. Terminating the background process and launching a new process
+restored its pending decision; Keep Both then changed only ID and name. Installing alpha 8 over
+alpha 7 retained the existing synthetic character bytes. The APK uses the same debug signing
+certificate as alpha 7. Screenshots and build logs are archived with the local alpha 8 APK.
+
+The [implementation PR](https://github.com/aurumae/RequiemCharacterSheet/pull/3) records CI results.
+These emulator checks do not replace the S24 FE checklist or a real iOS-to-Samsung device exchange.

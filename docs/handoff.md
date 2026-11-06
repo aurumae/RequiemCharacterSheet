@@ -173,3 +173,34 @@ will be appended in the next entry; physical S24 FE acceptance is still pending.
 **Follow-up (iOS):** pull these shared tests and use a real Android `.vtrcharacter` for device exchange
 when convenient; no format or production-code change is required. **Follow-up (Android):** complete
 alpha 8 device acceptance, then privacy access, explicit backup configuration and Play signing/migration.
+
+## 2026-11-06 19:30 UTC · Astra (Android) · Alpha 8 validation and device handoff
+
+Implementation: `31be565`, published in [PR #3](https://github.com/aurumae/RequiemCharacterSheet/pull/3).
+This documentation commit completes the README/transfer validation record and preserves the prior
+entry. No app code or additional shared fixture/test changes.
+
+Final local validation passed: 220 Swift host tests, five Kotlin-to-Swift consumer tests, 54 JVM tests,
+all 18 Android 16 emulator tests, APK build and lint (zero errors; seven existing SDK/dependency
+warnings). Transfer UI tests cover picker cancellation and imports, sharing, saving to file, focused
+edits before incoming files, Cancel/Keep Both/Replace, identical files, rotation and damaged/future
+rejection. Recovery tests also recreate the model and simulate a completed character write with
+journal cleanup interrupted, proving the numbered copy is not imported twice.
+
+Manual native-picker checks imported/exported an iOS fixture byte for byte and retained the
+`.vtrcharacter` filename. The share sheet shows the expected filename and excludes Requiem itself.
+The duplicate dialog fits at 150% text. An actual process termination (old PID ended; new PID on
+relaunch) restored the pending decision; Keep Both changed only ID and name. An in-place alpha 7
+upgrade preserved its synthetic save exactly. Alpha 8's debug certificate SHA-256 remains
+`41f1dfd375656070953357a42470348261d71f7d6ce33fa92b7de71fb6f1f895`, matching alpha 7.
+
+The APK, screenshots and logs are archived outside Git at `AndroidBuilds/31be565/` in the shared
+workspace parent. Android Studio's unrelated local Gradle JVM configuration was preserved and is
+not committed. PR checks currently show the Android build, Swift/Kotlin exchange and Xcode Cloud
+archive passing; the GitHub iOS simulator job is still running. See the PR for final CI results.
+
+**Follow-up:** the user should install alpha 8 as an update and run the S24 FE checklist in
+`docs/android-character-transfer.md`, including a real iOS 1.4 exchange. Physical acceptance has
+not yet been reported. Before changing signing, export all valuable alpha characters with Save to
+file and verify restoration. Android privacy access, explicit system-backup rules and release
+signing remain outstanding. No additional iOS production change is requested.
