@@ -1,17 +1,18 @@
 # Android parity with iOS 1.3
 
-Updated 5 November 2026. **Android alpha 7 implements the iOS 1.3 changes at `611b295`.** The Kotlin/Compose app, Android 16 minimum and shared repository are retained. [Integration PR #1](https://github.com/aurumae/RequiemCharacterSheet/pull/1) brings both native apps together; the numbered sections below retain the scope and acceptance criteria used for the implementation.
+Updated 6 November 2026. **Android alpha 7 implements the iOS 1.3 changes at `611b295`.** The Kotlin/Compose app, Android 16 minimum and shared repository are retained. [Integration PR #1](https://github.com/aurumae/RequiemCharacterSheet/pull/1) brings both native apps together; the numbered sections below retain the scope and acceptance criteria used for the implementation.
 
-The last build accepted on the physical Galaxy S24 FE is `1d0c798` (`0.4.0-alpha.6`). Its iOS baseline was `506ea78`. The new `0.5.0-alpha.7` (version code 7) incorporates all six upstream commits through `611b295` and retains the alpha 6 debug signing identity. Physical acceptance of alpha 7 on the S24 FE remains the next user check.
+**Alpha 7 (`0.5.0-alpha.7`, version code 7) was accepted on the Galaxy S24 FE running Android 17 on 5 November 2026.** The user reported that the app works as expected. The delivered source commit is `4c14885`, integrated into `main` by PR #1 as `8581eef`. This build incorporates all six upstream commits through `611b295` and retains the alpha 6 debug signing identity.
 
 ## Delivery status
 
 - Implemented schema 10, all four catalogs, bloodline rules and pickers, replacement fonts and offline licences, and the Android readability/editing changes below. Shared fixtures cover Morbus, a custom bloodline and unfinished creation, plus historical migration.
 - Local validation: 205 Swift host tests, 44 JVM rules/storage tests, all 13 Android emulator interaction tests, and bidirectional save exchange pass. The new shared bloodline scenario checks 12 actions, alongside the existing 37-action ordinary-play and 71-action creation scenarios. Android lint reports no errors (seven dependency/SDK warnings).
-- GitHub CI builds/tests the real Xcode app and its test targets, the Kotlin app, and the cross-platform save exchange. All three jobs passed for the implementation; the PR records results for each subsequent commit and is merged only after its final checks pass.
+- At the PR #1 integration, the GitHub Xcode build/tests, Kotlin build/tests and cross-platform exchange jobs all passed, as did the Xcode Cloud archive; PR #1 was merged as `8581eef`.
+- CI coordination update, 6 November: the iOS handoff reports a later `macos-26` UI snapshot timeout in `testCreatedCharacterIsSavedAndCanBeDeleted`. GitHub now skips `RequiemCharacterSheetUITests` while building the app and running the iOS unit tests, including `SaveContractTests`. Preserve `-skip-testing:RequiemCharacterSheetUITests`. UI tests remain in Xcode Cloud and local runs; future GitHub UI coverage needs suitable timeouts or a faster runner. The handoff identifies upstream commit `bdf383e`; it was not present in fetched `origin/main` (`fe0062d`) when this equivalent local workflow change was applied.
 - An Android 16 emulator upgrade from alpha 6 preserved all bytes of three synthetic legacy save files through installation and first launch. The APK contains the exact tracked IM Fell English/Cinzel fonts and full notices, with no Caslon Antique or Mrs Eaves resources.
 - Manual emulator checks covered the normal sheet, 150% text in the bloodline picker (portrait and landscape), readable licence text, and custom bloodline editing above the software keyboard. A background process-death check confirmed a new process, restored the open sheet and preserved the complete edited save byte for byte. These checks do not replace a full TalkBack session or physical-device testing.
-- Physical S24 FE acceptance and release-specific checks remain separate from the automated evidence. Export/import, Android privacy, backup rules and release signing are still outstanding.
+- Physical S24 FE acceptance is complete based on the user’s report on 5 November 2026. A full TalkBack session has not been separately confirmed. Export/import, Android privacy, backup rules, release signing and Play-delivered build checks are still outstanding.
 
 Opening an unchanged older file does not migrate it. The first real edit writes schema 10; alpha 6 cannot read that updated file, so retain a backup before testing.
 
@@ -129,4 +130,4 @@ Use an Android 16 emulator for the minimum supported version and the Galaxy S24 
 | Privacy, backup and signing migration | Still outstanding. The fetched changes do not add Android policy text, export/import, backup rules or release signing. |
 | Store screenshots | Capture the updated Android app after the new typography and pickers land. Existing screenshots describe the older appearance. |
 
-Both apps remain native in one repository. After alpha 7 device acceptance, resume release preparation with character export/import and signing migration, privacy access and explicit backup rules.
+Both apps remain native in one repository. With alpha 7 accepted on the S24 FE, resume release preparation with character export/import and signing migration, privacy access and explicit backup rules.

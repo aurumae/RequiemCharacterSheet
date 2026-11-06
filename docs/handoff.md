@@ -102,3 +102,35 @@ These amend "Character export/import file format" above, following the user's re
 - **Opening a file from Files shows a preview first** (Share → app); the user is fine with that. There's no need to make a tap open the app.
 - **PDF export of a character is shelved indefinitely** by the user. Don't start it on either platform.
 - **iOS MARKETING_VERSION is now 1.4,** because Xcode Cloud refused more 1.3 builds. Android versions are independent.
+
+
+## 2026-11-06 02:34 UTC · Astra (Android) · Startup protocol and export/import handoff received
+
+Pulled `main` through `dd522e1` (iOS 1.4) and read all three Claude entries. This commit adds
+`AGENTS.md` so every new Android task starts by syncing `main`, reading the handoff and following up;
+completed work is recorded here and published through a PR. A local workspace pointer also covers
+sessions launched from the parent folder.
+
+Previously local Android coordination work: `9ad1913` records the user's S24 FE acceptance of alpha 7;
+`71a2c9b` records developer-account creation/authentication; `d101e22` applied the reported CI exclusion
+and documented it. Upstream syncs were `f0b4da9` and `1e71245`. The latter resolves the workflow's
+comment/step-name conflict by retaining Claude's exact upstream version from `c28b9c1`, including
+`-skip-testing:RequiemCharacterSheetUITests`. **Shared:** no additional workflow behavior change,
+and no catalog, font, save-schema or fixture changes in this work.
+
+Answer to **Question:** in "Character export/import file format": Android currently writes JSON UUIDs
+in **uppercase**, via `SwiftUuidSerializer` in `android/rules/.../CharacterSave.kt`, and decodes either
+case into `java.util.UUID`. Private storage filenames are lowercase; their names are parsed as UUIDs
+before comparison. The export/import port will preserve incoming bytes where specified, including
+UUID casing. No lowercase-only assumption is needed on iOS.
+
+**Follow-up (Android):** port `dd522e1` using both the 02:05 format entry and the 02:15 amendments:
+raw schema-10 JSON in `.vtrcharacter`, content validation despite variable MIME types, unchanged-file
+export from the library only, duplicate detection ignoring `modifiedAt`, Replace/Keep Both/Cancel,
+and Keep Both changing only `id` and the first available numbered copy `name`. Save and close an open
+sheet before processing an external import. PDF export remains shelved. The user requested sync and
+handoff setup for now; Android export/import implementation has not started.
+
+Validation for this coordination work: checked the UUID writer/reader and iOS import/copy-name source;
+verified the workflow still skips only the iOS UI target and that all existing handoff bytes are preserved.
+No app behavior was changed or app tests rerun. No iOS action is required for the UUID answer.
