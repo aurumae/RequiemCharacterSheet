@@ -1,0 +1,8 @@
+# Copy outside the repository, restrict access, and fill in locally.
+# Set REQUIEM_SIGNING_PROPERTIES to that file's absolute path before invoking Gradle.
+# Relative storeFile paths are resolved beside this properties file.
+storeFile=upload-keystore.jks
+storeType=JKS
+keyAlias=requiem-upload
+storePassword=REPLACE_LOCALLY
+keyPassword=REPLACE_LOCALLY

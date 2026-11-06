@@ -1,7 +1,29 @@
+import java.io.File
+import java.security.KeyStore
+import java.security.cert.X509Certificate
+import java.security.interfaces.RSAPublicKey
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     kotlin("plugin.compose")
 }
+
+// Keep the keystore and passwords outside the checkout. Debug builds need neither.
+val signingPath = providers.environmentVariable("REQUIEM_SIGNING_PROPERTIES").orNull
+val uploadProperties = signingPath?.let { path ->
+    val source = file(path)
+    require(source.isFile) { "REQUIEM_SIGNING_PROPERTIES must point to a readable properties file." }
+    Properties().apply { source.inputStream().use(::load) }.also { values ->
+        for (key in listOf("storeFile", "storePassword", "keyAlias", "keyPassword")) {
+            require(!values.getProperty(key).isNullOrBlank()) { "Missing $key in the signing properties file." }
+        }
+        val keystore = File(values.getProperty("storeFile"))
+        if (!keystore.isAbsolute) values.setProperty("storeFile", source.absoluteFile.parentFile.resolve(keystore).path)
+        require(file(values.getProperty("storeFile")).isFile) { "The configured upload keystore does not exist." }
+    }
+}
+val allowUnsignedRelease = providers.gradleProperty("requiemUnsignedRelease").map(String::toBoolean).getOrElse(false)
 
 android {
     namespace = "ie.requiem.sheet"
@@ -10,9 +32,24 @@ android {
         applicationId = "ie.requiem.sheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.6.0-alpha.8"
+        versionCode = 9
+        versionName = "1.0.0-beta.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        if (uploadProperties != null) create("upload") {
+            storeFile = file(uploadProperties.getProperty("storeFile"))
+            storePassword = uploadProperties.getProperty("storePassword")
+            keyAlias = uploadProperties.getProperty("keyAlias")
+            keyPassword = uploadProperties.getProperty("keyPassword")
+            storeType = uploadProperties.getProperty("storeType", "JKS")
+        }
+    }
+    buildTypes.named("release") {
+        isDebuggable = false
+        // Keep the accepted app's behavior; shrinking can be evaluated separately.
+        isMinifyEnabled = false
+        if (uploadProperties != null) signingConfig = signingConfigs.getByName("upload")
     }
     buildFeatures { compose = true; buildConfig = true }
     sourceSets["test"].resources.srcDir("../../shared/fixtures")
@@ -20,6 +57,38 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+val verifyReleaseSigning = tasks.register("verifyReleaseSigning") {
+    group = "verification"
+    description = "Require a valid upload key before packaging a release; unsigned builds need an explicit CI flag."
+    doLast {
+        val values = uploadProperties
+        if (values == null) {
+            check(allowUnsignedRelease) {
+                "Release signing is not configured. Set REQUIEM_SIGNING_PROPERTIES to your private upload.properties file. " +
+                    "For an unsigned CI check only, pass -PrequiemUnsignedRelease=true."
+            }
+        } else {
+            val store = KeyStore.getInstance(values.getProperty("storeType", "JKS"))
+            File(values.getProperty("storeFile")).inputStream().use {
+                store.load(it, values.getProperty("storePassword").toCharArray())
+            }
+            val alias = values.getProperty("keyAlias")
+            check(store.isKeyEntry(alias)) { "The configured alias is not a private-key entry." }
+            check(store.getKey(alias, values.getProperty("keyPassword").toCharArray()) != null) { "Cannot unlock the upload key." }
+            val certificate = store.getCertificate(alias) as X509Certificate
+            certificate.checkValidity()
+            val key = certificate.publicKey as? RSAPublicKey
+            check(key != null && key.modulus.bitLength() >= 2048) { "Google Play upload keys must use RSA with at least 2048 bits." }
+            check(!certificate.subjectX500Principal.name.contains("CN=Android Debug", ignoreCase = true)) {
+                "The Android debug certificate cannot sign a Play release. Use a dedicated upload key."
+            }
+        }
+    }
+}
+tasks.matching { it.name == "packageRelease" || it.name == "packageReleaseBundle" }.configureEach {
+    dependsOn(verifyReleaseSigning)
 }
 
 dependencies {

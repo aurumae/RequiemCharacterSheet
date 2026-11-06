@@ -1,6 +1,6 @@
 # Android character export/import
 
-Implemented in alpha 8, `0.6.0-alpha.8` (version code 8), following Claude's iOS 1.4 implementation at `dd522e1` and both export/import handoff entries of 6 November 2026. Schema 10 is unchanged. The S24 FE accepted alpha 7; acceptance of this new build is pending.
+Implemented in alpha 8, `0.6.0-alpha.8` (version code 8), following Claude's iOS 1.4 implementation at `dd522e1` and both export/import handoff entries of 6 November 2026. Schema 10 is unchanged. The user accepted all alpha 8 manual checks on the S24 FE running Android 17 on 6 November 2026 and confirmed real iOS → Android and Android → iOS transfers.
 
 ## Using it
 
@@ -53,4 +53,4 @@ alpha 7 retained the existing synthetic character bytes. The APK uses the same d
 certificate as alpha 7. Screenshots and build logs are archived with the local alpha 8 APK.
 
 The [implementation PR](https://github.com/aurumae/RequiemCharacterSheet/pull/3) records CI results.
-These emulator checks do not replace the S24 FE checklist or a real iOS-to-Samsung device exchange.
+The user subsequently completed the S24 FE checklist and confirmed a real iOS-to-Samsung exchange in both directions. The later Play-delivered beta still needs its own install/update check.
