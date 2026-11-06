@@ -1,6 +1,8 @@
 # Android port plan
 
-**Revised 5 November 2026.** The accepted Android alpha 6 matches the earlier iOS baseline `506ea78`. Android alpha 7 now implements iOS 1.3 at `611b295`: schema 10, bloodlines/Cachexy, identity pickers, OFL fonts, About and readability improvements. See the [iOS 1.3 parity implementation and acceptance record](ios-1.3-parity-plan.md); alpha 7 was accepted on the S24 FE on 5 November 2026. The original milestones and delivered behaviour below remain a record of the alpha 6 baseline.
+**Revised 6 November 2026.** Alpha 8 adds the iOS 1.4 character export/import contract; see the [implementation and acceptance checklist](android-character-transfer.md). S24 FE acceptance of this new build is pending.
+
+**Previous parity baseline:** The accepted Android alpha 6 matches the earlier iOS baseline `506ea78`. Android alpha 7 now implements iOS 1.3 at `611b295`: schema 10, bloodlines/Cachexy, identity pickers, OFL fonts, About and readability improvements. See the [iOS 1.3 parity implementation and acceptance record](ios-1.3-parity-plan.md); alpha 7 was accepted on the S24 FE on 5 November 2026. The original milestones and delivered behaviour below remain a record of the alpha 6 baseline.
 
 Build the Android app in Kotlin and Jetpack Compose in an `android/` directory beside the Xcode project. Continue developing the iOS app in Swift and SwiftUI. Give both apps the same book catalogs, character-file format and examples of correct rules behavior. This lets a book correction reach both apps in one edit and gives each platform control over how players use the sheet.
 

@@ -4,6 +4,8 @@ Prepared 5 November 2026 for Requiem Character Sheet. The accepted Android basel
 
 **Parity update, 5 November:** Android now implements iOS 1.3 (`611b295`), including schema 10, bloodlines, new pickers and the supplied OFL fonts. Both fonts and full notices are packaged and readable offline in About; the old fonts are absent. The [parity record](ios-1.3-parity-plan.md) records the passing automated checks and user-confirmed physical-device acceptance; a full TalkBack session remains unconfirmed.
 
+**Transfer update, 6 November:** alpha 8 (`0.6.0-alpha.8`, code 8) implements the iOS 1.4 `.vtrcharacter` export/import contract. Library exports support sharing and saving to a user-selected folder; imports handle duplicate choices and preserve saved data. See the [implementation and acceptance checklist](android-character-transfer.md). Physical-device acceptance and the eventual debug-to-Play restore check remain outstanding.
+
 The developer account has been created and authenticated, as confirmed by the user. The main route below assumes a **personal account** for this independent project; the account type has not been separately confirmed. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
 
 Our proposed first release is free, without advertisements, purchases, accounts or a backend. Keep Android 16 as the minimum. Start recruiting compatible testers while preparing the release: account verification and the closed test will determine much of the schedule.
@@ -20,7 +22,7 @@ Our proposed first release is free, without advertisements, purchases, accounts 
 | Identity | Package is `ie.requiem.sheet`; label is Requiem Character Sheet | Confirm the permanent package and public publisher name |
 | Signing | All delivered alphas use a debug certificate | Create an upload key and use Play App Signing |
 | Privacy | Repository links to an iOS policy; About includes version, Dark Pack and font information | Publish an Android policy and add an accessible in-app link |
-| Character portability | JSON files are private to the app; no export/import screen | Provide a tested route for transferring alpha characters |
+| Character portability | Alpha 8 has library Export, Save to file and Import Character, plus incoming shared files | Accept on the S24 FE, export real alpha characters and verify restore before changing signing |
 | Backup | Manifest does not specify backup behaviour | Configure and test cloud backup and device transfer explicitly |
 | Store graphics | Android QA screenshots and a 216 × 216 launcher source exist | Prepare proper store graphics and suitable screenshots |
 | Distribution | APK sideloading has been tested | Internal Play test, closed test, production access and public review |
@@ -59,7 +61,7 @@ Keep a dated copy or link to the applicable agreement and any separate permissio
 
 Keep `ie.requiem.sheet` unless you want a different identifier before first registration or it is unavailable. This identifier determines which Android application receives updates; it is separate from the editable store title. Play package names are permanent and cannot be reused. [Create and configure a Play app](https://support.google.com/googleplay/android-developer/answer/9859152)
 
-For the first release candidate, I suggest a user-facing version such as `1.0.0-rc1`. Use the next unused integer version code above 7, and increment it for each newly uploaded build. The public release can be `1.0.0`; its code must continue increasing. Promoting an already uploaded, unchanged artifact between tracks does not require rebuilding it. We should decide the version before building the candidate so its metadata, screenshots and release notes agree.
+For the first release candidate, I suggest a user-facing version such as `1.0.0-rc1`. Use the next unused integer version code above 8, and increment it for each newly uploaded build. The public release can be `1.0.0`; its code must continue increasing. Promoting an already uploaded, unchanged artifact between tracks does not require rebuilding it. We should decide the version before building the candidate so its metadata, screenshots and release notes agree.
 
 Keep the code in the existing combined repository. The Android/iOS integration is tracked in [PR #1](https://github.com/aurumae/RequiemCharacterSheet/pull/1). Reconcile any later iOS/catalog changes, then tag the exact release commit. Continue iOS feature work separately and use the shared tests to detect differences. A public release should be reproducible from its tag without relying on uncommitted files in a worktree.
 
@@ -71,14 +73,14 @@ For subsequent development builds, consider an application ID suffix such as `.d
 
 My recommended transition is:
 
-1. After the schema 10 parity update, add character export and import with the shared v10 format and legacy migration support, preserving character IDs, custom bloodlines, creation progress, damage, paid-dot ledger and history. Reject unsupported future files without altering them.
-2. Deliver one final migration alpha signed with the **existing debug key**, so it updates the installed alpha normally.
-3. Export every character to a user-selected location outside the app's private directory. Keep a second copy.
+1. Install and accept alpha 8, which supplies character export/import for schema 10 and older supported saves, including IDs, custom bloodlines, creation progress, damage, paid-dot ledger and history. Unsupported future files are refused without altering saved characters.
+2. Alpha 8 uses the **existing debug key**, so it can update the installed alpha normally. Keep that signing continuity for any further migration fixes.
+3. From each character’s library menu, choose **Save to file** and select a location outside the app’s private directory. Export every character and keep a second copy.
 4. Verify the exported files by importing them into a separate test installation and comparing the saved values.
 5. Only after verification, remove the old installation if needed and install the Play test version.
 6. Import the copies and check that characters and XP history agree. Test imports with duplicate IDs, damaged files and unsupported future versions without silently overwriting existing sheets.
 
-Export/import is our proposed protection for players' data, not a general Play Store submission requirement. For your single development phone we could instead make a controlled USB extraction from the debuggable alpha, but that is a developer recovery procedure, not a feature ordinary testers can use. Android backup should not be relied on to bridge this signing change.
+Export/import is our implemented protection for players' data, not a general Play Store submission requirement. For your single development phone we could instead make a controlled USB extraction from the debuggable alpha, but that is a developer recovery procedure, not a feature ordinary testers can use. Android backup should not be relied on to bridge this signing change.
 
 Once testers are using Play-signed builds, later Play updates should retain their app data. We will explicitly test that update path before production.
 
@@ -110,7 +112,7 @@ For this app, the policy should explain in plain language:
 
 - Character names, player names, notes and other sheet contents are stored in app-private files; entering a real person's name is optional.
 - Whether the final build sends anything to you or to an integrated service. The inspected application has no ads, account system, analytics integration or app-managed server connection.
-- The final backup and device-transfer behaviour, and how user-directed exports work if implemented.
+- The final backup and device-transfer behaviour, and how user-directed exports work.
 - Deleting a character, clearing app storage and uninstalling; separately explain that previously exported files and backup copies may remain elsewhere.
 - How support emails and voluntarily supplied character files or screenshots are used and retained.
 - Any diagnostics actually available through Google Play or an added SDK. Do not copy the iOS crash-reporting sentence without checking Android behaviour.
@@ -176,7 +178,7 @@ Suggested starting copy:
 
 **Short description:** An unofficial character sheet for Vampire: The Requiem Second Edition.
 
-The full description should lead with the tabletop use, then describe guided creation, on-sheet editing, play trackers, advancement and offline saving. State that it is unofficial and intended to accompany the game, not replace the rulebooks. Explain Android 16 compatibility and include the required rights notice. Only advertise export/import once implemented. Do not promise cloud synchronisation, account sharing or automatic transfer from iOS.
+The full description should lead with the tabletop use, then describe guided creation, on-sheet editing, play trackers, advancement and offline saving. State that it is unofficial and intended to accompany the game, not replace the rulebooks. Explain Android 16 compatibility and include the required rights notice. Export/import can be described after alpha 8 acceptance. Do not promise cloud synchronisation, account sharing or automatic transfer from iOS.
 
 Prepare these graphics:
 
@@ -316,4 +318,4 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [ ] Final release reviewed, publishing settings understood and launch approved.
 - [ ] Public listing/install verified; support and maintenance routine in place.
 
-With [alpha 7 accepted on the S24 FE](ios-1.3-parity-plan.md), the next engineering tasks are **character export/import and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.
+With [alpha 7 accepted on the S24 FE](ios-1.3-parity-plan.md), the next engineering tasks are **alpha 8 acceptance and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.

@@ -134,3 +134,73 @@ handoff setup for now; Android export/import implementation has not started.
 Validation for this coordination work: checked the UUID writer/reader and iOS import/copy-name source;
 verified the workflow still skips only the iOS UI target and that all existing handoff bytes are preserved.
 No app behavior was changed or app tests rerun. No iOS action is required for the UUID answer.
+
+## 2026-11-06 19:22 UTC · Astra (Android) · Character export/import implemented
+
+This commit ports iOS 1.4 export/import (`dd522e1`), including the 02:15 amendments. Android alpha 8
+is `0.6.0-alpha.8`, version code 8. From the library, long-press or use the overflow for **Export**
+(native sharing) or **Save to file** (system document picker). **Import Character** is below creation;
+content-URI SEND/VIEW requests also import. Export remains library-only. PDF remains shelved.
+
+The raw `.vtrcharacter` JSON is preserved byte for byte on export, new-ID import and Replace.
+Identical decoded content ignores only `modifiedAt` and opens without a write. UUID comparison is
+case-insensitive. Conflicts show both dates and Replace / Keep Both / Cancel; Keep Both changes only
+ID and the first unused numbered name. Missing-ID legacy files acquire a stable identity before
+staging. Damaged/future files are refused. Focused sheet edits are committed and the sheet saved/closed
+before handling an incoming file. A private atomic journal restores pending choices after process death;
+it records a Keep Both copy's new identity before writing, avoiding duplicate copies on recovery.
+
+Android details: imports accept JSON, octet-stream or missing MIME and validate contents, with a 32 MB
+input limit. Outgoing files use `application/octet-stream` to preserve `.vtrcharacter` through document
+providers instead of having `.json` appended. Only temporary export snapshots are exposed with read-only
+FileProvider grants. Save to file is the durable user-selected backup route. Pending imports use the
+non-backed-up private directory. No broad storage permission, backend or automatic synchronisation.
+
+**Shared:** added `shared/fixtures/character-transfer.json` for copy names and added contract tests to
+`SaveContractTests.swift`. Actual Swift store exports pass through Kotlin and return to Swift import,
+including numbered copies, advanced/guided/Morbus and older paid-dot saves. No iOS production code,
+catalog, font, save-schema, Package.swift, scripts or workflow change. The GitHub iOS UI-test skip flag
+is intact. Updated Android README, port plan and Play guide; `docs/android-character-transfer.md`
+explains usage, recovery and the physical-device checklist.
+
+Validation so far: 220 Swift host tests plus five Kotlin-to-Swift consumer tests and 54 JVM tests pass;
+Android builds and lint pass (existing SDK/dependency upgrade warnings). An alpha 7-to-8 emulator
+upgrade preserved the saved synthetic character byte for byte. Device validation caught an activity
+intent/lifecycle issue, now fixed. A new UI assertion also needed the existing decoder's normalised
+empty tracks; that test expectation is corrected. Final device/recovery checks and artifact details
+will be appended in the next entry; physical S24 FE acceptance is still pending.
+
+**Follow-up (iOS):** pull these shared tests and use a real Android `.vtrcharacter` for device exchange
+when convenient; no format or production-code change is required. **Follow-up (Android):** complete
+alpha 8 device acceptance, then privacy access, explicit backup configuration and Play signing/migration.
+
+## 2026-11-06 19:30 UTC · Astra (Android) · Alpha 8 validation and device handoff
+
+Implementation: `31be565`, published in [PR #3](https://github.com/aurumae/RequiemCharacterSheet/pull/3).
+This documentation commit completes the README/transfer validation record and preserves the prior
+entry. No app code or additional shared fixture/test changes.
+
+Final local validation passed: 220 Swift host tests, five Kotlin-to-Swift consumer tests, 54 JVM tests,
+all 18 Android 16 emulator tests, APK build and lint (zero errors; seven existing SDK/dependency
+warnings). Transfer UI tests cover picker cancellation and imports, sharing, saving to file, focused
+edits before incoming files, Cancel/Keep Both/Replace, identical files, rotation and damaged/future
+rejection. Recovery tests also recreate the model and simulate a completed character write with
+journal cleanup interrupted, proving the numbered copy is not imported twice.
+
+Manual native-picker checks imported/exported an iOS fixture byte for byte and retained the
+`.vtrcharacter` filename. The share sheet shows the expected filename and excludes Requiem itself.
+The duplicate dialog fits at 150% text. An actual process termination (old PID ended; new PID on
+relaunch) restored the pending decision; Keep Both changed only ID and name. An in-place alpha 7
+upgrade preserved its synthetic save exactly. Alpha 8's debug certificate SHA-256 remains
+`41f1dfd375656070953357a42470348261d71f7d6ce33fa92b7de71fb6f1f895`, matching alpha 7.
+
+The APK, screenshots and logs are archived outside Git at `AndroidBuilds/31be565/` in the shared
+workspace parent. Android Studio's unrelated local Gradle JVM configuration was preserved and is
+not committed. PR checks currently show the Android build, Swift/Kotlin exchange and Xcode Cloud
+archive passing; the GitHub iOS simulator job is still running. See the PR for final CI results.
+
+**Follow-up:** the user should install alpha 8 as an update and run the S24 FE checklist in
+`docs/android-character-transfer.md`, including a real iOS 1.4 exchange. Physical acceptance has
+not yet been reported. Before changing signing, export all valuable alpha characters with Save to
+file and verify restoration. Android privacy access, explicit system-backup rules and release
+signing remain outstanding. No additional iOS production change is requested.
