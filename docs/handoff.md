@@ -204,3 +204,48 @@ archive passing; the GitHub iOS simulator job is still running. See the PR for f
 not yet been reported. Before changing signing, export all valuable alpha characters with Save to
 file and verify restoration. Android privacy access, explicit system-backup rules and release
 signing remain outstanding. No additional iOS production change is requested.
+
+## 2026-11-06 20:33 UTC · Astra (Android) · Alpha 8 accepted and first Play beta signing
+
+The user completed all manual checks on the S24 FE running Android 17 and explicitly confirmed
+both Android → iOS and iOS → Android character transfers. Alpha 8 is accepted. The previously
+queued GitHub iOS job passed, as did all other checks, so [PR #3](https://github.com/aurumae/RequiemCharacterSheet/pull/3)
+(`31be565`, `dcdf5c7`) is now merged as `679758c`. Both local checkouts were synced before this work;
+there were no new iOS handoff entries.
+
+This commit prepares **1.0.0-beta.1 (version code 9)**, package `ie.requiem.sheet`, for the first Play
+internal test. App behavior remains the accepted alpha 8 behavior. Release builds are non-debuggable;
+shrinking stays disabled. Added external signing-properties configuration, a non-secret template,
+private-key/credential ignore rules and release validation that rejects missing credentials and the
+debug certificate. Debug builds keep their existing signing. An explicit `requiemUnsignedRelease`
+flag permits unsigned CI packaging without access to any private key.
+
+The user confirmed no previous Play upload. A dedicated RSA-4096 upload keystore was created locally
+outside Git, with owner-only directory/key/password-file access. Google-generated Play App Signing
+will hold the separate distribution key. Private credentials were not printed or committed. The
+public upload-certificate SHA-256 is
+`57ec9f740f282fd7536402da8f468fb709dc36182828736b8679b56b7f160a0f`.
+The local `AndroidSigning/` folder in the workspace parent holds the key/configuration; the user must
+keep an encrypted recovery backup. The signing guide documents alias, rebuild steps, the first
+internal upload and the debug-to-Play migration. No Play upload, rollout, tester invitations, policy
+publication or account declarations have been performed.
+
+Validation: all 54 JVM tests, unsigned CI release build, signed release build and release lint pass
+(zero errors; seven existing SDK/dependency warnings). Both missing-credential and debug-key guards
+were exercised. Bundletool validation and signature verification passed; all 131 payload entries
+are signed by the upload certificate. Manifest/version/SDK values and absence of signing secrets
+were checked. 16 KB ZIP packaging, both 64-bit libraries' ELF LOAD alignment and RELRO boundaries
+pass static checks. Installed bundle-generated non-debuggable split APKs on the Android 16 emulator:
+alpha export import/re-export retained exact bytes, and an edit survived save/reopen/export with
+only its field and modified date changed. A 16 KB runtime test and Play-delivered install/update
+checks are still outstanding. Only synthetic emulator data was replaced; the S24 FE was untouched.
+
+**Shared:** `.github/workflows/save-contract.yml` adds unsigned release lint/bundle checks to the
+Android job. No signing secrets go to CI. Preserve the existing iOS UI-test skip; it is unchanged.
+No catalog, font, save-schema, fixture, Swift package, scripts or iOS production changes.
+
+**Follow-up (user/Android):** back up the signing material, upload the signed AAB to Internal testing
+with Google-managed Play App Signing, add tester accounts and verify a Play installation. Export
+valuable alpha characters before uninstalling the debug app for the signing transition. Android
+privacy access, explicit backup rules and the later closed/public release tasks remain. No iOS
+implementation follow-up is required; cross-device file compatibility is now physically confirmed.

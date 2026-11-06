@@ -1,2 +1,12 @@
 /.build/
 /.swiftpm/
+
+# Android signing credentials and private keys must never be committed.
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.key
+signing*.properties
+upload.properties
+key.properties

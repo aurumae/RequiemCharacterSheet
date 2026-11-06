@@ -4,9 +4,11 @@ Prepared 5 November 2026 for Requiem Character Sheet. The accepted Android basel
 
 **Parity update, 5 November:** Android now implements iOS 1.3 (`611b295`), including schema 10, bloodlines, new pickers and the supplied OFL fonts. Both fonts and full notices are packaged and readable offline in About; the old fonts are absent. The [parity record](ios-1.3-parity-plan.md) records the passing automated checks and user-confirmed physical-device acceptance; a full TalkBack session remains unconfirmed.
 
-**Transfer update, 6 November:** alpha 8 (`0.6.0-alpha.8`, code 8) implements the iOS 1.4 `.vtrcharacter` export/import contract. Library exports support sharing and saving to a user-selected folder; imports handle duplicate choices and preserve saved data. See the [implementation and acceptance checklist](android-character-transfer.md). Physical-device acceptance and the eventual debug-to-Play restore check remain outstanding.
+**Transfer update, 6 November:** alpha 8 (`0.6.0-alpha.8`, code 8) implements the iOS 1.4 `.vtrcharacter` export/import contract. Library exports support sharing and saving to a user-selected folder; imports handle duplicate choices and preserve saved data. See the [implementation and acceptance checklist](android-character-transfer.md). The user accepted all manual checks on the S24 FE and confirmed real transfers in both directions with iOS. The eventual debug-to-Play restore check remains outstanding.
 
-The developer account has been created and authenticated, as confirmed by the user. The main route below assumes a **personal account** for this independent project; the account type has not been separately confirmed. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; it does not create signing keys, publish a privacy policy, submit declarations or upload an app.
+**Signing update, 6 November:** the first upload build is `1.0.0-beta.1` (code 9), using a dedicated local upload key and Google-managed Play App Signing for distribution. See the [signing and first-upload guide](android-signing.md). Begin with internal testing; Android privacy access, explicit backup configuration, the closed test and public listing remain separate work. No bundle has yet been uploaded to Play Console.
+
+The developer account has been created and authenticated, as confirmed by the user. The main route below assumes a **personal account** for this independent project; the account type has not been separately confirmed. Use an organisation account instead if a legal organisation is the publisher. This guide describes work to do; the signing implementation now provides a local upload key and release build, but does not publish a privacy policy, submit declarations or upload an app.
 
 Our proposed first release is free, without advertisements, purchases, accounts or a backend. Keep Android 16 as the minimum. Start recruiting compatible testers while preparing the release: account verification and the closed test will determine much of the schedule.
 
@@ -15,14 +17,14 @@ Our proposed first release is free, without advertisements, purchases, accounts 
 | Area | Current position | Work before public release |
 | --- | --- | --- |
 | Character sheet | Guided creation, ordinary play and advancement accepted on your S24 FE | Retest the build delivered by Play |
-| Rules and saves | Alpha 7: 205 Swift host tests, 44 JVM rules/storage tests, 13 emulator interaction tests and shared save exchange pass; Xcode CI passes | Run checks against the final release commit and Play-delivered build |
+| Rules and saves | Alpha 8: 220 Swift host tests, 54 JVM rules/storage tests, 18 emulator interaction tests and shared save exchange pass; Xcode CI passes | Run checks against the final release commit and Play-delivered build |
 | New iOS parity | Alpha 7 reads schemas 1–10, writes 10, and implements bloodlines/Cachexy and identity pickers | Accepted on the S24 FE; retest the Play release build |
 | Fonts and notices | IM Fell English Regular and Cinzel Medium, both full OFL notices and offline About pages are implemented; old fonts removed | Retain notices and recheck the final release package |
 | Android support | `minSdk`, `targetSdk` and `compileSdk` are 36 | Keep Android 16 minimum; recheck Play requirements at submission |
 | Identity | Package is `ie.requiem.sheet`; label is Requiem Character Sheet | Confirm the permanent package and public publisher name |
-| Signing | All delivered alphas use a debug certificate | Create an upload key and use Play App Signing |
+| Signing | Dedicated upload key and release configuration prepared for beta 1; alphas retain their debug certificate | Back up the private key and configure Google-managed Play signing on first upload |
 | Privacy | Repository links to an iOS policy; About includes version, Dark Pack and font information | Publish an Android policy and add an accessible in-app link |
-| Character portability | Alpha 8 has library Export, Save to file and Import Character, plus incoming shared files | Accept on the S24 FE, export real alpha characters and verify restore before changing signing |
+| Character portability | Alpha 8 has library Export, Save to file and Import Character, plus incoming shared files | Accepted on the S24 FE; export valuable alpha characters and verify restore before changing signing |
 | Backup | Manifest does not specify backup behaviour | Configure and test cloud backup and device transfer explicitly |
 | Store graphics | Android QA screenshots and a 216 × 216 launcher source exist | Prepare proper store graphics and suitable screenshots |
 | Distribution | APK sideloading has been tested | Internal Play test, closed test, production access and public review |
@@ -61,7 +63,7 @@ Keep a dated copy or link to the applicable agreement and any separate permissio
 
 Keep `ie.requiem.sheet` unless you want a different identifier before first registration or it is unavailable. This identifier determines which Android application receives updates; it is separate from the editable store title. Play package names are permanent and cannot be reused. [Create and configure a Play app](https://support.google.com/googleplay/android-developer/answer/9859152)
 
-For the first release candidate, I suggest a user-facing version such as `1.0.0-rc1`. Use the next unused integer version code above 8, and increment it for each newly uploaded build. The public release can be `1.0.0`; its code must continue increasing. Promoting an already uploaded, unchanged artifact between tracks does not require rebuilding it. We should decide the version before building the candidate so its metadata, screenshots and release notes agree.
+The first internal beta is `1.0.0-beta.1`, version code **9**. Use the next unused integer above 9 for subsequent builds, and increment it for each newly uploaded build. The public release can be `1.0.0`; its code must continue increasing. Promoting an already uploaded, unchanged artifact between tracks does not require rebuilding it. Keep the bundle metadata, screenshots and release notes aligned with the selected version.
 
 Keep the code in the existing combined repository. The Android/iOS integration is tracked in [PR #1](https://github.com/aurumae/RequiemCharacterSheet/pull/1). Reconcile any later iOS/catalog changes, then tag the exact release commit. Continue iOS feature work separately and use the shared tests to detect differences. A public release should be reproducible from its tag without relying on uncommitted files in a worktree.
 
@@ -73,7 +75,7 @@ For subsequent development builds, consider an application ID suffix such as `.d
 
 My recommended transition is:
 
-1. Install and accept alpha 8, which supplies character export/import for schema 10 and older supported saves, including IDs, custom bloodlines, creation progress, damage, paid-dot ledger and history. Unsupported future files are refused without altering saved characters.
+1. Alpha 8 has been accepted on the S24 FE and supplies character export/import for schema 10 and older supported saves, including IDs, custom bloodlines, creation progress, damage, paid-dot ledger and history. Unsupported future files are refused without altering saved characters.
 2. Alpha 8 uses the **existing debug key**, so it can update the installed alpha normally. Keep that signing continuity for any further migration fixes.
 3. From each character’s library menu, choose **Save to file** and select a location outside the app’s private directory. Export every character and keep a second copy.
 4. Verify the exported files by importing them into a separate test installation and comparing the saved values.
@@ -88,14 +90,15 @@ Once testers are using Play-signed builds, later Play updates should retain thei
 
 Use **Play App Signing** with Google-managed app signing keys and a separate upload key held by you. The upload key authenticates the `.aab` file we submit; Google signs the APKs installed on users' phones. Current new-app enrolment includes Google's Android 17 signing support. Let Play manage that rather than adding signing logic to the app. An upload key can be reset through Play if lost; still keep secure backups. [Play App Signing](https://support.google.com/googleplay/android-developer/answer/9842756)
 
-In Android Studio, open this checkout's `android/` directory and use **Build → Generate Signed Bundle / APK → Android App Bundle**. Create a dedicated upload keystore outside Git, record its alias, and store passwords and recovery copies securely. Select the release variant. The existing Gradle file does not yet configure release signing, so an ordinary command-line release build is not automatically a signed submission artifact. [Android Studio signing workflow](https://developer.android.com/studio/publish/app-signing)
+A dedicated upload keystore now exists outside Git; its location, alias, public fingerprint and backup instructions are in the [signing guide](android-signing.md). The Gradle file loads the private configuration pointed to by `REQUIEM_SIGNING_PROPERTIES`. Debug builds do not need it; release packaging refuses missing credentials unless an explicit unsigned CI flag is supplied. Use the documented Gradle workflow below with the existing upload key; do not create another key for each build. If using Android Studio's signing wizard, launch Studio with that environment variable set and select the existing key and release variant. [Android Studio signing workflow](https://developer.android.com/studio/publish/app-signing)
 
-**Our code tasks:** configure release signing through local properties or secure CI inputs, exclude keystores and secret files from Git, and document the build. Keep release builds non-debuggable. If we enable shrinking or obfuscation, test the resulting build and preserve its mapping file; enabling these is not itself a release requirement.
+**Implemented:** external signing properties, ignored keystores/credential files, release signing validation and non-debuggable release builds. CI checks release packaging with no private credentials. If we enable shrinking or obfuscation, test the resulting build and preserve its mapping file; enabling these is not itself a release requirement.
 
 After configuring signing, the expected command from the repository root is:
 
 ```sh
-android/gradlew -p android :app:bundleRelease
+REQUIEM_SIGNING_PROPERTIES=/home/oisin/RequiemCharacterSheetApp/AndroidSigning/upload.properties \
+  android/gradlew -p android :app:bundleRelease
 ```
 
 The normal output is `android/app/build/outputs/bundle/release/app-release.aab`. Verify its signature, package, version code, SDK values and release manifest. Upload the **AAB**, not the existing debug APK. An AAB is a publishing artifact, not something you install directly on your phone. [Build release bundles](https://developer.android.com/build/building-cmdline)
@@ -178,7 +181,7 @@ Suggested starting copy:
 
 **Short description:** An unofficial character sheet for Vampire: The Requiem Second Edition.
 
-The full description should lead with the tabletop use, then describe guided creation, on-sheet editing, play trackers, advancement and offline saving. State that it is unofficial and intended to accompany the game, not replace the rulebooks. Explain Android 16 compatibility and include the required rights notice. Export/import can be described after alpha 8 acceptance. Do not promise cloud synchronisation, account sharing or automatic transfer from iOS.
+The full description should lead with the tabletop use, then describe guided creation, on-sheet editing, play trackers, advancement and offline saving. State that it is unofficial and intended to accompany the game, not replace the rulebooks. Explain Android 16 compatibility and include the required rights notice. Export/import was accepted with alpha 8 and can be described. Do not promise cloud synchronisation, account sharing or automatic transfer from iOS.
 
 Prepare these graphics:
 
@@ -308,8 +311,8 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [ ] Backup and device-transfer behaviour explicitly configured and tested.
 - [ ] Alpha characters exported or otherwise preserved and restore verified.
 - [ ] Upload key backed up securely; Play App Signing configured.
-- [ ] Release AAB signed, non-debuggable and archived with its commit/checksum.
-- [ ] Target API, native-library compatibility and device support checked.
+- [x] Release signing and non-debuggable beta bundle prepared; see the artifact validation record in the signing guide.
+- [x] Beta target/minimum API and 16 KB ELF/ZIP alignment checked. Play-delivered and 16 KB runtime tests remain release validation.
 - [ ] Listing text, store icon, feature graphic and Android screenshots ready.
 - [ ] App-content declarations and rating completed accurately.
 - [ ] Two Play-delivered builds tested for installation and data-preserving updates.
@@ -318,4 +321,4 @@ The known platform registration cost is US$25. Signing tools, our existing build
 - [ ] Final release reviewed, publishing settings understood and launch approved.
 - [ ] Public listing/install verified; support and maintenance routine in place.
 
-With [alpha 7 accepted on the S24 FE](ios-1.3-parity-plan.md), the next engineering tasks are **alpha 8 acceptance and signing migration, Android privacy access, explicit backup rules, and release signing configuration**. Account verification and tester recruitment can proceed alongside that work.
+With [alpha 8 accepted on the S24 FE](android-character-transfer.md), the next engineering tasks are **Play internal installation and signing migration, Android privacy access, and explicit backup rules**. Account verification and tester recruitment can proceed alongside that work.

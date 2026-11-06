@@ -19,6 +19,8 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Check release packaging without private signing credentials
+        run: android/gradlew -p android :app:lintRelease :app:bundleRelease -PrequiemUnsignedRelease=true
       - uses: actions/upload-artifact@v4
         with:
           name: requiem-android-debug
