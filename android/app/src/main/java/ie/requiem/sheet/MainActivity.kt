@@ -1,10 +1,13 @@
 package ie.requiem.sheet
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.*
@@ -22,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -30,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import android.text.format.DateUtils
 import kotlinx.coroutines.delay
+import java.text.DateFormat
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
     private val model: SheetModel by viewModels()
@@ -39,7 +45,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT))
         val sheetModel = model
+        if (savedInstanceState == null) intent.characterImportUri()?.let(sheetModel::enqueueImport)
         setContent { SheetTheme { LaunchWithDarkPack { Requiem(sheetModel) } } }
+    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // The model owns pending transfers; retain the launch intent for activity recreation.
+        intent.characterImportUri()?.let(model::enqueueImport)
     }
     override fun onStop() { super.onStop(); model.flush() }
 }
@@ -50,6 +62,12 @@ private fun Requiem(model: SheetModel) {
     var about by rememberSaveable { mutableStateOf(false) }
     val snack = remember { SnackbarHostState() }
     val focus = LocalFocusManager.current
+    val context = LocalContext.current
+    val importFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri?.let(model::enqueueImport)
+    }
+    // A generic MIME type preserves .vtrcharacter; document providers append .json for application/json.
+    val saveFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream"), model::saveExport)
     val c = state.character
     var requestedSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<SheetSection?>(null) }
     val window = LocalWindowInfo.current.containerSize
@@ -64,6 +82,27 @@ private fun Requiem(model: SheetModel) {
     }
     LaunchedEffect(state.savedNotice) {
         if (state.savedNotice > 0) { saved = true; delay(1500); saved = false }
+    }
+    LaunchedEffect(state.incomingUri, state.busy, state.pendingImport, state.transferError, state.exportRequest, state.awaitingDestination) {
+        if (state.incomingUri != null && !state.busy && state.pendingImport == null && state.transferError == null && state.exportRequest == null && !state.awaitingDestination) {
+            about = false
+            focus.clearFocus()
+            model.startNextImport()
+        }
+    }
+    LaunchedEffect(state.exportRequest) {
+        state.exportRequest?.let { request ->
+            try {
+                model.exportLaunched(request)
+                when (request.mode) {
+                    ExportMode.Share -> context.startActivity(characterShareIntent(context, request))
+                    ExportMode.Save -> saveFile.launch(request.name)
+                }
+            } catch (e: Exception) { model.exportFailure(e) }
+        }
+    }
+    LaunchedEffect(state.transferNotice) {
+        if (state.transferNotice > 0) snack.showSnackbar("Character file saved.", withDismissAction = true)
     }
     BackHandler(enabled = c != null) { focus.clearFocus(); model.close() }
     PageBackground {
@@ -91,12 +130,46 @@ private fun Requiem(model: SheetModel) {
             when {
                 c != null -> key(c.id) { SheetEditor(c, model.catalog, state.busy, model::edit, requestedSection) { requestedSection = null } }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-                else -> Library(state.rows, model) { about = true }
+                else -> Library(state.rows, model, importCharacter = { importFile.launch(arrayOf("*/*")) }) { about = true }
             }
         }
         SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))
     }
     if (about) AboutSheet { about = false }
+    state.pendingImport?.takeIf { it.existing != null && state.transferError == null }?.let { pending ->
+        ImportConflict(pending, state.busy, model::resolveImport, model::cancelImport)
+    }
+    state.transferError?.let { error ->
+        val hasPending = state.pendingImport != null
+        AlertDialog(onDismissRequest = { if (hasPending) model.cancelImport() else model.dismissTransferError() },
+            title = { SheetText(error.title) }, text = { SheetText(error.message) },
+            confirmButton = {
+                TextButton(onClick = { if (hasPending) model.retryImport() else model.dismissTransferError() }) {
+                    SheetText(if (hasPending) "Retry" else "OK")
+                }
+            }, dismissButton = { if (hasPending) TextButton(onClick = model::cancelImport) { SheetText("Cancel") } })
+    }
+}
+
+@Composable
+private fun ImportConflict(pending: PendingImport, busy: Boolean, resolve: (Boolean) -> Unit, cancel: () -> Unit) {
+    fun edited(value: Double) = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+        .format(Date((value * 1000).toLong() + 978_307_200_000L))
+    val name = pending.document.character.name.ifEmpty { "Unnamed Character" }
+    val existingDate = pending.existing?.edited
+    val message = "The imported copy was edited ${edited(pending.document.character.modifiedAt)}. " +
+        if (existingDate == null) "The one on this device could not be read." else "The one on this device was edited ${edited(existingDate)}."
+    AlertDialog(onDismissRequest = { if (!busy) cancel() }, title = { SheetText("“$name” Is Already Here") },
+        text = { SheetText(message, Modifier.verticalScroll(rememberScrollState())) },
+        confirmButton = {
+            Column(Modifier.fillMaxWidth()) {
+                TextButton(onClick = { resolve(false) }, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
+                    SheetText("Replace", color = MaterialTheme.colorScheme.error)
+                }
+                TextButton(onClick = { resolve(true) }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { SheetText("Keep Both") }
+                TextButton(onClick = cancel, enabled = !busy, modifier = Modifier.fillMaxWidth()) { SheetText("Cancel") }
+            }
+        })
 }
 
 @Composable
@@ -132,7 +205,7 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
 }
 
 @Composable
-private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit) {
+private fun Library(rows: List<LibraryRow>, model: SheetModel, importCharacter: () -> Unit, about: () -> Unit) {
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
     LazyColumn(Modifier.fillMaxSize().pageEdges().testTag("character-library"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
         item { SectionBand("CHARACTERS") }
@@ -144,9 +217,9 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
             val title = row.name.ifBlank { if (row.problem == null) "Unnamed Character" else "Unavailable character" }
             var menu by remember { mutableStateOf(false) }
             Row(Modifier.fillMaxWidth().background(Color.White), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f).clickable(enabled = row.problem == null, onClickLabel = "Open sheet") {
-                    model.open(row.id)
-                }.padding(horizontal = 8.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Column(Modifier.weight(1f).combinedClickable(enabled = row.problem == null, onClickLabel = "Open sheet",
+                    onClick = { model.open(row.id) }, onLongClickLabel = "Character options", onLongClick = { menu = true })
+                    .padding(horizontal = 8.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                     SheetText(title, style = LocalSheetType.current.label)
                     if (row.details.isNotEmpty()) SheetText(row.details, style = MaterialTheme.typography.bodyMedium)
                     if (row.guided) SheetText("Guided creation · In progress", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
@@ -162,6 +235,8 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
                         SheetIcon(SheetSymbol.More, SheetColors.muted)
                     }
                     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                        DropdownMenuItem(text = { SheetText("Export") }, onClick = { menu = false; model.export(row.id, ExportMode.Share) })
+                        DropdownMenuItem(text = { SheetText("Save to file") }, onClick = { menu = false; model.export(row.id, ExportMode.Save) })
                         DropdownMenuItem(text = { SheetText("Delete character") }, onClick = { menu = false; confirmId = row.id.toString() })
                     }
                 }
@@ -176,6 +251,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, about: () -> Unit
             }
         }
         item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
+        item { AddSheetRow("Import Character", true, importCharacter) }
         item { TextButton(onClick = about) { SheetText("About this app") } }
     }
     val selected = rows.firstOrNull { it.id.toString() == confirmId }

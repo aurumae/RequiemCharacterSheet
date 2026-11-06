@@ -10,8 +10,8 @@ android {
         applicationId = "ie.requiem.sheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 7
-        versionName = "0.5.0-alpha.7"
+        versionCode = 8
+        versionName = "0.6.0-alpha.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true; buildConfig = true }

@@ -15,10 +15,16 @@ internal data class LibraryRow(
 )
 
 internal data class OpenSheet(val file: File, val saved: CharacterSave, val text: String)
+internal data class CharacterExport(val fileName: String, val bytes: ByteArray)
+internal data class PendingImport(
+    val document: CharacterDocument, val existing: LibraryRow?, val identical: Boolean,
+    val existingFile: File?, val existingBytes: ByteArray?,
+)
 
 /** Used from one serialized writer. A session keeps the bytes it opened to detect stale writes. */
 internal class CharacterFiles(private val directory: File, val catalog: Catalog) {
     private val codec = CharacterCodec(catalog)
+    private val documents = CharacterDocuments(catalog)
 
     fun library(): List<LibraryRow> = files().map { (id, file) ->
         try {
@@ -58,6 +64,39 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
         Files.delete(session.file.toPath())
     }
 
+    fun export(id: UUID): CharacterExport {
+        val opened = open(id)
+        return CharacterExport(characterFileName(opened.saved.name), opened.file.readBytes())
+    }
+
+    fun prepareImport(bytes: ByteArray): PendingImport {
+        val document = documents.read(bytes)
+        val id = document.character.id
+        val matching = files().filter { it.first == id }
+        check(matching.size <= 1) { "More than one saved file has this character's identity." }
+        val file = matching.singleOrNull()?.second
+        val existing = if (file == null) null else library().first { it.id == id }
+        val saved = file?.let { runCatching { read(id, it).saved }.getOrNull() }
+        return PendingImport(document, existing,
+            saved != null && documents.equivalent(saved, document.character), file, file?.readBytes())
+    }
+
+    /** Prepare the exact copy before writing, so a pending import can be journalled safely. */
+    fun keepBoth(pending: PendingImport): PendingImport = prepareImport(
+        documents.copy(pending.document, library().map { it.name }.toSet()).bytes)
+
+    /** The caller obtains explicit Replace consent for an existing, different character. */
+    fun importCharacter(pending: PendingImport): OpenSheet {
+        val id = pending.document.character.id
+        val file = pending.existingFile ?: File(directory, "$id.json")
+        check(if (pending.existingBytes == null) files().none { it.first == id }
+            else file.exists() && file.readBytes().contentEquals(pending.existingBytes)) {
+            "This character changed while the import was open. Import the file again to compare the latest copy."
+        }
+        if (!pending.identical) write(file, pending.document.bytes)
+        return read(id, file)
+    }
+
     private fun read(id: UUID, file: File): OpenSheet {
         val text = file.readText()
         val c = codec.decode(text, fileId = id)
@@ -74,11 +113,13 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
         }
     }
 
-    private fun write(file: File, text: String) {
+    private fun write(file: File, text: String) = write(file, text.toByteArray(Charsets.UTF_8))
+
+    private fun write(file: File, bytes: ByteArray) {
         Files.createDirectories(directory.toPath())
         val temp = File.createTempFile(".sheet-", ".tmp", directory)
         try {
-            FileOutputStream(temp).use { it.write(text.toByteArray(Charsets.UTF_8)); it.fd.sync() }
+            FileOutputStream(temp).use { it.write(bytes); it.fd.sync() }
             Files.move(temp.toPath(), file.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
         } finally { temp.delete() }
     }

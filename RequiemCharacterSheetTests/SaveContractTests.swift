@@ -472,3 +472,58 @@ struct BloodlineContractTests {
         #expect(try JSONSerialization.jsonObject(with: JSONEncoder().encode(c)) as? NSDictionary == JSONSerialization.jsonObject(with: file) as? NSDictionary)
     }
 }
+
+/// Exercises the public transfer API, as well as the decoder, against Android's exported files.
+@MainActor
+struct CharacterTransferContractTests {
+    private let names = ["v10-advanced", "v10-guided", "v10-morbus", "v8-paid"]
+
+    @Test func sharedCopyNamesMatchAndroid() throws {
+        struct CopyCase: Decodable { let name: String; let taken: [String]; let copy: String }
+        let cases = try JSONDecoder().decode([CopyCase].self, from: SaveFixtures.resource("character-transfer"))
+        for value in cases {
+            #expect(CharacterStore.copyName(for: value.name, taken: Set(value.taken)) == value.copy)
+        }
+    }
+
+    @Test func exportsActualStoredFilesForAndroid() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("Transfer-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = CharacterStore(directory: directory)
+        for name in names {
+            let bytes = try SaveFixtures.data(name)
+            let pending = try store.prepareImport(of: bytes)
+            let id = try store.importCharacter(pending)
+            let exported = try store.exportData(for: id)
+            #expect(exported == bytes)
+            if let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] {
+                try exported.write(to: URL(fileURLWithPath: exchange).appendingPathComponent("swift-transfer-\(name).vtrcharacter"))
+            }
+        }
+    }
+
+    @Test func readsKotlinCharacterTransfers() throws {
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1",
+              let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("Transfer-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = CharacterStore(directory: directory)
+        for name in names {
+            let bytes = try Data(contentsOf: URL(fileURLWithPath: exchange).appendingPathComponent("kotlin-transfer-\(name).vtrcharacter"))
+            let pending = try store.prepareImport(of: bytes)
+            let id = try store.importCharacter(pending)
+            #expect(try store.exportData(for: id) == bytes)
+            let copiedBytes = try Data(contentsOf: URL(fileURLWithPath: exchange).appendingPathComponent("kotlin-transfer-copy-\(name).vtrcharacter"))
+            let copied = try store.prepareImport(of: copiedBytes)
+            #expect(copied.existing == nil)
+            #expect(copied.character.id != id)
+            #expect(copied.character.name == CharacterStore.copyName(for: pending.character.name, taken: []))
+            let copyID = try store.importCharacter(copied)
+            #expect(try store.exportData(for: copyID) == copiedBytes)
+            var original = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+            var copy = try #require(JSONSerialization.jsonObject(with: copiedBytes) as? [String: Any])
+            for key in ["id", "name"] { original.removeValue(forKey: key); copy.removeValue(forKey: key) }
+            #expect(NSDictionary(dictionary: original) == NSDictionary(dictionary: copy))
+        }
+    }
+}
