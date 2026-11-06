@@ -46,3 +46,59 @@ tool with a limited sign-in.
 
 Next on iOS: character export and import, which the Android plan also lists as next. I'll write a separate entry
 with the proposed file format once the user has agreed it, so both apps can read each other's exported files.
+
+## 2026-11-06 02:05 UTC · Claude (iOS) · Character export/import file format
+
+The user chose the format and the duplicate behaviour (2026-11-06). iOS implements it in
+`CharacterStore` (`exportData`, `prepareImport`, `importCharacter`), `CharacterFile.swift` and
+`CharacterListView`. The tests are in `CharacterStoreTests` ("Export and import"). **Follow-up:** please
+implement the same on Android so files move both ways.
+
+**File**
+- The extension is `.vtrcharacter`. The contents are exactly the saved character JSON (UTF-8, schema 10
+  today), with nothing wrapped around it. iOS exports the stored file byte for byte.
+- The file name is the character's name with `/ \ : * ? " < > |` and control characters replaced by spaces,
+  trimmed, then `.vtrcharacter`. An empty name gives `Unnamed Character.vtrcharacter`.
+- iOS declares the UTType `com.omccolgan.RequiemCharacterSheet.character`, conforming to `public.json`. No
+  MIME type is declared, so on Android expect `application/json`, `application/octet-stream` or nothing.
+  Accept them and check the content instead.
+
+**Import rules**
+1. If `schemaVersion` is greater than the version the app supports, refuse: "This character was saved by a
+   newer version of the app. Update the app to open it." Nothing is written.
+2. If the file isn't a JSON object with a string `name`, or doesn't decode, refuse: "The file isn't a character
+   file, or it's damaged." The `name` check matters because every field has a default, so any JSON object
+   would otherwise import as a blank character.
+3. Identity is `id`, compared as a UUID, not case-sensitively.
+   - **No character here has that id:** store the file unchanged, keeping its `modifiedAt`, then open it.
+   - **One does, and the content is equal apart from `modifiedAt`:** don't ask; just open it.
+   - **One does, and the content differs:** ask. The title is "“Name” Is Already Here". The message is "The imported
+     copy was edited <date>. The one on this device was edited <date>." The buttons are Replace (destructive),
+     Keep Both and Cancel. Replace stores the file unchanged under the same id. Keep Both changes only `id`
+     to a new UUID and leaves everything else, including the name and `modifiedAt`, as it was.
+4. A file with no `id` (schema 1) gets one when it's decoded, and is stored re-encoded with that id.
+
+**UI on iOS (for parity)**
+- **Export:** each readable row in the character list has a long-press menu with "Export", which opens the share sheet.
+- **Import:** an "Import Character" row below "New Character" opens a picker for `.vtrcharacter` and `.json` files.
+- **From outside the app:** opening a `.vtrcharacter` from Files, Mail or AirDrop imports it. If a sheet is open, it's saved and closed first, so
+  the import can't be overwritten by the open sheet.
+
+**Question:** does Android write UUIDs in lowercase? iOS accepts either. A lowercase file is stored byte for byte
+and keeps its id.
+
+## 2026-11-06 02:15 UTC · Claude (iOS) · Export/import amendments, iOS 1.4
+
+These amend "Character export/import file format" above, following the user's review:
+
+- **Keep Both also renames the copy**, numbering it like copied files. The second copy becomes "Lucius Avelorn (1)",
+  the third "Lucius Avelorn (2)", and so on.
+  - It uses the first number no other character has.
+  - A trailing " (n)" on the name is dropped before numbering, so a copy of "Lucius Avelorn (1)" is numbered from "Lucius Avelorn".
+  - An empty name becomes "Unnamed Character (1)".
+  - Only `id` and `name` change in the file.
+  - See `CharacterStore.copyName(for:taken:)` and its tests. **Follow-up:** match this on Android.
+- **Export is only from the character list,** not from inside an open sheet. The user wants it that way.
+- **Opening a file from Files shows a preview first** (Share → app); the user is fine with that. There's no need to make a tap open the app.
+- **PDF export of a character is shelved indefinitely** by the user. Don't start it on either platform.
+- **iOS MARKETING_VERSION is now 1.4,** because Xcode Cloud refused more 1.3 builds. Android versions are independent.

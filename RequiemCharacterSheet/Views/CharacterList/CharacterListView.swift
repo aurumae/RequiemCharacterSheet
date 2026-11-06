@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// The first screen: every saved character, with options to open, create and delete them.
+/// The first screen: every saved character, with options to open, create, import, export and delete them.
 struct CharacterListView: View {
     @Environment(\.theme) private var theme
     let store: CharacterStore
@@ -15,6 +15,11 @@ struct CharacterListView: View {
     @State private var errorAlert: ErrorAlert?
     @State private var choosingNewCharacter = false
     @State private var showingAbout = false
+    @State private var choosingImportFile = false
+    /// An imported character that's already on this device, waiting for Replace or Keep Both.
+    @State private var conflictingImport: CharacterImport?
+    /// A file opened from outside the app while a character was open; imported once that character is saved.
+    @State private var waitingImportURL: URL?
 
     var body: some View {
         NavigationStack {
@@ -34,6 +39,16 @@ struct CharacterListView: View {
 
                             ForEach(store.summaries) { summary in
                                 row(for: summary)
+                                    .contextMenu {
+                                        if summary.isReadable {
+                                            ShareLink(
+                                                item: CharacterFile(url: store.exportURL(for: summary.id), name: summary.name),
+                                                preview: SharePreview(displayName(for: summary))
+                                            ) {
+                                                Label("Export", systemImage: "square.and.arrow.up")
+                                            }
+                                        }
+                                    }
                                     .swipeActions {
                                         Button("Delete") {
                                             pendingDeletion = summary
@@ -68,6 +83,18 @@ struct CharacterListView: View {
                             } message: {
                                 Text("Guided creation walks through the book's steps and keeps to the starting dots. A blank sheet has no limits, e.g. for a character you already have.")
                             }
+
+                            AddRowButton("Import Character", systemImage: "square.and.arrow.down") {
+                                choosingImportFile = true
+                            }
+                            .fileImporter(isPresented: $choosingImportFile, allowedContentTypes: [.requiemCharacter, .json]) { result in
+                                switch result {
+                                case .success(let url):
+                                    importFile(at: url)
+                                case .failure(let error):
+                                    errorAlert = ErrorAlert(title: "Couldn't Import Character", message: error.localizedDescription)
+                                }
+                            }
                         }
                     }
                     .listStyle(.grouped)
@@ -96,7 +123,35 @@ struct CharacterListView: View {
             .onChange(of: openCharacter) { closed, nowOpen in
                 if nowOpen == nil, let closed {
                     save(closed.character)
+                    if let url = waitingImportURL {
+                        waitingImportURL = nil
+                        importFile(at: url)
+                    }
                 }
+            }
+            // A character file opened from Files, Mail, AirDrop and so on
+            .onOpenURL { url in
+                if openCharacter != nil {
+                    // Save and close the open character first, so the import can't be overwritten by it
+                    waitingImportURL = url
+                    openCharacter = nil
+                } else {
+                    importFile(at: url)
+                }
+            }
+            .alert(
+                "“\(conflictingImport.map { displayName(for: $0.character.name) } ?? "")” Is Already Here",
+                isPresented: Binding(
+                    get: { conflictingImport != nil },
+                    set: { if !$0 { conflictingImport = nil } }
+                ),
+                presenting: conflictingImport
+            ) { pending in
+                Button("Replace", role: .destructive) { finishImport(pending, keepingBoth: false) }
+                Button("Keep Both") { finishImport(pending, keepingBoth: true) }
+                Button("Cancel", role: .cancel) {}
+            } message: { pending in
+                Text(conflictMessage(for: pending))
             }
             .alert(
                 errorAlert?.title ?? "",
@@ -152,7 +207,17 @@ struct CharacterListView: View {
     }
 
     private func displayName(for summary: CharacterSummary) -> String {
-        summary.name.isEmpty ? "Unnamed Character" : summary.name
+        displayName(for: summary.name)
+    }
+
+    private func displayName(for name: String) -> String {
+        name.isEmpty ? "Unnamed Character" : name
+    }
+
+    private func conflictMessage(for pending: CharacterImport) -> String {
+        let imported = "The imported copy was edited \(pending.character.modifiedAt.formatted(date: .abbreviated, time: .shortened))."
+        guard let here = pending.existing?.modifiedAt else { return imported }
+        return imported + " The one on this device was edited \(here.formatted(date: .abbreviated, time: .shortened))."
     }
 
     // MARK: - Actions
@@ -181,6 +246,42 @@ struct CharacterListView: View {
             try store.save(character)
         } catch {
             errorAlert = ErrorAlert(title: "Couldn't Save Character", message: error.localizedDescription)
+        }
+    }
+
+    private func importFile(at url: URL) {
+        // Files chosen in the picker are outside the app, and need permission to read
+        let isAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if isAccessing { url.stopAccessingSecurityScopedResource() }
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            // Files opened from other apps arrive as a copy inside the app's own storage, no longer needed
+            if [URL.documentsDirectory, URL.temporaryDirectory].contains(where: { url.path.hasPrefix($0.path) }) {
+                try? FileManager.default.removeItem(at: url)
+            }
+            let pending = try store.prepareImport(of: data)
+            if pending.isAlreadyHere {
+                // Nothing to ask: the character here is the same, so just show it
+                openCharacter = OpenCharacter(character: try store.load(pending.character.id))
+            } else if pending.existing == nil {
+                finishImport(pending, keepingBoth: false)
+            } else {
+                conflictingImport = pending
+            }
+        } catch {
+            errorAlert = ErrorAlert(title: "Couldn't Import Character", message: error.localizedDescription)
+        }
+    }
+
+    /// Adds the character to the store and opens it.
+    private func finishImport(_ pending: CharacterImport, keepingBoth: Bool) {
+        do {
+            let id = try store.importCharacter(pending, keepingBoth: keepingBoth)
+            openCharacter = OpenCharacter(character: try store.load(id))
+        } catch {
+            errorAlert = ErrorAlert(title: "Couldn't Import Character", message: error.localizedDescription)
         }
     }
 
