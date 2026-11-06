@@ -1,1 +1,2 @@
 android/gradlew.bat text eol=crlf
+docs/handoff.md merge=union
