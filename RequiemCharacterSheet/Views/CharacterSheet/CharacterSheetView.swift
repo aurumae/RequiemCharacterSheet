@@ -114,11 +114,11 @@ struct CharacterSheetView: View {
                     // Rows can be shorter than this iOS's tall default, so Humanity's Touchstone rows stay compact.
                     // Other rows are taller than this anyway.
                     .environment(\.defaultMinListRowHeight, 36)
-                    .environment(\.revealEditingField) { row in
+                    .environment(\.revealEditingField, RevealEditingFieldAction { row in
                         withAnimation {
                             proxy.scrollTo(row.id, anchor: UnitPoint(x: 0.5, y: row.anchor))
                         }
-                    }
+                    })
                 }
             }
             .padding(.horizontal)

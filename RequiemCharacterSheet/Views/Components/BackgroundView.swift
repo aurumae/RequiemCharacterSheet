@@ -64,9 +64,26 @@ struct EditingRow {
     var anchor: Double = 0.3
 }
 
+/// Scrolls a row into view, e.g. above the keyboard when one of its fields opens for editing.
+/// Wrapped in a type that always compares equal, as closures can't be compared: otherwise every update
+/// of the sheet would count as a change and refresh every view reading it. The closure only uses the
+/// list's scroll proxy, so a new one does the same as the old.
+struct RevealEditingFieldAction: Equatable {
+    private let reveal: (EditingRow) -> Void
+
+    init(_ reveal: @escaping (EditingRow) -> Void) {
+        self.reveal = reveal
+    }
+
+    func callAsFunction(_ row: EditingRow) {
+        reveal(row)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool { true }
+}
+
 extension EnvironmentValues {
-    /// Scrolls a row into view, e.g. above the keyboard when one of its fields opens for editing.
-    @Entry var revealEditingField: (EditingRow) -> Void = { _ in }
+    @Entry var revealEditingField = RevealEditingFieldAction { _ in }
     /// The row the current view is in, set by `editingRow(_:)`.
     @Entry var editingRow: EditingRow?
 }
