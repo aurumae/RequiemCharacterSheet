@@ -349,16 +349,18 @@ struct AddRowButton: View {
     @Environment(\.theme) private var theme
     @Environment(\.isEnabled) private var isEnabled
     let title: String
+    let systemImage: String
     let action: () -> Void
 
-    init(_ title: String, action: @escaping () -> Void) {
+    init(_ title: String, systemImage: String = "plus.circle", action: @escaping () -> Void) {
         self.title = title
+        self.systemImage = systemImage
         self.action = action
     }
 
     var body: some View {
         Button(action: action) {
-            Label(title, systemImage: "plus.circle")
+            Label(title, systemImage: systemImage)
                 .foregroundStyle(theme.accent)
                 .opacity(isEnabled ? 1 : 0.35)
                 .frame(maxWidth: .infinity, alignment: .leading)

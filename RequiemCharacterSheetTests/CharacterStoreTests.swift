@@ -227,6 +227,153 @@ final class CharacterStoreTests {
         #expect(makeStore().summaries.isEmpty)
     }
 
+    // MARK: - Export and import
+
+    private func savedFile(_ id: UUID) -> URL {
+        directory.appending(path: "\(id.uuidString).json")
+    }
+
+    @Test func exportIsTheSavedFile() throws {
+        let store = makeStore()
+        let character = Character()
+        character.name = "Marcus Vale"
+        try store.save(character)
+
+        #expect(try store.exportData(for: character.id) == Data(contentsOf: savedFile(character.id)))
+    }
+
+    @Test func importedCharacterIsStoredUnchanged() throws {
+        let source = Character()
+        source.name = "Marcus Vale"
+        source.modifiedAt = Date(timeIntervalSinceReferenceDate: 1000)
+        let data = try JSONEncoder().encode(source)
+        let store = makeStore()
+
+        let pending = try store.prepareImport(of: data)
+        #expect(pending.existing == nil)
+        let id = try store.importCharacter(pending)
+
+        #expect(id == source.id)
+        #expect(try Data(contentsOf: savedFile(id)) == data)
+        #expect(store.summaries.map(\.name) == ["Marcus Vale"])
+        #expect(store.summaries.first?.modifiedAt == source.modifiedAt)
+    }
+
+    @Test func importWithLowercaseIDIsStoredUnchanged() throws {
+        // Another platform may write the same UUID in lowercase
+        let id = UUID()
+        let data = Data(#"{"schemaVersion": 10, "id": "\#(id.uuidString.lowercased())", "name": "Marcus Vale"}"#.utf8)
+        let store = makeStore()
+
+        try store.importCharacter(store.prepareImport(of: data))
+
+        #expect(try Data(contentsOf: savedFile(id)) == data)
+    }
+
+    @Test func importingACharacterAlreadyHereFindsIt() throws {
+        let store = makeStore()
+        let character = Character()
+        character.name = "Marcus Vale"
+        try store.save(character)
+
+        let pending = try store.prepareImport(of: store.exportData(for: character.id))
+
+        #expect(pending.existing?.id == character.id)
+        #expect(pending.isAlreadyHere)
+    }
+
+    @Test func changedCopyIsNotAlreadyHere() throws {
+        let store = makeStore()
+        let character = Character()
+        try store.save(character)
+        character.name = "Marcus Vale"
+
+        let pending = try store.prepareImport(of: JSONEncoder().encode(character))
+
+        #expect(pending.existing?.id == character.id)
+        #expect(!pending.isAlreadyHere)
+    }
+
+    @Test func replacingOverwritesTheCharacterHere() throws {
+        let store = makeStore()
+        let character = Character()
+        character.name = "Marcus Vale"
+        try store.save(character)
+        character.name = "Marcus Vale, Elder"
+        let newer = try JSONEncoder().encode(character)
+
+        try store.importCharacter(store.prepareImport(of: newer))
+
+        #expect(store.summaries.count == 1)
+        #expect(try store.load(character.id).name == "Marcus Vale, Elder")
+    }
+
+    @Test func keepingBothAddsACopyWithANewIdentity() throws {
+        let store = makeStore()
+        let character = Character()
+        character.name = "Marcus Vale"
+        character.attributes.first { $0.name == "Strength" }?.rating = 4
+        try store.save(character)
+
+        let copyID = try store.importCharacter(store.prepareImport(of: store.exportData(for: character.id)), keepingBoth: true)
+
+        #expect(copyID != character.id)
+        #expect(Set(store.summaries.map(\.id)) == [character.id, copyID])
+        let copy = try store.load(copyID)
+        #expect(copy.name == "Marcus Vale (1)")
+        #expect(copy.attributes.first { $0.name == "Strength" }?.rating == 4)
+        #expect(copy.modifiedAt == character.modifiedAt)
+    }
+
+    @Test func copiesAreNumberedLikeFiles() throws {
+        let store = makeStore()
+        let character = Character()
+        character.name = "Lucius Avelorn"
+        try store.save(character)
+        let data = try store.exportData(for: character.id)
+
+        let first = try store.importCharacter(store.prepareImport(of: data), keepingBoth: true)
+        let second = try store.importCharacter(store.prepareImport(of: data), keepingBoth: true)
+
+        #expect(try store.load(first).name == "Lucius Avelorn (1)")
+        #expect(try store.load(second).name == "Lucius Avelorn (2)")
+    }
+
+    @Test func copyNameUsesTheFirstFreeNumber() {
+        #expect(CharacterStore.copyName(for: "Lucius", taken: ["Lucius"]) == "Lucius (1)")
+        #expect(CharacterStore.copyName(for: "Lucius", taken: ["Lucius", "Lucius (2)"]) == "Lucius (1)")
+        #expect(CharacterStore.copyName(for: "Lucius (1)", taken: ["Lucius", "Lucius (1)"]) == "Lucius (2)")
+        #expect(CharacterStore.copyName(for: "", taken: [""]) == "Unnamed Character (1)")
+        #expect(CharacterStore.copyName(for: "Year (1999) Lucius", taken: []) == "Year (1999) Lucius (1)")
+    }
+
+    @Test func importFromBeforeCharactersHadIDsKeepsItsNewID() throws {
+        let store = makeStore()
+
+        let id = try store.importCharacter(store.prepareImport(of: Data(#"{"name": "Marcus Vale"}"#.utf8)))
+
+        #expect(store.summaries.map(\.id) == [id])
+        #expect(try store.load(id).name == "Marcus Vale")
+    }
+
+    @Test func importFromNewerVersionIsRefused() throws {
+        let store = makeStore()
+        let data = Data(#"{"schemaVersion": 99, "id": "\#(UUID().uuidString)", "name": "Marcus Vale"}"#.utf8)
+
+        #expect(throws: CharacterStoreError.newerFormat(version: 99)) { try store.prepareImport(of: data) }
+        #expect(store.summaries.isEmpty)
+    }
+
+    @Test func importOfSomethingElseIsRefused() throws {
+        let store = makeStore()
+
+        #expect(throws: CharacterStoreError.unreadable) { try store.prepareImport(of: Data("not a character".utf8)) }
+        #expect(throws: CharacterStoreError.unreadable) { try store.prepareImport(of: Data("[1, 2]".utf8)) }
+        // Other JSON decodes as a blank character, as every field has a default
+        #expect(throws: CharacterStoreError.unreadable) { try store.prepareImport(of: Data(#"{"v1-unversioned": {}}"#.utf8)) }
+        #expect(store.summaries.isEmpty)
+    }
+
     // MARK: - Moving the single-character save
 
     @Test func legacySaveIsMovedIntoStore() throws {

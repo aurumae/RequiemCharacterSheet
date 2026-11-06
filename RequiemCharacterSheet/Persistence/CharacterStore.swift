@@ -21,6 +21,30 @@ struct CharacterSummary: Identifiable, Equatable {
 enum CharacterStoreError: Error, Equatable {
     /// The file was saved by a newer version of the app. Opening it here could drop fields this version doesn't know about.
     case newerFormat(version: Int)
+    /// The file isn't a character file, or it's damaged.
+    case unreadable
+}
+
+extension CharacterStoreError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .newerFormat:
+            "This character was saved by a newer version of the app. Update the app to open it."
+        case .unreadable:
+            "The file isn't a character file, or it's damaged."
+        }
+    }
+}
+
+/// A character file that has been read and checked, waiting to be added to the store.
+struct CharacterImport {
+    /// The file exactly as it was received.
+    let data: Data
+    let character: Character
+    /// The character on this device with the same identity, if there is one.
+    let existing: CharacterSummary?
+    /// The character on this device is the same as the file, apart from perhaps its edited date.
+    let isAlreadyHere: Bool
 }
 
 /// Saves each character as its own JSON file in the app's private Application Support directory.
@@ -113,6 +137,79 @@ final class CharacterStore {
         let character = try decodeCharacter(from: data)
         try save(character, at: character.modifiedAt)
         legacyDefaults.removeObject(forKey: Self.legacySaveKey)
+    }
+
+    // MARK: - Export and import
+
+    /// The character's saved file, exactly as stored, for sharing with another device.
+    func exportData(for id: UUID) throws -> Data {
+        try Data(contentsOf: exportURL(for: id))
+    }
+
+    /// Where the character's saved file is, for sharing it without reading it first.
+    func exportURL(for id: UUID) -> URL {
+        fileURL(for: id)
+    }
+
+    /// Reads a received character file and checks it can be opened, without changing the store.
+    func prepareImport(of data: Data) throws -> CharacterImport {
+        let character: Character
+        do {
+            character = try decodeCharacter(from: data)
+        } catch let error as CharacterStoreError {
+            throw error
+        } catch {
+            throw CharacterStoreError.unreadable
+        }
+        // Missing fields fall back to defaults, so any JSON object would decode as a blank character.
+        // Every character file ever saved has a name, even if it's empty.
+        guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any], object["name"] is String else {
+            throw CharacterStoreError.unreadable
+        }
+        let existing = summaries.first { $0.id == character.id }
+        let isAlreadyHere = existing != nil
+            && (try? Self.comparableContent(of: load(character.id))) == (try? Self.comparableContent(of: character))
+        return CharacterImport(data: data, character: character, existing: existing, isAlreadyHere: isAlreadyHere)
+    }
+
+    /// Adds an imported character, replacing the one with the same identity unless `keepingBoth`,
+    /// in which case the copy gets a new identity and a numbered name, e.g. "Lucius Avelorn (1)".
+    /// Returns the imported character's ID.
+    @discardableResult
+    func importCharacter(_ pending: CharacterImport, keepingBoth: Bool = false) throws -> UUID {
+        var data = pending.data
+        var id = pending.character.id
+        let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        if keepingBoth && pending.existing != nil {
+            // Only the identity and name change; everything else in the file is kept as it was
+            guard var object else { throw CharacterStoreError.unreadable }
+            id = UUID()
+            object["id"] = id.uuidString
+            object["name"] = Self.copyName(for: pending.character.name, taken: Set(summaries.map(\.name)))
+            data = try JSONSerialization.data(withJSONObject: object)
+        } else if (object?["id"] as? String).flatMap(UUID.init(uuidString:)) != id {
+            // A file from before characters had IDs gets one when it's read, so it's saved with it
+            data = try JSONEncoder().encode(pending.character)
+        }
+        // Otherwise the file is stored byte for byte, so its format and edited date stay as they were
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try data.write(to: fileURL(for: id), options: .atomic)
+        reload()
+        return id
+    }
+
+    /// The name for a copy, numbered like copied files: "Name (1)", then "Name (2)" and so on, using the
+    /// first number no other character has. A copy of "Name (1)" is numbered from "Name" too.
+    nonisolated static func copyName(for name: String, taken: Set<String>) -> String {
+        var base = name.isEmpty ? "Unnamed Character" : name
+        if let suffix = base.range(of: #" \(\d+\)$"#, options: .regularExpression) {
+            base.removeSubrange(suffix)
+        }
+        var number = 1
+        while taken.contains("\(base) (\(number))") {
+            number += 1
+        }
+        return "\(base) (\(number))"
     }
 
     // MARK: - Private

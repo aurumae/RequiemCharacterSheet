@@ -47,10 +47,9 @@ jobs:
           with open(os.environ["GITHUB_ENV"], "a") as output:
               output.write("REQUIEM_SIMULATOR=" + phone["udid"] + "\n")
           PYTHON
-      # UI tests remain in Xcode Cloud and local runs. The macos-26 runner can
-      # time out evaluating UI snapshots; restore coverage here only after
-      # addressing runner performance or the UI-test timeouts.
-      - name: Build the Xcode app and run iOS unit tests
+      # UI tests run in Xcode Cloud and locally; on GitHub's slower shared runners their first look at the
+      # character sheet can time out, so only the unit tests run here.
+      - name: Build and test the Xcode app
         run: >-
           xcodebuild test -project RequiemCharacterSheet.xcodeproj
           -scheme RequiemCharacterSheet
