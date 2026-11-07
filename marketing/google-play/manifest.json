@@ -1,0 +1,81 @@
+{
+  "capturedApp": "ie.requiem.sheet",
+  "versionName": "1.0.0-beta.1",
+  "versionCode": 9,
+  "releaseSourceCommit": "f0bd5a7acf993dd30e1fcd97fa1d22b73c37f8a1",
+  "captureDate": "2026-11-07",
+  "files": [
+    {
+      "file": "feature-graphic.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 896962,
+      "sha256": "abb1a4329811cab481df6bcf143f69dd7361fb58ee3a3b63030e4c85669c7528"
+    },
+    {
+      "file": "phone-screenshots/01-character-library.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 806439,
+      "sha256": "8e9ced1616deb54dd38a26fd2b6427f1cdaf2ee3502e42a078e86f41efb1e131"
+    },
+    {
+      "file": "phone-screenshots/02-guided-creation.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 714723,
+      "sha256": "3f24d6fc018575f887dafeb127701380d398b28cbcaa357e1ba591e914f95cf0"
+    },
+    {
+      "file": "phone-screenshots/03-attributes.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 752700,
+      "sha256": "3c04054e8bd386b0d64621e8cd4b138fa0f82f80f765eafc11bc6a4d72c2b8e5"
+    },
+    {
+      "file": "phone-screenshots/04-skills-and-specialties.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 685723,
+      "sha256": "d3f04ac56f0d78e3cd1d9f888cd3e8869a3dfc162613cb8daff50ec24074c27b"
+    },
+    {
+      "file": "phone-screenshots/05-disciplines-and-coils.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 716951,
+      "sha256": "85330680b3897c293d13352fa1c8341961c80caa6b941c91405de5715f4e03f4"
+    },
+    {
+      "file": "phone-screenshots/06-merits-and-aspirations.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 728847,
+      "sha256": "e365c7e3dbe76000605e06f49db8bdc74930fd9eaf6be20760aed702c3606382"
+    },
+    {
+      "file": "phone-screenshots/07-health-willpower-and-vitae.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 684863,
+      "sha256": "1a0f51d575dbce96aca389a932058476c65cd56eda17741cae9093f9c30ca9f2"
+    },
+    {
+      "file": "phone-screenshots/08-humanity-and-touchstones.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 691878,
+      "sha256": "6a4247ce3b17f8de4f287cfc4c233e993631c73e6201072f407969fde191a28f"
+    }
+  ]
+}
