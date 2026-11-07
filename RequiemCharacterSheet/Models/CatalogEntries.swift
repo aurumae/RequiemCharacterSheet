@@ -309,6 +309,8 @@ struct QualifierRule: Decodable {
     let prompt: String
     /// The allowed choices, if limited.
     let options: [String]?
+    /// The choices are the character's Skill Specialties, e.g. for Area of Expertise.
+    let fromSpecialties: Bool?
 }
 
 struct Prerequisite: Decodable {
@@ -545,11 +547,15 @@ struct ArchetypeEntry: CatalogEntry {
     let id: CatalogEntryID
     let name: String
     let source: SourceReference
-    /// The book gives only names, so this is usually empty.
+    /// Usually empty: the book's descriptions are too short to summarise, so the Willpower actions stand in.
     let summary: String
+    /// A sample action that regains one Willpower.
+    let singleWillpower: String?
+    /// A sample action that regains all Willpower, once per chapter.
+    let allWillpower: String?
 
     enum CodingKeys: CodingKey {
-        case id, name, source, summary
+        case id, name, source, summary, singleWillpower, allWillpower
     }
 
     init(from decoder: Decoder) throws {
@@ -558,6 +564,15 @@ struct ArchetypeEntry: CatalogEntry {
         name = try container.decode(String.self, forKey: .name)
         source = try container.decode(SourceReference.self, forKey: .source)
         summary = try container.decode(.summary, default: "")
+        singleWillpower = try container.decodeIfPresent(String.self, forKey: .singleWillpower)
+        allWillpower = try container.decodeIfPresent(String.self, forKey: .allWillpower)
+    }
+
+    /// The sample Willpower actions, e.g. "Single Willpower: Abandon a home."
+    var willpowerFacts: [(label: String, value: String)] {
+        [("Single Willpower", singleWillpower), ("All Willpower", allWillpower)].compactMap { label, value in
+            value.map { (label, $0) }
+        }
     }
 }
 

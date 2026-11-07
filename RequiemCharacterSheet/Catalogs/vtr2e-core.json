@@ -2349,7 +2349,8 @@
       ],
       "qualifier": {
         "prompt": "Specialty",
-        "options": null
+        "options": null,
+        "fromSpecialties": true
       },
       "repeatable": false,
       "prerequisites": [
@@ -5017,216 +5018,270 @@
       "name": "Authoritarian",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 84
+      },
+      "singleWillpower": "Shut down an inferior trying to rise to your level of power.",
+      "allWillpower": "Commit a widespread hit against a rival's mortal connections."
     },
     {
       "id": "child",
       "name": "Child",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 85
+      },
+      "singleWillpower": "Find someone to take responsibility for your mistake.",
+      "allWillpower": "Commit a terrible crime to see how authority might react."
     },
     {
       "id": "competitor",
       "name": "Competitor",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 85
+      },
+      "singleWillpower": "Challenge someone clearly your superior.",
+      "allWillpower": "Risk Final Death to prove that you can handle something."
     },
     {
       "id": "conformist",
       "name": "Conformist",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 85
+      },
+      "singleWillpower": "Choose an obviously disadvantageous path, because it fits with protocol.",
+      "allWillpower": "Stand by the losing side with shield at the ready, because it's your side."
     },
     {
       "id": "conspirator",
       "name": "Conspirator",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 85
+      },
+      "singleWillpower": "Add a layer of meaningless complexity to a plan.",
+      "allWillpower": "Refuse to take an action in self-defense without excessive, dangerous plotting."
     },
     {
       "id": "courtesan",
       "name": "Courtesan",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 85
+      },
+      "singleWillpower": "Put yourself out for another's pleasure.",
+      "allWillpower": "Be the last one dancing when the party's on fire."
     },
     {
       "id": "cult-leader",
       "name": "Cult Leader",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 85
+      },
+      "singleWillpower": "Convince someone to deny logic because of your word.",
+      "allWillpower": "Risk exile or death to defend your cult's belief system."
     },
     {
       "id": "deviant",
       "name": "Deviant",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Commit a crime against your recognized society.",
+      "allWillpower": "Commit a high crime in plain view of an authority."
     },
     {
       "id": "follower",
       "name": "Follower",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Follow a directive blindly, for the sake of following.",
+      "allWillpower": "Follow a dangerous directive without hesitation."
     },
     {
       "id": "guru",
       "name": "Guru",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Give advice that someone uses to succeed.",
+      "allWillpower": "Give protected, dangerous information without asking for payment."
     },
     {
       "id": "idealist",
       "name": "Idealist",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Deny a compromise that would water down your ideal.",
+      "allWillpower": "Refuse safety for fear of abandoning your ideal's purity."
     },
     {
       "id": "jester",
       "name": "Jester",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Point out an absurdity in the current state of affairs, to lighten the tone.",
+      "allWillpower": "Favor wit and cunning over direct self-defense in a situation of serious danger."
     },
     {
       "id": "junkie",
       "name": "Junkie",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Ignore a problem or responsibility in favor of immediate gratification.",
+      "allWillpower": "Abandon an important relationship over your pursuit of pleasure."
     },
     {
       "id": "martyr",
       "name": "Martyr",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Take another's burden upon yourself without expecting recompense.",
+      "allWillpower": "Put yourself at risk to save someone else or an ideology."
     },
     {
       "id": "masochist",
       "name": "Masochist",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Find and experience a new source of hurt.",
+      "allWillpower": "Willingly explore pain, beyond the point of safety and reason."
     },
     {
       "id": "monster",
       "name": "Monster",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Cause pain for the sole intention of causing pain.",
+      "allWillpower": "Commit a capital crime without additional motive."
     },
     {
       "id": "nomad",
       "name": "Nomad",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Abandon a home.",
+      "allWillpower": "Abandon a society, organization, or city."
     },
     {
       "id": "nurturer",
       "name": "Nurturer",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 86
+      },
+      "singleWillpower": "Put yourself out to help another succeed.",
+      "allWillpower": "Take full responsibility for another's dangerous mistake."
     },
     {
       "id": "perfectionist",
       "name": "Perfectionist",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Revisit an already successful action to hammer out a flaw.",
+      "allWillpower": "Stick with a failed and dangerous plan, in order to fix what went wrong."
     },
     {
       "id": "penitent",
       "name": "Penitent",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Punish yourself for a mistake.",
+      "allWillpower": "Risk death to correct an egregious error in judgment."
     },
     {
       "id": "questioner",
       "name": "Questioner",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Challenge an accepted truth.",
+      "allWillpower": "Put a long-believed truth to the test, at your own peril."
     },
     {
       "id": "rebel",
       "name": "Rebel",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Openly flout a tradition.",
+      "allWillpower": "Openly flout a Kindred Tradition, or a covenant taboo."
     },
     {
       "id": "scholar",
       "name": "Scholar",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Uncover a lost piece of information.",
+      "allWillpower": "Uncover forbidden knowledge."
     },
     {
       "id": "social-chameleon",
       "name": "Social Chameleon",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Ingratiate yourself to a new social clique.",
+      "allWillpower": "Burn an important bridge to guarantee acceptance in a new group."
     },
     {
       "id": "spy",
       "name": "Spy",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Build a new identity or uncover a secret.",
+      "allWillpower": "Uncover a damning secret that could end someone."
     },
     {
       "id": "survivor",
       "name": "Survivor",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Favor the safe path over the higher risk, higher reward path.",
+      "allWillpower": "Abandon a social group or relationship in order to stay safe."
     },
     {
       "id": "visionary",
       "name": "Visionary",
       "source": {
         "book": "vtr2e-core",
-        "page": 81
-      }
+        "page": 87
+      },
+      "singleWillpower": "Help someone by sharing your vision with them.",
+      "allWillpower": "Put yourself at risk to show a group the power of your vision."
     }
   ]
 }

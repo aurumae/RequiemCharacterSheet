@@ -86,7 +86,7 @@ struct CreationPanelView: View {
             } message: {
                 Text(character.unfinishedCreationSteps.map { "\($0.title): \($0.detail)" }.joined(separator: "\n"))
             }
-            .sheet(isPresented: $showingFinish) {
+            .hostedSheet(isPresented: $showingFinish) {
                 FinishCreationView(character: character)
             }
 

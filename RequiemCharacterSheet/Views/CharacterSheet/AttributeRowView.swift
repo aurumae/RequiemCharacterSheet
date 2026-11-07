@@ -23,8 +23,10 @@ struct AttributeRowView: View {
         character.editableMaximum(for: TraitKey(.attribute, attribute.kind.rawValue), upTo: character.baseRatingCap)
     }
 
+    /// As many dots as Blood Potency allows, or the rating with bonuses if that's more, e.g. with Vigor.
+    /// Dots that can never be bought aren't drawn.
     private var maximumVisibleRating: Int {
-        character.baseRatingCap >= 6 || totalRating >= 6 ? 10 : 5
+        min(10, max(character.baseRatingCap, totalRating))
     }
 
     var body: some View {

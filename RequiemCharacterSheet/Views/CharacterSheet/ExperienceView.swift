@@ -82,7 +82,7 @@ struct ExperienceView: View {
             }
             .buttonStyle(.plain)
             .accessibilityHint("Shows every change to the character's traits")
-            .sheet(isPresented: $showingLog) {
+            .hostedSheet(isPresented: $showingLog) {
                 ChangeLogView(character: character)
             }
         }

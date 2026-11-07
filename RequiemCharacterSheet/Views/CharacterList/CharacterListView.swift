@@ -95,6 +95,9 @@ struct CharacterListView: View {
                                     errorAlert = ErrorAlert(title: "Couldn't Import Character", message: error.localizedDescription)
                                 }
                             }
+
+                            // Also in each row's long-press menu
+                            exportMenu
                         }
                     }
                     .listStyle(.grouped)
@@ -167,6 +170,28 @@ struct CharacterListView: View {
             }
         }
         .tint(theme.accent)
+    }
+
+    /// Lists the characters that can be shared; choosing one opens the share sheet.
+    private var exportMenu: some View {
+        let readable = store.summaries.filter(\.isReadable)
+        return Menu {
+            ForEach(readable) { summary in
+                ShareLink(
+                    item: CharacterFile(url: store.exportURL(for: summary.id), name: summary.name),
+                    preview: SharePreview(displayName(for: summary))
+                ) {
+                    Text(displayName(for: summary))
+                }
+            }
+        } label: {
+            Label("Export Character", systemImage: "square.and.arrow.up")
+                .foregroundStyle(theme.accent)
+                .opacity(readable.isEmpty ? 0.35 : 1)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+        }
+        .disabled(readable.isEmpty)
     }
 
     @ViewBuilder

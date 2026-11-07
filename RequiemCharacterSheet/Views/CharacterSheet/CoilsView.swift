@@ -43,7 +43,7 @@ struct CoilsView: View {
                     showingScalePicker = true
                 }
                 .disabled(!character.canLearnDevotionsAndScales)
-                .sheet(isPresented: $showingScalePicker, onDismiss: addCustomScaleIfChosen) {
+                .hostedSheet(isPresented: $showingScalePicker, onDismiss: addCustomScaleIfChosen) {
                     CatalogPickerView(
                         title: "Add Scale",
                         searchPrompt: "Search Scales",
@@ -204,7 +204,7 @@ struct CoilRowView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityHint("Shows its tiers")
-                        .sheet(isPresented: $showingDetail) {
+                        .hostedSheet(isPresented: $showingDetail) {
                             MysteryDetailView(entry: entry, rating: coil.rating, character: character)
                         }
                     } else if character.isMysteryCoil(coil) {
@@ -265,7 +265,7 @@ struct ScaleRowView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityHint("Shows its details")
-                .sheet(isPresented: $showingDetail) {
+                .hostedSheet(isPresented: $showingDetail) {
                     ScaleDetailView(entry: entry, character: character)
                 }
 

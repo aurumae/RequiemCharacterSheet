@@ -32,6 +32,12 @@ struct SplashScreenView: View {
                 .multilineTextAlignment(.center)
                 .padding()
 
+            // VoiceOver users get "Double-tap to skip" as the hint instead
+            Text("Tap anywhere to continue")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+
             Spacer()
         }
         .padding()

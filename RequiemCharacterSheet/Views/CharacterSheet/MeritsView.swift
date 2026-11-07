@@ -28,7 +28,7 @@ struct MeritsView: View {
             AddRowButton("Add Merit") {
                 showingPicker = true
             }
-            .sheet(isPresented: $showingPicker, onDismiss: addCustomMeritIfChosen) {
+            .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomMeritIfChosen) {
                 MeritPickerView(character: character) { entry, qualifier in
                     if let entry {
                         // A chosen Merit starts at its lowest rating

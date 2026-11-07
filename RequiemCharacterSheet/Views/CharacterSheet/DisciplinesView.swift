@@ -28,7 +28,7 @@ struct DisciplinesView: View {
             AddRowButton("Add Discipline") {
                 showingPicker = true
             }
-            .sheet(isPresented: $showingPicker, onDismiss: addCustomDisciplineIfChosen) {
+            .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomDisciplineIfChosen) {
                 DisciplinePickerView(character: character) { entry in
                     // A chosen Discipline starts at one dot; a custom one starts blank for its name
                     if let entry {

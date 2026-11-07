@@ -51,10 +51,9 @@ struct RequiemCharacterSheetApp: App {
                 }
             }
             .task {
-                // Keep the splash screen visible for 5 seconds, then fade it out over 2 seconds
-                // and fade in the main app view over 1 second
-                try? await Task.sleep(for: .seconds(5))
-                await dismissSplash(fadeOut: 2, pause: 2, fadeIn: 1)
+                // Five seconds in all: the splash screen stays for 4, fades out, then the main view fades in
+                try? await Task.sleep(for: .seconds(4))
+                await dismissSplash(fadeOut: 0.5, pause: 0.1, fadeIn: 0.4)
             }
         }
     }

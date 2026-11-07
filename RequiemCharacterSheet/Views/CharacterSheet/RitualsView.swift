@@ -39,7 +39,7 @@ struct RitualsView: View {
             AddRowButton("Add Ritual") {
                 showingPicker = true
             }
-            .sheet(isPresented: $showingPicker, onDismiss: addCustomRitualIfChosen) {
+            .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomRitualIfChosen) {
                 CatalogPickerView(
                     title: "Add Ritual",
                     searchPrompt: "Search Rituals",
@@ -141,7 +141,7 @@ struct RitualRowView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint("Shows its details")
-                    .sheet(isPresented: $showingDetail) {
+                    .hostedSheet(isPresented: $showingDetail) {
                         RitualDetailView(entry: entry, character: character)
                     }
 

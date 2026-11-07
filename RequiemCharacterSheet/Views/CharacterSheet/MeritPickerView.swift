@@ -80,25 +80,32 @@ struct MeritPickerView: View {
                     Button("Cancel") { dismiss() }
                 }
             }
-            // Qualifiers with a fixed set of choices, e.g. Defensive Combat (Brawl or Weaponry)
+            // Qualifiers with a set of choices, e.g. Defensive Combat (Brawl or Weaponry), or the character's
+            // Specialties for Area of Expertise
             .confirmationDialog(
                 pendingEntry.map { "\($0.name): choose \($0.qualifier?.prompt.lowercased() ?? "one")" } ?? "",
                 isPresented: Binding(
-                    get: { pendingEntry?.qualifier?.options != nil },
+                    get: { pendingEntry.map { character.qualifierOptions(for: $0) != nil } ?? false },
                     set: { if !$0 { pendingEntry = nil } }
                 ),
                 titleVisibility: .visible,
                 presenting: pendingEntry
             ) { entry in
-                ForEach(entry.qualifier?.options ?? [], id: \.self) { option in
-                    Button(option) { choose(entry, qualifier: option) }
+                if entry.qualifier?.usesSpecialty == true {
+                    ForEach(character.specialtyChoices, id: \.self) { choice in
+                        Button("\(choice.specialty) (\(choice.skill))") { choose(entry, qualifier: choice.specialty) }
+                    }
+                } else {
+                    ForEach(entry.qualifier?.options ?? [], id: \.self) { option in
+                        Button(option) { choose(entry, qualifier: option) }
+                    }
                 }
             }
             // Free-text qualifiers, e.g. the language for Language
             .alert(
                 pendingEntry.map { "\($0.name)" } ?? "",
                 isPresented: Binding(
-                    get: { pendingEntry != nil && pendingEntry?.qualifier?.options == nil },
+                    get: { pendingEntry.map { character.qualifierOptions(for: $0) == nil } ?? false },
                     set: { if !$0 { pendingEntry = nil } }
                 ),
                 presenting: pendingEntry
@@ -122,6 +129,8 @@ struct MeritPickerView: View {
         let unmet = character.unmetPrerequisites(for: entry)
         // During guided creation, only Merits that fit the ten starting dots, and none Kindred can't take
         let fits = character.creationAllows(.merit(entry, rating: entry.ratings.min() ?? 1))
+        // e.g. Area of Expertise, which is for one of the character's Specialties
+        let needsSpecialty = entry.qualifier?.usesSpecialty == true && character.specialtyChoices.isEmpty
         Button {
             if entry.qualifier != nil {
                 qualifierDraft = ""
@@ -143,7 +152,11 @@ struct MeritPickerView: View {
                     Text(entry.summary)
                         .themedText(.detail)
                         .foregroundStyle(.primary)
-                    if !fits {
+                    if needsSpecialty {
+                        Label("Needs a Skill Specialty first", systemImage: "nosign")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    } else if !fits {
                         Label(entry.unavailableToKindred ? PrerequisiteCheck.notForKindred
                               : unmet.isEmpty ? "Doesn't fit the starting Merit dots" : unmet.warningText,
                               systemImage: "nosign")
@@ -169,8 +182,8 @@ struct MeritPickerView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .disabled(isOwned || !fits)
-        .opacity(fits ? 1 : 0.5)
+        .disabled(isOwned || !fits || needsSpecialty)
+        .opacity(fits && !needsSpecialty ? 1 : 0.5)
     }
 
     private func ratingsAccessibilityLabel(_ entry: MeritEntry) -> String {

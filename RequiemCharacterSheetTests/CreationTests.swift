@@ -319,6 +319,14 @@ struct CreationTests {
         #expect(Catalog.bundled.archetypes.entry(named: "social chameleon") != nil)
     }
 
+    @Test func everyArchetypeHasItsWillpowerActions() {
+        for archetype in Catalog.bundled.archetypes.all {
+            #expect(archetype.willpowerFacts.map(\.label) == ["Single Willpower", "All Willpower"], "\(archetype.name)")
+            #expect((84...87).contains(archetype.source.page ?? 0), "\(archetype.name)")
+        }
+        #expect(Catalog.bundled.archetypes.entry(named: "Nomad")?.singleWillpower == "Abandon a home.")
+    }
+
     // MARK: - Steps, finishing and leaving
 
     @Test func guidedCharactersStartInCreation() {

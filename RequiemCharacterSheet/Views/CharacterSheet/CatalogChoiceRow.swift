@@ -5,8 +5,17 @@
 
 import SwiftUI
 
+/// The details shown when a choice's label is tapped, e.g. the chosen clan's favoured Attributes and bane.
+struct CatalogChoiceDetail {
+    let title: String
+    let summary: String
+    let citation: String
+    var facts: [DetailFact] = []
+}
+
 /// A character detail chosen from the catalog, e.g. "Clan: Ventrue". Tapping the value opens a list of the
 /// book's options with a short description, then a custom option, and "none" where that makes sense.
+/// Tapping the label shows the chosen entry's details, or the list if nothing from the book is chosen.
 struct CatalogChoiceRow: View {
     @Environment(\.theme) private var theme
     let label: String
@@ -23,10 +32,13 @@ struct CatalogChoiceRow: View {
     let customTitle: String
     /// e.g. "Unaligned" for covenants; `nil` if there's no "none" option.
     var noneTitle: String?
+    /// The chosen catalog entry's details; `nil` when it's custom or nothing is chosen.
+    let detail: () -> CatalogChoiceDetail?
     /// Called with the chosen catalog entry, or `nil` for none.
     let choose: (CatalogEntryID?) -> Void
 
     @State private var showingPicker = false
+    @State private var shownDetail: CatalogChoiceDetail?
     /// The custom option was chosen; its text field opens once the picker has closed.
     @State private var editsCustomOnDismiss = false
     @State private var editsCustom = false
@@ -37,9 +49,32 @@ struct CatalogChoiceRow: View {
 
     var body: some View {
         HStack {
-            Text(label)
-                .themedText(.label)
-                .frame(minWidth: 100, alignment: .leading)
+            let detail = detail()
+            Button {
+                if let detail {
+                    shownDetail = detail
+                } else {
+                    showingPicker = true
+                }
+            } label: {
+                Text(label)
+                    .themedText(.label)
+                    .frame(minWidth: 100, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(detail.map { "\($0.title) details" } ?? trimmedLabel)
+            .accessibilityHint(detail == nil ? "Double-tap to choose" : "Shows its details")
+            .hostedSheet(isPresented: Binding(get: { shownDetail != nil }, set: { if !$0 { shownDetail = nil } })) {
+                if let shownDetail {
+                    CatalogDetailView(
+                        title: shownDetail.title,
+                        summary: shownDetail.summary,
+                        citation: shownDetail.citation,
+                        facts: shownDetail.facts
+                    )
+                }
+            }
 
             Spacer()
 
@@ -78,7 +113,7 @@ struct CatalogChoiceRow: View {
         }
         .padding(.vertical, 4)
         .editingRow("info-\(label)")
-        .sheet(isPresented: $showingPicker, onDismiss: {
+        .hostedSheet(isPresented: $showingPicker, onDismiss: {
             if editsCustomOnDismiss {
                 editsCustomOnDismiss = false
                 editsCustom = true
@@ -105,6 +140,60 @@ struct CatalogChoiceRow: View {
 }
 
 extension Character {
+    var clanDetail: CatalogChoiceDetail? {
+        clanEntry.map { clan in
+            CatalogChoiceDetail(title: clan.name, summary: clan.summary, citation: clan.source.citation(), facts: [
+                DetailFact(label: "Favoured Attributes", value: clan.favoredAttributes.map(\.name).joined(separator: " or ")),
+                DetailFact(label: "Disciplines", value: disciplineNames(clan.disciplines)),
+                DetailFact(label: "Bane", value: "\(clan.bane.name). \(clan.bane.summary)"),
+            ])
+        }
+    }
+
+    var bloodlineDetail: CatalogChoiceDetail? {
+        bloodlineEntry.map { bloodline in
+            CatalogChoiceDetail(title: bloodline.name, summary: bloodline.summary, citation: bloodline.source.citation(), facts: [
+                DetailFact(label: "Parent clan", value: bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")),
+                DetailFact(label: "Disciplines", value: disciplineNames(bloodline.disciplines)),
+                DetailFact(label: "Bane", value: "\(bloodline.bane.name). \(bloodline.bane.summary)"),
+            ])
+        }
+    }
+
+    var covenantDetail: CatalogChoiceDetail? {
+        covenantEntry.map { CatalogChoiceDetail(title: $0.name, summary: $0.summary, citation: $0.source.citation()) }
+    }
+
+    /// The book's Mask or Dirge archetype with this name, if it is one, with its sample Willpower actions.
+    func archetypeDetail(named name: String) -> CatalogChoiceDetail? {
+        guard let archetype = Catalog.bundled.archetypes.entry(named: name) else { return nil }
+        return CatalogChoiceDetail(
+            title: archetype.name,
+            summary: archetype.summary,
+            citation: archetype.source.citation(),
+            facts: archetype.willpowerFacts.map { DetailFact(label: $0.label, value: $0.value) }
+        )
+    }
+
+    /// Mask and Dirge archetypes for the picker; the same list serves both.
+    func archetypePickerSections(chosen: String) -> [CatalogPickerSection] {
+        let items = Catalog.bundled.archetypes.all.map { archetype in
+            CatalogPickerItem(
+                id: archetype.id,
+                name: archetype.name,
+                summary: archetype.summary,
+                details: archetype.willpowerFacts.map { "\($0.label): \($0.value)" },
+                citation: archetype.source.citation(),
+                isOwned: archetype.name == chosen
+            )
+        }
+        return [CatalogPickerSection(title: "Archetypes", items: items)]
+    }
+
+    private func disciplineNames(_ ids: [CatalogEntryID]) -> String {
+        ids.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")
+    }
+
     /// Clans for the picker, each with its favoured Attributes and in-clan Disciplines.
     func clanPickerSections() -> [CatalogPickerSection] {
         let items = Catalog.bundled.clans.all.sorted { $0.name < $1.name }.map { clan in

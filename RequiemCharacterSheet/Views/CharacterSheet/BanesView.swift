@@ -54,7 +54,7 @@ struct BanesView: View {
                 AddRowButton("Add Bane") {
                     showingPicker = true
                 }
-                .sheet(isPresented: $showingPicker, onDismiss: addCustomBaneIfChosen) {
+                .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomBaneIfChosen) {
                     BanePickerView(character: character) { entry in
                         if let entry {
                             character.banes.append(Bane(source: .catalog(entry.id)))

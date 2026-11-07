@@ -8,24 +8,90 @@
 
 import SwiftUI
 
+/// A Specialty being added (no index) or edited.
+struct SpecialtyEdit {
+    let skill: Skill
+    let index: Int?
+
+    /// The text the prompt starts with: the Specialty being edited, or nothing when adding.
+    var initialText: String {
+        index.flatMap { skill.specialties.indices.contains($0) ? skill.specialties[$0] : nil } ?? ""
+    }
+}
+
+/// Opens the Specialty prompt, which the sheet shows. It isn't attached to the row: rows in a list can be
+/// discarded while the keyboard appears, which would close the prompt before anything could be typed.
+/// Always compares equal, as closures can't be compared; see `RevealEditingFieldAction`.
+struct EditSpecialtyAction: Equatable {
+    private let open: (SpecialtyEdit) -> Void
+
+    init(_ open: @escaping (SpecialtyEdit) -> Void) {
+        self.open = open
+    }
+
+    func callAsFunction(_ edit: SpecialtyEdit) {
+        open(edit)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool { true }
+}
+
+extension EnvironmentValues {
+    @Entry var editSpecialty = EditSpecialtyAction { _ in }
+}
+
+/// The prompt for adding, renaming or deleting a Specialty.
+struct SpecialtyPrompt: ViewModifier {
+    let character: Character
+    @Binding var edit: SpecialtyEdit?
+    /// Kept apart from `edit`, which is cleared as the prompt closes, so the buttons always see the text.
+    @Binding var draft: String
+
+    func body(content: Content) -> some View {
+        content
+            .alert(
+                edit?.index == nil ? "Add Specialty" : "Edit Specialty",
+                isPresented: Binding(get: { edit != nil }, set: { if !$0 { edit = nil } }),
+                presenting: edit
+            ) { edit in
+                TextField("Specialty", text: $draft)
+                if let index = edit.index {
+                    Button("Save") { character.renameSpecialty(of: edit.skill, at: index, to: draft) }
+                    Button("Delete", role: .destructive) { character.removeSpecialty(of: edit.skill, at: index) }
+                } else {
+                    Button("Add") { character.addSpecialty(draft, to: edit.skill) }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: { edit in
+                Text(message(for: edit))
+            }
+    }
+
+    private func message(for edit: SpecialtyEdit) -> String {
+        guard let index = edit.index, edit.skill.specialties.indices.contains(index) else { return edit.skill.name }
+        let specialty = edit.skill.specialties[index]
+        let following = character.merits.filter { $0.entry?.qualifier?.usesSpecialty == true && $0.qualifier == specialty }
+        guard !following.isEmpty else { return edit.skill.name }
+        // Deleting it takes the Merit with it
+        return "\(edit.skill.name). \(following.map(\.name).joined(separator: ", ")) depends on this Specialty."
+    }
+}
+
 struct SkillRowView: View {
     @Environment(\.theme) private var theme
     let character: Character
     @Bindable var skill: Skill
+    @Environment(\.editSpecialty) private var editSpecialty
     @State private var showingPicker = false
-
-    // Specialty being added or edited in the prompt
-    @State private var isAddingSpecialty = false
-    @State private var editingSpecialtyIndex: Int?
-    @State private var specialtyDraft = ""
 
     /// The Blood Potency cap, and during guided creation, the starting dots left.
     private var maxEditableRating: Int {
         character.editableMaximum(for: TraitKey(.skill, skill.skillID.rawValue), upTo: character.baseRatingCap)
     }
 
+    /// As many dots as Blood Potency allows, or the rating if that's more. Dots that can never be bought aren't drawn.
     private var maximumVisibleRating: Int {
-        character.baseRatingCap >= 6 || skill.rating >= 6 ? 10 : 5
+        min(10, max(character.baseRatingCap, skill.rating))
     }
 
     var body: some View {
@@ -51,8 +117,7 @@ struct SkillRowView: View {
                 // Specialties, each tappable to edit
                 ForEach(Array(skill.specialties.enumerated()), id: \.offset) { index, specialty in
                     Button {
-                        specialtyDraft = specialty
-                        editingSpecialtyIndex = index
+                        editSpecialty(SpecialtyEdit(skill: skill, index: index))
                     } label: {
                         Text(specialty)
                             .themedText(.detail)
@@ -63,8 +128,7 @@ struct SkillRowView: View {
                 }
 
                 Button {
-                    specialtyDraft = ""
-                    isAddingSpecialty = true
+                    editSpecialty(SpecialtyEdit(skill: skill, index: nil))
                 } label: {
                     Text("Add Specialty")
                         .themedText(.detail)
@@ -92,56 +156,5 @@ struct SkillRowView: View {
                 .frame(width: 116)
         }
         .padding(.vertical, 4)
-        .alert("Add Specialty", isPresented: $isAddingSpecialty) {
-            TextField("Specialty", text: $specialtyDraft)
-            Button("Add") {
-                addSpecialty()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text(skill.name)
-        }
-        .alert(
-            "Edit Specialty",
-            isPresented: Binding(
-                get: { editingSpecialtyIndex != nil },
-                set: { if !$0 { editingSpecialtyIndex = nil } }
-            )
-        ) {
-            TextField("Specialty", text: $specialtyDraft)
-            Button("Save") {
-                saveEditedSpecialty()
-            }
-            Button("Delete", role: .destructive) {
-                deleteEditedSpecialty()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text(skill.name)
-        }
-    }
-
-    private var trimmedDraft: String {
-        specialtyDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    private func addSpecialty() {
-        guard !trimmedDraft.isEmpty else { return }
-        skill.specialties.append(trimmedDraft)
-    }
-
-    private func saveEditedSpecialty() {
-        guard let index = editingSpecialtyIndex, skill.specialties.indices.contains(index) else { return }
-        // Saving an empty specialty removes it
-        if trimmedDraft.isEmpty {
-            skill.specialties.remove(at: index)
-        } else {
-            skill.specialties[index] = trimmedDraft
-        }
-    }
-
-    private func deleteEditedSpecialty() {
-        guard let index = editingSpecialtyIndex, skill.specialties.indices.contains(index) else { return }
-        skill.specialties.remove(at: index)
     }
 }

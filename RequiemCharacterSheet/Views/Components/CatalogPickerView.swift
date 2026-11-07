@@ -125,9 +125,11 @@ struct CatalogPickerView: View {
                             DotsText(dots)
                         }
                     }
-                    Text(item.summary)
-                        .themedText(.detail)
-                        .foregroundStyle(.primary)
+                    if !item.summary.isEmpty {
+                        Text(item.summary)
+                            .themedText(.detail)
+                            .foregroundStyle(.primary)
+                    }
                     ForEach(item.details, id: \.self) { detail in
                         Text(detail)
                             .themedText(.detail)
@@ -207,8 +209,10 @@ struct CatalogDetailView<Extra: View>: View {
             List {
                 Section {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(summary)
-                            .themedText(.body)
+                        if !summary.isEmpty {
+                            Text(summary)
+                                .themedText(.body)
+                        }
                         ForEach(facts) { fact in
                             (Text("\(fact.label): ").bold() + Text(fact.value))
                                 .themedText(.detail)

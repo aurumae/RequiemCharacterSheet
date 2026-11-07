@@ -38,7 +38,7 @@ struct DisciplineRowView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityHint(entry.kind == .ritual ? "Shows its rules and rituals" : "Shows its powers")
-                .sheet(isPresented: $showingDetail) {
+                .hostedSheet(isPresented: $showingDetail) {
                     DisciplineDetailView(entry: entry, rating: discipline.rating, character: character)
                 }
             } else {

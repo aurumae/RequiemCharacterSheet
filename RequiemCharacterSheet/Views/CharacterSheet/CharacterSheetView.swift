@@ -19,6 +19,12 @@ struct CharacterSheetView: View {
     @State private var showsNegativeExperienceNotice = false
     /// During guided creation, asks which favoured Attribute takes the clan's dot.
     @State private var choosingFavoredAttribute = false
+    /// The Specialty being added or edited, shown here rather than in its row; see `EditSpecialtyAction`.
+    @State private var specialtyEdit: SpecialtyEdit?
+    @State private var specialtyDraft = ""
+    /// Pickers and details opened from rows in the list, presented here; see `PresentSheetAction`.
+    @State private var hostedSheet: HostedSheet?
+    @State private var lastHostedSheet: HostedSheet?
 
     var body: some View {
         BackgroundView {
@@ -119,12 +125,22 @@ struct CharacterSheetView: View {
                             proxy.scrollTo(row.id, anchor: UnitPoint(x: 0.5, y: row.anchor))
                         }
                     })
+                    .environment(\.presentSheet, PresentSheetAction { sheet in
+                        lastHostedSheet = sheet
+                        hostedSheet = sheet
+                    })
+                    .environment(\.editSpecialty, EditSpecialtyAction { edit in
+                        specialtyDraft = edit.initialText
+                        specialtyEdit = edit
+                    })
                 }
             }
             .padding(.horizontal)
             // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border
             .padding(.bottom, 26)
         }
+        .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
+        .sheetHost($hostedSheet, lastPresented: $lastHostedSheet)
         // Choosing a clan during guided creation asks where its free Attribute dot goes
         .onChange(of: character.clanSource) {
             // The clan is usually chosen in a picker; ask once it has closed, as an alert can't show over it

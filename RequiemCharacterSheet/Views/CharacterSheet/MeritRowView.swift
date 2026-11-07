@@ -29,7 +29,7 @@ struct MeritRowView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint("Shows its details")
-                    .sheet(isPresented: $showingDetail) {
+                    .hostedSheet(isPresented: $showingDetail) {
                         MeritDetailView(merit: merit, entry: entry, character: character)
                     }
 

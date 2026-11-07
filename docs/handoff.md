@@ -249,3 +249,48 @@ with Google-managed Play App Signing, add tester accounts and verify a Play inst
 valuable alpha characters before uninstalling the debug app for the signing transition. Android
 privacy access, explicit backup rules and the later closed/public release tasks remain. No iOS
 implementation follow-up is required; cross-device file compatibility is now physically confirmed.
+
+## 2026-11-07 03:08 UTC · Claude (iOS) · Home-screen export, splash, Area of Expertise, archetypes, sheet fixes
+
+I pulled `main` through `6784393` and read Astra's entries; there are no iOS follow-ups in them. Congratulations on the beta.
+This entry covers the user's latest round of iOS changes. **Follow-up:** match them on Android, where that
+makes sense.
+
+**Shared catalog changes (`vtr2e-core.json`)**
+- **Area of Expertise:** its `qualifier` gains `"fromSpecialties": true`. The qualifier is then chosen from the
+  character's Specialties instead of being typed.
+- **Archetypes:**
+  - Each of the 27 gains `singleWillpower` and `allWillpower` strings: the book's sample Willpower actions,
+    quoted at the user's request.
+  - Their `source.page` was wrong; it was 81 for all of them. It's now 84, 85, 86 or 87 for each, from the book
+    pages the user supplied.
+  - `summary` stays empty.
+- Both are additive, so older readers ignore them.
+
+**Area of Expertise rules** (in `Models/SpecialtyRules.swift`; tests in `SpecialtyTests`)
+- **In the Merit picker:**
+  - With no Specialties on the sheet, the Merit is disabled with "Needs a Skill Specialty first".
+  - Otherwise it asks with a list such as "Rifles (Firearms)". The stored qualifier is just the Specialty text.
+- **Renaming a Specialty** renames the qualifier of any `fromSpecialties` Merit for it.
+- **Deleting a Specialty, or renaming it to empty,** removes such Merits.
+  - This happens only if no other Skill has a Specialty with the same name.
+  - In XP Mode, the Merit's paid dots are refunded through the usual snapshot/recordChanges path.
+- **Editing a Specialty that a Merit depends on:** the edit prompt's message says, for example, "Firearms. Area of Expertise
+  (Rifles) depends on this Specialty."
+
+**UI (no format change)**
+- **Home screen:** an "Export Character" row below Import Character opens a menu of readable characters; choosing one shares it. Long-press Export stays.
+- **Splash:** "Tap anywhere to continue" shows in secondary grey below the Dark Pack text. The splash is now about 5 s in all: 4 s, then a short fade.
+- **Dots:**
+  - Attributes and Skills draw `min(10, max(baseRatingCap, total rating))` dots, so 5 at BP 1 and 6 at BP 6, instead of revealing all 10 from BP 6.
+  - Bonus dots, e.g. Vigor, still extend the row.
+  - Unbuyable dots are no longer drawn.
+- **Health boxes:** both rows are left-aligned.
+- **Character labels:**
+  - Tapping the left-column label of Mask, Dirge, Clan, Bloodline or Covenant shows the chosen catalog entry's details. With nothing chosen, or a custom value, it opens the chooser.
+  - Clan details show the favoured Attributes, Disciplines and bane. Bloodline details show the parent clan, Disciplines and bane. Covenant details show the summary.
+  - Archetype details show the Single Willpower and All Willpower actions.
+- **Mask and Dirge** now use the same searchable chooser as Clan, plus "Custom Mask"/"Custom Dirge", instead of a small menu. They are still stored as plain strings.
+- **Two iOS-only bug fixes:**
+  - The Specialty prompt and every sheet opened from a row are now presented from outside the sheet's list.
+  - They used to close by themselves, or get stuck so that taps did nothing. Check whether Android's dialogs can be lost the same way when a lazy row leaves composition.

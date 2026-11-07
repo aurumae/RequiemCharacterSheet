@@ -30,7 +30,7 @@ struct DevotionsView: View {
                 showingPicker = true
             }
             .disabled(!character.canLearnDevotionsAndScales)
-            .sheet(isPresented: $showingPicker, onDismiss: addCustomDevotionIfChosen) {
+            .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomDevotionIfChosen) {
                 CatalogPickerView(
                     title: "Add Devotion",
                     searchPrompt: "Search Devotions",
@@ -105,7 +105,7 @@ struct DevotionRowView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint("Shows its details")
-                    .sheet(isPresented: $showingDetail) {
+                    .hostedSheet(isPresented: $showingDetail) {
                         DevotionDetailView(entry: entry, character: character)
                     }
 
