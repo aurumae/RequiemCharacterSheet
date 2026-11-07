@@ -1,0 +1,391 @@
+{
+  "armor": 1,
+  "aspirations": [
+    {
+      "id": "815F3D46-7EEA-40C4-9CCE-6390B3E82A06",
+      "text": "Recover the missing folio"
+    },
+    {
+      "id": "47BEA32C-44F8-4C79-B6D2-85D4F86C2988",
+      "text": "Earn the trust of the Dragons"
+    },
+    {
+      "id": "6902584D-7603-4B9C-AD3C-B3C6D58E473B",
+      "text": "Protect the old city archive"
+    }
+  ],
+  "attributes": [
+    {
+      "attribute": "intelligence",
+      "rating": 3
+    },
+    {
+      "attribute": "wits",
+      "rating": 3
+    },
+    {
+      "attribute": "resolve",
+      "rating": 3
+    },
+    {
+      "attribute": "strength",
+      "rating": 2
+    },
+    {
+      "attribute": "dexterity",
+      "rating": 2
+    },
+    {
+      "attribute": "stamina",
+      "rating": 3
+    },
+    {
+      "attribute": "presence",
+      "rating": 2
+    },
+    {
+      "attribute": "manipulation",
+      "rating": 2
+    },
+    {
+      "attribute": "composure",
+      "rating": 3
+    }
+  ],
+  "banes": [],
+  "beats": 3,
+  "bloodPotency": 1,
+  "bloodline": {
+    "custom": ""
+  },
+  "changeLog": [
+    {
+      "date": 815694929.082808,
+      "experiences": 2,
+      "to": 3,
+      "id": "2AA839DD-D6C8-4145-8FAF-85A34E845ACF",
+      "name": "Investigation",
+      "trait": "skill:investigation",
+      "xpMode": true,
+      "from": 2
+    },
+    {
+      "date": 815687729.082808,
+      "experiences": 3,
+      "to": 2,
+      "id": "15F294A4-9CDF-4E8F-B1CC-368B20498E42",
+      "name": "Resilience",
+      "trait": "discipline:2EE7A2BF-4ED8-47DF-B5A5-B3AE6AEF20E7",
+      "xpMode": true,
+      "from": 1
+    }
+  ],
+  "chronicle": "Dublin by Night",
+  "clan": {
+    "catalog": "ventrue"
+  },
+  "clanBaneActive": false,
+  "coils": [
+    {
+      "id": "58DA62CD-744C-55D8-9826-949A33312969",
+      "mystery": {
+        "catalog": "mystery-of-the-wyrm"
+      },
+      "rating": 2
+    }
+  ],
+  "concept": "Night archivist",
+  "covenant": {
+    "catalog": "ordo-dracul"
+  },
+  "createdAt": 814557329.082808,
+  "currentVitae": 8,
+  "devotions": [],
+  "dirge": "Survivor",
+  "disciplines": [
+    {
+      "id": "73C43F7A-EFCA-4AD1-89E3-F52C83D4222E",
+      "source": {
+        "catalog": "dominate"
+      },
+      "rating": 3
+    },
+    {
+      "id": "2EE7A2BF-4ED8-47DF-B5A5-B3AE6AEF20E7",
+      "source": {
+        "catalog": "resilience"
+      },
+      "rating": 2
+    },
+    {
+      "id": "AE96CC5F-B8BB-4E7B-A820-F55A50372B9D",
+      "source": {
+        "catalog": "animalism"
+      },
+      "rating": 1
+    }
+  ],
+  "experiences": 12,
+  "healthTrack": [
+    "bashing",
+    "lethal",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+  ],
+  "humanity": 7,
+  "id": "A3FF6992-0E95-5FF5-AFCF-25719A70562D",
+  "mask": "Scholar",
+  "merits": [
+    {
+      "id": "18D55DF9-8B5A-4CA1-8A7F-6B1C90630AC9",
+      "source": {
+        "catalog": "safe-place"
+      },
+      "rating": 2
+    },
+    {
+      "id": "3AA46293-FCCC-4FF8-9332-8A046D0FA1A0",
+      "source": {
+        "catalog": "resources"
+      },
+      "rating": 2
+    },
+    {
+      "id": "711946FB-266C-48CC-B339-EE0F127B1AAB",
+      "source": {
+        "catalog": "covenant-status"
+      },
+      "rating": 2,
+      "qualifier": "Ordo Dracul"
+    },
+    {
+      "id": "2986A6F6-51CC-4232-AD46-55A0CF5E4E5F",
+      "source": {
+        "catalog": "defensive-combat"
+      },
+      "rating": 1,
+      "qualifier": "Brawl"
+    }
+  ],
+  "modifiedAt": 815766629.082808,
+  "mystery": {
+    "catalog": "mystery-of-the-wyrm"
+  },
+  "name": "Róisín Vale",
+  "paidDots": {
+    "skill:investigation": {
+      "3": 2
+    },
+    "discipline:2EE7A2BF-4ED8-47DF-B5A5-B3AE6AEF20E7": {
+      "2": 3
+    }
+  },
+  "player": "Aoife",
+  "rituals": [],
+  "scales": [
+    {
+      "id": "0AF4C9A7-484C-5744-94A0-7C891E2541C9",
+      "source": {
+        "catalog": "day-wake-conditioning"
+      }
+    }
+  ],
+  "schemaVersion": 10,
+  "size": 5,
+  "skillList": "vampire-core",
+  "skills": [
+    {
+      "skill": "academics",
+      "rating": 3,
+      "specialties": [
+        "History"
+      ]
+    },
+    {
+      "skill": "computer",
+      "rating": 1,
+      "specialties": []
+    },
+    {
+      "skill": "crafts",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "investigation",
+      "rating": 3,
+      "specialties": [
+        "Archives"
+      ]
+    },
+    {
+      "skill": "medicine",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "occult",
+      "rating": 2,
+      "specialties": [
+        "Kindred lore"
+      ]
+    },
+    {
+      "skill": "politics",
+      "rating": 2,
+      "specialties": []
+    },
+    {
+      "skill": "science",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "athletics",
+      "rating": 1,
+      "specialties": []
+    },
+    {
+      "skill": "brawl",
+      "rating": 2,
+      "specialties": []
+    },
+    {
+      "skill": "drive",
+      "rating": 1,
+      "specialties": []
+    },
+    {
+      "skill": "firearms",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "larceny",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "stealth",
+      "rating": 1,
+      "specialties": []
+    },
+    {
+      "skill": "survival",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "weaponry",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "animal-ken",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "empathy",
+      "rating": 2,
+      "specialties": []
+    },
+    {
+      "skill": "expression",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "intimidation",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "persuasion",
+      "rating": 2,
+      "specialties": []
+    },
+    {
+      "skill": "socialize",
+      "rating": 1,
+      "specialties": []
+    },
+    {
+      "skill": "streetwise",
+      "rating": 0,
+      "specialties": []
+    },
+    {
+      "skill": "subterfuge",
+      "rating": 1,
+      "specialties": []
+    }
+  ],
+  "touchstones": [
+    {
+      "id": "20700517-F5FD-5B3D-8DA2-72CD1CB6E54C",
+      "level": 1,
+      "text": ""
+    },
+    {
+      "id": "2CBBE13C-0EEA-514E-90DF-DC9B4F00A454",
+      "level": 2,
+      "text": ""
+    },
+    {
+      "id": "7654E423-0408-5336-BA94-4A60743F4254",
+      "level": 3,
+      "text": ""
+    },
+    {
+      "id": "50A68E3B-BDA7-59C3-A29C-5C5D4A19C898",
+      "level": 4,
+      "text": ""
+    },
+    {
+      "id": "6ED01C85-812F-5113-BAB2-0B80A3DFD2B2",
+      "level": 5,
+      "text": ""
+    },
+    {
+      "id": "D8DCF328-4545-557E-A4A8-BCBB566CD699",
+      "level": 6,
+      "text": "The family home in Rathmines"
+    },
+    {
+      "id": "7E36C0AC-98C8-548D-9363-7B29122D3C37",
+      "level": 7,
+      "text": "Maeve, the night librarian"
+    },
+    {
+      "id": "1570C940-3720-5B1C-8480-4E162F5F4155",
+      "level": 8,
+      "text": ""
+    },
+    {
+      "id": "157371AE-D4CE-5556-97D7-2760A50EE8FF",
+      "level": 9,
+      "text": ""
+    },
+    {
+      "id": "60CE7E7B-AC94-5A67-AEA7-A9397BACDA11",
+      "level": 10,
+      "text": ""
+    }
+  ],
+  "willpowerTrack": [
+    "spent",
+    "spent",
+    "none",
+    "none",
+    "none",
+    "none"
+  ],
+  "xpMode": true
+}

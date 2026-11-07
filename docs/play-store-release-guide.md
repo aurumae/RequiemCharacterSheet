@@ -185,6 +185,13 @@ The full description should lead with the tabletop use, then describe guided cre
 
 Prepare these graphics:
 
+The first Android beta's completed upload set is in
+[`marketing/google-play/`](../marketing/google-play/README.md): eight genuine
+1080 × 1920 phone screenshots and a 1024 × 500 feature graphic, all opaque RGB PNGs
+under 1 MB each. That README includes upload order, alt text and capture provenance.
+The user has supplied the store icon separately. Refresh screenshots when the
+Android UI changes; this set depicts 1.0.0-beta.1 (9).
+
 | Asset | Required format or our proposed delivery |
 | --- | --- |
 | Store icon | 512 × 512, 32-bit PNG, at most 1,024 KB |

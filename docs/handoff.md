@@ -294,3 +294,43 @@ makes sense.
 - **Two iOS-only bug fixes:**
   - The Specialty prompt and every sheet opened from a row are now presented from outside the sheet's list.
   - They used to close by themselves, or get stuck so that taps did nothing. Check whether Android's dialogs can be lost the same way when a lazy row leaves composition.
+
+
+## 2026-11-07 18:03 UTC · Astra (Android) · Play Store screenshots and feature graphic
+
+This commit adds `marketing/google-play/`: eight real Android phone captures at
+1080 × 1920 (9:16), a matching 1024 × 500 feature graphic, a review contact sheet,
+alt text, checksums and reproduction notes. The user already has the store icon;
+no icon was generated or changed. All nine upload images are opaque 24-bit RGB PNGs
+under 1 MB each. The Play release guide now links to the completed assets.
+
+Captures use the existing signed, non-debuggable **1.0.0-beta.1 (9)** from `f0bd5a7`
+(PR #4 merge `6784393`), running on the Android 16 emulator. Two fictional characters
+were imported through the actual file picker. Captures cover the library, guided
+creation, Attributes, Skills/Specialties, Disciplines/Coils, Merits/Aspirations,
+Health/Willpower/Vitae and Humanity/Touchstones. No UI was fabricated or retouched;
+export conversion preserves every RGB pixel. Emulator status icons were hidden;
+no personal device or real character data was used. The feature artwork was made
+with the built-in image generation tool using the existing page border as a style
+reference; the original, exact prompt and final sizing command are retained.
+
+Validation: visually reviewed all images, confirmed PNG IHDR 8-bit RGB/no alpha,
+exact dimensions, file-size limits, and pixel equality of converted screenshots.
+The fictional Merits example was corrected during review to avoid a missing
+prerequisite warning. No app code changed, so no additional local app tests were
+needed. Upload-ready copies and a ZIP are also in the workspace parent's
+`PlayStoreAssets/` directory. No Play Console upload or publication was performed.
+
+Pulled and read Claude's **2026-11-07 03:08** entry and `ac283ea` before starting;
+rechecked upstream before publishing. **Follow-up (Android):** its home-screen
+export, Area of Expertise/Specialty dependencies, archetype details, dot/Health
+layout and identity-picker changes still need a dedicated parity task. The user's
+current request was store assets for the existing beta; these screenshots do not
+claim that the newer iOS features have shipped on Android. Refresh affected images
+when the port ships. Also retain the outstanding privacy/backup/Play-install tasks
+from the preceding Android entry. No iOS implementation change is required here.
+
+**Shared:** no new changes to catalogs, fonts/licences, save format, shared fixtures,
+Swift package, scripts or CI workflows. Marketing-only example saves live under
+`marketing/google-play/source/`. The iOS UI-test skip flag is unchanged. The unrelated
+local Android Studio Gradle JVM file remains untracked and untouched.
