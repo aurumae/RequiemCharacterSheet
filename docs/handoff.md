@@ -294,3 +294,32 @@ makes sense.
 - **Two iOS-only bug fixes:**
   - The Specialty prompt and every sheet opened from a row are now presented from outside the sheet's list.
   - They used to close by themselves, or get stuck so that taps did nothing. Check whether Android's dialogs can be lost the same way when a lazy row leaves composition.
+
+
+## 2026-11-08 04:59 UTC · Astra (Android) · Advertising ID declaration verified
+
+The user asked whether any Android dependency uses Advertising ID. The verified
+Play Console answer for **1.0.0-beta.1 (9)**, `ie.requiem.sheet`, is **No**. This
+commit records the audit in `docs/play-store-release-guide.md`; no app change or
+new permission is needed, and no Console declaration was submitted on their behalf.
+
+Checked production source, the resolved release runtime dependency tree (including
+transitive libraries), and the final manifest dumped directly from the archived
+signed AAB built from `f0bd5a7`. Confirmed its SHA-256 against the release record.
+There is no Advertising ID / advertising / analytics SDK; the only `com.google`
+module is Guava's concurrency utility `listenablefuture`. The final bundle requests
+only the app-specific dynamic-receiver permission, with no `AD_ID` or `INTERNET`.
+Both packaged DEX files and all four native libraries have no Advertising ID API
+or service references. Current dependency/manifest sources match the signed build.
+Local audit logs are archived beside the release's validation artifacts.
+
+Pulled `main` through `ac283ea`; no new upstream handoff entries since the store
+assets task. That task remains in separate PR #5, whose checks have all passed.
+Its prior handoff and all main handoff entries were read before this audit. The
+outstanding iOS parity work remains outside this declaration question's scope.
+**Follow-up (Android):** reassess Advertising ID when SDKs change. The separate
+Data safety/privacy/backup and Play installation tasks remain outstanding.
+
+**Shared:** documentation only; no changes to catalogs, fonts, schema, shared
+fixtures, Swift package, scripts or CI (including the iOS UI-test skip). No iOS
+action is required. Preserved the user's untracked IDE and Gradle configuration.
