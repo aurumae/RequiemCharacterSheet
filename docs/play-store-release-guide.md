@@ -212,10 +212,32 @@ Use **App content** and clear its outstanding tasks. Exact labels can change; an
 | Target audience | Choose the actual intended ages; my proposal is adult tabletop players, not children |
 | Content rating | Complete the IARC questionnaire honestly for the content actually present |
 | Data safety | Submit the outcome of the final data-flow review in section 7 |
-| Advertising ID and sensitive permissions | Declare actual use; none is intended, but inspect the merged release manifest |
+| Advertising ID | **No** for 1.0.0-beta.1 (9), verified on 8 November 2026; see the audit below |
+| Sensitive permissions | No sensitive permissions requested by the audited beta's merged release manifest |
 | Health features | No health features: the Health tracker represents fictional game damage |
 | Financial features | No financial features: Resources, Beats and Experiences are game values |
 | Other requested declarations | Complete applicable no-feature answers; do not leave Dashboard tasks unresolved |
+
+**Advertising ID audit (8 November 2026):** select **No** for `ie.requiem.sheet`
+1.0.0-beta.1, version code 9. Reviewed the app source and complete Gradle
+`releaseRuntimeClasspath`, including transitive dependencies: no Advertising ID,
+advertising or analytics SDK is included. The only `com.google` runtime dependency
+is Guava's `listenablefuture`, a concurrency utility. Dumped the final manifest
+directly from the signed AAB archived under `AndroidBuilds/f0bd5a7/` (SHA-256
+`8828caca8b09b4bfe61dc9feb5c1bd90dac11cd1b98b8f8f6cb3f9c637d621a8`): it contains
+neither `com.google.android.gms.permission.AD_ID` nor `INTERNET`. Its sole requested
+permission is the app-specific `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`. Scanning
+both packaged DEX files and all four native libraries also found no Advertising ID
+API/service references. The release dependencies and manifest source are unchanged
+since the signed build's source commit `f0bd5a7`.
+
+No code change or additional permission is needed to answer **No**. Targeting
+Android 13 or later does not itself mean the app uses Advertising ID; Google's
+permission requirement applies to apps that use it.
+[Android Advertising ID requirements](https://developer.android.com/about/versions/13/behavior-changes-13#ad-id)
+Recheck when introducing or updating SDKs. This audit addresses Advertising ID;
+the broader Data safety review in section 7 remains separate. The declaration has
+not been submitted to Play Console on the user's behalf.
 
 Audience selection and the content rating are different. An adult intended audience does not let us choose a rating ourselves. Review the bundled text and artwork for horror, violence, blood and other themes, then answer the rating questions as written. Being a character-sheet utility does not automatically mean “Everyone.” [Review preparation and declarations](https://support.google.com/googleplay/android-developer/answer/9859455) · [Health declaration](https://support.google.com/googleplay/android-developer/answer/14738291) · [Financial declaration](https://support.google.com/googleplay/android-developer/answer/13849271)
 
