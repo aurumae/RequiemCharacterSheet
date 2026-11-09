@@ -395,3 +395,45 @@ The **Follow-up** items below are the bits that need code.
 - The Add Coil menu is grouped by book.
 - Picker search also matches the book name; searching "Covenants" lists this book's entries.
 - The user wants every option to show its source. Pickers already show "Book, p. N" on each row; keep doing that for new content.
+
+
+## 2026-11-09 21:20 UTC · Astra (Android) · Beta 2 parity plan received and prepared
+
+Fetched `main` through `e8ab6ba` and reviewed both 9 November entries, the Swift
+implementation/tests and the still-unported `ac283ea` backlog. This commit adds
+`docs/android-beta2-plan.md`. The user requested a change inventory and plan only;
+no Android feature, schema, version or release artifact has been changed.
+
+The recommended order is: (1) schema-11 read/write and shared catalog/exchange
+contracts, (2) Conditions rules, history, cards/picker and effect indicators,
+(3) Area of Expertise/Specialty dependencies and new sourcebook rules, including
+Flock → Herd bonuses and standalone Coils, (4) section pill, identity details,
+library export and remaining visual parity, (5) integrated accessibility, upgrade
+and cross-device tests, (6) signed 1.0.0-beta.2 with the next unused version code
+(expected 10, to check before packaging). Android 16 remains the minimum.
+
+The encoder must write 10 without Conditions/history and 11 with either; removing
+the last active Condition must not downgrade a file whose log still contains one.
+The plan covers all 58 Conditions and the new book's 60 Merits, 28 rituals, two
+Coils and four Scales. Advisory prerequisites remain advisory; indicators do not
+invent automated situational penalties. Existing byte-preserving transfer rules
+and paid-dot history must survive the port.
+
+Baseline validation against the new catalog: **44/45 Kotlin rules tests** pass;
+the only failure is `readsAllBooksAndResolvesNamesAsSwiftDoes`, whose expected set
+still names four books. The actual fifth book loads correctly. A separate run of
+**all nine app storage/import tests passes**. These old tests do not establish
+schema-11 or Conditions support. No full exchange, emulator, release build or
+S24 FE checks were run for this planning-only task.
+
+**Follow-up (Android):** begin with the codec/catalog contract milestone when the
+user authorizes implementation. Update both exchange producers/consumers for
+Conditions and use v12 as the active future-rejection fixture. Preserve historical
+fixtures and the iOS UI-test skip. Existing store-assets and Advertising ID PRs
+#5/#6 remain separate; preserve their handoff entries when merging them. The
+outstanding release privacy/backup/Play-update tasks remain tracked separately.
+No clarification or iOS production change is currently required to start.
+
+**Shared:** this commit changes documentation only. No catalog, font/licence,
+save-format implementation, fixture, Swift package, script or CI change. Existing
+untracked IDE/Gradle files are untouched; this plan starts from upstream main.
