@@ -21,6 +21,9 @@ class ParityUiTest {
         ui.onNode(hasText(name) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun choose(field: String, id: String, search: String) {
+        // At phone width the temporary XP notice can cover the Clan row. Like
+        // CoreSheetUiTest, wait for that notice before testing a physical tap.
+        ui.waitUntil(6_000) { ui.onAllNodesWithText("Your available Experiences are now below zero.").fetchSemanticsNodes().isEmpty() }
         sheet(hasContentDescription(field)).performClick()
         ui.onNodeWithTag("identity-search").performTextInput(search)
         ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-$id"))

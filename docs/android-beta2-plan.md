@@ -302,8 +302,10 @@ bonus dots. Custom and catalog notes/history use stable UUIDs.
 - Shared contract passed: **255 Swift host tests, 57 Kotlin rules tests, six
   Kotlin-to-Swift consumers**, including real v11 store transfers and a character
   written after Android Condition actions. Nine Android storage/import tests pass.
-- Initial complete emulator suite: **20/20** passed. Final phone-width regression
-  run and release verification are recorded in the subsequent handoff entry.
+- Initial complete emulator suite: **20/20** passed. The final compact-phone run passed 19/20, then both parity tests passed after
+  the test waited for an XP notice covering its tap target. Thus all 20 test cases
+  are covered on the final app. An earlier host-emulator disconnect is not counted
+  as an app test result.
 - Debug/release builds and lint passed (zero errors; seven existing update warnings).
   Normal and 150% text visual checks prompted fixes to the pill, indicator scale,
   tonal button colors and compact-card text bounds.
@@ -322,3 +324,30 @@ No dependency, catalog JSON, font, licence, network permission or iOS production
 source changed. Schema implementation and shared tests changed as described above.
 Privacy-link/backup policy, 16 KB runtime and actual Play update tasks stay in the
 release guide; store screenshots should be refreshed after visual acceptance.
+
+### Signed candidate and final checks
+
+The production source is `53e6e35` (rules: `2012ff6`). Artifacts, SHA256SUMS,
+release notes and validation evidence are archived outside Git in
+`/home/oisin/RequiemCharacterSheetApp/AndroidBuilds/53e6e35/`.
+
+- Play upload: `RequiemCharacterSheet-1.0.0-beta.2-10.aab`.
+- AAB SHA-256: `966751bb98c9a9be871bfced70324395122353918797c2c38b92182b5d34f47c`.
+- Debug and upload-key-signed APKs are retained separately. The latter is a local
+  release test artifact; a Play installation uses Google's distribution signature.
+- Bundle validation, signatures, version/SDK fields and release manifest pass.
+  Permissions remain limited to the app's internal receiver permission, with no
+  AD_ID or INTERNET. No dependency declaration changed.
+- A real local **signed beta 1 → beta 2** update, without uninstalling between those
+  versions, preserved ordinary and guided v10 characters. Both exports were byte
+  identical after the update, including IDs, dates, creation state, damage, XP and
+  paid-dot ledger. This does not substitute for a Play-delivered update.
+- Portrait, landscape and 150% text were inspected on the emulator. Static APK and
+  64-bit ELF alignment passes 16 KB checks; the emulator runs 4 KB pages.
+- All GitHub checks and Xcode Cloud succeeded for `53e6e35`. The final follow-up
+  commit only synchronizes one UI test with the existing snackbar and records
+  validation; it does not change the archived application binaries.
+
+Next: upload code 10 to internal testing if unused in Console, then complete the
+S24 FE and real-device exchange checklist above. No Play upload or rollout has
+been performed by the agent.

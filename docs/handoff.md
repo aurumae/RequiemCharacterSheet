@@ -510,3 +510,51 @@ finish the final validation/archive and publish the updated PR. **Follow-up (use
 S24 FE and real iOS↔Android beta-2 exchange remain unconfirmed. Play installation,
 privacy/backup policy and 16 KB runtime tasks remain separately tracked; no Play
 release was uploaded or rolled out here.
+
+## 2026-11-09 23:45 UTC · Astra (Android) · Beta 2 signed and validated for device acceptance
+
+Production commits: `2012ff6` (rules/save contract), `53e6e35` (native UI and beta-2
+version). This follow-up changes only the parity UI test's synchronization and
+validation documentation. A captured failure showed the existing negative-XP
+snackbar covering the Clan tap target on a compact phone; the test now waits for
+it as CoreSheetUiTest already does. No production behavior change was needed.
+
+Validation: 255 Swift host tests, 57 Kotlin rules tests, nine Android storage/import
+tests and six Kotlin-to-Swift consumer tests pass. The initial complete UI suite
+passed 20/20. The final compact-phone suite passed 19/20; after the snackbar wait,
+both parity tests passed, completing all 20 cases on the final app. An intervening
+host emulator disconnect and failed software-renderer boot were recovered by
+restarting with Vulkan and virtual cameras disabled; those interrupted runs are
+not counted as app results. Normal/150% text, portrait and landscape layouts were
+visually reviewed. Full TalkBack and physical S24 FE acceptance remain pending.
+
+Signed beta 1 (9) was installed from its archived bundle APKs. Two v10 characters
+(ordinary and unfinished guided) were imported through Android's real picker.
+Installing upload-key-signed beta 2 (10) over it, without uninstalling, preserved
+both. Actual Save to file exports were byte identical to the originals, including
+IDs, dates, trackers, creation state, XP history and paid dots. This is a local
+signed-update check, not a Google Play delivery test.
+
+Final app source `53e6e35` is archived at `AndroidBuilds/53e6e35/` in the parent
+workspace: signed AAB, upload-signed test APK, debug APK, checksums, notes, logs and
+QA screenshots. AAB SHA-256:
+`966751bb98c9a9be871bfced70324395122353918797c2c38b92182b5d34f47c`.
+Bundletool and signatures verify; package `ie.requiem.sheet`, version
+`1.0.0-beta.2 (10)`, min/target 36, non-debuggable. Existing upload certificate is
+unchanged. Only the internal receiver permission is present; no AD_ID or INTERNET.
+APK/64-bit ELF alignment passes static 16 KB checks; runtime here is 4 KB, so the
+16 KB runtime task remains open. Lint: zero errors, seven existing update warnings.
+All GitHub checks and Xcode Cloud passed at `53e6e35`.
+
+**Shared:** no additional schema/catalog/font/fixture/Swift/package/script/CI change
+in this follow-up. The iOS UI-test skip is intact. Handoff history is append-only;
+main is still `e8ab6ba`. PR #7 now contains the implementation rather than only a
+plan. Existing asset/audit PRs #5/#6 remain independent and have not been merged.
+
+**Follow-up (user/Android):** confirm version code 10 is unused in Play Console,
+upload the AAB to internal testing, check the S24 FE and exchange real Conditions
+files in both directions with current iOS. Use the checklist in the beta-2 plan,
+including Area of Expertise, Flock, standalone Coils and indicators. Privacy-link/
+backup policy and Play-delivered update tasks remain separate. No Play upload or
+rollout occurred. **Follow-up (iOS):** after PR #7 merges, pull/read these entries;
+Android now reads 11 and conditionally writes 10/11 with the same raw file format.
