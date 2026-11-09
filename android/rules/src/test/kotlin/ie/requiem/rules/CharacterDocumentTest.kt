@@ -16,7 +16,7 @@ class CharacterDocumentTest {
             assertEquals("The file isn't a character file, or it's damaged.", e.message)
         }
         assertThrows(CharacterDocumentError::class.java) { documents.read(byteArrayOf(0xc3.toByte(), 0x28)) }
-        val future = assertThrows(CharacterDocumentError::class.java) { documents.read("{\"schemaVersion\":11}".toByteArray()) }
+        val future = assertThrows(CharacterDocumentError::class.java) { documents.read("{\"schemaVersion\":12}".toByteArray()) }
         assertEquals("This character was saved by a newer version of the app. Update the app to open it.", future.message)
     }
 
@@ -55,7 +55,7 @@ class CharacterDocumentTest {
 
     @Test fun exchangesActualExportedFilesAndCopiesWithSwift() {
         val directory = System.getProperty("exchangeDir")?.let(::File)
-        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v8-paid")) {
+        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v8-paid", "v11-conditions")) {
             val bytes = directory?.resolve("swift-transfer-$name.vtrcharacter")?.readBytes()
                 ?: javaClass.getResource("/characters/$name.json")!!.readBytes()
             val imported = documents.read(bytes)

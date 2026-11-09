@@ -24,6 +24,8 @@ fun CharacterSave.identityOptions(field: CharacterDetail, catalog: Catalog, quer
         val matches = clan.catalog in parents
         val group = if (kind == CatalogKind.bloodlines && matches) "${catalog.name(CatalogKind.clans, clan)} Bloodlines" else field.label + "s"
         val details = buildList {
+            entry.raw.str("singleWillpower")?.let { add("Single Willpower: $it") }
+            entry.raw.str("allWillpower")?.let { add("All Willpower: $it") }
             if (parents.isNotEmpty()) add("Parent clan: " + parents.joinToString { catalog.name(CatalogKind.clans, TraitSource(catalog = it)) })
             entry.raw.strings("favoredAttributes").takeIf { it.isNotEmpty() }?.let { add("Favoured Attributes: " + it.joinToString(transform = ::traitName)) }
             entry.raw.strings("disciplines").takeIf { it.isNotEmpty() }?.let { ids ->
@@ -37,5 +39,5 @@ fun CharacterSave.identityOptions(field: CharacterDetail, catalog: Catalog, quer
     val own = options.any { it.warning == null && kind == CatalogKind.bloodlines }
     return options.sortedWith(compareBy<IdentityOption> { it.warning != null }.thenBy { it.entry.name })
         .map { if (own && it.warning != null) it.copy(group = "Other Bloodlines") else it }
-        .filter { query.isBlank() || (it.entry.name + " " + it.entry.summary).contains(query.trim(), ignoreCase = true) }
+        .filter { query.isBlank() || (it.entry.name + " " + it.entry.summary + " " + it.entry.bookName + " " + it.details.joinToString(" ")).contains(query.trim(), ignoreCase = true) }
 }

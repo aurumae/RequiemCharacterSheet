@@ -21,6 +21,10 @@ class BookEntry internal constructor(val kind: CatalogKind, internal val raw: Js
     val repeatable: Boolean get() = raw.flag("repeatable")
     val qualifierPrompt: String? get() = raw.obj("qualifier")?.str("prompt")
     val qualifierOptions: List<String> get() = raw.obj("qualifier")?.strings("options").orEmpty()
+    val qualifierFromSpecialties: Boolean get() = raw.obj("qualifier")?.flag("fromSpecialties") == true
+    val coilOnly: Boolean get() = raw.flag("coilOnly")
+    val bookId: String get() = raw.obj("source")?.str("book").orEmpty()
+    val bookName: String get() = books[bookId] ?: bookId
     val isRitualDiscipline: Boolean get() = raw.str("kind") == "ritual"
     val coilName: String get() = raw.obj("coil")?.str("name") ?: name
     val dots: Int get() = raw.int("dots", 1)

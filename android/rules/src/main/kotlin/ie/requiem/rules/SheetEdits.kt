@@ -4,6 +4,11 @@ import java.util.UUID
 
 /** Committed player actions. Loading, rendering and saving never replay an edit. */
 sealed interface SheetEdit {
+    data class AddCondition(val source: TraitSource, val id: UUID = UUID.randomUUID()) : SheetEdit
+    data class ConditionText(val id: UUID, val field: ConditionField, val text: String) : SheetEdit
+    data class ConditionCounter(val id: UUID, val value: Int) : SheetEdit
+    data class ConditionPersistent(val id: UUID, val value: Boolean) : SheetEdit
+    data class ConditionAction(val id: UUID, val event: ConditionEvent) : SheetEdit
     data class Priority(val category: TraitCategory, val priority: CreationPriority, val skills: Boolean) : SheetEdit
     data class FavoredAttribute(val id: String) : SheetEdit
     data class CreationBonus(val experiences: Int) : SheetEdit
@@ -57,7 +62,7 @@ val CharacterSave.staminaCap: Int get() = legalRatings(RatingKind.Attribute, blo
 
 fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundationNow()): CharacterSave {
     if (!creationAllowsEdit(action, catalog)) return this
-    val applied = applyEdit(action, catalog)
+    val applied = applyEdit(action, catalog, at)
     val next = if (applied.creation != null && applied.xpMode) applied.copy(xpMode = false) else applied
     if (next == this) return this
     // Remove invisible marks immediately: an edit made before the next write must not
@@ -68,7 +73,9 @@ fun CharacterSave.edit(action: SheetEdit, catalog: Catalog, at: Double = foundat
         .recordChanges(this, catalog, at)
 }
 
-internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog): CharacterSave = when (action) {
+internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog, at: Double = foundationNow()): CharacterSave = when (action) {
+    is SheetEdit.AddCondition, is SheetEdit.ConditionText, is SheetEdit.ConditionCounter,
+    is SheetEdit.ConditionPersistent, is SheetEdit.ConditionAction -> editCondition(action, catalog, at)
     is SheetEdit.Priority -> setPriority(action)
     is SheetEdit.FavoredAttribute -> chooseFavoredAttribute(action.id, catalog)
     is SheetEdit.CreationBonus -> if (creation != null && CreationRules.ranks.any { it.second == action.experiences }) copy(creation = creation.copy(bonusExperiences = action.experiences)) else this
@@ -88,9 +95,7 @@ internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog): Chara
     is SheetEdit.Willpower -> if (action.index !in 0 until willpower) this else copy(willpowerTrack = List(willpower) { i ->
         val old = willpowerTrack.getOrElse(i) { WillpowerMark.none }; if (i == action.index) if (old == WillpowerMark.none) WillpowerMark.spent else WillpowerMark.none else old })
     is SheetEdit.AddSpecialty -> if (action.text.isBlank()) this else copy(skills = skills.map { if (it.skill == action.skill) it.copy(specialties = it.specialties + action.text.trim()) else it })
-    is SheetEdit.ReplaceSpecialty -> copy(skills = skills.map {
-        if (it.skill != action.skill || it.specialties.getOrNull(action.index) != action.previous) it
-        else it.copy(specialties = it.specialties.toMutableList().apply { if (action.text.isBlank()) removeAt(action.index) else set(action.index, action.text.trim()) }) })
+    is SheetEdit.ReplaceSpecialty -> replaceSpecialty(action, catalog)
     is SheetEdit.Number -> setNumber(action.field, action.value, catalog)
     is SheetEdit.Counter -> {
         if (action.field == NumberField.Beats && action.delta > 0 && beats >= 4) copy(beats = 0, experiences = (experiences.toLong() + 1).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
@@ -106,13 +111,13 @@ internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog): Chara
     is SheetEdit.EntryRating -> rateEntry(action, catalog)
     is SheetEdit.RenameEntry -> renameEntry(action, catalog)
     is SheetEdit.MeritQualifier -> copy(merits = merits.map {
-        val options = catalog.entry(CatalogKind.merits, it.source)?.qualifierOptions.orEmpty()
-        if (it.id != action.id || (options.isNotEmpty() && action.text !in options)) it else it.copy(qualifier = action.text.trim().ifEmpty { null }) })
+        val options = catalog.entry(CatalogKind.merits, it.source)?.let(::qualifierChoices)
+        if (it.id != action.id || (options != null && action.text.trim() !in options)) it else it.copy(qualifier = action.text.trim().ifEmpty { null }) })
     is SheetEdit.CustomRitual -> copy(rituals = rituals.map { if (it.id == action.id && catalog.entry(CatalogKind.rituals, it.source) == null)
         it.copy(customDiscipline = action.discipline, customDots = action.dots.coerceIn(1, 5)) else it })
     is SheetEdit.CustomDevotionCost -> copy(devotions = devotions.map { if (it.id == action.id && catalog.entry(CatalogKind.devotions, it.source) == null)
         it.copy(customExperienceCost = action.value.coerceIn(1, 20)) else it })
-    is SheetEdit.Mystery -> chooseMystery(action)
+    is SheetEdit.Mystery -> if (catalog.entry(CatalogKind.mysteries, action.source)?.coilOnly == true) this else chooseMystery(action)
 }
 
 private fun CharacterSave.setNumber(field: NumberField, value: Int, catalog: Catalog): CharacterSave {
@@ -153,7 +158,7 @@ private fun CharacterSave.addEntry(a: SheetEdit.AddEntry, catalog: Catalog): Cha
     return when (a.kind) {
         EntryKind.Discipline -> copy(disciplines = disciplines + Discipline(a.source, 1, a.id))
         EntryKind.Merit -> {
-            if (entry?.qualifierOptions?.let { it.isNotEmpty() && a.qualifier !in it } == true) this
+            if (entry?.let(::qualifierChoices)?.let { a.qualifier?.trim() !in it } == true) this
             else copy(merits = merits + Merit(a.source, a.qualifier?.trim()?.ifEmpty { null }, entry?.ratings?.minOrNull() ?: 1, a.id))
         }
         EntryKind.Bane -> if (banes.size >= 3) this else copy(banes = banes + Bane(a.source, a.id))

@@ -29,6 +29,8 @@ private fun CharacterSave.check(rule: JsonObject, catalog: Catalog): Prerequisit
         "merit" -> PrerequisiteCheck(named(CatalogKind.merits) + if (minimum > 1) " $minimum" else "", merits.any { it.source.catalog == id && it.rating >= minimum })
         "discipline" -> PrerequisiteCheck("${named(CatalogKind.disciplines)} $minimum", disciplineRating(id) >= minimum)
         "bloodPotency" -> PrerequisiteCheck("Blood Potency $minimum", bloodPotency >= minimum)
+        "willpower" -> PrerequisiteCheck("Willpower $minimum", willpower >= minimum)
+        "notCovenant" -> PrerequisiteCheck("Not ${named(CatalogKind.covenants)}", covenant.catalog != id)
         "clan" -> PrerequisiteCheck("Clan: ${named(CatalogKind.clans)}", clan.catalog == id)
         "covenant" -> if (rule.str("minimum") != null) PrerequisiteCheck("${named(CatalogKind.covenants)} Status $minimum", covenantStatus(id, catalog) >= minimum)
             else PrerequisiteCheck("Covenant: ${named(CatalogKind.covenants)}", covenant.catalog == id)

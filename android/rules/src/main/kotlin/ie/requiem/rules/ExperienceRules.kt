@@ -78,5 +78,5 @@ private fun CharacterSave.experienceCost(key: String, catalog: Catalog): Int {
 }
 
 /** Live names keep a custom entry's older log records readable after it is named. */
-fun CharacterSave.changeName(change: TraitChange, catalog: Catalog): String = traitSnapshot(catalog)[change.trait]?.name?.takeIf { it.isNotBlank() }
+fun CharacterSave.changeName(change: TraitChange, catalog: Catalog): String = conditionLogName(change, catalog) ?: traitSnapshot(catalog)[change.trait]?.name?.takeIf { it.isNotBlank() }
     ?: change.name.ifBlank { change.trait.substringBefore(':').replaceFirstChar { it.uppercaseChar() } }

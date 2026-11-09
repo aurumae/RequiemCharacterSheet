@@ -53,6 +53,14 @@ fun CharacterSave.bookDetail(entry: BookEntry, catalog: Catalog, rating: Int = 0
         data.str("page")?.let { add(DetailFact("Page", it)) }
     }
     when (entry.kind) {
+        CatalogKind.archetypes, CatalogKind.clans, CatalogKind.bloodlines, CatalogKind.covenants -> {
+            fact("Also known as", e.str("nickname"))
+            fact("Single Willpower", e.str("singleWillpower")); fact("All Willpower", e.str("allWillpower"))
+            e.strings("parentClans").takeIf { it.isNotEmpty() }?.let { fact("Parent clan", it.joinToString { id -> catalog.name(CatalogKind.clans, TraitSource(catalog = id)) }) }
+            e.strings("favoredAttributes").takeIf { it.isNotEmpty() }?.let { fact("Favoured Attributes", it.joinToString(transform = ::traitName)) }
+            e.strings("disciplines").takeIf { it.isNotEmpty() }?.let { fact("Disciplines", it.joinToString { id -> catalog.name(CatalogKind.disciplines, TraitSource(catalog = id)) }) }
+            e.obj("bane")?.let { fact(it.str("name") ?: "Bane", it.str("summary")) }
+        }
         CatalogKind.disciplines -> {
             if (entry.id in inClanDisciplines(catalog)) fact("Clan", "In-clan for ${inClanGroupName(catalog)}")
             e.obj("ritualRules")?.let { rules ->
@@ -81,6 +89,7 @@ fun CharacterSave.bookDetail(entry: BookEntry, catalog: Catalog, rating: Int = 0
                 val target = when (type) {
                     "attribute" -> traitName(effect.str("attribute").orEmpty())
                     "attributeRolls" -> traitName(effect.str("attribute").orEmpty()) + " rolls"
+                    "merit" -> catalog.name(CatalogKind.merits, TraitSource(catalog = effect.str("merit")))
                     "size" -> "Size (and so Health)"
                     "defense", "speed", "initiative" -> type.replaceFirstChar { it.uppercaseChar() }
                     else -> null

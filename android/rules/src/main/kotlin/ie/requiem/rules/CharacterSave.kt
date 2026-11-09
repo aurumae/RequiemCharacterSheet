@@ -49,7 +49,7 @@ data class TraitSource(val catalog: String? = null, val custom: String? = null) 
 @Serializable enum class WillpowerMark { none, spent }
 
 private val traitKinds = setOf("attribute", "skill", "specialty", "discipline", "merit", "coil",
-    "ritual", "devotion", "scale", "humanity", "bloodPotency")
+    "ritual", "devotion", "scale", "humanity", "bloodPotency", "condition")
 private fun validTraitKey(key: String) =
     key.substringBefore(':') in traitKinds && key.substringAfter(':', "").isNotEmpty()
 
@@ -58,6 +58,7 @@ data class TraitChange(
     val id: SaveId, val date: Double, val trait: String, val name: String,
     val from: Int, val to: Int, val experiences: Int, val xpMode: Boolean,
     val duringCreation: Boolean? = null,
+    val event: ConditionEvent? = null, val beats: Int? = null,
 ) {
     init { require(validTraitKey(trait)) { "Invalid log trait: $trait" } }
 }
@@ -80,7 +81,7 @@ data class CreationState(
 internal val attributeIds = attributeDefinitions.map { it.id }
 internal val coreSkillIds = skillDefinitions.map { it.id }
 
-internal const val CURRENT_SCHEMA = 10
+internal const val CURRENT_SCHEMA = 11
 
 // Seconds since 2001-01-01 UTC. Retain the Double read from disk, including its fraction.
 internal fun foundationNow(): Double = (System.currentTimeMillis() - 978_307_200_000L) / 1000.0
@@ -127,7 +128,9 @@ data class CharacterSave(
     val changeLog: List<TraitChange> = emptyList(),
     val paidDots: Map<String, Map<Int, Int>> = emptyMap(),
     val creation: CreationState? = null,
+    val conditions: List<CharacterCondition> = emptyList(),
 ) {
     init { require(paidDots.keys.all(::validTraitKey)) { "Invalid paid-dot trait" } }
+    val savedSchemaVersion: Int get() = if (conditions.isNotEmpty() || changeLog.any { it.trait.startsWith("condition:") }) 11 else 10
     val experiencesAvailable: Int get() = experiences - changeLog.sumOf { it.experiences }
 }

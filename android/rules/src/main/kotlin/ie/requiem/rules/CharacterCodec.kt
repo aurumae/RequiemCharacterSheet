@@ -52,10 +52,19 @@ class CharacterCodec(private val catalog: Catalog) {
     fun encode(character: CharacterSave): String {
         require(character.schemaVersion == CURRENT_SCHEMA)
         // Swift writes exactly the visible Health and Willpower boxes, including unmarked boxes.
-        return json.encodeToString(character.copy(
+        val encoded = json.encodeToJsonElement(character.copy(
+            schemaVersion = character.savedSchemaVersion,
             healthTrack = List(character.health(catalog).coerceAtLeast(0)) { character.healthTrack.getOrElse(it) { Damage.none } },
             willpowerTrack = List(character.willpower.coerceAtLeast(0)) { character.willpowerTrack.getOrElse(it) { WillpowerMark.none } },
-        ))
+        )).jsonObject.toMutableMap()
+        if (character.conditions.isEmpty()) encoded.remove("conditions")
+        else encoded["conditions"] = JsonArray(encoded.getValue("conditions").jsonArray.map { element ->
+            val fields = element.jsonObject
+            if (fields.getValue("source").jsonObject.containsKey("catalog"))
+                JsonObject(fields.filterKeys { it !in setOf("customEffect", "customResolution", "customBeat", "customPersistent") })
+            else fields
+        })
+        return JsonObject(encoded).toString()
     }
 
     /** Compare to the originally loaded state. Re-decoding a sparse legacy save would generate new IDs. */
@@ -127,6 +136,7 @@ class CharacterCodec(private val catalog: Catalog) {
             link(it, "customDiscipline", CatalogKind.disciplines)
         }
         rows("coils") { link(it, "mystery", CatalogKind.mysteries) }
+        rows("conditions") { link(it, "source", CatalogKind.conditions) }
     }
 }
 

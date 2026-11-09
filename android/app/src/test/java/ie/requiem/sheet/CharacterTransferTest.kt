@@ -65,7 +65,7 @@ class CharacterTransferTest {
     @Test fun invalidFilesDoNotChangeLibraryAndLegacyWithoutIdentityGetsOnePersistedIdentity() {
         val repo = repo()
         val original = repo.importCharacter(repo.prepareImport(fixture()))
-        for (bytes in listOf("{}".toByteArray(), fixture("v11-future"), "{\"name\":null}".toByteArray())) {
+        for (bytes in listOf("{}".toByteArray(), fixture("v12-future"), "{\"name\":null}".toByteArray())) {
             assertThrows(CharacterDocumentError::class.java) { repo.prepareImport(bytes) }
             assertArrayEquals(fixture(), original.file.readBytes())
             assertEquals(1, repo.library().size)

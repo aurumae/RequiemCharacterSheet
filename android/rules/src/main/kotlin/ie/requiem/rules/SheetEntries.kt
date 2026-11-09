@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class SheetEntry(val id: UUID, val source: TraitSource, val name: String, val rating: Int? = null,
     val choices: List<Int> = emptyList(), val qualifier: String? = null, val summary: String = "", val citation: String = "",
-    val notes: List<String> = emptyList(), val warnings: List<String> = emptyList(), val known: Boolean = false, val visibleDots: Int = 0)
+    val notes: List<String> = emptyList(), val warnings: List<String> = emptyList(), val known: Boolean = false, val visibleDots: Int = 0, val bonus: Int = 0)
 
 fun CharacterSave.entryRows(kind: EntryKind, catalog: Catalog): List<SheetEntry> {
     fun row(id: UUID, source: TraitSource, rating: Int? = null, qualifier: String? = null, customChoices: List<Int> = emptyList()): SheetEntry {
@@ -21,7 +21,7 @@ fun CharacterSave.entryRows(kind: EntryKind, catalog: Catalog): List<SheetEntry>
             val e = catalog.entry(CatalogKind.disciplines, d.source)
             row(d.id, d.source, d.rating, customChoices = (0..5).toList()).copy(warnings = listOfNotNull(e?.let { ritualLearningWarning(it, catalog) }))
         }
-        EntryKind.Merit -> merits.map { m -> row(m.id, m.source, m.rating, m.qualifier, (0..5).toList()).copy(warnings = listOfNotNull(
+        EntryKind.Merit -> merits.map { m -> row(m.id, m.source, m.rating, m.qualifier, (0..5).toList()).copy(bonus = meritBonus(m.source.catalog, catalog), warnings = listOfNotNull(
             catalog.entry(CatalogKind.merits, m.source)?.let { prerequisites(it, catalog).warningText().ifEmpty { null } })) }
         EntryKind.Bane -> banes.map { row(it.id, it.source) }
         EntryKind.Ritual -> rituals.map { r -> row(r.id, r.source, r.dots(catalog), customChoices = if (catalog.entry(CatalogKind.rituals, r.source) == null) (1..5).toList() else emptyList())
@@ -63,12 +63,13 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
     val ritualOrder = (ritualDisciplines(catalog).map { it.id } + catalog.bookEntries(CatalogKind.disciplines).filter { it.isRitualDiscipline }.map { it.id }).distinct()
     val mysteries = catalog.bookEntries(CatalogKind.mysteries).sortedBy { it.id != mystery.catalog }.map { it.id }
     val needle = searchable(query.trim())
-    val entries = catalog.bookEntries(kind.catalogKind).filter { needle.isEmpty() || searchable(it.name + " " + it.summary + " " + it.coilName).contains(needle) }
+    val entries = catalog.bookEntries(kind.catalogKind).filter { (!choosingMystery || !it.coilOnly) && (needle.isEmpty() || searchable(it.name + " " + it.summary + " " + it.coilName + " " + it.bookName + " " + it.citation).contains(needle)) }
     fun rank(e: BookEntry): Int = when (kind) {
         EntryKind.Discipline -> if (e.id in ownDisciplines) 0 else 1
         EntryKind.Merit -> if (needle.isNotEmpty()) 0 else meritOrder.indexOf(e.category).coerceAtLeast(0)
         EntryKind.Ritual -> ritualOrder.indexOf(e.discipline).coerceAtLeast(0)
         EntryKind.Devotion -> if (prerequisites(e, catalog).none { it.met == false }) 0 else 1
+        EntryKind.Coil -> catalog.books.keys.indexOf(e.bookId).coerceAtLeast(0)
         EntryKind.Scale -> mysteries.indexOf(e.raw.str("mystery")).coerceAtLeast(0)
         else -> 0
     }
@@ -80,7 +81,8 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
             EntryKind.Ritual -> catalog.name(CatalogKind.disciplines, TraitSource(catalog = e.discipline))
             EntryKind.Devotion -> if (rank(e) == 0) "You have the Disciplines" else "Other Devotions"
             EntryKind.Scale -> catalog.name(CatalogKind.mysteries, TraitSource(catalog = e.raw.str("mystery").orEmpty()))
-            else -> if (choosingMystery) "Mysteries" else kind.title + "s"
+            EntryKind.Coil -> e.bookName
+            else -> kind.title + "s"
         }
         val details = when (kind) {
             EntryKind.Merit -> listOf(e.ratingsText())
@@ -96,7 +98,7 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
             else -> ""
         }.ifEmpty { null }
         CatalogOption(e, if (kind == EntryKind.Coil && !choosingMystery) e.coilName else e.name, group,
-            !choosingMystery && e.id in owned && !(kind == EntryKind.Merit && e.repeatable), details, warning, if (choosingMystery) null else (if (kind == EntryKind.Discipline) reasonCantLearn(e, catalog) else null) ?: creationEntryRejection(SheetEdit.AddEntry(kind, e.source()), catalog))
+            !choosingMystery && e.id in owned && !(kind == EntryKind.Merit && e.repeatable), details, warning, if (choosingMystery) null else (if (kind == EntryKind.Discipline) reasonCantLearn(e, catalog) else if (kind == EntryKind.Merit && e.qualifierFromSpecialties && specialtyChoices.isEmpty()) "Add a Skill Specialty first" else null) ?: creationEntryRejection(SheetEdit.AddEntry(kind, e.source()), catalog))
     }
 }
 fun BookEntry.source(): TraitSource = TraitSource(catalog = id)

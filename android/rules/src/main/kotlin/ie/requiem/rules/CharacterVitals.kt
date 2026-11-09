@@ -15,6 +15,9 @@ internal fun JsonObject.effectAmount(rating: Int): Int = if (get("amount") == Js
 internal fun CharacterSave.effectBonus(catalog: Catalog, type: String, attribute: String? = null): Int = effects(catalog).sumOf {
     if (it.data.str("type") == type && (attribute == null || it.data.str("attribute") == attribute)) it.data.effectAmount(it.rating) else 0
 }
+fun CharacterSave.meritBonus(id: String?, catalog: Catalog): Int = if (id == null) 0 else effects(catalog).sumOf {
+    if (it.data.str("type") == "merit" && it.data.str("merit") == id) it.data.effectAmount(it.rating) else 0
+}
 fun CharacterSave.attributeBonus(id: String, catalog: Catalog): Int = effectBonus(catalog, "attribute", id)
 fun CharacterSave.rollBonus(id: String, catalog: Catalog): Int = effectBonus(catalog, "attributeRolls", id)
 fun CharacterSave.staminaBonus(catalog: Catalog): Int = attributeBonus("stamina", catalog)

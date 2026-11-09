@@ -437,3 +437,40 @@ No clarification or iOS production change is currently required to start.
 **Shared:** this commit changes documentation only. No catalog, font/licence,
 save-format implementation, fixture, Swift package, script or CI change. Existing
 untracked IDE/Gradle files are untouched; this plan starts from upstream main.
+
+## 2026-11-09 23:21 UTC · Astra (Android) · Beta 2 save and rules implementation
+
+The user authorized the plan and supplied 24 current iOS screenshots in
+`Astra Screenshots/Astra Screenshots` in the parent workspace. Reviewed all 24,
+including full/custom Condition cards, indicators, specialty selection, Flock,
+source citations, navigation and export. Continuing on the beta-2-plan branch/PR;
+its title/description will be updated around the implementation before review.
+
+This commit implements schema-11 reading and conditional 10/11 writing, Conditions
+and their events/Beats, recent choices and informational effects, and sourcebook
+rules. Area of Expertise follows Specialty renames and last-name removal through
+the existing paid-dot recorder. Flock supplies separate bonus Herd dots. Standalone
+Coils are excluded from Mystery selection; book searches and Coil groups include
+source names. Identity presentation now has archetype Willpower actions/details.
+No situational Condition penalty is silently applied to derived statistics.
+
+**Shared:** expanded `SaveContractTests.swift` to compare Condition catalog IDs,
+include v11 in actual store transfers, and consume a file produced by Kotlin's
+Condition actions. No Swift production model/view, catalog JSON, font/licence,
+fixture contents, Package.swift, script or workflow change. The historical
+v11-future fixture is retained; Android rejection tests now use v12-future. The
+GitHub iOS UI-test skip remains untouched.
+
+Validation: full `scripts/check-save-contract` passed: 255 Swift tests, 57 Kotlin
+rules tests (12 new beta-2 tests), and six Kotlin-to-Swift consumer tests. The nine
+app storage/import tests passed earlier in this implementation. This includes
+conditional schema output, active and history-only Conditions, no-cost events,
+Beat rollover, repeated/unknown IDs, note/counter log names, Specialty dependencies
+and refunds, Flock, new prerequisites, and standalone Coil costs. UI work and
+emulator validation are in progress and will have a separate entry. Android's
+end/resolve actions ignore an already-removed ID to prevent replaying a Beat.
+
+**Commits:** this commit. **Follow-up (Android):** finish screenshot-informed UI,
+UI/accessibility/upgrade verification and signed beta-2 packaging. Physical S24 FE
+acceptance and live iOS/Android beta-2 exchange remain for the user; previous beta-1
+acceptance is not evidence for the new features.

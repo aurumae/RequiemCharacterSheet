@@ -57,7 +57,7 @@ class SaveContractTest {
     }
 
     @Test fun readsAllBooksAndResolvesNamesAsSwiftDoes() {
-        assertEquals(setOf("vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion"), catalog.books.keys)
+        assertEquals(setOf("vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "secrets-of-the-covenants"), catalog.books.keys)
         assertTrue(CatalogKind.entries.all { catalog.entries(it).isNotEmpty() })
         System.getProperty("exchangeDir")?.let { path ->
             val expected = Json.decodeFromString<Map<String, List<String>>>(File(path, "catalog-ids.json").readText())
@@ -141,15 +141,15 @@ class SaveContractTest {
 
     @Test fun exchangesCurrentCharactersAndPreservesHiddenState() {
         val exchange = System.getProperty("exchangeDir")?.let(::File)
-        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus")) {
+        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v11-conditions")) {
             val text = exchange?.resolve("swift-$name.json")?.readText() ?: fixture(name)
             val original = codec.decode(text)
             if (name != "v10-guided") {
                 val merit = original.merits.single { it.source.catalog == "defensive-combat" }
                 val key = "merit:" + merit.id.toString().uppercase()
                 assertEquals(1, original.paidDots[key]?.get(1))
-                assertEquals(key, original.changeLog.last().trait)
-                assertEquals(-1, original.experiencesAvailable)
+                assertEquals(key, original.changeLog.last { !it.trait.startsWith("condition:") }.trait)
+                assertEquals(if (name == "v11-conditions") 0 else -1, original.experiencesAvailable)
                 assertEquals(2, original.rituals.size)
                 assertEquals("Unpublished power", original.devotions.last().source.custom)
             } else {
@@ -180,7 +180,7 @@ class SaveContractTest {
     }
 
     @Test fun futureAndDamagedSavesCannotEnterTheEditPath() {
-        assertEquals(11, assertThrows(UnsupportedSchema::class.java) { codec.decode(fixture("v11-future")) }.version)
+        assertEquals(12, assertThrows(UnsupportedSchema::class.java) { codec.decode(fixture("v12-future")) }.version)
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"id":"broken"}""") }
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"healthTrack":["lost"]}""") }
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"paidDots":{"broken":{"1":3}}}""") }

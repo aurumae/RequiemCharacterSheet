@@ -172,6 +172,20 @@ struct SaveContractTests {
         #expect(try object(encoder.encode(c)) == object(data))
     }
 
+    @Test func readsKotlinBeta2Conditions() throws {
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let path = Self.exchange else { return }
+        let data = try Data(contentsOf: URL(fileURLWithPath: path).appendingPathComponent("kotlin-beta2-play.json"))
+        let c = try JSONDecoder().decode(Character.self, from: data)
+        #expect(c.beats == 1 && c.experiences == 1)
+        #expect(c.conditions.count == 2)
+        #expect(c.conditions.first?.name == "Tempted" && c.conditions.first?.counter == 2)
+        #expect(c.conditions.last?.name == "Haunted" && c.conditions.last?.isPersistent == true)
+        #expect(c.changeLog.filter { $0.event == .beat }.count == 1)
+        #expect(c.changeLog.filter { $0.event == .resolved }.first?.beats == 1)
+        #expect(c.paidDots.isEmpty)
+        #expect(try object(encoder.encode(c)) == object(data))
+    }
+
     @Test func currentFixturesMatchWhatSwiftWrites() throws {
         if let path = Self.exchange {
             let c = Catalog.bundled
@@ -180,7 +194,7 @@ struct SaveContractTests {
                        "covenants": c.covenants.all.map(\.id), "banes": c.banes.all.map(\.id),
                        "rituals": c.rituals.all.map(\.id), "devotions": c.devotions.all.map(\.id),
                        "mysteries": c.mysteries.all.map(\.id), "scales": c.scales.all.map(\.id),
-                       "archetypes": c.archetypes.all.map(\.id), "bloodlines": c.bloodlines.all.map(\.id)]
+                       "archetypes": c.archetypes.all.map(\.id), "bloodlines": c.bloodlines.all.map(\.id), "conditions": c.conditions.all.map(\.id)]
             let url = URL(fileURLWithPath: path).appendingPathComponent("catalog-ids.json")
             try encoder.encode(ids).write(to: url)
         }
@@ -477,7 +491,7 @@ struct BloodlineContractTests {
 /// Exercises the public transfer API, as well as the decoder, against Android's exported files.
 @MainActor
 struct CharacterTransferContractTests {
-    private let names = ["v10-advanced", "v10-guided", "v10-morbus", "v8-paid"]
+    private let names = ["v10-advanced", "v10-guided", "v10-morbus", "v8-paid", "v11-conditions"]
 
     @Test func sharedCopyNamesMatchAndroid() throws {
         struct CopyCase: Decodable { let name: String; let taken: [String]; let copy: String }
