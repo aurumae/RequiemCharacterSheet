@@ -1,9 +1,10 @@
 # Android beta 2: iOS parity plan
 
 Planning baseline: `origin/main` at **`e8ab6ba`**, fetched 9 November 2026.
-Android remains the accepted **1.0.0-beta.1 (9)** from `f0bd5a7`; no Android
-production source changed in the intervening iOS commits. This document plans the
-port. No feature implementation or new release build is part of this planning task.
+The accepted baseline is **1.0.0-beta.1 (9)** from `f0bd5a7`. The user subsequently
+authorized implementation using 24 current iOS screenshots. The sections below
+record the original plan; the implementation and acceptance status is appended at
+the end.
 
 ## Changes to bring across
 
@@ -29,7 +30,7 @@ and 3 from Secrets of the Covenants. Preserve Requiem-first ordering and the
 deliberate omission of duplicate/reprinted entries. Tilts and a combat screen are
 outside this release scope; PDF export remains shelved.
 
-## Findings from the Android comparison
+## Initial findings from the Android comparison
 
 - `CURRENT_SCHEMA` is 10, and both the codec and import boundary reject 11.
   That currently protects Conditions from being discarded. Merely raising the
@@ -245,7 +246,7 @@ final beta-2 artifact rather than assuming an older audit covers a new build.
 
 ## Source control and handoff
 
-This plan is a documentation-only branch/PR from `e8ab6ba`. Existing PR #5 (store
+Implementation continues in the existing `android/beta2-plan` branch and [PR #7](https://github.com/aurumae/RequiemCharacterSheet/pull/7), based on `e8ab6ba`. Existing PR #5 (store
 assets) and PR #6 (Advertising ID audit) remain separate; neither is a prerequisite
 for the schema/rules work. Preserve their handoff entries when those PRs merge.
 
@@ -255,6 +256,69 @@ model/codec changes together with their matching tests so intermediate PRs have
 green contracts. Resync and read Claude's new entries before each milestone;
 shared schemas/catalogs may keep moving while iOS work continues.
 
-No clarification is currently required to begin milestone 1. The code and handoff
+No clarification was required to begin milestone 1. The code and handoff
 define the expected behavior; flag any later discrepancy against the Swift tests
 before making an incompatible Android-only rule.
+
+## Implementation and acceptance status — 9 November 2026
+
+The native Compose implementation now includes all feature milestones above,
+following iOS through `e8ab6ba`. The rules/save milestone is `2012ff6`; the UI and
+version update are in this commit. Android remains API 36+, package
+`ie.requiem.sheet`. The candidate is **1.0.0-beta.2 (10)**. Code 10 is the next
+repository version after beta 1; Play Console was not connected here, so its
+availability must be confirmed when uploading.
+
+### How the screenshots informed the implementation
+
+All 24 PNGs in the supplied `Astra Screenshots/Astra Screenshots` folder were
+reviewed. The reference files remain in the user's workspace, outside this checkout.
+
+- 01–03: retain the five-second, tap-dismissible Dark Pack screen and per-character
+  export; add the home Export Character chooser. The existing Android deadline
+  remains rotation-safe; no iOS glass effect or extra fade duration was added.
+- 04–09: red current-section pill with selected menu item; identity labels open
+  details, values open searchable choices with explicit Custom and book citations.
+  Mask/Dirge show Single/All Willpower actions. At large text sizes the pill uses
+  one-line ellipsis and an independent chevron, with its full name available to
+  accessibility; it cannot split a word across lines or hide Save/Back.
+- 10–17: five-column compact dots, ten-dot display ceiling, legal rating menus,
+  Condition indicators and Flock's separate black Herd bonuses. Existing Health
+  wrapping stays left aligned. Specialty choices show their Skill; dependency
+  prompts explain renames, deletion and XP refunds.
+- 18–24: equal-height swipeable cards with a visible next-card edge, full red-headed
+  cards, notes/counters, persistent/custom fields, End/Resolve/Beat controls,
+  Recently Used and book-grouped picker, source-aware Coils and event-based history.
+  Controls retain native Compose sheets, menus, inputs and scroll behavior.
+
+Condition/Specialty/identity dialogs live outside lazy rows and restore their
+route/draft across activity recreation. A Condition indicator has a separate
+48dp tap area; trait rows expose a named accessibility action for effects alongside
+rating actions. Indicators are informational, and paid dots remain separate from
+bonus dots. Custom and catalog notes/history use stable UUIDs.
+
+### Validation and remaining acceptance
+
+- Shared contract passed: **255 Swift host tests, 57 Kotlin rules tests, six
+  Kotlin-to-Swift consumers**, including real v11 store transfers and a character
+  written after Android Condition actions. Nine Android storage/import tests pass.
+- Initial complete emulator suite: **20/20** passed. Final phone-width regression
+  run and release verification are recorded in the subsequent handoff entry.
+- Debug/release builds and lint passed (zero errors; seven existing update warnings).
+  Normal and 150% text visual checks prompted fixes to the pill, indicator scale,
+  tonal button colors and compact-card text bounds.
+- Physical **S24 FE**, real beta-2 iOS↔Android exchange, a complete TalkBack session,
+  and **Play-delivered** installation/update remain pending. Local/emulator results
+  do not establish those checks.
+
+For S24 FE acceptance, focus on (1) Condition add/note/counter/custom/End/Resolve/
+Beat and the five-Beat rollover; (2) indicators, horizontal cards and section jumps;
+(3) Area of Expertise rename/delete/refund; (4) Herd 4 + Flock 3 showing seven dots
+with only four purchased; (5) standalone Coils and book-name search; (6) new home
+export, actual iOS exchange, and preserving existing characters on update. Repeat
+the card/edit flows with enlarged text and TalkBack.
+
+No dependency, catalog JSON, font, licence, network permission or iOS production
+source changed. Schema implementation and shared tests changed as described above.
+Privacy-link/backup policy, 16 KB runtime and actual Play update tasks stay in the
+release guide; store screenshots should be refreshed after visual acceptance.

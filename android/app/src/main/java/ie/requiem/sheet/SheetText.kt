@@ -14,12 +14,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import ie.requiem.rules.spokenForScreenReader
 
 /** Keep the visible notation while speaking dot counts and ranges naturally. */
 @Composable
 internal fun SheetText(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified,
-    style: TextStyle = LocalTextStyle.current, textAlign: TextAlign? = null, textDecoration: TextDecoration? = null) {
+    style: TextStyle = LocalTextStyle.current, textAlign: TextAlign? = null, textDecoration: TextDecoration? = null, maxLines: Int = Int.MAX_VALUE, overflow: TextOverflow = TextOverflow.Clip) {
     val type = LocalSheetType.current
     val display = style.fontFamily == type.display
     val formatted = remember(text, display, type.smallCaps) {
@@ -32,5 +33,5 @@ internal fun SheetText(text: String, modifier: Modifier = Modifier, color: Color
     }
     val spoken = remember(text) { text.spokenForScreenReader() }
     Text(formatted, if (spoken == text) modifier else modifier.semantics { contentDescription = spoken },
-        color = color, style = style, textAlign = textAlign, textDecoration = textDecoration)
+        color = color, style = style, textAlign = textAlign, textDecoration = textDecoration, maxLines = maxLines, overflow = overflow)
 }

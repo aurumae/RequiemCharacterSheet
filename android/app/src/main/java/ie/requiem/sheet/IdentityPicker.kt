@@ -26,46 +26,41 @@ import ie.requiem.rules.*
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun IdentityRow(field: CharacterDetail, c: CharacterSave, catalog: Catalog, editable: Boolean, edit: (SheetEdit) -> Unit) {
+internal fun IdentityRow(field: CharacterDetail, c: CharacterSave, catalog: Catalog, editable: Boolean, navigate: (String) -> Unit) {
     val value = field.value(c, catalog)
-    var picker by rememberSaveable(field) { mutableStateOf(false) }
-    var custom by rememberSaveable(field) { mutableStateOf(false) }
-    var draft by rememberSaveable(field) { mutableStateOf(value) }
-    var wasFocused by remember { mutableStateOf(false) }
-    val focus = LocalFocusManager.current
-    val request = remember { FocusRequester() }
-    fun commit() { if (custom) { custom = false; edit(SheetEdit.Detail(field, draft.trim())) } }
+    @Composable fun label() {
+        SheetText("${field.label}:", Modifier.heightIn(min = 48.dp).clickable { navigate("identityDetail|${field.name}") }
+            .padding(vertical = 12.dp).semantics { contentDescription = "${field.label} details" }, style = LocalSheetType.current.label)
+    }
     @Composable fun input(modifier: Modifier) {
-        if (custom) {
-            BasicTextField(draft, onValueChange = { draft = it }, singleLine = true, readOnly = !editable,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = SheetColors.ink),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { commit(); focus.clearFocus() }),
-                modifier = modifier.padding(vertical = 12.dp).focusRequester(request).revealWhileEditing(draft)
-                    .onFocusChanged { if (wasFocused && !it.isFocused) commit(); wasFocused = it.isFocused }
-                    .semantics { contentDescription = "Custom ${field.label}" }.testTag("custom-${field.name}"))
-            LaunchedEffect(Unit) { request.requestFocus() }
-        } else Row(modifier.heightIn(min = 48.dp).clickable(enabled = editable, role = Role.Button) { focus.clearFocus(); picker = true }
-            .clearAndSetSemantics {
-                contentDescription = field.label; stateDescription = value.ifBlank { "Not chosen" }; role = Role.Button
-                if (editable) onClick("Choose ${field.label}") { focus.clearFocus(); picker = true; true }
-            }.testTag("identity-${field.name}"), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier.heightIn(min = 48.dp).clickable(enabled = editable, role = Role.Button) { navigate("identityPick|${field.name}") }
+            .semantics(mergeDescendants = true) { contentDescription = field.label; stateDescription = value.ifBlank { "Not chosen" } }
+            .testTag("identity-${field.name}"), verticalAlignment = Alignment.CenterVertically) {
             SheetText(value.ifBlank { "Choose" }, Modifier.weight(1f), color = if (value.isBlank()) SheetColors.muted else SheetColors.ink)
             SheetIcon(SheetSymbol.Choose)
         }
     }
-    if (LocalDensity.current.fontScale > 1.3f) Column(Modifier.fillMaxWidth().background(Color.White).padding(8.dp)) {
-        SheetText("${field.label}:", style = LocalSheetType.current.label)
-        input(Modifier.fillMaxWidth())
-    } else Row(Modifier.fillMaxWidth().background(Color.White).heightIn(min = 60.dp).padding(horizontal = 8.dp),
+    if (LocalDensity.current.fontScale > 1.3f) Column(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp)) {
+        label(); input(Modifier.fillMaxWidth())
+    } else Row(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        SheetText("${field.label}:", style = LocalSheetType.current.label)
-        input(Modifier.weight(1f))
+        label(); input(Modifier.weight(1f))
     }
-    if (picker) IdentityPicker(field, c, catalog, onChoose = { text ->
-        picker = false
-        edit(SheetEdit.Detail(field, text))
-    }, onCustom = { picker = false; draft = value; custom = true }, dismiss = { picker = false })
+}
+
+@Composable
+internal fun IdentityDialogs(route: String, c: CharacterSave, catalog: Catalog, edit: (SheetEdit) -> Unit, navigate: (String?) -> Unit) {
+    val parts = route.split('|'); val field = CharacterDetail.valueOf(parts[1])
+    val value = field.value(c, catalog)
+    val entry = field.catalogKind?.let { catalog.entry(it, catalog.source(it, value)) }
+    when {
+        parts[0] == "identityCustom" -> TextPrompt("Custom ${field.label}", field.label, value, false, true, {
+            edit(SheetEdit.Detail(field, it)); navigate(null)
+        }, { navigate(null) })
+        parts[0] == "identityDetail" && entry != null -> EntryDetailSheet(c.bookDetail(entry, catalog)) { navigate(null) }
+        else -> IdentityPicker(field, c, catalog, { edit(SheetEdit.Detail(field, it)); navigate(null) },
+            { navigate("identityCustom|${field.name}") }, { navigate(null) })
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,7 +86,7 @@ private fun IdentityPicker(field: CharacterDetail, c: CharacterSave, catalog: Ca
                 modifier = Modifier.fillMaxWidth().testTag("identity-search"), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done))
             LazyColumn(Modifier.weight(1f, fill = false).testTag("identity-options"), contentPadding = PaddingValues(bottom = 24.dp)) {
                 item { TextButton(onClick = { finish(onCustom) }, enabled = !closing) { SheetText("Custom ${field.label}") } }
-                if (field != CharacterDetail.Clan) item {
+                if (field in listOf(CharacterDetail.Bloodline, CharacterDetail.Covenant)) item {
                     TextButton(onClick = { finish { onChoose("") } }, enabled = !closing) { SheetText(if (field == CharacterDetail.Bloodline) "No Bloodline" else "Unaligned") }
                 }
                 if (options.isEmpty()) item { SheetText("No matching entries", Modifier.padding(12.dp)) }

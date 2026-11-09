@@ -14,8 +14,8 @@ class CoreSheetUiTest {
         return ui.onNode(matcher)
     }
     private fun jump(section: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(section) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun rating(name: String, value: Int) {
         sheetNode(hasContentDescription(name)).performClick()
@@ -37,14 +37,14 @@ class CoreSheetUiTest {
         ui.onNodeWithTag("identity-search").performTextInput("Ventrue")
         ui.onNodeWithTag("identity-option-ventrue").performClick()
         ui.onNodeWithContentDescription("Clan").assert(hasStateDescription("Ventrue"))
-        sheetNode(hasContentDescription("Choose Mask")).performClick()
-        ui.onNodeWithText("Search Mask").performTextInput("Author")
+        sheetNode(hasContentDescription("Mask")).performClick()
+        ui.onNodeWithTag("identity-search").performTextInput("Author")
         ui.onNodeWithText("Authoritarian").performClick()
         sheetNode(hasContentDescription("Mask")).assertTextContains("Authoritarian")
         sheetNode(hasContentDescription("Covenant")).performClick()
         ui.onNodeWithText("Custom Covenant").performClick()
-        ui.onNodeWithTag("custom-Covenant").performTextInput("Our custom covenant")
-        ui.onNodeWithTag("custom-Covenant").performImeAction()
+        ui.onNodeWithTag("text-prompt").performTextInput("Our custom covenant")
+        ui.onNodeWithTag("text-prompt").performImeAction()
         jump("Attributes")
         rating("Wits", 3)
         rating("Composure", 2)

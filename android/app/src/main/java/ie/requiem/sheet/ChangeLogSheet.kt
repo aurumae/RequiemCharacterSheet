@@ -49,6 +49,8 @@ internal fun ChangeLogSheet(c: CharacterSave, catalog: Catalog, dismiss: () -> U
                 item { SubsectionLabel(day.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))) }
                 items(changes.sortedByDescending { it.date }, key = { it.id.toString() }) { change ->
                     val amount = when {
+                        (change.beats ?: 0) > 0 -> "+${change.beats} Beat"
+                        change.trait.startsWith("condition:") -> ""
                         change.duringCreation == true -> "Creation"
                         change.experiences > 0 -> "Spent ${change.experiences}"
                         change.experiences < 0 -> "Refunded ${-change.experiences}"
@@ -56,6 +58,7 @@ internal fun ChangeLogSheet(c: CharacterSave, catalog: Catalog, dismiss: () -> U
                         else -> "Free"
                     }
                     val changeText = when (change.trait.substringBefore(':')) {
+                        "condition" -> change.event?.name?.replaceFirstChar { it.uppercaseChar() } ?: if (change.to > change.from) "Added" else "Ended"
                         "ritual", "scale" -> if (change.to > change.from) "Learned" else "Removed"
                         "devotion" -> when {
                             change.from == 0 -> "Learned"

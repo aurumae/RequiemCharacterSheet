@@ -474,3 +474,39 @@ end/resolve actions ignore an already-removed ID to prevent replaying a Beat.
 UI/accessibility/upgrade verification and signed beta-2 packaging. Physical S24 FE
 acceptance and live iOS/Android beta-2 exchange remain for the user; previous beta-1
 acceptance is not evidence for the new features.
+
+## 2026-11-09 23:28 UTC · Astra (Android) · Screenshot-informed beta 2 screens
+
+Builds on `2012ff6`. This commit adds the native Conditions carousel, full/custom
+cards, note/counter editing, End/Resolve/Beat controls, recent/book picker, effects
+indicators and event-based Change Log. It adds the current-section pill, identity
+label details and richer Mask/Dirge picker, home Export Character chooser,
+Specialty-dependent Merit choices/prompts and Flock bonus dots. Identity/Specialty
+modal state is hoisted outside lazy rows. Five-column dots wrap tightly and stop
+at ten; legal editing menus remain. Version is 1.0.0-beta.2 (10), next after the
+repository's code 9; Console availability has not been independently inspected.
+
+All 24 supplied iOS references were reviewed. The mapping and physical acceptance
+checklist are appended to `docs/android-beta2-plan.md`. Native Android controls,
+text scaling, 48dp indicator targets and the existing five-second/tap-dismiss
+splash remain. Visual checks caught and corrected purple default tonal buttons,
+a large-text pill wrapping inside words, and the indicator glyph outgrowing its
+circle. At enlarged text the pill uses ellipsis plus a separate chevron and exposes
+its complete section name to accessibility. The frame/fonts come from existing
+assets, with no new image or font dependency.
+
+Validation so far: the complete initial emulator suite passed 20/20, including
+new Condition/Specialty/identity/recreation flows. JVM rules/storage checks and
+debug/release lint/builds passed (zero lint errors; seven existing update warnings).
+A final 420dpi phone-width suite is running after the visual refinements. Its
+focused predecessor exposed an ambiguous test matcher (the pill and menu now both
+contain the current section name); selectors now explicitly scope menu entries to
+the popup. Release/upgrade checks and final results follow in another entry.
+
+**Shared:** README/transfer documentation now explain conditional schema 10/11;
+no catalog, font, fixture, Swift source/test, package, script or CI change in this
+commit. **Commits:** this commit plus rules `2012ff6`. **Follow-up (Android):**
+finish the final validation/archive and publish the updated PR. **Follow-up (user):**
+S24 FE and real iOS↔Android beta-2 exchange remain unconfirmed. Play installation,
+privacy/backup policy and 16 KB runtime tasks remain separately tracked; no Play
+release was uploaded or rolled out here.

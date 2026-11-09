@@ -21,7 +21,7 @@ internal fun PowerEntryRow(kind: EntryKind, row: SheetEntry, editable: Boolean, 
     Column(Modifier.fillMaxWidth().background(Color.White)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
             Box(Modifier.weight(1f)) {
-                if (rating != null && row.choices.isNotEmpty()) TraitRatingControl(row.name.ifBlank { kind.title }, rating, 0,
+                if (rating != null && row.choices.isNotEmpty()) TraitRatingControl(row.name.ifBlank { kind.title }, rating, row.bonus,
                     row.choices.first()..row.choices.last(), editable, allowedValues = row.choices,
                     reserveFiveDots = kind == EntryKind.Merit, onNameClick = if (row.known || editable) open else null, visibleCap = row.visibleDots) {
                     edit(SheetEdit.EntryRating(kind, row.id, it))

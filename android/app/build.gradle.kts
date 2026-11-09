@@ -32,8 +32,8 @@ android {
         applicationId = "ie.requiem.sheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.0.0-beta.1"
+        versionCode = 10
+        versionName = "1.0.0-beta.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {

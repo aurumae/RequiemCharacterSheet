@@ -83,7 +83,7 @@ internal fun StaminaControl(c: CharacterSave, catalog: Catalog, editable: Boolea
 internal fun TraitRatingControl(
     label: String, base: Int, bonus: Int, legal: IntRange, editable: Boolean,
     allowedValues: List<Int> = legal.toList(), reserveFiveDots: Boolean = false,
-    onNameClick: (() -> Unit)? = null, visibleCap: Int = legal.last, note: String? = null, onSelect: (Int) -> Unit,
+    onNameClick: (() -> Unit)? = null, visibleCap: Int = legal.last, note: String? = null, onConditions: (() -> Unit)? = null, onSelect: (Int) -> Unit,
 ) {
     var expanded by rememberSaveable(label) { mutableStateOf(false) }
     fun select(value: Int): Boolean {
@@ -98,10 +98,10 @@ internal fun TraitRatingControl(
         @Composable fun dots() {
             CompactTargets {
                 Column(if (reserveFiveDots) Modifier.width(minOf(maxWidth, 120.dp)) else Modifier) {
-                    (1..maxOf(visibleCap, base + bonus)).chunked(dotsPerRow).forEach { values ->
+                    (1..maxOf(visibleCap, base + bonus).coerceAtMost(10)).chunked(dotsPerRow).forEach { values ->
                         Row {
                             values.forEach { value ->
-                                Box(Modifier.size(24.dp, 48.dp).clickable(enabled = editable && value in allowedValues.first()..allowedValues.last()) {
+                                Box(Modifier.size(24.dp, 24.dp).clickable(enabled = editable && value in allowedValues.first()..allowedValues.last()) {
                                     select(if (legal.first == 0 && base == 1 && value == 1) 0 else value)
                                 }.alpha(if (value > allowedValues.last() && value > base + bonus) .35f else 1f), contentAlignment = Alignment.Center) { RatingDot(value <= base + bonus, value > base) }
                             }
@@ -111,17 +111,20 @@ internal fun TraitRatingControl(
             }
         }
         @Composable fun name(modifier: Modifier) {
-            Box(modifier.heightIn(min = 48.dp).clickable(enabled = editable || onNameClick != null) { if (onNameClick != null) onNameClick() else expanded = true },
-                contentAlignment = Alignment.CenterStart) {
-                Column(Modifier.padding(top = 8.dp, bottom = 8.dp, end = 4.dp)) {
-                    SheetText(label, style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
-                    if (note != null) SheetText(note, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+            Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.weight(1f).heightIn(min = 48.dp).clickable(enabled = editable || onNameClick != null) { if (onNameClick != null) onNameClick() else expanded = true },
+                    contentAlignment = Alignment.CenterStart) {
+                    Column(Modifier.padding(top = 8.dp, bottom = 8.dp, end = 4.dp)) {
+                        SheetText(label, style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
+                        if (note != null) SheetText(note, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    }
                 }
+                if (onConditions != null) ConditionIndicator(label, onConditions)
             }
         }
         Box(Modifier.fillMaxWidth().clearAndSetSemantics {
             contentDescription = label
-            stateDescription = "$base base, $bonus bonus" + (note?.let { ", $it" } ?: "")
+            stateDescription = "$base base, $bonus bonus" + (if (onConditions != null) ", affected by Conditions" else "") + (note?.let { ", $it" } ?: "")
             if (editable || onNameClick != null) onClick(label = if (onNameClick != null) "Open $label" else "Choose $label rating") {
                 if (onNameClick != null) onNameClick() else expanded = true; true
             }
@@ -130,6 +133,7 @@ internal fun TraitRatingControl(
                     (allowedValues.last() - allowedValues.first() - 1).coerceAtLeast(0))
                 setProgress { select(Math.round(it).coerceIn(legal)) }
                 customActions = buildList {
+                    if (onConditions != null) add(CustomAccessibilityAction("Conditions affecting $label") { onConditions(); true })
                     add(CustomAccessibilityAction("Choose $label rating") { expanded = true; true })
                     allowedValues.firstOrNull { it > base }?.let { value -> add(CustomAccessibilityAction("Raise $label") { select(value) }) }
                     allowedValues.lastOrNull { it < base }?.let { value -> add(CustomAccessibilityAction("Lower $label") { select(value) }) }

@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import android.text.format.DateUtils
 import kotlinx.coroutines.delay
@@ -69,6 +70,7 @@ private fun Requiem(model: SheetModel) {
     // A generic MIME type preserves .vtrcharacter; document providers append .json for application/json.
     val saveFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream"), model::saveExport)
     val c = state.character
+    var currentSection by rememberSaveable(c?.id?.toString()) { mutableStateOf(if (c?.creation != null) SheetSection.Creation else SheetSection.Character) }
     var requestedSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<SheetSection?>(null) }
     val window = LocalWindowInfo.current.containerSize
     val sideInset = if (window.width > window.height) with(LocalDensity.current) { (window.width * .08f).toDp() } else 16.dp
@@ -111,7 +113,7 @@ private fun Requiem(model: SheetModel) {
                 IconButton(onClick = { focus.clearFocus(); model.close() }, enabled = !state.busy, modifier = Modifier.semantics { contentDescription = "Back" }) {
                     SheetIcon(SheetSymbol.Back, SheetColors.ink)
                 }
-                SheetSectionMenu(SheetSection.available(c, model.catalog)) { focus.clearFocus(); requestedSection = it }
+                SheetSectionMenu(SheetSection.available(c, model.catalog), currentSection) { focus.clearFocus(); requestedSection = it }
                 Spacer(Modifier.weight(1f))
                 if (c.creation == null) {
                     XpBadge(c.xpMode, c.experiencesAvailable, !state.busy) { model.edit(ie.requiem.rules.SheetEdit.XpMode(!c.xpMode)) }
@@ -128,7 +130,7 @@ private fun Requiem(model: SheetModel) {
                 }
             }
             when {
-                c != null -> key(c.id) { SheetEditor(c, model.catalog, state.busy, model::edit, requestedSection) { requestedSection = null } }
+                c != null -> key(c.id) { SheetEditor(c, model.catalog, state.busy, model::edit, requestedSection, { currentSection = it }) { requestedSection = null } }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 else -> Library(state.rows, model, importCharacter = { importFile.launch(arrayOf("*/*")) }) { about = true }
             }
@@ -173,13 +175,22 @@ private fun ImportConflict(pending: PendingImport, busy: Boolean, resolve: (Bool
 }
 
 @Composable
-private fun SheetSectionMenu(sections: List<SheetSection>, select: (SheetSection) -> Unit) {
+private fun SheetSectionMenu(sections: List<SheetSection>, current: SheetSection, select: (SheetSection) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     Box {
-        TextButton(onClick = { expanded = true }) { SheetText("Sections") }
+        TextButton(onClick = { expanded = true }, modifier = Modifier.widthIn(max = 160.dp).testTag("section-pill")
+            .semantics { contentDescription = "Sections"; stateDescription = current.title }) {
+            Row(Modifier.background(SheetColors.accent, CircleShape).padding(horizontal = 12.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+                val style = LocalSheetType.current.subsection.copy(fontSize = 14.sp, lineHeight = 18.sp, letterSpacing = 0.sp)
+                SheetText(if (current == SheetSection.Coils) "Coils" else if (current == SheetSection.Creation) "Creation" else current.title,
+                    Modifier.weight(1f, fill = false), color = Color.White, style = style, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+                SheetText("⌄", Modifier.padding(start = 4.dp), color = Color.White, style = style)
+            }
+        }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             sections.forEach { section ->
-                DropdownMenuItem(text = { SheetText(section.title) }, onClick = { expanded = false; select(section) })
+                DropdownMenuItem(text = { SheetText(section.title) }, modifier = Modifier.semantics { selected = section == current },
+                    trailingIcon = { if (section == current) SheetText("✓", color = SheetColors.accent) }, onClick = { expanded = false; select(section) })
             }
         }
     }
@@ -206,6 +217,7 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
 
 @Composable
 private fun Library(rows: List<LibraryRow>, model: SheetModel, importCharacter: () -> Unit, about: () -> Unit) {
+    var exportPicker by rememberSaveable { mutableStateOf(false) }
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
     LazyColumn(Modifier.fillMaxSize().pageEdges().testTag("character-library"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
         item { SectionBand("CHARACTERS") }
@@ -252,8 +264,21 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, importCharacter: 
         }
         item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
         item { AddSheetRow("Import Character", true, importCharacter) }
+        item { AddSheetRow("Export Character", rows.any { it.problem == null }) { exportPicker = true } }
         item { TextButton(onClick = about) { SheetText("About this app") } }
     }
+    if (exportPicker) AlertDialog(onDismissRequest = { exportPicker = false }, title = { SheetText("Export Character") }, text = {
+        LazyColumn {
+            items(rows.filter { it.problem == null }, key = { it.id.toString() }) { row ->
+                TextButton(onClick = { exportPicker = false; model.export(row.id, ExportMode.Share) }, modifier = Modifier.fillMaxWidth()) {
+                    Column(Modifier.fillMaxWidth()) {
+                        SheetText(row.name.ifBlank { "Unnamed Character" }, style = LocalSheetType.current.trait)
+                        if (row.details.isNotBlank()) SheetText(row.details, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+        }
+    }, confirmButton = { TextButton(onClick = { exportPicker = false }) { SheetText("Cancel") } })
     val selected = rows.firstOrNull { it.id.toString() == confirmId }
     if (selected != null) AlertDialog(onDismissRequest = { confirmId = null },
         title = { SheetText("Delete character?") },

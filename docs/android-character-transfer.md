@@ -2,6 +2,10 @@
 
 Implemented in alpha 8, `0.6.0-alpha.8` (version code 8), following Claude's iOS 1.4 implementation at `dd522e1` and both export/import handoff entries of 6 November 2026. Schema 10 is unchanged. The user accepted all alpha 8 manual checks on the S24 FE running Android 17 on 6 November 2026 and confirmed real iOS → Android and Android → iOS transfers.
 
+## Beta 2 update
+
+Beta 2 reads schemas 1–11 and adds **Export Character** below Import on the home screen, while retaining the per-character menu. Conditions and Condition history travel in the same raw JSON; either requires schema 11. Files without either still write schema 10. Beta 1 cannot import schema 11. The actual Swift-store/Kotlin-store exchange now includes `v11-conditions`. `v12-future.json` is the active refusal fixture; `v11-future.json` is retained as a historical fixture and is no longer a future version.
+
 ## Using it
 
 - From the library, long-press a character or use its three-dot menu. **Export** opens the Android share sheet. **Save to file** opens the system document picker with the character's suggested `.vtrcharacter` filename.

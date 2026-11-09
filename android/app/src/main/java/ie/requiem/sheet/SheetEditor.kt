@@ -21,7 +21,7 @@ internal enum class SheetSection(val title: String, val itemKey: String) {
     Disciplines("Disciplines", "disciplines"), Devotions("Devotions", "devotions"), Rituals("Rituals", "rituals"),
     Coils("Coils of the Dragon", "coils"), Merits("Merits", "merits"), Aspirations("Aspirations", "aspirations"), Banes("Banes", "banes"),
     Health("Health", "health"), Willpower("Willpower", "willpower"), BloodPotency("Blood Potency", "blood-potency"),
-    Vitae("Vitae", "vitae"), Humanity("Humanity", "humanity"), Advantages("Advantages", "advantages"), Experience("Experience", "experience");
+    Vitae("Vitae", "vitae"), Humanity("Humanity", "humanity"), Advantages("Advantages", "advantages"), Experience("Experience", "experience"), Conditions("Conditions", "conditions");
     companion object {
         fun available(c: CharacterSave, catalog: Catalog): List<SheetSection> = entries.filter {
             (it != Creation || c.creation != null) && (it != Rituals || c.showsRituals(catalog)) && (it != Coils || c.showsCoils)
@@ -31,11 +31,12 @@ internal enum class SheetSection(val title: String, val itemKey: String) {
 
 @Composable
 internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit: (SheetEdit) -> Unit,
-    section: SheetSection?, onSectionHandled: () -> Unit) {
+    section: SheetSection?, onCurrentSection: (SheetSection) -> Unit, onSectionHandled: () -> Unit) {
     val editable = !busy
     var log by rememberSaveable { mutableStateOf(false) }
     var overlay by rememberSaveable { mutableStateOf<String?>(null) }
     val list = rememberLazyListState()
+    var jumping by remember { mutableStateOf(false) }
     var localSection by rememberSaveable { mutableStateOf<SheetSection?>(null) }
     var previousClan by rememberSaveable { mutableStateOf(c.clan.catalog ?: c.clan.custom.orEmpty()) }
     LaunchedEffect(c.clan) {
@@ -44,6 +45,22 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
         previousClan = clan
     }
     val keys = SheetSection.available(c, catalog).flatMap { if (it == SheetSection.Skills) TraitCategory.entries.map { category -> "skills-${category.name}" } else listOf(it.itemKey) }
+    val reportSection by rememberUpdatedState(onCurrentSection)
+    LaunchedEffect(list, keys) {
+        snapshotFlow { Triple(list.firstVisibleItemIndex, list.firstVisibleItemScrollOffset, list.isScrollInProgress) }.collect { (index, _, scrolling) ->
+            if (scrolling && !jumping) {
+                val key = keys.getOrNull(index)
+                SheetSection.available(c, catalog).firstOrNull { it.itemKey == key || (it == SheetSection.Skills && key?.startsWith("skills-") == true) }?.let(reportSection)
+            }
+        }
+    }
+    fun conditionAction(target: String): (() -> Unit)? = if (c.conditionEffects(target, catalog).isEmpty()) null else ({ overlay = "conditionEffects|$target" })
+    @Composable fun category(category: TraitCategory, skills: Boolean) {
+        Row(Modifier.fillMaxWidth().background(Color.White), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.weight(1f)) { CategoryHeader(category, skills, c, catalog, editable, edit) }
+            conditionAction("${if (skills) "skillCategory" else "attributeCategory"}:${category.name.lowercase()}")?.let { ConditionIndicator(category.title, it) }
+        }
+    }
     @Composable fun entries(kind: EntryKind) {
         val rows = c.entryRows(kind, catalog)
         @Composable fun row(item: SheetEntry) {
@@ -75,7 +92,11 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
     @Composable fun band(title: String) { Spacer(Modifier.height(16.dp)); SectionBand(title) }
     LaunchedEffect(section, localSection) {
         val target = localSection ?: section
-        if (target != null) { keys.indexOf(target.itemKey).takeIf { it >= 0 }?.let { list.scrollToItem(it) }; localSection = null; onSectionHandled() }
+        if (target != null) {
+            jumping = true
+            try { keys.indexOf(target.itemKey).takeIf { it >= 0 }?.let { list.scrollToItem(it); reportSection(target) } }
+            finally { jumping = false; localSection = null; onSectionHandled() }
+        }
     }
     Column(Modifier.fillMaxSize()) {
         LazyColumn(state = list, modifier = Modifier.weight(1f).pageEdges().testTag("character-sheet"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
@@ -86,7 +107,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             item("character") {
                 SectionBand("CHARACTER")
                 CharacterDetail.entries.forEach { field ->
-                    key(field) { CharacterDetailRow(field, c, catalog, editable, edit) }
+                    key(field) { CharacterDetailRow(field, c, catalog, editable, edit) { overlay = it } }
                     SheetRule()
                 }
                 Spacer(Modifier.height(12.dp))
@@ -94,12 +115,13 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             item("attributes") {
                 SectionBand("ATTRIBUTES")
                 TraitCategory.entries.forEach { category ->
-                    CategoryHeader(category, false, c, catalog, editable, edit)
+                    category(category, false)
                     attributeDefinitions.filter { it.category == category }.forEach { definition ->
                         val attribute = c.attributes.first { it.attribute == definition.id }
                         key(definition.id) {
                             TraitRatingControl(definition.name, attribute.rating, c.attributeBonus(definition.id, catalog) + c.rollBonus(definition.id, catalog),
                                 legalRatings(RatingKind.Attribute, c.bloodPotency), editable, allowedValues = c.attributeChoices(definition.id, catalog),
+                                onConditions = conditionAction("attribute:${definition.id}"),
                                 note = if (c.creation?.favoredAttribute == definition.id) "Includes the ${catalog.name(CatalogKind.clans, c.clan)} dot" else null) { edit(SheetEdit.AttributeRating(definition.id, it)) }
                         }
                         SheetRule()
@@ -110,11 +132,11 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
             TraitCategory.entries.forEach { category ->
                 item("skills-${category.name}") {
                     if (category == TraitCategory.Mental) SectionBand("SKILLS")
-                    CategoryHeader(category, true, c, catalog, editable, edit)
+                    category(category, true)
                     SheetText("(${category.unskilledPenalty} unskilled)", Modifier.fillMaxWidth().background(Color.White).padding(start = 8.dp, bottom = 4.dp),
                         style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     skillDefinitions.filter { it.category == category }.forEach { definition ->
-                        key(definition.id) { SkillEditor(definition, c.skills.first { it.skill == definition.id }, c, editable, catalog, edit) }
+                        key(definition.id) { SkillEditor(definition, c.skills.first { it.skill == definition.id }, c, editable, catalog, edit) { overlay = it } }
                         SheetRule()
                     }
                 }
@@ -161,12 +183,13 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                 }
             }
             item("humanity") { band("HUMANITY"); HumanityRows(c, catalog, editable, edit) { overlay = "touch|$it" } }
-            item("advantages") { band("ADVANTAGES"); Advantages(c, catalog, editable) { overlay = "number|${it.name}" } }
+            item("advantages") { band("ADVANTAGES"); Advantages(c, catalog, editable, conditionAction("defense")) { overlay = "number|${it.name}" } }
             item("experience") {
                 SectionBand("EXPERIENCE")
                 ExperienceSection(c, editable, edit, number = { overlay = "number|${it.name}" }) { log = true }
                 Spacer(Modifier.height(16.dp))
             }
+            item("conditions") { SectionBand("CONDITIONS"); ConditionsSection(c, catalog, editable) { overlay = it } }
         }
     }
     if (log) ChangeLogSheet(c, catalog) { log = false }
@@ -208,10 +231,11 @@ private fun ExperienceSection(c: CharacterSave, editable: Boolean, edit: (SheetE
 }
 
 @Composable
-internal fun ValueRow(label: String, value: Int, description: String = "$label $value", caution: Boolean = false) {
-    Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(8.dp).clearAndSetSemantics { contentDescription = description },
+internal fun ValueRow(label: String, value: Int, description: String = "$label $value", caution: Boolean = false, onConditions: (() -> Unit)? = null) {
+    Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(8.dp).semantics(mergeDescendants = true) { contentDescription = description },
         verticalAlignment = Alignment.CenterVertically) {
         SheetText(label, Modifier.weight(1f), style = LocalSheetType.current.label)
+        if (onConditions != null) ConditionIndicator(label, onConditions)
         SheetText(value.toString(), style = LocalSheetType.current.label, color = if (caution) SheetColors.caution else SheetColors.accent)
     }
 }

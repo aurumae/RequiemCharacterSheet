@@ -17,8 +17,8 @@ class GuidedCreationUiTest {
         return ui.onNode(matcher)
     }
     private fun jump(section: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(section) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun rating(name: String, value: Int) {
         sheet(hasContentDescription(name)).performClick()

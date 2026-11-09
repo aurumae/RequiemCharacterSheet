@@ -105,13 +105,13 @@ internal fun HumanityRows(c: CharacterSave, catalog: Catalog, editable: Boolean,
 }
 
 @Composable
-internal fun Advantages(c: CharacterSave, catalog: Catalog, editable: Boolean, number: (NumberField) -> Unit) {
+internal fun Advantages(c: CharacterSave, catalog: Catalog, editable: Boolean, onConditions: (() -> Unit)? = null, number: (NumberField) -> Unit) {
     Column(Modifier.fillMaxWidth().background(Color.White)) {
         ValueRow("Size:", c.effectiveSize(catalog)); SheetRule()
         ValueRow("Speed:", c.speed(catalog)); SheetRule()
-        ValueRow("Defense (Athletics):", c.defense(catalog)); SheetRule()
+        ValueRow("Defense (Athletics):", c.defense(catalog), onConditions = onConditions); SheetRule()
         c.alternativeDefenseSkills(catalog).filter { it in listOf("brawl", "weaponry") }.forEach { skill ->
-            ValueRow("Defense (${skillDefinitions.first { it.id == skill }.name}):", c.defense(catalog, skill)); SheetRule()
+            ValueRow("Defense (${skillDefinitions.first { it.id == skill }.name}):", c.defense(catalog, skill), onConditions = onConditions); SheetRule()
         }
         Row(Modifier.fillMaxWidth().clickable(enabled = editable) { number(NumberField.Armor) }.padding(8.dp).heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
             SheetText("Armor:", Modifier.weight(1f), style = LocalSheetType.current.label)

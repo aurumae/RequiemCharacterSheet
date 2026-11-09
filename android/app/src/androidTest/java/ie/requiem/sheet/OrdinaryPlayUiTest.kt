@@ -13,8 +13,8 @@ class OrdinaryPlayUiTest {
         return ui.onNode(matcher)
     }
     private fun jump(section: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(section) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun choose(kind: String, id: String, search: String) {
         sheet(hasText("Add $kind")).performClick()

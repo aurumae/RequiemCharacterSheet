@@ -17,8 +17,8 @@ class ParityUiTest {
         return ui.onNode(matcher)
     }
     private fun jump(name: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(name).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(name) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun choose(field: String, id: String, search: String) {
         sheet(hasContentDescription(field)).performClick()
