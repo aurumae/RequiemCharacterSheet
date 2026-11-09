@@ -93,6 +93,11 @@ extension Character {
             }
             // Measured in Covenant Status with that covenant
             return PrerequisiteCheck(description: "\(name) Status \(minimum)", isMet: covenantStatus(id) >= minimum)
+        case .willpower:
+            return PrerequisiteCheck(description: "Willpower \(minimum)", isMet: willpower >= minimum)
+        case .notCovenant:
+            let name = catalog.covenants.entry(id)?.name ?? id
+            return PrerequisiteCheck(description: "Not a member of the \(name)", isMet: covenantSource != .catalog(id))
         case .other:
             return unknown(prerequisite)
         }
@@ -143,6 +148,8 @@ extension Effect {
             return adds(amount.value(forRating: rating), to: "Size (and so Health)")
         case .defenseSkillFromQualifier:
             return "Defense can use \(qualifier ?? "the chosen Skill") instead of Athletics"
+        case .merit(let id, let amount):
+            return adds(amount.value(forRating: rating), to: Catalog.bundled.merits.entry(id)?.name ?? id)
         }
     }
 

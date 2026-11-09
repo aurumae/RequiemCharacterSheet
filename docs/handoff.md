@@ -360,3 +360,38 @@ This is a big one, and much of it is shared. **Follow-up:** please port it to An
   - The pill keeps a jumped-to section until the user scrolls.
 - iOS 26 is now the minimum (`IPHONEOS_DEPLOYMENT_TARGET`), to hide the toolbar's glass bubble behind the pill.
 - Tilts are not Conditions; the user wants them on a possible future combat screen, if at all.
+
+## 2026-11-09 21:11 UTC · Claude (iOS) · Secrets of the Covenants catalog, new requirement kinds, Merit effects
+
+This is the first sourcebook. **Follow-up:** Android reads every catalog file, so the content appears there automatically.
+The **Follow-up** items below are the bits that need code.
+
+**New file: `RequiemCharacterSheet/Catalogs/secrets-of-the-covenants.json`** (book id `secrets-of-the-covenants`, pp. 177–202), in our own words:
+- **60 Merits:**
+  - Each covenant's Merits, with their Status requirement.
+  - The Fighting Styles with their maneuvers: Mobilize Outrage, Temple Guardian, Courtoisie, Crusade and Rites of the Impaled.
+  - The Carthian Laws, Invictus Oaths, Crúac Styles and Wyrm's Nest Merits.
+  - The "outsider" Merits: Casual User, Chorister, One Foot in the Door, Laity and Independent Study.
+  - The book's reprints of Automatic Writing, Laying on Hands and Numbing Touch are left out; they're already in from `cofd-core`.
+- **28 rituals** (14 Crúac, 14 Theban), with targets, sacraments and contests.
+- **2 Coil-only "mysteries"** (Zirnitra, Ziva) and **4 Scales**.
+- **3 Conditions:** Primeval Truths, Oathbreaker and Seed of Her Divinity.
+
+**Shared format additions**
+- `Prerequisite.kind` **`notCovenant`** (`id` = covenant) is met when the character's covenant isn't that one. It carries
+  `text` ("Not a member of the …") so your current fallback to text still reads correctly. **Follow-up:** check it.
+- `Prerequisite.kind` **`willpower`** (`minimum`) is met when Willpower dots (Resolve + Composure) ≥ minimum, e.g. Mobilize
+  Outrage's Willpower 5. It has `text` as a fallback. **Follow-up:** check it.
+- `MysteryEntry.coilOnly` (default false): a Coil with no Mystery to follow. It's **not offered in the Mystery chooser**,
+  but can be added as a Coil, with its own Scale section. As a non-Mystery Coil it costs 4 XP per dot. **Follow-up:** your
+  Mystery chooser currently lists Zirnitra and Ziva.
+- **New effect `{"type": "merit", "merit": "<id>", "amount": …}`**, which adds dots to another Merit; it's used by Flock →
+  Herd. iOS shows them as ink (black) dots after the bought ones, like Vigor on Strength, and they can go past 5 (up to 10).
+  `Character.meritBonus(for:)`. **Follow-up:** port it; the user says every Sanctified character takes Flock.
+- Requirements still shown as unchecked text (user's call): "Carthian Status at least the Merit's rating",
+  Stigmata's Humanity rule, "Contacts (Inter-City)", "Safe Place/Herd at least the rating", "Mortal only".
+
+**UI (iOS)**
+- The Add Coil menu is grouped by book.
+- Picker search also matches the book name; searching "Covenants" lists this book's entries.
+- The user wants every option to show its source. Pickers already show "Book, p. N" on each row; keep doing that for new content.

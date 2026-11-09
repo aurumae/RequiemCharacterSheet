@@ -496,6 +496,14 @@ final class Character: Codable {
         }
     }
 
+    /// Dots other Merits add to a Merit, e.g. Flock to Herd.
+    func meritBonus(for id: CatalogEntryID) -> Int {
+        effectTotal { effect in
+            if case .merit(let target, let amount) = effect, target == id { return amount }
+            return nil
+        }
+    }
+
     /// Bonuses that only apply when the Attribute is rolled, e.g. Praestantia.
     func rollBonus(for kind: AttributeKind) -> Int {
         effectTotal { effect in

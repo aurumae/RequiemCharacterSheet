@@ -18,7 +18,8 @@ struct MeritPickerView: View {
     @State private var pendingEntry: MeritEntry?
     @State private var qualifierDraft = ""
 
-    /// Alphabetical; when searching, Merits whose name matches come before those whose summary does.
+    /// Alphabetical; when searching, Merits whose name matches come first, then those whose summary does, then
+    /// those from a book whose name matches, e.g. "Covenants" for Secrets of the Covenants.
     private var matchingEntries: [MeritEntry] {
         let entries = Catalog.bundled.merits.all.sorted { $0.name < $1.name }
         guard !searchText.isEmpty else { return entries }
@@ -26,7 +27,11 @@ struct MeritPickerView: View {
         let summaryMatches = entries.filter {
             !$0.name.localizedStandardContains(searchText) && $0.summary.localizedStandardContains(searchText)
         }
-        return nameMatches + summaryMatches
+        let bookMatches = entries.filter {
+            !$0.name.localizedStandardContains(searchText) && !$0.summary.localizedStandardContains(searchText)
+                && $0.source.citation().localizedStandardContains(searchText)
+        }
+        return nameMatches + summaryMatches + bookMatches
     }
 
     private static let categoryOrder: [MeritEntry.Category] = [.vampire, .covenant, .mental, .physical, .social, .fighting, .other, .supernatural]

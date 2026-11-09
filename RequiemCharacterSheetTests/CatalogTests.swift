@@ -15,18 +15,19 @@ struct CatalogTests {
     // MARK: - Bundled data
 
     @Test func bundledCatalogsLoad() {
-        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion"])
+        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "secrets-of-the-covenants"])
         #expect(catalog.disciplines.all.count == 14)
         #expect(catalog.bloodlines.all.count == 1)
-        // 85 from Vampire: The Requiem, plus 72 from Chronicles of Darkness that Requiem doesn't reprint
-        #expect(catalog.merits.all.count == 157)
+        // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
+        // and 60 from Secrets of the Covenants
+        #expect(catalog.merits.all.count == 217)
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 6)
         #expect(catalog.covenants.all.count == 5)
-        #expect(catalog.rituals.all.count == 20)
+        #expect(catalog.rituals.all.count == 48)
         #expect(catalog.devotions.all.count == 29)
-        #expect(catalog.mysteries.all.count == 3)
-        #expect(catalog.scales.all.count == 10)
+        #expect(catalog.mysteries.all.count == 5)
+        #expect(catalog.scales.all.count == 14)
     }
 
     @Test func requiemEntriesTakePrecedenceOverReprints() {
@@ -94,14 +95,69 @@ struct CatalogTests {
                 #expect(catalog.merits.entry(id) != nil, "merit \(id)")
             case .discipline:
                 #expect(catalog.disciplines.entry(id) != nil, "discipline \(id)")
-            case .covenant:
+            case .covenant, .notCovenant:
                 #expect(catalog.covenants.entry(id) != nil, "covenant \(id)")
             case .clan:
                 #expect(catalog.clans.entry(id) != nil, "clan \(id)")
-            case .bloodPotency, .other:
+            case .bloodPotency, .willpower, .other:
                 break
             }
         }
+    }
+
+    @Test func secretsOfTheCovenantsIsLoaded() throws {
+        let book = "secrets-of-the-covenants"
+        #expect(catalog.book(book)?.name == "Secrets of the Covenants")
+        #expect(catalog.merits.all.filter { $0.source.book == book }.count == 60)
+        #expect(catalog.rituals.all.filter { $0.source.book == book }.count == 28)
+        #expect(catalog.scales.all.filter { $0.source.book == book }.count == 4)
+        #expect(catalog.conditions.all.filter { $0.source.book == book }.count == 3)
+        // Every entry cites a page of the appendix
+        #expect(catalog.merits.all.filter { $0.source.book == book }.allSatisfy { (177...202).contains($0.source.page ?? 0) })
+        // Its Coils have no Mystery to follow
+        #expect(catalog.mysteries.all.filter(\.coilOnly).map(\.id).sorted() == ["coil-of-zirnitra", "coil-of-ziva"])
+        // Scales point at real Coil tiers
+        for scale in catalog.scales.all {
+            for coil in scale.prerequisiteCoils {
+                #expect(catalog.mysteries.entry(coil.mystery)?.tiers.contains { $0.id == coil.tier } == true, "\(scale.name)")
+            }
+        }
+    }
+
+    @Test func notBeingInACovenantIsChecked() throws {
+        let laity = try #require(catalog.merits.entry("laity"))
+        let character = Character()
+        character.covenantSource = .catalog("invictus")
+        #expect(character.unmetPrerequisites(for: laity).isEmpty)
+        character.covenantSource = .catalog("lancea-et-sanctum")
+        #expect(character.unmetPrerequisites(for: laity).map(\.description) == ["Not a member of the Lancea et Sanctum"])
+    }
+
+    @Test func flockAddsToHerd() throws {
+        let character = Character()
+        character.merits.append(Merit(source: .catalog("herd"), rating: 4))
+        #expect(character.meritBonus(for: "herd") == 0)
+        character.merits.append(Merit(source: .catalog("flock"), rating: 3))
+
+        // Above five, as the book allows
+        #expect(character.meritBonus(for: "herd") == 3)
+        #expect(character.meritBonus(for: "flock") == 0)
+    }
+
+    @Test func willpowerRequirementIsChecked() throws {
+        let mobilizeOutrage = try #require(catalog.merits.entry("mobilize-outrage"))
+        let character = Character()
+        character.covenantSource = .catalog("carthian-movement")
+        character.merits.append(Merit(source: .catalog("covenant-status"), qualifier: "Carthian Movement", rating: 1))
+        character.skill(.brawl)?.rating = 2
+        func resolve() -> Attribute? { character.attributes.first { $0.kind == .resolve } }
+        func composure() -> Attribute? { character.attributes.first { $0.kind == .composure } }
+        resolve()?.rating = 2
+        composure()?.rating = 2
+        #expect(character.unmetPrerequisites(for: mobilizeOutrage).map(\.description) == ["Willpower 5"])
+
+        composure()?.rating = 3
+        #expect(character.unmetPrerequisites(for: mobilizeOutrage).isEmpty)
     }
 
     @Test func meritsHaveRatings() {

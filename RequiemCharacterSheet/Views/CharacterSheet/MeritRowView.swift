@@ -37,10 +37,13 @@ struct MeritRowView: View {
 
                     // Only as many dots as the Merit can have, at the left of a five-dot column so the first
                     // dot lines up with other rows; a Merit capped below five (e.g. Defensive Combat) ends early
+                    // Dots from other Merits, e.g. Flock's on Herd, follow in ink and can pass five
+                    let bonus = character.meritBonus(for: entry.id)
                     DotsRatingView(
                         merit.name,
                         rating: allowedRating(for: entry),
-                        maxRating: entry.ratings.max() ?? 5,
+                        totalRating: merit.rating + bonus,
+                        maxRating: min(10, max(entry.ratings.max() ?? 5, merit.rating + bonus)),
                         maxEditableRating: maxEditableRating(upTo: entry.ratings.max() ?? 5),
                         allowsResetToZero: true
                     )

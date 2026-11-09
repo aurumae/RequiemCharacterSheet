@@ -55,14 +55,19 @@ struct CatalogPickerView: View {
 
     @State private var searchText = ""
 
-    /// When searching, items whose name matches come before those whose summary does.
+    /// When searching, items whose name matches come first, then those whose summary does, then those from a
+    /// book whose name matches, e.g. "Covenants" for everything from Secrets of the Covenants.
     private func matching(_ items: [CatalogPickerItem]) -> [CatalogPickerItem] {
         guard !searchText.isEmpty else { return items }
         let nameMatches = items.filter { $0.name.localizedStandardContains(searchText) }
         let summaryMatches = items.filter {
             !$0.name.localizedStandardContains(searchText) && $0.summary.localizedStandardContains(searchText)
         }
-        return nameMatches + summaryMatches
+        let bookMatches = items.filter {
+            !$0.name.localizedStandardContains(searchText) && !$0.summary.localizedStandardContains(searchText)
+                && $0.citation.localizedStandardContains(searchText)
+        }
+        return nameMatches + summaryMatches + bookMatches
     }
 
     var body: some View {

@@ -324,7 +324,9 @@ struct Prerequisite: Decodable {
     let text: String?
 
     enum Kind: String, Decodable {
-        case attribute, skill, merit, discipline, bloodPotency, clan, covenant, other
+        /// `notCovenant`: not a member of the covenant, e.g. Casual User for non-Carthians.
+        /// `willpower`: Willpower dots (Resolve + Composure), e.g. Mobilize Outrage.
+        case attribute, skill, merit, discipline, bloodPotency, clan, covenant, notCovenant, willpower, other
     }
 }
 
@@ -480,6 +482,24 @@ struct MysteryEntry: CatalogEntry {
     let coil: CoilInfo
     /// One per dot, in order.
     let tiers: [CoilTier]
+    /// A Coil without a Mystery to follow, e.g. the Coil of Zirnitra: it can be learned as a Coil, with its
+    /// Scales, but isn't offered as the character's Mystery.
+    let coilOnly: Bool
+
+    enum CodingKeys: CodingKey {
+        case id, name, source, summary, coil, tiers, coilOnly
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(String.self, forKey: .summary)
+        coil = try container.decode(CoilInfo.self, forKey: .coil)
+        tiers = try container.decode([CoilTier].self, forKey: .tiers)
+        coilOnly = try container.decode(.coilOnly, default: false)
+    }
 
     func tier(_ dots: Int) -> CoilTier? {
         tiers.first { $0.dots == dots }
@@ -695,9 +715,11 @@ enum Effect: Decodable, Equatable {
     case size(Amount)
     /// Defense may use the Skill named by the Merit's qualifier instead of Athletics. Defensive Combat.
     case defenseSkillFromQualifier
+    /// Adds dots to another Merit, which may go above five. Flock (Herd).
+    case merit(CatalogEntryID, Amount)
 
     private enum CodingKeys: CodingKey {
-        case type, attribute, amount
+        case type, attribute, merit, amount
     }
 
     /// Saved as e.g. {"type": "attribute", "attribute": "strength", "amount": "rating"}.
@@ -719,6 +741,8 @@ enum Effect: Decodable, Equatable {
             self = .size(try container.decode(Amount.self, forKey: .amount))
         case "defenseSkillFromQualifier":
             self = .defenseSkillFromQualifier
+        case "merit":
+            self = .merit(try container.decode(String.self, forKey: .merit), try container.decode(Amount.self, forKey: .amount))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown effect \(type)")
         }

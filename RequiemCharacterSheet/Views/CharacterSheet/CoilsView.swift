@@ -88,7 +88,8 @@ struct CoilsView: View {
                 }
             }
             Menu {
-                ForEach(Catalog.bundled.mysteries.all) { entry in
+                // Coils without a Mystery, like the Coil of Zirnitra, are learned as Coils, not followed
+                ForEach(Catalog.bundled.mysteries.all.filter { !$0.coilOnly }) { entry in
                     Button(entry.name) {
                         editsCustomMystery = false
                         character.chooseMystery(.catalog(entry.id))
@@ -128,12 +129,20 @@ struct CoilsView: View {
     private var addCoilMenu: some View {
         Menu {
             let present = Set(character.coils.map(\.mystery))
-            // At creation, only the character's own Mystery's Coil, which choosing the Mystery adds
-            ForEach(Catalog.bundled.mysteries.all.filter { !present.contains(.catalog($0.id)) }) { entry in
-                Button(entry.coil.name) {
-                    character.coils.append(Coil(mystery: .catalog(entry.id)))
+            // Grouped by book, so it's clear where each Coil comes from. At creation, only the character's own
+            // Mystery's Coil, which choosing the Mystery adds.
+            ForEach(Catalog.bundled.books, id: \.id) { book in
+                let coils = Catalog.bundled.mysteries.all.filter { $0.source.book == book.id && !present.contains(.catalog($0.id)) }
+                if !coils.isEmpty {
+                    Section(book.name) {
+                        ForEach(coils) { entry in
+                            Button(entry.coil.name) {
+                                character.coils.append(Coil(mystery: .catalog(entry.id)))
+                            }
+                            .disabled(character.isInCreation)
+                        }
+                    }
                 }
-                .disabled(character.isInCreation)
             }
             Button("Custom Coil") {
                 let coil = Coil(mystery: .custom(""))

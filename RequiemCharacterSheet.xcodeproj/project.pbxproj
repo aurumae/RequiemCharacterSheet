@@ -62,6 +62,7 @@
 		BC460D9530A194F00062F53F /* ConditionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9430A194F00062F53F /* ConditionTests.swift */; };
 		BC460D9730A195820062F53F /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9630A195820062F53F /* ConditionsView.swift */; };
 		BC460D9930A195FB0062F53F /* ConditionIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9830A195FB0062F53F /* ConditionIndicator.swift */; };
+		BC460D9B30A236AA0062F53F /* secrets-of-the-covenants.json in Resources */ = {isa = PBXBuildFile; fileRef = BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -186,7 +187,8 @@
 		BC460D9230A1945E0062F53F /* Conditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conditions.swift; sourceTree = "<group>"; };
 		BC460D9430A194F00062F53F /* ConditionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionTests.swift; sourceTree = "<group>"; };
 		BC460D9630A195820062F53F /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
-		BC460D9830A195FB0062F53F /* ConditionIndicator.swift */ = {isa = PBXFileReference; path = ConditionIndicator.swift; sourceTree = "<group>"; };
+		BC460D9830A195FB0062F53F /* ConditionIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionIndicator.swift; sourceTree = "<group>"; };
+		BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */ = {isa = PBXFileReference; path = "secrets-of-the-covenants.json"; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				BC2B443F309A30A600720F0C /* thousand-years-of-night.json */,
 				BC2B4449309A3C3500720F0C /* cofd-core.json */,
 				BC2B4481309C0DD400720F0C /* dark-eras-companion.json */,
+				BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */,
 			);
 			path = Catalogs;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */,
 				BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */,
 				BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */,
+				BC460D9B30A236AA0062F53F /* secrets-of-the-covenants.json in Resources */,
 				BC2B4440309A30A600720F0C /* thousand-years-of-night.json in Resources */,
 				BC2B443E309A30A500720F0C /* vtr2e-core.json in Resources */,
 				BC2B4494309CCD2C00720F0C /* Cinzel-Medium.ttf in Resources */,
