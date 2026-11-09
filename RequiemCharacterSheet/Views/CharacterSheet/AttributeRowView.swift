@@ -54,6 +54,8 @@ struct AttributeRowView: View {
                     }
                 }
             }
+            // A mark if a Condition affects it
+            ConditionIndicator(character: character, target: .attribute(attribute.kind), traitName: attribute.name)
             Spacer()
             DotsRatingView(
                 attribute.name,

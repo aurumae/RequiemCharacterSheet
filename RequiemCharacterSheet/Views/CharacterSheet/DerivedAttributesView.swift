@@ -15,17 +15,17 @@ struct DerivedAttributesView: View {
     private let armorRange = 0...99
 
     var body: some View {
-        Section(header: Text("ADVANTAGES").themedText(.sectionHeader)) {
+        SheetSectionBlock(.advantages) {
             LabeledValueRow("Size:", value: character.effectiveSize)
             LabeledValueRow("Speed:", value: character.speed)
-            LabeledValueRow("Defense (Athletics):", value: character.defense)
+            LabeledValueRow("Defense (Athletics):", value: character.defense, condition: (character, .defense))
 
             if character.hasDefensiveCombatBrawl {
-                LabeledValueRow("Defense (Brawl):", value: character.defenseUsingBrawl)
+                LabeledValueRow("Defense (Brawl):", value: character.defenseUsingBrawl, condition: (character, .defense))
             }
 
             if character.hasDefensiveCombatWeaponry {
-                LabeledValueRow("Defense (Weaponry):", value: character.defenseUsingWeaponry)
+                LabeledValueRow("Defense (Weaponry):", value: character.defenseUsingWeaponry, condition: (character, .defense))
             }
 
             TapToEditNumberRow("Armor:", value: $character.armor, in: armorRange)

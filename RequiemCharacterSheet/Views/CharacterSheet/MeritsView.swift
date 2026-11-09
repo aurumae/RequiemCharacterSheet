@@ -18,7 +18,7 @@ struct MeritsView: View {
     @State private var addsCustomMeritOnDismiss = false
 
     var body: some View {
-        Section(header: Text("MERITS").themedText(.sectionHeader)) {
+        SheetSectionBlock(.merits) {
             ForEach(character.merits) { merit in
                 MeritRowView(merit: merit, character: character, beginsEditing: merit.id == newCustomMeritID)
                     .editingRow(merit.id)

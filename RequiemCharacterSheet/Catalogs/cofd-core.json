@@ -2200,5 +2200,156 @@
       ],
       "summary": "Defensive unarmed Style that redirects blows."
     }
+  ],
+  "conditions": [
+    {
+      "id": "blind",
+      "name": "Blind",
+      "source": {
+        "book": "cofd-core",
+        "page": 288
+      },
+      "persistent": false,
+      "summary": "You can't see. Rolls that need sight get only a chance die, or −3 if another sense can reasonably stand in. In combat, use the Blinded Tilt instead. It can be taken as Persistent.",
+      "resolution": "A limitation or difficulty that makes the danger you're in worse.",
+      "beat": null,
+      "possibleSources": null
+    },
+    {
+      "id": "bonded",
+      "name": "Bonded",
+      "source": {
+        "book": "cofd-core",
+        "page": 288
+      },
+      "persistent": false,
+      "summary": "You've built a deep bond with an animal. +2 on rolls to influence or persuade it, once a scene. In your presence it can add your Animal Ken to rolls to resist coercion or fear, and to any one roll.",
+      "resolution": "The animal dies.",
+      "beat": null,
+      "possibleSources": "Animal Ken",
+      "notePrompt": "With"
+    },
+    {
+      "id": "connected",
+      "name": "Connected",
+      "source": {
+        "book": "cofd-core",
+        "page": 288
+      },
+      "persistent": false,
+      "summary": "You've made inroads with a group. +2 to all rolls relating to it, or end this Condition for a one-time +3 to influence or work with them.",
+      "resolution": "Use it up as described, or burn the bridge.",
+      "beat": null,
+      "possibleSources": "Politics, Socialize",
+      "notePrompt": "With"
+    },
+    {
+      "id": "crippled",
+      "name": "Crippled",
+      "source": {
+        "book": "cofd-core",
+        "page": 288
+      },
+      "persistent": true,
+      "summary": "You can walk little or not at all: your Speed is effectively 1, and you rely on a wheelchair or similar to travel. A manual wheelchair's Speed equals your Strength and needs your hands; an electric one has Speed 3 and leaves them free. If an injury caused it, it lasts until the injury heals.",
+      "resolution": "Regain your mobility, if it was temporary.",
+      "beat": "The disability puts you in danger or holds you back badly.",
+      "possibleSources": null
+    },
+    {
+      "id": "embarrassing-secret",
+      "name": "Embarrassing Secret",
+      "source": {
+        "book": "cofd-core",
+        "page": 289
+      },
+      "persistent": false,
+      "summary": "Something in your past could come back to haunt you: if it got out, you could be shunned or even arrested. If it does get out, this becomes Notoriety.",
+      "resolution": "The secret gets out.",
+      "beat": null,
+      "possibleSources": null,
+      "notePrompt": "Secret"
+    },
+    {
+      "id": "informed",
+      "name": "Informed",
+      "source": {
+        "book": "cofd-core",
+        "page": 289
+      },
+      "persistent": false,
+      "summary": "You've researched a topic thoroughly. On a roll relating to it, with any relevant Skill, you can resolve this: a failure counts as one success, and a success becomes exceptional. Combat rolls can't use it.",
+      "resolution": "Use the research on a roll, as described.",
+      "beat": null,
+      "possibleSources": "Academics, Investigation, Occult, Science",
+      "notePrompt": "Topic"
+    },
+    {
+      "id": "leveraged",
+      "name": "Leveraged",
+      "source": {
+        "book": "cofd-core",
+        "page": 289
+      },
+      "persistent": false,
+      "summary": "Someone has blackmailed, tricked or talked you into doing what they want. Whenever they ask something of you, you can resolve this by doing it without rolling to resist. You can have this more than once, for different people.",
+      "resolution": "Do as they ask, as described, or turn the tables on them.",
+      "beat": null,
+      "possibleSources": "Empathy, Persuasion, Subterfuge",
+      "repeatable": true,
+      "notePrompt": "By"
+    },
+    {
+      "id": "lost",
+      "name": "Lost",
+      "source": {
+        "book": "cofd-core",
+        "page": 289
+      },
+      "persistent": false,
+      "summary": "You've no idea where you are or how to reach your goal, and can make no headway until you find your way: Wits + Streetwise in a city, or Wits + Survival in the wilderness.",
+      "resolution": "Give up the goal, or find your way.",
+      "beat": null,
+      "possibleSources": null
+    },
+    {
+      "id": "madness",
+      "name": "Madness",
+      "source": {
+        "book": "cofd-core",
+        "page": 289
+      },
+      "persistent": true,
+      "summary": "Something you saw or did shook you loose from reality, supernatural rather than a treatable illness. The Storyteller has (10 − your Integrity) dice to take, once a chapter, from any one Mental or Social roll.",
+      "resolution": "Regain a dot of Integrity, lose another one, or get an exceptional success on a breaking point.",
+      "beat": "You fail a roll because of this Condition.",
+      "possibleSources": null
+    },
+    {
+      "id": "mute",
+      "name": "Mute",
+      "source": {
+        "book": "cofd-core",
+        "page": 290
+      },
+      "persistent": true,
+      "summary": "You can't speak; you communicate by writing, gestures or signs. Illness, injury or supernatural powers can cause it for a while, until your voice returns.",
+      "resolution": "Regain your voice, if it was temporary.",
+      "beat": "Being unable to speak makes the danger you're in worse.",
+      "possibleSources": null
+    },
+    {
+      "id": "notoriety",
+      "name": "Notoriety",
+      "source": {
+        "book": "cofd-core",
+        "page": 290
+      },
+      "persistent": false,
+      "summary": "Whether or not you did something terrible, the wrong people think you did, and the public shuns you. −2 on Social rolls against those who know of it, and in Social maneuvering they need one more Door opened.",
+      "resolution": "The story is debunked, or your name is cleared.",
+      "beat": null,
+      "possibleSources": "Subterfuge, Socialize"
+    }
   ]
 }

@@ -57,6 +57,11 @@
 		BC2B4494309CCD2C00720F0C /* Cinzel-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */; };
 		BC2B4496309CCD2D00720F0C /* Cinzel-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */; };
 		BC2B4498309CDF5D00720F0C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4497309CDF5D00720F0C /* AboutView.swift */; };
+		BC460D8F30A189860062F53F /* SheetNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D8E30A189860062F53F /* SheetNavigation.swift */; };
+		BC460D9330A1945E0062F53F /* Conditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9230A1945E0062F53F /* Conditions.swift */; };
+		BC460D9530A194F00062F53F /* ConditionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9430A194F00062F53F /* ConditionTests.swift */; };
+		BC460D9730A195820062F53F /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9630A195820062F53F /* ConditionsView.swift */; };
+		BC460D9930A195FB0062F53F /* ConditionIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9830A195FB0062F53F /* ConditionIndicator.swift */; };
 		BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
 		BC6D369C2C9A1142008D03F7 /* BloodPotencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */; };
 		BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
@@ -177,6 +182,11 @@
 		BC2B4493309CCD2C00720F0C /* Cinzel-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cinzel-Medium.ttf"; sourceTree = "<group>"; };
 		BC2B4495309CCD2D00720F0C /* Cinzel-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Cinzel-OFL.txt"; sourceTree = "<group>"; };
 		BC2B4497309CDF5D00720F0C /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		BC460D8E30A189860062F53F /* SheetNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigation.swift; sourceTree = "<group>"; };
+		BC460D9230A1945E0062F53F /* Conditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conditions.swift; sourceTree = "<group>"; };
+		BC460D9430A194F00062F53F /* ConditionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionTests.swift; sourceTree = "<group>"; };
+		BC460D9630A195820062F53F /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
+		BC460D9830A195FB0062F53F /* ConditionIndicator.swift */ = {isa = PBXFileReference; path = ConditionIndicator.swift; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -213,7 +223,7 @@
 		BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFile.swift; sourceTree = "<group>"; };
 		BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyRules.swift; sourceTree = "<group>"; };
 		BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyTests.swift; sourceTree = "<group>"; };
-		BCAFCCDD309EBFAB00A5D9F1 /* HostedSheet.swift */ = {isa = PBXFileReference; path = HostedSheet.swift; sourceTree = "<group>"; };
+		BCAFCCDD309EBFAB00A5D9F1 /* HostedSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedSheet.swift; sourceTree = "<group>"; };
 		BCB158CA2C986811003B6A8F /* RequiemCharacterSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RequiemCharacterSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCharacterSheetApp.swift; sourceTree = "<group>"; };
 		BCB158D12C986812003B6A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -328,6 +338,9 @@
 				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 				BC2B447D309B564700720F0C /* CreationPanelView.swift */,
 				BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */,
+				BC460D8E30A189860062F53F /* SheetNavigation.swift */,
+				BC460D9630A195820062F53F /* ConditionsView.swift */,
+				BC460D9830A195FB0062F53F /* ConditionIndicator.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -433,6 +446,7 @@
 				A1F143D41BC34BF6B184F403 /* fixtures */,
 				BC2B4485309C0E9200720F0C /* BloodlineTests.swift */,
 				BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */,
+				BC460D9430A194F00062F53F /* ConditionTests.swift */,
 			);
 			path = RequiemCharacterSheetTests;
 			sourceTree = "<group>";
@@ -480,6 +494,7 @@
 				BC2B4473309AADD600720F0C /* ExperienceRules.swift */,
 				BC2B4479309AC90400720F0C /* CreationRules.swift */,
 				BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */,
+				BC460D9230A1945E0062F53F /* Conditions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -668,6 +683,7 @@
 				BCB159142C9873D3003B6A8F /* HealthView.swift in Sources */,
 				BC6D369A2C9A0929008D03F7 /* WillpowerView.swift in Sources */,
 				BC6D36D32C9DE65C008D03F7 /* DisciplineRowView.swift in Sources */,
+				BC460D8F30A189860062F53F /* SheetNavigation.swift in Sources */,
 				BC2B4478309ABD4300720F0C /* ExperienceView.swift in Sources */,
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
 				BC2B4454309A454C00720F0C /* DisciplinePickerView.swift in Sources */,
@@ -676,6 +692,7 @@
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,
 				BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */,
 				BCB159072C987161003B6A8F /* Character.swift in Sources */,
+				BC460D9730A195820062F53F /* ConditionsView.swift in Sources */,
 				BCB159052C987143003B6A8F /* Attribute.swift in Sources */,
 				BCAFCCDA309EA8B200A5D9F1 /* SpecialtyRules.swift in Sources */,
 				BCAFCCD6309D6A5500A5D9F1 /* CharacterFile.swift in Sources */,
@@ -693,10 +710,12 @@
 				BC6D369E2C9A3040008D03F7 /* WillpowerBoxesView.swift in Sources */,
 				BC6D36C62C9D1866008D03F7 /* SplashScreenView.swift in Sources */,
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
+				BC460D9930A195FB0062F53F /* ConditionIndicator.swift in Sources */,
 				BC2B4472309AADC300720F0C /* Experience.swift in Sources */,
 				BC2B4484309C0E2300720F0C /* CatalogChoiceRow.swift in Sources */,
 				BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */,
 				BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */,
+				BC460D9330A1945E0062F53F /* Conditions.swift in Sources */,
 				BC2B446A309AA14400720F0C /* CatalogPickerView.swift in Sources */,
 				BC2B447A309AC90400720F0C /* CreationRules.swift in Sources */,
 				BC2B445C309A4DE600720F0C /* MeritDetailView.swift in Sources */,
@@ -719,6 +738,7 @@
 				BCAFCCDC309EA90A00A5D9F1 /* SpecialtyTests.swift in Sources */,
 				BC2B4456309A457C00720F0C /* CatalogFormattingTests.swift in Sources */,
 				BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */,
+				BC460D9530A194F00062F53F /* ConditionTests.swift in Sources */,
 				BC2B447C309AC93B00720F0C /* CreationTests.swift in Sources */,
 				A1F143D41BC34BF6B184F400 /* SaveContractTests.swift in Sources */,
 				BC2B442C30997D2400720F0C /* CharacterTrackTests.swift in Sources */,
@@ -812,7 +832,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -871,7 +891,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -963,7 +983,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.RequiemCharacterSheetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -981,7 +1001,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.RequiemCharacterSheetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

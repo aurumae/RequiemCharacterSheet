@@ -97,21 +97,24 @@ struct SkillRowView: View {
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
             VStack(alignment: .leading, spacing: 4) {
-                // Skill Name
-                Button(action: {
-                    showingPicker = true
-                }) {
-                    Text(skill.name)
-                        .themedText(.label)
-                }
-                .buttonStyle(.plain)
-                .accessibilityHint("Double-tap to choose a rating")
-                .confirmationDialog("Set \(skill.name)", isPresented: $showingPicker, titleVisibility: .visible) {
-                    ForEach(Array(character.skillRatingRange.clamped(to: 0...maxEditableRating)), id: \.self) { value in
-                        Button("\(value)") {
-                            skill.rating = value
+                // Skill Name, and a mark if a Condition affects it
+                HStack(spacing: 4) {
+                    Button(action: {
+                        showingPicker = true
+                    }) {
+                        Text(skill.name)
+                            .themedText(.label)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityHint("Double-tap to choose a rating")
+                    .confirmationDialog("Set \(skill.name)", isPresented: $showingPicker, titleVisibility: .visible) {
+                        ForEach(Array(character.skillRatingRange.clamped(to: 0...maxEditableRating)), id: \.self) { value in
+                            Button("\(value)") {
+                                skill.rating = value
+                            }
                         }
                     }
+                    ConditionIndicator(character: character, target: .skill(skill.skillID), traitName: skill.name)
                 }
 
                 // Specialties, each tappable to edit

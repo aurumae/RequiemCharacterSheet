@@ -109,7 +109,7 @@ extension DisciplineDetailView {
     }
 
     private func fact(_ label: String, _ value: String) -> some View {
-        (Text("\(label): ").bold() + Text(value))
+        Text("\(Text("\(label): ").bold())\(value)")
             .themedText(.detail)
             .accessibilityLabel("\(label): \(value.spokenForVoiceOver)")
     }
@@ -188,7 +188,7 @@ private struct PowerRow: View {
     }
 
     private func detail(_ label: String, _ value: String) -> some View {
-        (Text("\(label): ").bold() + Text(value))
+        Text("\(Text("\(label): ").bold())\(value)")
             .themedText(.detail)
             .accessibilityLabel("\(label): \(value.spokenForVoiceOver)")
     }

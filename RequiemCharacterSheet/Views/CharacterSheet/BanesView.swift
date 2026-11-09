@@ -19,7 +19,7 @@ struct BanesView: View {
     @State private var addsCustomBaneOnDismiss = false
 
     var body: some View {
-        Section(header: Text("BANES").themedText(.sectionHeader)) {
+        SheetSectionBlock(.banes) {
             if let clan = character.clanEntry {
                 ClanBaneRow(
                     clan: clan,

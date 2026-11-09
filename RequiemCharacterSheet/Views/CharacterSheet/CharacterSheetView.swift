@@ -25,6 +25,15 @@ struct CharacterSheetView: View {
     /// Pickers and details opened from rows in the list, presented here; see `PresentSheetAction`.
     @State private var hostedSheet: HostedSheet?
     @State private var lastHostedSheet: HostedSheet?
+    /// The section being read, shown in the pill, and whether its list of sections is open.
+    @State private var currentSection: SheetSection? = .character
+    @State private var showingSectionMenu = false
+    @State private var sectionTracker = SheetSectionTracker()
+    /// A section chosen in the pill's list, scrolled to by the list.
+    @State private var sectionToShow: SheetSection?
+    /// The pill keeps a section jumped to until the player scrolls, even if the sheet can't scroll far enough
+    /// to bring its heading to the top, e.g. a short section at the end.
+    @State private var jumpedSection: SheetSection?
 
     var body: some View {
         BackgroundView {
@@ -46,7 +55,7 @@ struct CharacterSheetView: View {
                         CharacterInfoView(character: character)
                     
                         // ATTRIBUTES SECTION
-                        Section(header: Text("ATTRIBUTES").themedText(.sectionHeader)) {
+                        SheetSectionBlock(.attributes) {
                             // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
                             ForEach(TraitCategory.allCases, id: \.self) { category in
                                 Section(header: CategoryHeader(title: category.name, character: character, category: category, skills: false)) {
@@ -82,26 +91,26 @@ struct CharacterSheetView: View {
                         BanesView(character: character)
                     
                         // HEALTH SECTION
-                        Section(header: Text("HEALTH").themedText(.sectionHeader)) {
+                        SheetSectionBlock(.health) {
                             HealthView(character: character)
                         }
                     
                         // WILLPOWER SECTION
-                        Section(header: Text("WILLPOWER").themedText(.sectionHeader)) {
+                        SheetSectionBlock(.willpower) {
                             WillpowerView(character: character)
                         }
                     
                         // BLOOD POTENCY SECTION
-                        Section(header: Text("BLOOD POTENCY").themedText(.sectionHeader)) {
+                        SheetSectionBlock(.bloodPotency) {
                             BloodPotencyView(character: character)
                         }
                         // VITAE SECTION
-                        Section(header: Text("VITAE").themedText(.sectionHeader)) {
+                        SheetSectionBlock(.vitae) {
                             VitaeView(character: character)
                         }
                     
                         // HUMANITY SECTION
-                        Section(header: Text("HUMANITY").themedText(.sectionHeader)) {
+                        SheetSectionBlock(.humanity) {
                             HumanityView(character: character)
                         }
                     
@@ -110,8 +119,13 @@ struct CharacterSheetView: View {
 
                         // EXPERIENCE SECTION
                         ExperienceView(character: character)
+
+                        // CONDITIONS SECTION, last so swiping through its cards doesn't interrupt scrolling
+                        ConditionsView(character: character)
                     }
                     .listStyle(.grouped)
+                    // Headings are rows (see SheetSectionBlock); this keeps the gap above them as it was for headers
+                    .listSectionSpacing(15)
                     .background(Color.clear)
                     // Scrolling ends text editing
                     .scrollDismissesKeyboard(.immediately)
@@ -125,6 +139,28 @@ struct CharacterSheetView: View {
                             proxy.scrollTo(row.id, anchor: UnitPoint(x: 0.5, y: row.anchor))
                         }
                     })
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
+                        sectionTracker.listFrame = frame
+                    }
+                    .onScrollPhaseChange { _, phase in
+                        if phase == .interacting {
+                            jumpedSection = nil
+                        }
+                    }
+                    .environment(\.reportSectionHeading, ReportSectionHeadingAction { section, top in
+                        sectionTracker.update(section, top: top)
+                        guard jumpedSection == nil else { return }
+                        if let current = sectionTracker.currentSection(in: character.sheetSections), current != currentSection {
+                            currentSection = current
+                        }
+                    })
+                    .onChange(of: sectionToShow) { _, section in
+                        guard let section else { return }
+                        sectionToShow = nil
+                        withAnimation {
+                            proxy.scrollTo(section, anchor: .top)
+                        }
+                    }
                     .environment(\.presentSheet, PresentSheetAction { sheet in
                         lastHostedSheet = sheet
                         hostedSheet = sheet
@@ -138,6 +174,18 @@ struct CharacterSheetView: View {
             .padding(.horizontal)
             // Content sits inside the safe area (below the navigation bar); this keeps it clear of the bottom border
             .padding(.bottom, 26)
+        }
+        .overlay {
+            if showingSectionMenu {
+                SectionMenu(sections: character.sheetSections, current: currentSection) { section in
+                    showingSectionMenu = false
+                    currentSection = section
+                    jumpedSection = section
+                    sectionToShow = section
+                } close: {
+                    withAnimation(.snappy(duration: 0.2)) { showingSectionMenu = false }
+                }
+            }
         }
         .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
         .sheetHost($hostedSheet, lastPresented: $lastHostedSheet)
@@ -179,6 +227,11 @@ struct CharacterSheetView: View {
         // Let the parchment border show behind the navigation bar
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
+            // Jumps between the sheet's sections
+            ToolbarItem(placement: .topBarLeading) {
+                SectionPill(current: currentSection, isOpen: $showingSectionMenu)
+            }
+            .sharedBackgroundVisibility(.hidden)
             // Starting dots are free; XP Mode starts when creation is finished
             if !character.isInCreation {
                 ToolbarItem(placement: .topBarTrailing) {

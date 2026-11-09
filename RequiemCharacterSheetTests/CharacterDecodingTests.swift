@@ -105,11 +105,23 @@ struct CharacterDecodingTests {
         #expect(attributeRating("Strength", in: reloaded) == 4)
     }
 
-    @Test func saveRecordsCurrentSchemaVersion() throws {
+    @Test func saveWithoutConditionsStaysAtVersion10() throws {
         let data = try JSONEncoder().encode(Character())
         let json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
 
+        // So apps that can't read Conditions can still open it
+        #expect(json["schemaVersion"] as? Int == 10)
+        #expect(json["conditions"] == nil)
+    }
+
+    @Test func saveWithConditionsIsCurrentVersion() throws {
+        let character = Character()
+        character.addCondition(CharacterCondition(source: .catalog("swooning"), note: "Marcus Vale"))
+        let data = try JSONEncoder().encode(character)
+        let json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
         #expect(json["schemaVersion"] as? Int == Character.currentSchemaVersion)
+        #expect((json["conditions"] as? [Any])?.count == 1)
     }
 
     // MARK: - Helpers

@@ -9,22 +9,34 @@ import SwiftUI
 struct LabeledValueRow: View {
     let label: String
     let value: String
+    /// A trait active Conditions may affect, e.g. Defense, marked after the label.
+    var condition: (character: Character, target: ConditionTarget)?
 
-    init(_ label: String, value: Int) {
+    init(_ label: String, value: Int, condition: (character: Character, target: ConditionTarget)? = nil) {
         self.label = label
         self.value = "\(value)"
+        self.condition = condition
     }
 
     var body: some View {
         HStack {
             Text(label)
                 .themedText(.label)
+            if let condition {
+                ConditionIndicator(character: condition.character, target: condition.target,
+                                   traitName: label.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
+            }
             Spacer()
             Text(value)
                 .themedText(.label)
         }
         .padding(.vertical, 4)
-        .accessibilityElement(children: .combine)
+        // The mark is its own button, so the row can't be one element when it's there
+        .accessibilityElement(children: hasMark ? .contain : .combine)
+    }
+
+    private var hasMark: Bool {
+        condition.map { !$0.character.conditionEffects(on: $0.target).isEmpty } ?? false
     }
 }
 

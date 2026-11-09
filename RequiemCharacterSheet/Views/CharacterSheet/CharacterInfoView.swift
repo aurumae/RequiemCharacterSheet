@@ -12,7 +12,7 @@ struct CharacterInfoView: View {
     @Bindable var character: Character
 
     var body: some View {
-        Section(header: Text("CHARACTER").themedText(.sectionHeader)) {
+        SheetSectionBlock(.character) {
             CharacterInfoRowView(label: "Name:", text: $character.name)
             CharacterInfoRowView(label: "Player:", text: $character.player)
             CharacterInfoRowView(label: "Chronicle:", text: $character.chronicle)

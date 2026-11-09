@@ -12,7 +12,7 @@ struct SkillsView: View {
     let character: Character
 
     var body: some View {
-        Section(header: Text("SKILLS").themedText(.sectionHeader)) {
+        SheetSectionBlock(.skills) {
             // MENTAL, PHYSICAL and SOCIAL SKILLS
             ForEach(TraitCategory.allCases, id: \.self) { category in
                 Section(header: CategoryHeader(title: category.name, subtitle: "(\(category.unskilledPenalty) unskilled)",

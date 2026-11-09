@@ -214,7 +214,7 @@ struct CatalogDetailView<Extra: View>: View {
                                 .themedText(.body)
                         }
                         ForEach(facts) { fact in
-                            (Text("\(fact.label): ").bold() + Text(fact.value))
+                            Text("\(Text("\(fact.label): ").bold())\(fact.value)")
                                 .themedText(.detail)
                                 .accessibilityLabel("\(fact.label): \(fact.value.spokenForVoiceOver)")
                         }

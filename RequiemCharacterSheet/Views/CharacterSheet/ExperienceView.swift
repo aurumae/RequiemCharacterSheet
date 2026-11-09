@@ -12,7 +12,7 @@ struct ExperienceView: View {
     @State private var showingLog = false
 
     var body: some View {
-        Section(header: Text("EXPERIENCE").themedText(.sectionHeader)) {
+        SheetSectionBlock(.experience) {
             VStack(alignment: .leading, spacing: 2) {
                 Toggle(isOn: $character.xpMode) {
                     Text("XP Mode")

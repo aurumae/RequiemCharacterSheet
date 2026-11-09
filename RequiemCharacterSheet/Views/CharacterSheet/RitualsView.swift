@@ -16,7 +16,7 @@ struct RitualsView: View {
     @State private var customRitualDiscipline: CatalogEntryID?
 
     var body: some View {
-        Section(header: Text("RITUALS").themedText(.sectionHeader)) {
+        SheetSectionBlock(.rituals) {
             ForEach(groups, id: \.discipline) { group in
                 Section(header: Text(group.title).themedText(.subsectionHeader)) {
                     if let id = group.discipline.catalogID, character.disciplineRating(id) > 0 {

@@ -20,6 +20,16 @@ struct CategoryHeader: View {
             VStack(alignment: .leading) {
                 Text(title)
                     .themedText(.subsectionHeader)
+                    // A mark if a Condition affects the whole group, e.g. Broken's Social rolls. An overlay, just
+                    // after the title, so the heading's spacing is the same with or without it.
+                    .overlay(alignment: .trailing) {
+                        ConditionIndicator(
+                            character: character,
+                            target: skills ? .skillCategory(category) : .attributeCategory(category),
+                            traitName: "\(category.name) \(skills ? "Skills" : "Attributes")"
+                        )
+                        .alignmentGuide(.trailing) { $0[.leading] - 4 }
+                    }
                 if let subtitle {
                     Text(subtitle)
                         .themedText(.note)

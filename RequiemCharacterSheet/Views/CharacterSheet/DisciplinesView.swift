@@ -18,7 +18,7 @@ struct DisciplinesView: View {
     @State private var addsCustomDisciplineOnDismiss = false
 
     var body: some View {
-        Section(header: Text("DISCIPLINES").themedText(.sectionHeader)) {
+        SheetSectionBlock(.disciplines) {
             ForEach(character.disciplines) { discipline in
                 DisciplineRowView(discipline: discipline, character: character, beginsEditing: discipline.id == newCustomDisciplineID)
                     .editingRow(discipline.id)

@@ -71,8 +71,11 @@ extension View {
     /// Presents the sheets handed over by `hostedSheet` from views inside `content`'s list.
     func sheetHost(_ sheet: Binding<HostedSheet?>, lastPresented: Binding<HostedSheet?>) -> some View {
         self.sheet(item: sheet, onDismiss: {
-            lastPresented.wrappedValue?.onDismiss?()
+            // Cleared first, so an onDismiss that presents the next sheet (e.g. a picker opening the card it
+            // added) keeps that sheet's own onDismiss
+            let dismissed = lastPresented.wrappedValue
             lastPresented.wrappedValue = nil
+            dismissed?.onDismiss?()
         }) { sheet in
             sheet.content
         }

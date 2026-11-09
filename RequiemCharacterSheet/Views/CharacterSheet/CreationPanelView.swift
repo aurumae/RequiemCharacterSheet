@@ -20,7 +20,7 @@ struct CreationPanelView: View {
         let steps = character.creationSteps
         let doneCount = steps.filter { $0.status == .done }.count
 
-        Section(header: Text("CHARACTER CREATION").themedText(.sectionHeader)) {
+        SheetSectionBlock(.creation) {
             VStack(alignment: .leading, spacing: 6) {
                 Text("\(doneCount) of \(steps.count) steps done")
                     .themedText(.detail)

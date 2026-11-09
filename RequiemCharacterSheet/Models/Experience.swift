@@ -5,9 +5,10 @@
 
 import Foundation
 
-/// The kinds of trait that cost Experiences to raise.
+/// The kinds of trait that cost Experiences to raise, and Conditions, which are logged but cost nothing.
 enum TraitKind: String, Codable, CaseIterable {
     case attribute, skill, specialty, discipline, merit, coil, ritual, devotion, scale, humanity, bloodPotency
+    case condition
 
     /// Lowering a paid trait with XP Mode on refunds its Experiences, as for a mistake. Humanity and
     /// Blood Potency fall in play (breaking points, torpor), so losing them never refunds.
@@ -97,6 +98,10 @@ struct TraitChange: Identifiable, Codable, Equatable {
     let xpMode: Bool
     /// Made during guided creation, with the starting dots. Not saved before version 9.
     var duringCreation: Bool? = nil
+    /// For a Condition: what happened to it. Not saved before version 11.
+    var event: ConditionEvent? = nil
+    /// Beats gained, e.g. 1 for resolving a Condition. Not saved before version 11.
+    var beats: Int? = nil
 }
 
 /// Every trait's rating at one moment, and its name, so a deleted trait can still be named in the log.
@@ -108,6 +113,14 @@ struct TraitSnapshot: Equatable {
 extension TraitChange {
     /// What changed, e.g. "1 → 3", "Learned", or "Cost 1 → 3" for a custom Devotion.
     var changeText: String {
+        if let event {
+            switch event {
+            case .added: return "Added"
+            case .ended: return "Ended"
+            case .resolved: return "Resolved"
+            case .beat: return "Beat"
+            }
+        }
         switch trait.kind {
         case .ritual, .scale:
             return to > from ? "Learned" : "Removed"
@@ -122,6 +135,9 @@ extension TraitChange {
 
     /// What it cost, e.g. "Spent 8", "Refunded 4", "Creation", "Free" (XP Mode off) or "No cost".
     var costText: String {
+        if trait.kind == .condition {
+            return beats.map { $0 == 1 ? "+1 Beat" : "+\($0) Beats" } ?? ""
+        }
         if duringCreation == true { return "Creation" }
         if experiences > 0 { return "Spent \(experiences)" }
         if experiences < 0 { return "Refunded \(-experiences)" }
@@ -133,7 +149,10 @@ extension Character {
     /// The name to show for a log entry: the trait's current name if it's still on the sheet (a custom
     /// trait may have been named after it was added), otherwise its name when it changed.
     func displayName(for change: TraitChange) -> String {
-        let current = traitSnapshot.names[change.trait] ?? ""
+        // A Condition is named as it is now, or as it was when it ended, e.g. with the note typed after adding it
+        let current = condition(for: change).map(logName)
+            ?? (change.trait.kind == .condition ? changeLog.last { $0.trait == change.trait }?.name : nil)
+            ?? traitSnapshot.names[change.trait] ?? ""
         let name = current.isEmpty ? change.name : current
         return name.isEmpty ? "Unnamed \(change.trait.kind.displayName)" : name
     }
@@ -153,6 +172,7 @@ extension TraitKind {
         case .scale: return "Scale"
         case .humanity: return "Humanity"
         case .bloodPotency: return "Blood Potency"
+        case .condition: return "Condition"
         }
     }
 }

@@ -17,7 +17,7 @@ struct CoilsView: View {
     @State private var addsCustomScaleOnDismiss = false
 
     var body: some View {
-        Section(header: Text("COILS OF THE DRAGON").themedText(.sectionHeader)) {
+        SheetSectionBlock(.coils) {
             mysteryRow
 
             ForEach(character.coils) { coil in

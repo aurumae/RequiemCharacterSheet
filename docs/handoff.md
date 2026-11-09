@@ -294,3 +294,69 @@ makes sense.
 - **Two iOS-only bug fixes:**
   - The Specialty prompt and every sheet opened from a row are now presented from outside the sheet's list.
   - They used to close by themselves, or get stuck so that taps did nothing. Check whether Android's dialogs can be lost the same way when a lazy row leaves composition.
+
+## 2026-11-09 16:16 UTC · Claude (iOS) · Conditions, save schema 11, section pill, iOS 26 minimum
+
+This is a big one, and much of it is shared. **Follow-up:** please port it to Android; the save format part matters most.
+
+**Save format: schema 11, written only when needed** (`Character.savedSchemaVersion`)
+- A character is saved as **11 only if it has Conditions, or Condition entries in `changeLog`**. Every other
+  character is still saved as 10, byte for byte, with no `conditions` key. Today's Android therefore keeps
+  opening those files, and refuses files that have Conditions with its "newer version" message, which is
+  correct: they can't be read without losing data. When you add schema 11, do the same: write the lowest
+  version the content needs.
+- New top-level `conditions`: an array, written only when it isn't empty. Each element has:
+  - `id` (UUID), `source` (TraitSource), `note` (string), `counter` (int, 0 if unused) and `addedAt` (date).
+  - For custom Conditions only, also `customEffect`, `customResolution`, `customBeat` and `customPersistent`.
+- **The change log gains a `condition` kind.** The trait key is `"condition:<catalog id or custom>/<UUID>"`. Entries
+  add optional `event` (`added`, `ended`, `resolved` or `beat`) and `beats` (int, set when Beats were gained).
+  - `experiences` is always 0.
+  - from/to are 0→1 for added, 1→0 for ended and resolved, and 1→1 for beat.
+  - These entries are not in the trait snapshot and never cost or refund XP.
+- **Fixtures:** I added `shared/fixtures/characters/v11-conditions.json`, which is the same as v10-advanced plus Conditions and log entries;
+  Swift lists it in `SaveContractTests.current`. I also added `v12-future.json`; Swift's store-boundary test now uses it,
+  because iOS reads 11. I **left `v11-future.json` in place** for your tests; switch to v12 when you support 11.
+  `catalog-ids.json` in the exchange doesn't list Conditions yet, so add them if you compare.
+
+**Rules** (`Models/Conditions.swift`; tests in `ConditionTests`)
+- `addCondition` logs `added`. A Condition with `counter: true` starts at 1.
+- `endCondition` removes it with no Beat.
+- `resolveCondition` removes it and gives a Beat unless `beatOnResolve` is false (Distracted, Stumbled).
+- `takeBeat` gives a Beat and keeps the Condition. Beats go through the existing `incrementBeats` (5 Beats → 1 Experience).
+- `canAdd`: a Condition already on the sheet can be added again only if it's `repeatable`.
+- `recentConditionIDs`: the newest five catalog ids from `added` log entries.
+- `conditionEffects(on:)` feeds the indicators.
+- A log entry's display name follows the live Condition, so the note typed after adding shows up. Once the Condition is
+  gone, it uses the name from that Condition's last entry.
+
+**Catalog (shared)**
+- `vtr2e-core.json` has a `conditions` array: the 44 core Conditions, pp. 301–307, in our own words. The user
+  supplied the appendix, and it wins over the card PDF; for example, Intoxicated is only in the book.
+- `cofd-core.json` gains only the 11 Conditions Requiem doesn't have: Blind, Bonded, Connected, Crippled,
+  Embarrassing Secret, Informed, Leveraged, Lost, Madness, Mute and Notoriety, pp. 288–290. CofD's versions of
+  Requiem ones (Broken, Obsession, Swooned…) are deliberately left out, so each appears once, as Requiem's.
+- Fields:
+  - `persistent`, `summary` (effect), `resolution`, `beat` (null = n/a) and `possibleSources`.
+  - `beatOnResolve` (default true), `repeatable` (default false), `notePrompt` (e.g. "For", "By"; null = "Note")
+    and `counter` (default false).
+  - `affects: [{targets, text}]`, where a target is one of `attribute:<kind>`, `skill:<id>`,
+    `attributeCategory:<mental|physical|social>`, `skillCategory:<…>` or `defense`. Skip unknown targets.
+
+**UI on iOS**
+- **Conditions section:** the very last section, so swiping sideways never interrupts the vertical scroll.
+  - Its carousel has equal-height compact cards with "Tap for the full card", "2 of 4 · swipe for more", and "4 of 4" on the last card.
+  - **Full card:** the name in a red band with a PERSISTENT tag, a note field, and a penalty stepper for counter Conditions.
+    Then the effect, Resolution, and Beat with a Beat button beside it, followed by possible sources and the citation. End and
+    Resolve ("Resolve · +1 Beat" when it gives one) sit at the bottom.
+  - Custom Conditions have editable name, effect, resolution, Beat and persistent fields.
+  - **Add Condition:** opens a picker with "Recently Used", then each book in catalog order (Requiem first), then Custom
+    Condition. Choosing one adds it and then opens its card.
+- **Indicators:** a vampire-red dot with a white "c" after any Attribute, Skill, category heading or Defense row an active Condition
+  affects. It's laid out at 16pt so rows don't grow, with a 44pt tap target. Tapping it opens a popover of effects, each of which opens its card.
+  The user asked for a plain dot rather than a blood drop, because other splats will have their own colours.
+- **Section pill:** a vampire-red pill (Cinzel, white) in the navigation bar names the section being read. Tapping it opens a list of
+  sections, with the current one filled red, and choosing one jumps there.
+  - Each section heading is now the section's **first row**, because Lists can't scroll to headers. It looks the same as before.
+  - The pill keeps a jumped-to section until the user scrolls.
+- iOS 26 is now the minimum (`IPHONEOS_DEPLOYMENT_TARGET`), to hide the toolbar's glass bubble behind the pill.
+- Tilts are not Conditions; the user wants them on a possible future combat screen, if at all.

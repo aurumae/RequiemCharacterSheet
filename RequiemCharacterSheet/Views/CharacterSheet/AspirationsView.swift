@@ -14,7 +14,7 @@ struct AspirationsView: View {
     @State private var newAspirationID: UUID?
 
     var body: some View {
-        Section(header: Text("ASPIRATIONS").themedText(.sectionHeader)) {
+        SheetSectionBlock(.aspirations) {
             ForEach(character.aspirations) { aspiration in
                 AspirationRowView(aspiration: aspiration, beginsEditing: aspiration.id == newAspirationID)
                     .editingRow(aspiration.id)

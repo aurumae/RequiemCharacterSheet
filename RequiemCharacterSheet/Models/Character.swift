@@ -24,7 +24,15 @@ final class Character: Codable {
     /// - 8: adds `xpMode`, `changeLog` and `paidDots`.
     /// - 9: adds `creation`.
     /// - 10: bloodline saved as a catalog id or custom text (`TraitSource`) instead of a name.
-    static let currentSchemaVersion = 10
+    /// - 11: adds `conditions`, and Condition entries in `changeLog`. Only characters with either are saved
+    ///   as 11; others are still saved as 10, so apps that can't read Conditions can still open them.
+    static let currentSchemaVersion = 11
+
+    /// The version this character needs: 11 only with Conditions, so that older apps refuse such a file
+    /// instead of opening it and dropping its Conditions.
+    var savedSchemaVersion: Int {
+        !conditions.isEmpty || changeLog.contains { $0.trait.kind == .condition } ? 11 : 10
+    }
 
     /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
     static let maxBanes = 3
@@ -123,6 +131,8 @@ final class Character: Codable {
     var paidDots: [TraitKey: [Int: Int]]
     /// Set while the character is being made with guided creation.
     var creation: CreationState?
+    /// Active Conditions, in the order they were added.
+    var conditions: [CharacterCondition]
 
     enum CodingKeys: CodingKey {
         case schemaVersion, id, createdAt, modifiedAt,
@@ -130,7 +140,7 @@ final class Character: Codable {
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
              currentVitae, humanity, clanBaneActive, touchstones, disciplines, merits,
              rituals, devotions, mystery, coils, scales, aspirations, banes, size, armor, beats, experiences,
-             xpMode, changeLog, paidDots, creation
+             xpMode, changeLog, paidDots, creation, conditions
         // Read from saves before version 3 only
         case healthBoxes, willpowerBoxes
     }
@@ -138,7 +148,7 @@ final class Character: Codable {
     // Encoding
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(Character.currentSchemaVersion, forKey: .schemaVersion)
+        try container.encode(savedSchemaVersion, forKey: .schemaVersion)
         try container.encode(id, forKey: .id)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(modifiedAt, forKey: .modifiedAt)
@@ -187,6 +197,10 @@ final class Character: Codable {
         try container.encode(changeLog, forKey: .changeLog)
         try container.encode(paidDots, forKey: .paidDots)
         try container.encodeIfPresent(creation, forKey: .creation)
+        // Not written without Conditions, so such files are unchanged from version 10
+        if !conditions.isEmpty {
+            try container.encode(conditions, forKey: .conditions)
+        }
     }
 
     // Decoding. Every field falls back to its default when missing, so saves written
@@ -260,6 +274,7 @@ final class Character: Codable {
         changeLog = try container.decode(.changeLog, default: [])
         paidDots = try container.decode(.paidDots, default: [:])
         creation = try container.decodeIfPresent(CreationState.self, forKey: .creation)
+        conditions = try container.decode(.conditions, default: [])
 
         // Bring loaded values within the limits set by Blood Potency
         clampBaseRatings()
@@ -318,6 +333,7 @@ final class Character: Codable {
         changeLog = []
         paidDots = [:]
         creation = nil
+        conditions = []
     }
 
     // MARK: - Defaults

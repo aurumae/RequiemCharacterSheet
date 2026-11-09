@@ -5283,5 +5283,700 @@
       "singleWillpower": "Help someone by sharing your vision with them.",
       "allWillpower": "Put yourself at risk to show a group the power of your vision."
     }
+  ],
+  "conditions": [
+    {
+      "id": "addicted",
+      "name": "Addicted",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 301
+      },
+      "persistent": true,
+      "summary": "Hooked on something: a drug, gambling, Vitae or another habit that slowly takes over your life. You have to indulge it regularly to keep it in check; going without can bring on Deprived. Choose the addiction when you take this.",
+      "resolution": "Regain a dot of Integrity, lose another one, or get an exceptional success on a breaking point.",
+      "beat": "You choose a fix over an obligation.",
+      "possibleSources": "Alcoholism, substance abuse, Vitae addiction",
+      "repeatable": true,
+      "notePrompt": "Addicted to"
+    },
+    {
+      "id": "amnesia",
+      "name": "Amnesia",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 301
+      },
+      "persistent": true,
+      "summary": "A whole stretch of your life is missing from your memory, which causes no end of trouble with the people who knew you then.",
+      "resolution": "You get the memory back and learn the truth. The Storyteller may make that a breaking point.",
+      "beat": "Something you forgot comes back to cause trouble, like an old warrant or enemy.",
+      "possibleSources": "Physical or psychological trauma, Dominate"
+    },
+    {
+      "id": "bestial",
+      "name": "Bestial",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 301
+      },
+      "persistent": false,
+      "summary": "You act on primal impulse: you run from what scares you and answer aggression with violence. −2 to rolls to resist frenzy or physical impulses and −2 to Defense. Rolls to push you into impulsive aggression or flight are exceptional successes on three successes. It fades after a number of nights equal to the Blood Potency of the vampire who caused it, and can't return for a month after it ends.",
+      "resolution": "Deal damage into someone's last three Health boxes.",
+      "beat": null,
+      "possibleSources": "A monstrous predatory aura conflict, a breaking point",
+      "affects": [
+        {
+          "targets": [
+            "defense"
+          ],
+          "text": "Bestial: −2 to Defense"
+        }
+      ]
+    },
+    {
+      "id": "broken",
+      "name": "Broken",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 301
+      },
+      "persistent": true,
+      "summary": "Something in you snapped. You can barely function and flinch from anything more intense than a raised voice. −2 to all Social rolls and to rolls involving Resolve, and −5 to Intimidation.",
+      "resolution": "Regain a dot of Integrity, lose another one, or get an exceptional success on a breaking point.",
+      "beat": "You back down from a confrontation, or fail a roll because of this Condition.",
+      "possibleSources": "Severe psychological trauma, Nightmare, some Ghoul Merits",
+      "affects": [
+        {
+          "targets": [
+            "attributeCategory:social",
+            "skillCategory:social"
+          ],
+          "text": "Broken: −2 to Social rolls"
+        },
+        {
+          "targets": [
+            "attribute:resolve"
+          ],
+          "text": "Broken: −2 to rolls involving Resolve"
+        },
+        {
+          "targets": [
+            "skill:intimidation"
+          ],
+          "text": "Broken: −5 to Intimidation"
+        }
+      ]
+    },
+    {
+      "id": "charmed",
+      "name": "Charmed",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 301
+      },
+      "persistent": true,
+      "summary": "A vampire's Majesty has won you over. She adds her Majesty dots to Manipulation rolls against you, and your rolls to see through her lies or motives lose that many dice; supernatural attempts to read her become a Clash of Wills. You want to please her and will do her favours. It wears off by itself, without being resolved, after an hour per dot of her Blood Potency.",
+      "resolution": "She tries to seriously harm you or someone close to you, or you make a significant financial or physical sacrifice for her.",
+      "beat": "You reveal a secret to her or do her a favour.",
+      "possibleSources": "Majesty",
+      "notePrompt": "By"
+    },
+    {
+      "id": "competitive",
+      "name": "Competitive",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": false,
+      "summary": "You have to prove you're better. In direct competition, including contested and extended rolls, you take −2 on any roll where you don't spend Willpower. Rolls to goad you into competing are exceptional successes on three successes. It fades after a number of nights equal to the Blood Potency of the vampire who caused it, and can't return for a month after it ends.",
+      "resolution": "Win or lose a competition in which someone reaches a breaking point.",
+      "beat": null,
+      "possibleSources": "A challenging predatory aura conflict, a breaking point"
+    },
+    {
+      "id": "confused",
+      "name": "Confused",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": false,
+      "summary": "You can't think straight. −2 to Intelligence and Wits rolls.",
+      "resolution": "Spend half an hour clearing your head, or take any lethal damage.",
+      "beat": null,
+      "possibleSources": "A blow to the head, dramatic failure with some Auspex powers",
+      "affects": [
+        {
+          "targets": [
+            "attribute:intelligence",
+            "attribute:wits"
+          ],
+          "text": "Confused: −2 to Intelligence and Wits rolls"
+        }
+      ]
+    },
+    {
+      "id": "delusional",
+      "name": "Delusional",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": true,
+      "summary": "You believe something untrue, like someone poisoning your food or a double replacing a loved one. You don't see things that aren't there, but you can't shake the belief; spending a Willpower lets you explain why it doesn't apply this once, however mad that sounds.",
+      "resolution": "Disprove the delusion completely, or destroy the vampire behind it.",
+      "beat": "You hold to the belief despite evidence against it.",
+      "possibleSources": "Nightmare"
+    },
+    {
+      "id": "dependent",
+      "name": "Dependent",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": true,
+      "summary": "You're obsessed with a mortal, for their attention and their blood, and suffer the effects of a second-stage blood bond to them.",
+      "resolution": "The mortal dies.",
+      "beat": "You suffer a loss because you dodged responsibility for the obsession.",
+      "possibleSources": "Daeva clan bane",
+      "notePrompt": "On"
+    },
+    {
+      "id": "deprived",
+      "name": "Deprived",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": false,
+      "summary": "You're addicted and can't get a fix, leaving you irritable, anxious and unfocused. −1 to dice pools using Stamina, Resolve or Composure. Traits worked out from them, like Defense, aren't affected.",
+      "resolution": "Indulge the addiction.",
+      "beat": null,
+      "possibleSources": "Being Addicted without a fix",
+      "affects": [
+        {
+          "targets": [
+            "attribute:stamina",
+            "attribute:resolve",
+            "attribute:composure"
+          ],
+          "text": "Deprived: −1 to dice pools using Stamina, Resolve or Composure"
+        }
+      ]
+    },
+    {
+      "id": "distracted",
+      "name": "Distracted",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": false,
+      "summary": "Confusion and distractions surround you. You can't take extended actions, and take −2 to rolls involving perception, concentration or precision. Resolving this gives no Beat.",
+      "resolution": "Leave the swarm.",
+      "beat": null,
+      "possibleSources": "Being in a swarm",
+      "beatOnResolve": false
+    },
+    {
+      "id": "dominated",
+      "name": "Dominated",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 302
+      },
+      "persistent": false,
+      "summary": "A vampire has given you a command you can't disobey. A task with a natural end resolves this when it's done; otherwise it ends at sunrise. Afterwards you can't quite remember what you did under her spell.",
+      "resolution": "Take more bashing or lethal damage than your Stamina; face a breaking point while obeying and succeed at its Resolve + Composure roll; or carry out the command.",
+      "beat": null,
+      "possibleSources": "Dominate",
+      "notePrompt": "By"
+    },
+    {
+      "id": "drained",
+      "name": "Drained",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 303
+      },
+      "persistent": false,
+      "summary": "You've lost a lot of blood to a vampire. −2 to physical actions and to rolls to stabilise or survive injuries. After any scene of physical exertion, including taking damage, being fed from or spending Willpower on a physical roll, roll Stamina (with wound penalties, but not this one) or pass out for an hour or more.",
+      "resolution": "All your lethal damage heals naturally.",
+      "beat": null,
+      "possibleSources": "A vampire's feeding",
+      "affects": [
+        {
+          "targets": [
+            "attributeCategory:physical",
+            "skillCategory:physical"
+          ],
+          "text": "Drained: −2 to physical actions"
+        }
+      ]
+    },
+    {
+      "id": "ecstatic",
+      "name": "Ecstatic",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 303
+      },
+      "persistent": false,
+      "summary": "Blood sorcery has quieted your Beast for now. You feed as though your Blood Potency were three lower (at least 1), and get +2 to avoid frenzy.",
+      "resolution": "Feed, sleep, or resist a frenzy.",
+      "beat": null,
+      "possibleSources": "Exceptional success on a Crúac ritual"
+    },
+    {
+      "id": "enervated",
+      "name": "Enervated",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 303
+      },
+      "persistent": true,
+      "summary": "The second stage of soul loss: your Integrity is gone and your Willpower is fading. Besides Soulless's effects, you regain Willpower only through your Vice, and each time you do, your permanent Willpower drops a dot before you refill to the new maximum.",
+      "resolution": "Regain your soul.",
+      "beat": "Lose a dot of permanent Willpower.",
+      "possibleSources": "Soul loss"
+    },
+    {
+      "id": "enslaved",
+      "name": "Enslaved",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 303
+      },
+      "persistent": true,
+      "summary": "You're wholly in a vampire's thrall. You can't tell her requests from her Dominate commands; you do what she says and remember what she tells you to. This counts as Mesmerized for Dominate, she only needs you to hear her voice, and your Resolve doesn't penalise her Entombed Command or Possession.",
+      "resolution": "Kill the vampire controlling you, or break her control by supernatural means.",
+      "beat": "You're made to do something you wouldn't normally do.",
+      "possibleSources": "Dominate",
+      "notePrompt": "By"
+    },
+    {
+      "id": "enthralled",
+      "name": "Enthralled",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 303
+      },
+      "persistent": true,
+      "summary": "You're fanatically loyal to a vampire and will put your own life at risk for him, for a night per dot of his Blood Potency. Acting against his commands costs a Willpower and is a breaking point at Humanity 1; fail it and you back out at the last moment.",
+      "resolution": "Take more lethal damage than your Stamina protecting him, or succeed at a breaking point roll caused by this Condition.",
+      "beat": "You put yourself in harm's way to protect him.",
+      "possibleSources": "Majesty",
+      "notePrompt": "To"
+    },
+    {
+      "id": "false-memories",
+      "name": "False Memories",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 303
+      },
+      "persistent": true,
+      "summary": "You remember things that never happened, and believe them even against strong proof. Being shown that a memory is false is a breaking point at a level the Storyteller sets.",
+      "resolution": "Face proof that the memory is false and succeed at the breaking point.",
+      "beat": "You trust someone, or take a risk, based only on the false memories.",
+      "possibleSources": "Dominate"
+    },
+    {
+      "id": "frightened",
+      "name": "Frightened",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "Terror has driven out reason: you have to get away from what scared you right now, abandoning belongings and allies, and fight past anyone who stops you. You can't approach or act against the source; if the only way out is past it, you collapse in terror. Vampires and others prone to losing control roll to avoid frenzy. Lasts until the end of the scene; a Willpower holds it off for a turn.",
+      "resolution": "Escape from the source of your fear.",
+      "beat": null,
+      "possibleSources": "Nightmare, coming face to face with a phobia"
+    },
+    {
+      "id": "fugue",
+      "name": "Fugue",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": true,
+      "summary": "Your mind blocks out something terrible, leaving you prone to blackouts and lost time. When things get too much like what caused it, roll Resolve + Composure; on a failure the Storyteller plays your character for the next scene, who tries to avoid the conflict and get away.",
+      "resolution": "Regain a dot of Integrity, lose another one, or get an exceptional success on a breaking point.",
+      "beat": "You go into a fugue as described.",
+      "possibleSources": "Psychological trauma, a breaking point, some Ghoul Merits"
+    },
+    {
+      "id": "guilty",
+      "name": "Guilty",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "You're consumed by guilt and remorse, often after a successful detachment roll. −2 to Resolve or Composure rolls to defend against Subterfuge, Empathy or Intimidation.",
+      "resolution": "Confess your crimes and make amends for what you did.",
+      "beat": null,
+      "possibleSources": "A breaking point, some Ghoul Merits"
+    },
+    {
+      "id": "humbled",
+      "name": "Humbled",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "You've felt the touch of the divine and feel unworthy and wretched. −2 to Resolve rolls, and you can't regain Willpower from your Requiem.",
+      "resolution": "Regain Willpower through your Mask.",
+      "beat": null,
+      "possibleSources": "Dramatic failure on a Theban Sorcery ritual",
+      "affects": [
+        {
+          "targets": [
+            "attribute:resolve"
+          ],
+          "text": "Humbled: −2 to Resolve rolls"
+        }
+      ]
+    },
+    {
+      "id": "inspired",
+      "name": "Inspired",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "You're deeply inspired. On an action to do with the inspiration you can resolve this: that roll is an exceptional success on three successes, and you regain a Willpower.",
+      "resolution": "Use the inspiration on a roll, as described.",
+      "beat": null,
+      "possibleSources": "Exceptional success with Crafts or Expression, the Inspiring Merit, Auspex"
+    },
+    {
+      "id": "intoxicated",
+      "name": "Intoxicated",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "Drunk, drugged or otherwise dulled to the world: not seeing things, but with lowered inhibitions and slower reactions. −2 to Dexterity and Wits dice pools, and anyone using Social maneuvering on you needs two fewer Doors.",
+      "resolution": "Sleep it off, or face a breaking point.",
+      "beat": null,
+      "possibleSources": "Heavy drinking or drug use",
+      "affects": [
+        {
+          "targets": [
+            "attribute:dexterity",
+            "attribute:wits"
+          ],
+          "text": "Intoxicated: −2 to Dexterity and Wits dice pools"
+        }
+      ]
+    },
+    {
+      "id": "jaded",
+      "name": "Jaded",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "You've lost interest in the living and act only for yourself, and the Beast's grip tightens. Your Humanity caps rolls to resist frenzy, and you can't spend Willpower to hold off frenzy, though you can still ride the wave.",
+      "resolution": "A meaningful interaction with a Touchstone.",
+      "beat": null,
+      "possibleSources": "Failing a detachment roll"
+    },
+    {
+      "id": "languid",
+      "name": "Languid",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 304
+      },
+      "persistent": false,
+      "summary": "Torpor calls to you. You take a cumulative −1 to all actions for each night you've had this, and rising from daysleep costs a Vitae per dot of Blood Potency.",
+      "resolution": "Fall into torpor.",
+      "beat": null,
+      "possibleSources": "Losing a Touchstone",
+      "counter": true
+    },
+    {
+      "id": "lethargic",
+      "name": "Lethargic",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "You're fighting daysleep. You can't spend Willpower, and take a cumulative −1 to all actions for every six hours you stay awake. Every six hours, roll Stamina + Resolve (with the penalty) or sleep until the next sunset.",
+      "resolution": "Sleep a full day.",
+      "beat": null,
+      "possibleSources": "Fighting daysleep",
+      "counter": true
+    },
+    {
+      "id": "mesmerized",
+      "name": "Mesmerized",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "Your will bows to a vampire's. You seem a little quiet but otherwise normal, and can't resist her commands; doing something out of character makes you look hypnotised or sleepwalking. If you resolve this, you get +3 to resist being Mesmerized again that scene, and remember little of what happened. It fades after a scene, which doesn't count as resolving it.",
+      "resolution": "Take any bashing or lethal damage, or face a breaking point as part of a command.",
+      "beat": null,
+      "possibleSources": "Dominate",
+      "notePrompt": "By"
+    },
+    {
+      "id": "obsession",
+      "name": "Obsession",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": true,
+      "summary": "Something is on your mind and you can't let it go. 9-again on rolls to pursue it, and no 10-again on rolls that have nothing to do with it. With the Storyteller's approval it can be temporary.",
+      "resolution": "Let go of the fixation.",
+      "beat": "You fail an obligation because you were pursuing the obsession.",
+      "possibleSources": "Acute Senses",
+      "notePrompt": "With"
+    },
+    {
+      "id": "raptured",
+      "name": "Raptured",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "The fire of Longinus's words puts you in unsettling harmony with your Beast. Riding the wave costs no Willpower and succeeds on three successes instead of five.",
+      "resolution": "Fall to frenzy or ride the wave.",
+      "beat": null,
+      "possibleSources": "The Anointed Merit"
+    },
+    {
+      "id": "sated",
+      "name": "Sated",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "You gave your Beast an outlet that kept it from frenzy. +1 to rolls to resist frenzy until this is resolved.",
+      "resolution": "Frenzy, or resist a significant provocation to frenzy (−3 or worse to resist).",
+      "beat": null,
+      "possibleSources": "Animalism"
+    },
+    {
+      "id": "scarred",
+      "name": "Scarred",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "A vampire bit you violently, leaving you disturbed, angry, paranoid and quick to lash out. −2 to rolls to resist fear, such as from Nightmare or Intimidation, and a creature with a predatory aura gets +2 to frighten or intimidate you.",
+      "resolution": "Lash out physically, dealing three or more lethal damage to someone.",
+      "beat": null,
+      "possibleSources": "A violent bite from a vampire"
+    },
+    {
+      "id": "shaken",
+      "name": "Shaken",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "Something has badly frightened you. When that fear could get in the way of an action, you may choose to fail the roll and resolve this.",
+      "resolution": "Give in to the fear and fail a roll, as described.",
+      "beat": null,
+      "possibleSources": "A breaking point, Auspex"
+    },
+    {
+      "id": "soulless",
+      "name": "Soulless",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 306
+      },
+      "persistent": true,
+      "summary": "The first stage of soul loss. You can't attempt abjuration, warding or binding, and rolls to resist possession are at −2. You don't regain Willpower from surrender or rest, and Virtue and Vice swap roles: fulfil your Virtue safely for a Willpower once a scene, or your Vice at risk to yourself once a chapter for all of it. Regaining Willpower through your Vice is a breaking point at −5 unless you're at Integrity 1; for a vampire, at Humanity 2.",
+      "resolution": "Regain your soul.",
+      "beat": "You lose Integrity because you indulged your Vice.",
+      "possibleSources": "Soul loss"
+    },
+    {
+      "id": "spooked",
+      "name": "Spooked",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 305
+      },
+      "persistent": false,
+      "summary": "You've seen something supernatural: not enough to terrify you, but unmistakably otherworldly. How you react is up to you, but it holds your attention.",
+      "resolution": "Your fear and fascination make you hinder the group or complicate things, like investigating a noise alone, staying up all night researching, or running instead of standing firm.",
+      "beat": null,
+      "possibleSources": "The Unseen Sense Merit, the Wet Dream Devotion"
+    },
+    {
+      "id": "steadfast",
+      "name": "Steadfast",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "You're confident and resolved. When you fail a roll, you can resolve this to count it as a single success; on a chance die, resolve it to roll a regular die instead.",
+      "resolution": "Your confidence carries you through, as described.",
+      "beat": null,
+      "possibleSources": "A breaking point"
+    },
+    {
+      "id": "stumbled",
+      "name": "Stumbled",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "You've hit a complication in a blood sorcery ritual: each further roll in the extended action is at −3. Resolving this gives no Beat.",
+      "resolution": "The ritual ends.",
+      "beat": null,
+      "possibleSources": "Dramatic failure on a blood sorcery ritual",
+      "beatOnResolve": false
+    },
+    {
+      "id": "subservient",
+      "name": "Subservient",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 306
+      },
+      "persistent": true,
+      "summary": "A vampire has worn down your will. She can command you as though you were Mesmerized even when you aren't; you can spend a Willpower to resist, but she can then Mesmerize you properly. She still needs Dominate to change your memories. It fades after a week unless she renews it.",
+      "resolution": "Take more lethal damage than your Stamina following her command, or face a breaking point while following it and succeed at the roll.",
+      "beat": "She makes you do something you wouldn't normally do.",
+      "possibleSources": "Dominate",
+      "notePrompt": "To"
+    },
+    {
+      "id": "swooning",
+      "name": "Swooning",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "You're attracted to someone and vulnerable to them. −2 to rolls that would harm them; they get +2 on Social rolls against you, and their impression of you counts one level better in Social maneuvering (at most perfect). You can have this more than once, for different people.",
+      "resolution": "Put yourself in danger for them, or choose to fail a roll to resist their Social action.",
+      "beat": null,
+      "possibleSources": "An exceptional Persuasion or Subterfuge success against you, dramatic failure with Majesty, being fed on gently, help with your Vice (mortals)",
+      "repeatable": true,
+      "notePrompt": "For"
+    },
+    {
+      "id": "tainted",
+      "name": "Tainted",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "You committed diablerie and traces of your victim's soul remain. Once a chapter they can haunt you, taking their Blood Potency in dice from one of your dice pools or adding it to a pool against you. You can have this more than once, one for each victim.",
+      "resolution": "Months equal to the victim's Blood Potency pass; each aggravated damage you take shortens that by a month.",
+      "beat": null,
+      "possibleSources": "Diablerie",
+      "repeatable": true,
+      "notePrompt": "Victim"
+    },
+    {
+      "id": "tasked",
+      "name": "Tasked",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "Your clan, covenant or family has given you a duty that carries weight. 8-again on rolls toward the task, and no 10-again on rolls that aren't.",
+      "resolution": "Complete the task, or fail it.",
+      "beat": null,
+      "possibleSources": "The Dynasty Membership Merit",
+      "notePrompt": "Task"
+    },
+    {
+      "id": "tempted",
+      "name": "Tempted",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "You refused the Beast, but it stays near the surface. −1 to rolls to resist frenzy, worse by one each time you resist again, e.g. \"Tempted −3\" after three resistances.",
+      "resolution": "Kill, fall to frenzy, or have a meaningful connection with a Touchstone.",
+      "beat": null,
+      "possibleSources": "Successfully resisting frenzy",
+      "counter": true
+    },
+    {
+      "id": "thrall",
+      "name": "Thrall",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 307
+      },
+      "persistent": true,
+      "summary": "You've fully succumbed to soullessness. You can't spend Willpower or Experiences, can't use Defense, and suffer all the effects of Broken. Only keep playing the character if there's a chance of regaining the soul.",
+      "resolution": "Regain your soul.",
+      "beat": "You're victimised because of this Condition.",
+      "possibleSources": "Soul loss",
+      "affects": [
+        {
+          "targets": [
+            "defense"
+          ],
+          "text": "Thrall: no Defense"
+        },
+        {
+          "targets": [
+            "attributeCategory:social",
+            "skillCategory:social"
+          ],
+          "text": "Thrall (as Broken): −2 to Social rolls"
+        },
+        {
+          "targets": [
+            "attribute:resolve"
+          ],
+          "text": "Thrall (as Broken): −2 to rolls involving Resolve"
+        },
+        {
+          "targets": [
+            "skill:intimidation"
+          ],
+          "text": "Thrall (as Broken): −5 to Intimidation"
+        }
+      ]
+    },
+    {
+      "id": "wanton",
+      "name": "Wanton",
+      "source": {
+        "book": "vtr2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "You want, for the sake of wanting. −2 to Composure or Resolve rolls to resist temptation, and whoever caused this gets exceptional successes on three successes when tempting you, including with Majesty. It fades after a number of nights equal to the Blood Potency of the vampire who won the aura conflict (or your own, after a detachment roll), and can't return for a month after it ends.",
+      "resolution": "Indulge in something that's a breaking point.",
+      "beat": null,
+      "possibleSources": "A seductive predatory aura conflict, a breaking point"
+    }
   ]
 }

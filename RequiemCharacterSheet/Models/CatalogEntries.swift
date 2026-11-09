@@ -46,10 +46,11 @@ struct CatalogFile: Decodable {
     let mysteries: [MysteryEntry]
     let scales: [ScaleEntry]
     let archetypes: [ArchetypeEntry]
+    let conditions: [ConditionEntry]
 
     enum CodingKeys: CodingKey {
         case format, version, book, disciplines, merits, banes, clans, bloodlines, covenants
-        case rituals, devotions, mysteries, scales, archetypes
+        case rituals, devotions, mysteries, scales, archetypes, conditions
     }
 
     init(from decoder: Decoder) throws {
@@ -69,6 +70,7 @@ struct CatalogFile: Decodable {
         mysteries = try container.decode(.mysteries, default: [])
         scales = try container.decode(.scales, default: [])
         archetypes = try container.decode(.archetypes, default: [])
+        conditions = try container.decode(.conditions, default: [])
     }
 }
 
@@ -572,6 +574,103 @@ struct ArchetypeEntry: CatalogEntry {
     var willpowerFacts: [(label: String, value: String)] {
         [("Single Willpower", singleWillpower), ("All Willpower", allWillpower)].compactMap { label, value in
             value.map { (label, $0) }
+        }
+    }
+}
+
+// MARK: - Conditions
+
+/// A Condition, e.g. Swooning: what it does, how it's resolved, and what earns a Beat while it lasts.
+struct ConditionEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    let source: SourceReference
+    /// Lasts until resolved, and usually earns Beats along the way.
+    let persistent: Bool
+    /// What it does, in our own words.
+    let summary: String
+    let resolution: String
+    /// How it earns a Beat while it lasts; `nil` when it doesn't.
+    let beat: String?
+    let possibleSources: String?
+    /// Resolving it earns a Beat. A few say they don't, e.g. Distracted.
+    let beatOnResolve: Bool
+    /// A character can have it more than once, e.g. Swooning for two people.
+    let repeatable: Bool
+    /// What the note on the sheet is for, e.g. "For" (whom) or "Addicted to"; `nil` if it has none.
+    let notePrompt: String?
+    /// It has a growing penalty, shown as "Tempted −3".
+    let counter: Bool
+    /// The traits it clearly affects, marked on the sheet. Situational effects aren't listed.
+    let affects: [ConditionEffect]
+
+    enum CodingKeys: CodingKey {
+        case id, name, source, persistent, summary, resolution, beat, possibleSources, beatOnResolve, repeatable
+        case notePrompt, counter, affects
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        persistent = try container.decode(.persistent, default: false)
+        summary = try container.decode(String.self, forKey: .summary)
+        resolution = try container.decode(.resolution, default: "")
+        beat = try container.decodeIfPresent(String.self, forKey: .beat)
+        possibleSources = try container.decodeIfPresent(String.self, forKey: .possibleSources)
+        beatOnResolve = try container.decode(.beatOnResolve, default: true)
+        repeatable = try container.decode(.repeatable, default: false)
+        notePrompt = try container.decodeIfPresent(String.self, forKey: .notePrompt)
+        counter = try container.decode(.counter, default: false)
+        affects = try container.decode(.affects, default: [])
+    }
+}
+
+/// Traits a Condition affects, and how, e.g. Deprived: "−1 to dice pools using Stamina, Resolve or Composure".
+struct ConditionEffect: Decodable, Equatable {
+    let targets: [ConditionTarget]
+    let text: String
+
+    enum CodingKeys: CodingKey {
+        case targets, text
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        // Targets this version doesn't know are skipped, so a newer catalog still loads
+        targets = try container.decode([String].self, forKey: .targets).compactMap(ConditionTarget.init)
+        text = try container.decode(String.self, forKey: .text)
+    }
+}
+
+/// A trait or group of traits a Condition affects. Saved as "attribute:stamina", "skill:intimidation",
+/// "attributeCategory:social", "skillCategory:physical" or "defense".
+enum ConditionTarget: Equatable, Hashable {
+    case attribute(AttributeKind)
+    case skill(SkillID)
+    case attributeCategory(TraitCategory)
+    case skillCategory(TraitCategory)
+    case defense
+
+    init?(_ text: String) {
+        let parts = text.split(separator: ":", maxSplits: 1).map(String.init)
+        switch (parts.first, parts.count == 2 ? parts[1] : nil) {
+        case ("attribute", let id?):
+            guard let kind = AttributeKind(rawValue: id) else { return nil }
+            self = .attribute(kind)
+        case ("skill", let id?):
+            self = .skill(SkillID(id))
+        case ("attributeCategory", let id?):
+            guard let category = TraitCategory(rawValue: id) else { return nil }
+            self = .attributeCategory(category)
+        case ("skillCategory", let id?):
+            guard let category = TraitCategory(rawValue: id) else { return nil }
+            self = .skillCategory(category)
+        case ("defense", nil):
+            self = .defense
+        default:
+            return nil
         }
     }
 }

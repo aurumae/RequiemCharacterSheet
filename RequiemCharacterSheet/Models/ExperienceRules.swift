@@ -136,6 +136,9 @@ extension Character {
             return 2
         case .bloodPotency:
             return 5
+        case .condition:
+            // Conditions are logged but never bought
+            return 0
         }
     }
 }
