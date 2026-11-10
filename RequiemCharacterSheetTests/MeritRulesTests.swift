@@ -18,10 +18,11 @@ struct MeritRulesTests {
     // MARK: - Ratings
 
     @Test func ratingsReadAsDots() throws {
-        #expect(try merit("language").ratingsText == "•")
-        #expect(try merit("fleet-of-foot").ratingsText == "•–•••")
-        #expect(try merit("giant").ratingsText == "•••")
-        #expect(try merit("iron-skin").ratingsText == "•• or ••••")
+        #expect(try merit("language").ratingsText == "●")
+        #expect(try merit("fleet-of-foot").ratingsText == "● to ●●●")
+        #expect(try merit("giant").ratingsText == "●●●")
+        #expect(try merit("iron-skin").ratingsText == "●● or ●●●●")
+        #expect(try merit("fleet-of-foot").ratingsText.spokenForVoiceOver == "1 dot to 3 dots")
     }
 
     @Test func ratingsSnapToAllowedValues() throws {

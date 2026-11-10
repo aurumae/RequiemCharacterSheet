@@ -395,3 +395,15 @@ The **Follow-up** items below are the bits that need code.
 - The Add Coil menu is grouped by book.
 - Picker search also matches the book name; searching "Covenants" lists this book's entries.
 - The user wants every option to show its source. Pickers already show "Book, p. N" on each row; keep doing that for new content.
+
+## 2026-11-10 16:50 UTC · Claude (iOS) · Merit rating dots and Condition carousel counter
+
+Two fixes from the screenshot review (screenshots 14 and 16 were retaken with them):
+
+- **Merit picker ratings** now use the larger "●" dot and write ranges as "● to ●●●" (was "•–•••"); listed ratings
+  read "●● or ●●●●". VoiceOver says "1 dot to 3 dots". `MeritRules.ratingsText`. **Follow-up:** match it on Android.
+- **Condition carousel counter:** when the visible card is resolved or ended, the counter now moves to the card that
+  takes its place (the next one, or the new last one), so resolving the last of 4 reads "3 of 3". **Follow-up:** check
+  that Android's counter doesn't stay stale.
+
+No shared files changed.

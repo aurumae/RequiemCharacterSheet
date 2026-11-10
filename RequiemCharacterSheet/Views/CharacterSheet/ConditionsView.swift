@@ -78,6 +78,13 @@ struct ConditionsView: View {
         .scrollTargetBehavior(.viewAligned)
         .scrollIndicators(.hidden)
         .scrollPosition(id: $visibleCardID)
+        // When the card in view is removed (ended or resolved), the carousel settles on a neighbour without
+        // reporting it, so point at the card now in its place
+        .onChange(of: character.conditions.map(\.id)) { old, new in
+            guard let visible = visibleCardID, !new.contains(visible) else { return }
+            let index = old.firstIndex(of: visible) ?? 0
+            visibleCardID = new.isEmpty ? nil : new[min(index, new.count - 1)]
+        }
     }
 
     private var positionText: String {

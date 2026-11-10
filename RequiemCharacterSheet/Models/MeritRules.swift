@@ -112,12 +112,13 @@ extension MeritEntry {
     /// The ratings it can be bought at, as dots: "•", "•–•••", or "•• or ••••" when there are gaps.
     var ratingsText: String {
         guard let lowest = ratings.min(), let highest = ratings.max() else { return "" }
-        let dots = { (count: Int) in String(repeating: "•", count: count) }
+        // The larger dot, as in DotsText; a range reads as the books write it, "● to ●●●"
+        let dots = { (count: Int) in String(repeating: "●", count: count) }
         if lowest == highest {
             return dots(lowest)
         }
         if ratings.sorted() == Array(lowest...highest) {
-            return "\(dots(lowest))–\(dots(highest))"
+            return "\(dots(lowest)) to \(dots(highest))"
         }
         return ratings.sorted().map(dots).joined(separator: " or ")
     }
