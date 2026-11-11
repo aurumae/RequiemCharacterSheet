@@ -95,6 +95,7 @@
 		BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E62C9E0074008D03F7 /* BaneRowView.swift */; };
 		BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */; };
 		BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36EA2C9E0087008D03F7 /* BanesView.swift */; };
+		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCAFCCD6309D6A5500A5D9F1 /* CharacterFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */; };
 		BCAFCCDA309EA8B200A5D9F1 /* SpecialtyRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */; };
 		BCAFCCDC309EA90A00A5D9F1 /* SpecialtyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */; };
@@ -188,7 +189,7 @@
 		BC460D9430A194F00062F53F /* ConditionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionTests.swift; sourceTree = "<group>"; };
 		BC460D9630A195820062F53F /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
 		BC460D9830A195FB0062F53F /* ConditionIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionIndicator.swift; sourceTree = "<group>"; };
-		BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */ = {isa = PBXFileReference; path = "secrets-of-the-covenants.json"; sourceTree = "<group>"; };
+		BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "secrets-of-the-covenants.json"; sourceTree = "<group>"; };
 		BC6D36992C9A0929008D03F7 /* WillpowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerView.swift; sourceTree = "<group>"; };
 		BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPotencyView.swift; sourceTree = "<group>"; };
 		BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WillpowerBoxesView.swift; sourceTree = "<group>"; };
@@ -222,6 +223,7 @@
 		BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspirationsView.swift; sourceTree = "<group>"; };
 		BC6D36EA2C9E0087008D03F7 /* BanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanesView.swift; sourceTree = "<group>"; };
 		BC6D36EC2C9E457F008D03F7 /* RequiemCharacterSheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RequiemCharacterSheet.entitlements; sourceTree = "<group>"; };
+		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFile.swift; sourceTree = "<group>"; };
 		BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyRules.swift; sourceTree = "<group>"; };
 		BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyTests.swift; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 				BC2B4449309A3C3500720F0C /* cofd-core.json */,
 				BC2B4481309C0DD400720F0C /* dark-eras-companion.json */,
 				BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */,
+				BCA1AE1B30A410C7001317CA /* dark-eras.json */,
 			);
 			path = Catalogs;
 			sourceTree = "<group>";
@@ -624,6 +627,7 @@
 				BC2B4492309CC46200720F0C /* IMFellEnglish-OFL.txt in Resources */,
 				BCB158D52C986812003B6A8F /* Preview Assets.xcassets in Resources */,
 				BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */,
+				BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */,
 				BCB158D22C986812003B6A8F /* Assets.xcassets in Resources */,
 				BC460D9B30A236AA0062F53F /* secrets-of-the-covenants.json in Resources */,
 				BC2B4440309A30A600720F0C /* thousand-years-of-night.json in Resources */,

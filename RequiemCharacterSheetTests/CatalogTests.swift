@@ -15,15 +15,15 @@ struct CatalogTests {
     // MARK: - Bundled data
 
     @Test func bundledCatalogsLoad() {
-        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "secrets-of-the-covenants"])
+        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "secrets-of-the-covenants"])
         #expect(catalog.disciplines.all.count == 14)
         #expect(catalog.bloodlines.all.count == 1)
         // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
-        // 60 from Secrets of the Covenants and 19 from A Thousand Years of Night
-        #expect(catalog.merits.all.count == 236)
+        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night and 2 from Dark Eras
+        #expect(catalog.merits.all.count == 238)
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 9)
-        #expect(catalog.covenants.all.count == 5)
+        #expect(catalog.covenants.all.count == 8)
         #expect(catalog.rituals.all.count == 54)
         #expect(catalog.devotions.all.count == 40)
         #expect(catalog.mysteries.all.count == 6)
@@ -165,6 +165,39 @@ struct CatalogTests {
     @Test func elderBanesDeepenTheFiveClans() {
         #expect(catalog.elderBanes.all.map(\.clan) == ["daeva", "gangrel", "mekhet", "nosferatu", "ventrue"])
         #expect(catalog.elderBanes.all.allSatisfy { $0.humanityThreshold == 3 && catalog.clans.entry($0.clan) != nil })
+    }
+
+    @Test func darkErasCovenantsAreLoaded() throws {
+        #expect(catalog.book("dark-eras")?.name == "Dark Eras")
+        #expect(catalog.covenants.entry("gallows-post")?.source.book == "dark-eras-companion")
+        #expect(catalog.covenants.entry("al-hamasoun")?.source.book == "dark-eras-companion")
+        #expect(catalog.covenants.entry("weihan-cynn")?.source.book == "dark-eras")
+        #expect(catalog.merits.all.filter { $0.source.book == "dark-eras" }.map(\.id) == ["envoy", "contract-with-the-uncanny"])
+        // Covenant Status can be taken for any covenant in the catalogs
+        let status = try #require(catalog.merits.entry("covenant-status"))
+        let options = try #require(Character().qualifierOptions(for: status))
+        #expect(["Gallows Post", "Weihan Cynn", "Al-Hamasoun", "Invictus"].allSatisfy(options.contains))
+    }
+
+    @Test func gallowsPostTakesCarthianLawsWithItsOwnStatus() throws {
+        let laws = catalog.merits.all.filter { $0.group == "carthian-law" }.map(\.id)
+        #expect(laws.count == 12)
+        #expect(laws.contains("stare-decisis") && laws.contains("lex-terrae"))
+
+        let lexTerrae = try #require(catalog.merits.entry("lex-terrae"))
+        let carthianPull = try #require(catalog.merits.entry("carthian-pull"))
+        let character = Character()
+        character.covenantSource = .catalog("gallows-post")
+        character.merits.append(Merit(source: .catalog("feeding-grounds"), rating: 1))
+        character.merits.append(Merit(source: .catalog("covenant-status"), qualifier: "Gallows Post", rating: 1))
+        #expect(character.unmetPrerequisites(for: lexTerrae).map(\.description) == ["Gallows Post Status 2"])
+        character.merits[1].rating = 2
+        #expect(character.unmetPrerequisites(for: lexTerrae).isEmpty)
+        // Carthian Merits that aren't Laws still need Carthian Status
+        #expect(character.unmetPrerequisites(for: carthianPull).map(\.description) == ["Carthian Movement Status 1"])
+        // Others still need Carthian Status for the Laws
+        character.covenantSource = .catalog("invictus")
+        #expect(character.unmetPrerequisites(for: lexTerrae).map(\.description) == ["Carthian Movement Status 2"])
     }
 
     @Test func notBeingInACovenantIsChecked() throws {

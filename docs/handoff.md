@@ -476,3 +476,39 @@ book's name, in catalog order with the Requiem core book first.
   then the group in small capitals.
 
 **Follow-up:** group every Android picker the same way.
+
+## 2026-11-11 03:00 UTC · Claude (iOS) · Dark Eras covenants: Gallows Post, Weihan Cynn, Al-Hamasoun
+
+This comes from Requiem for Regina (Dark Eras) and The Soulless and the Dead (Dark Eras Companion), in our own words
+with pages. The Changeling and Promethean content is left out (user's call).
+
+**Catalogs**
+- **New file `RequiemCharacterSheet/Catalogs/dark-eras.json`** (book `dark-eras`, "Dark Eras"). **Follow-up:** load it.
+  It contains:
+  - the Weihan Cynn covenant (p. 270);
+  - Envoy (p. 266, Gallows Post Status 1);
+  - Contract With the Uncanny (p. 271, Weihan Cynn Status 1, repeatable, qualifier "Faction").
+- **`dark-eras-companion.json`** gains a `covenants` array:
+  - the Gallows Post (p. 92). Its full write-up is here, so it's listed under Dark Eras Companion (user's call), even
+    though Regina also describes it.
+  - the Al-Hamasoun (p. 91), offered as a covenant at the user's request.
+- All three are in the Covenant picker under their books.
+
+**Shared format additions**
+- **`MeritEntry.group`** (optional string): `"carthian-law"` is now set on the 12 Carthian Laws. The user named
+  them: Lex Terrae, Mandate from the Masses, Plausible Deniability, Right of Return, Strength of Resolution (core);
+  Breaking the Chains, Cease Fire, Coda Against Sorcery, Empower Judiciary, Establish Precedent, Weaponize Dissent
+  (Secrets of the Covenants); and Stare Decisis (A Thousand Years of Night).
+- **`CovenantEntry.meritGroups`**: `[{group, inPlaceOf}]`. The Gallows Post has
+  `{ "group": "carthian-law", "inPlaceOf": "carthian-movement" }`. When the character's covenant has an entry for a
+  Merit's group, that Merit's `covenant` requirement for `inPlaceOf` is checked against their own covenant's Status
+  instead. It's worded "Gallows Post Status 2". Carthian Merits that aren't Laws still need Carthian Status.
+  **Follow-up:** port it.
+- **`QualifierRule.fromCovenants`**: Covenant Status now has `fromCovenants: true`, so its choices are every covenant
+  in the catalogs. Its `options` list still holds the five core covenants as a fallback. **Follow-up:** use
+  `fromCovenants`, so Gallows Post, Weihan Cynn and Al-Hamasoun Status can be bought.
+
+**UI (iOS):** a typed Merit qualifier (Language, Contract With the Uncanny's faction…) can no longer be left empty;
+Add stays disabled until something is typed. **Follow-up:** do the same.
+
+No save-format change.

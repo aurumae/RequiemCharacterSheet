@@ -31,7 +31,7 @@ extension Character {
     /// Every requirement of the Merit: each prerequisite, then one line per "one of" choice.
     func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck] {
         let kindred = entry.unavailableToKindred ? [PrerequisiteCheck(description: PrerequisiteCheck.notForKindred, isMet: false)] : []
-        return kindred + prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf)
+        return kindred + prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf, group: entry.group)
     }
 
     /// Every Discipline a Devotion needs, then one line per "one of" choice.
@@ -44,7 +44,8 @@ extension Character {
         prerequisiteChecks(for: entry).filter { $0.isMet == false }
     }
 
-    private func prerequisiteChecks(_ prerequisites: [Prerequisite], anyOf: [[Prerequisite]]) -> [PrerequisiteCheck] {
+    private func prerequisiteChecks(_ prerequisites: [Prerequisite], anyOf: [[Prerequisite]], group: String? = nil) -> [PrerequisiteCheck] {
+        let check = { (prerequisite: Prerequisite) in self.check(prerequisite, meritGroup: group) }
         var checks = prerequisites.map(check)
         if !anyOf.isEmpty {
             let groups = anyOf.map { $0.map(check) }
@@ -61,7 +62,9 @@ extension Character {
         prerequisiteChecks(for: entry).filter { $0.isMet == false }
     }
 
-    private func check(_ prerequisite: Prerequisite) -> PrerequisiteCheck {
+    /// `meritGroup` is the family the Merit belongs to, e.g. "carthian-law", which some covenants may take with their
+    /// own Status.
+    private func check(_ prerequisite: Prerequisite, meritGroup: String? = nil) -> PrerequisiteCheck {
         let id = prerequisite.id ?? ""
         let minimum = prerequisite.minimum ?? 1
         let catalog = Catalog.bundled
@@ -87,6 +90,11 @@ extension Character {
             let name = catalog.clans.entry(id)?.name ?? id
             return PrerequisiteCheck(description: "Clan: \(name)", isMet: clanSource == .catalog(id))
         case .covenant:
+            // The character's covenant may take this family of Merits with its own Status instead
+            if let meritGroup, let own = covenantSource.catalogID.flatMap({ catalog.covenants.entry($0) }),
+               own.meritGroups.contains(CovenantMeritGroup(group: meritGroup, inPlaceOf: id)) {
+                return PrerequisiteCheck(description: "\(own.name) Status \(minimum)", isMet: covenantStatus(own.id) >= minimum)
+            }
             let name = catalog.covenants.entry(id)?.name ?? id
             guard prerequisite.minimum != nil else {
                 return PrerequisiteCheck(description: "Covenant: \(name)", isMet: covenantSource == .catalog(id))

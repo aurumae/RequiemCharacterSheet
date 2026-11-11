@@ -95,7 +95,7 @@ struct MeritPickerView: View {
                         Button("\(choice.specialty) (\(choice.skill))") { choose(entry, qualifier: choice.specialty) }
                     }
                 } else {
-                    ForEach(entry.qualifier?.options ?? [], id: \.self) { option in
+                    ForEach(character.qualifierOptions(for: entry) ?? [], id: \.self) { option in
                         Button(option) { choose(entry, qualifier: option) }
                     }
                 }
@@ -110,10 +110,12 @@ struct MeritPickerView: View {
                 presenting: pendingEntry
             ) { entry in
                 TextField(entry.qualifier?.prompt ?? "Qualifier", text: $qualifierDraft)
+                // Read when tapped: the alert doesn't redraw its button on every keystroke
                 Button("Add") {
-                    let trimmed = qualifierDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-                    choose(entry, qualifier: trimmed.isEmpty ? nil : trimmed)
+                    choose(entry, qualifier: qualifierDraft.trimmingCharacters(in: .whitespacesAndNewlines))
                 }
+                // The Merit needs to say what it's for, e.g. which Language
+                .disabled(qualifierDraft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 Button("Cancel", role: .cancel) {}
             } message: { entry in
                 Text("Enter the \(entry.qualifier?.prompt.lowercased() ?? "qualifier") this Merit is for.")

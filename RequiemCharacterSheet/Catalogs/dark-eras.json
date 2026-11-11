@@ -1,0 +1,76 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras",
+    "name": "Dark Eras"
+  },
+  "covenants": [
+    {
+      "id": "weihan-cynn",
+      "name": "Weihan Cynn",
+      "nickname": "Woods-Witches",
+      "source": {
+        "book": "dark-eras",
+        "page": 270
+      },
+      "summary": "Pagan witches who have ruled Kindred Britain for centuries by striking bargains with its werewolves, spirits and other monsters, and playing them against each other."
+    }
+  ],
+  "merits": [
+    {
+      "id": "envoy",
+      "name": "Envoy",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras",
+        "page": 266
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "gallows-post",
+          "minimum": 1
+        }
+      ],
+      "summary": "A respected envoy of the Post. Anyone pursuing or intercepting you between cities needs more successes than your dots. You arrive with a gift worth a one-time Social bonus with whoever you're travelling to, and once a story half your dots count as Allies or Contacts in a new city."
+    },
+    {
+      "id": "contract-with-the-uncanny",
+      "name": "Contract With the Uncanny",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras",
+        "page": 271
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": true,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "weihan-cynn",
+          "minimum": 1
+        }
+      ],
+      "summary": "Call on your covenant's ancient pacts with one supernatural faction or force for favors. Each must be repaid in kind, and favors above your dots cost more in return; renege and you lose the Merit and suffer their backlash.",
+      "qualifier": {
+        "prompt": "Faction",
+        "options": null
+      }
+    }
+  ]
+}

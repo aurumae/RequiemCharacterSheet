@@ -34,7 +34,9 @@ extension Character {
     /// The choices for a Merit's qualifier, or `nil` when the player types it.
     func qualifierOptions(for entry: MeritEntry) -> [String]? {
         guard let rule = entry.qualifier else { return nil }
-        return rule.usesSpecialty ? specialtyChoices.map(\.specialty) : rule.options
+        if rule.usesSpecialty { return specialtyChoices.map(\.specialty) }
+        if rule.fromCovenants == true { return Catalog.bundled.covenants.all.map(\.name) }
+        return rule.options
     }
 
     func addSpecialty(_ name: String, to skill: Skill) {

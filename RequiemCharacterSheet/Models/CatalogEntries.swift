@@ -280,6 +280,8 @@ struct MeritEntry: CatalogEntry {
     /// Kindred can't take it: the Supernatural Merits, and Vice-Ridden and Virtuous, since vampires
     /// have no Virtue or Vice (Vampire: The Requiem p. 81).
     let unavailableToKindred: Bool
+    /// A family of Merits another covenant may also take, e.g. "carthian-law" for the Carthian Laws.
+    let group: String?
 
     enum Category: String, Decodable {
         case mental, physical, social, fighting, vampire, covenant, supernatural, other
@@ -287,7 +289,7 @@ struct MeritEntry: CatalogEntry {
 
     enum CodingKeys: CodingKey {
         case id, name, category, source, ratings, qualifier, repeatable
-        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary, effects, unavailableToKindred
+        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary, effects, unavailableToKindred, group
     }
 
     init(from decoder: Decoder) throws {
@@ -305,6 +307,7 @@ struct MeritEntry: CatalogEntry {
         summary = try container.decode(String.self, forKey: .summary)
         effects = try container.decodeEffects(.effects)
         unavailableToKindred = try container.decode(.unavailableToKindred, default: false)
+        group = try container.decodeIfPresent(String.self, forKey: .group)
     }
 }
 
@@ -315,6 +318,8 @@ struct QualifierRule: Decodable {
     let options: [String]?
     /// The choices are the character's Skill Specialties, e.g. for Area of Expertise.
     let fromSpecialties: Bool?
+    /// The choices are every covenant in the catalogs, e.g. for Covenant Status.
+    let fromCovenants: Bool?
 }
 
 struct Prerequisite: Decodable {
@@ -425,6 +430,29 @@ struct CovenantEntry: CatalogEntry {
     let nickname: String?
     let source: SourceReference
     let summary: String
+    /// Families of another covenant's Merits its members may take, e.g. the Gallows Post's use of Carthian Laws.
+    let meritGroups: [CovenantMeritGroup]
+
+    enum CodingKeys: CodingKey {
+        case id, name, nickname, source, summary, meritGroups
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(String.self, forKey: .summary)
+        meritGroups = try container.decode(.meritGroups, default: [])
+    }
+}
+
+/// Members may take the Merits in `group`, with their own Covenant Status standing in for Status in `inPlaceOf`,
+/// e.g. Gallows Post Status for the Carthian Laws' Carthian Status (Dark Eras Companion p. 93).
+struct CovenantMeritGroup: Decodable, Equatable {
+    let group: String
+    let inPlaceOf: CatalogEntryID
 }
 
 // MARK: - Blood sorcery, Devotions, Coils and Scales
