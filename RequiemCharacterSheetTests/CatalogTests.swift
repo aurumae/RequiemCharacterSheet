@@ -19,15 +19,16 @@ struct CatalogTests {
         #expect(catalog.disciplines.all.count == 14)
         #expect(catalog.bloodlines.all.count == 1)
         // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
-        // and 60 from Secrets of the Covenants
-        #expect(catalog.merits.all.count == 217)
+        // 60 from Secrets of the Covenants and 19 from A Thousand Years of Night
+        #expect(catalog.merits.all.count == 236)
         #expect(catalog.banes.all.count == 14)
-        #expect(catalog.clans.all.count == 6)
+        #expect(catalog.clans.all.count == 9)
         #expect(catalog.covenants.all.count == 5)
-        #expect(catalog.rituals.all.count == 48)
-        #expect(catalog.devotions.all.count == 29)
-        #expect(catalog.mysteries.all.count == 5)
-        #expect(catalog.scales.all.count == 14)
+        #expect(catalog.rituals.all.count == 54)
+        #expect(catalog.devotions.all.count == 40)
+        #expect(catalog.mysteries.all.count == 6)
+        #expect(catalog.scales.all.count == 16)
+        #expect(catalog.elderBanes.all.count == 5)
     }
 
     @Test func requiemEntriesTakePrecedenceOverReprints() {
@@ -50,6 +51,7 @@ struct CatalogTests {
             + catalog.banes.all.map(\.source) + catalog.clans.all.map(\.source) + catalog.covenants.all.map(\.source)
             + catalog.rituals.all.map(\.source) + catalog.devotions.all.map(\.source)
             + catalog.mysteries.all.map(\.source) + catalog.scales.all.map(\.source)
+            + catalog.elderBanes.all.map(\.source)
         #expect(sources.allSatisfy { books.contains($0.book) })
     }
 
@@ -115,13 +117,54 @@ struct CatalogTests {
         // Every entry cites a page of the appendix
         #expect(catalog.merits.all.filter { $0.source.book == book }.allSatisfy { (177...202).contains($0.source.page ?? 0) })
         // Its Coils have no Mystery to follow
-        #expect(catalog.mysteries.all.filter(\.coilOnly).map(\.id).sorted() == ["coil-of-zirnitra", "coil-of-ziva"])
+        #expect(catalog.mysteries.all.filter { $0.coilOnly && $0.source.book == book }.map(\.id).sorted() == ["coil-of-zirnitra", "coil-of-ziva"])
         // Scales point at real Coil tiers
         for scale in catalog.scales.all {
             for coil in scale.prerequisiteCoils {
                 #expect(catalog.mysteries.entry(coil.mystery)?.tiers.contains { $0.id == coil.tier } == true, "\(scale.name)")
             }
         }
+    }
+
+    @Test func aThousandYearsOfNightIsLoaded() throws {
+        let book = "thousand-years-of-night"
+        #expect(catalog.book(book)?.name == "A Thousand Years of Night")
+        #expect(catalog.clans.all.filter { $0.source.book == book }.map(\.id) == ["akhud", "hollow-mekhet", "julii", "pijavica"])
+        #expect(catalog.merits.all.filter { $0.source.book == book }.count == 19)
+        #expect(catalog.devotions.all.filter { $0.source.book == book }.count == 11)
+        #expect(catalog.rituals.all.filter { $0.source.book == book }.count == 6)
+        #expect(catalog.conditions.all.filter { $0.source.book == book }.count == 15)
+        #expect(catalog.archetypes.all.filter { $0.source.book == book }.count == 3)
+        // Its Leveraged is a different Condition from the Chronicles of Darkness one
+        #expect(catalog.conditions.entry("leveraged")?.source.book == "cofd-core")
+        #expect(catalog.conditions.entry("leveraged-ghoul")?.source.book == book)
+        // The Coil of the Quintessence is learned within the Mystery of the Voivode
+        let quintessence = try #require(catalog.mysteries.entry("coil-of-the-quintessence"))
+        #expect(quintessence.coilOnly)
+        #expect(quintessence.partOfMystery == "mystery-of-the-voivode")
+    }
+
+    @Test func pickersGroupEntriesByBook() {
+        let clans = CatalogBookSection.sections([CatalogPickerGroup("", catalog.clans.all)])
+        #expect(clans.map(\.book.name) == ["Vampire: The Requiem Second Edition", "A Thousand Years of Night"])
+        #expect(clans.last?.entries.map(\.id) == ["akhud", "hollow-mekhet", "julii", "pijavica"])
+        #expect(clans.allSatisfy { $0.startsBook })
+
+        // Within a book, groups keep their order
+        let inClan = catalog.disciplines.all.filter { ["celerity", "praestantia"].contains($0.id) }
+        let others = catalog.disciplines.all.filter { ["auspex"].contains($0.id) }
+        let disciplines = CatalogBookSection.sections([
+            CatalogPickerGroup("In-clan", inClan),
+            CatalogPickerGroup("Other", others),
+        ])
+        #expect(disciplines.map(\.title) == ["In-clan", "Other", "In-clan"])
+        #expect(disciplines.map(\.startsBook) == [true, false, true])
+        #expect(disciplines.last?.book.id == "thousand-years-of-night")
+    }
+
+    @Test func elderBanesDeepenTheFiveClans() {
+        #expect(catalog.elderBanes.all.map(\.clan) == ["daeva", "gangrel", "mekhet", "nosferatu", "ventrue"])
+        #expect(catalog.elderBanes.all.allSatisfy { $0.humanityThreshold == 3 && catalog.clans.entry($0.clan) != nil })
     }
 
     @Test func notBeingInACovenantIsChecked() throws {

@@ -111,7 +111,11 @@ extension Character {
     }
 
     func isMysteryCoil(_ coil: Coil) -> Bool {
-        mysterySource != .custom("") && coil.mystery == mysterySource
+        guard mysterySource != .custom("") else { return false }
+        if coil.mystery == mysterySource { return true }
+        // A Coil that counts as part of the character's Mystery
+        let partOf = coil.mystery.catalogID.flatMap { Catalog.bundled.mysteries.entry($0) }?.partOfMystery
+        return partOf != nil && partOf == mysterySource.catalogID
     }
 
     var ordoDraculStatus: Int {

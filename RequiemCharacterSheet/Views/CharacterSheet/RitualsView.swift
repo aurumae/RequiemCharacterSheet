@@ -87,30 +87,32 @@ struct RitualsView: View {
         return owned.isEmpty ? Catalog.bundled.disciplines.all.filter { $0.kind == .ritual } : owned
     }
 
+    /// By book; within each, one group per ritual Discipline.
     private var pickerSections: [CatalogPickerSection] {
         let owned = Set(character.rituals.compactMap(\.source.catalogID))
         let others = Catalog.bundled.disciplines.all.filter { $0.kind == .ritual && !pickerDisciplines.map(\.id).contains($0.id) }
-        return (pickerDisciplines + others).map { discipline in
-            let rating = character.disciplineRating(discipline.id)
-            let items = Catalog.bundled.rituals.all
+        let disciplines = pickerDisciplines + others
+        let groups = disciplines.map { discipline in
+            CatalogPickerGroup(discipline.name, Catalog.bundled.rituals.all
                 .filter { $0.discipline == discipline.id }
-                .sorted { ($0.dots, $0.name) < ($1.dots, $1.name) }
-                .map { entry in
-                    CatalogPickerItem(
-                        id: entry.id,
-                        name: entry.name,
-                        dots: entry.dots,
-                        summary: entry.summary,
-                        details: ["Target successes: \(entry.targetSuccesses)"],
-                        warning: rating < entry.dots ? "Requires \(discipline.name) \(entry.dots)" : nil,
-                        citation: entry.source.citation(),
-                        isOwned: owned.contains(entry.id),
-                        // During guided creation, only the ritual that comes with each dot
-                        unavailableReason: character.creationAllows(.ritual(discipline: .catalog(discipline.id), dots: entry.dots))
-                            ? nil : "Doesn't fit: one ritual per \(discipline.name) dot at creation"
-                    )
-                }
-            return CatalogPickerSection(title: discipline.name, items: items)
+                .sorted { ($0.dots, $0.name) < ($1.dots, $1.name) })
+        }
+        return CatalogPickerSection.byBook(groups) { entry in
+            let discipline = disciplines.first { $0.id == entry.discipline }
+            let name = discipline?.name ?? entry.discipline
+            return CatalogPickerItem(
+                id: entry.id,
+                name: entry.name,
+                dots: entry.dots,
+                summary: entry.summary,
+                details: ["Target successes: \(entry.targetSuccesses)"],
+                warning: character.disciplineRating(entry.discipline) < entry.dots ? "Requires \(name) \(entry.dots)" : nil,
+                citation: entry.source.citation(),
+                isOwned: owned.contains(entry.id),
+                // During guided creation, only the ritual that comes with each dot
+                unavailableReason: character.creationAllows(.ritual(discipline: .catalog(entry.discipline), dots: entry.dots))
+                    ? nil : "Doesn't fit: one ritual per \(name) dot at creation"
+            )
         }
     }
 

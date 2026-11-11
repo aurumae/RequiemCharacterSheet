@@ -24,9 +24,65 @@ struct CatalogPickerItem: Identifiable {
 }
 
 struct CatalogPickerSection: Identifiable {
-    var id: String { title }
+    var id: String { (book ?? "") + "/" + title }
+    /// A group within the book, e.g. "Other Devotions", or empty when the book is the only grouping.
     let title: String
+    /// The name of the book its entries come from, shown as a heading above its first section.
+    var book: String?
     let items: [CatalogPickerItem]
+
+    /// One section per book, in catalog order, so players can always see which book an option comes from, and
+    /// within each book one per group, in the order given. Empty sections are left out.
+    static func byBook<Entry: CatalogEntry>(
+        _ groups: [CatalogPickerGroup<Entry>],
+        item: (Entry) -> CatalogPickerItem
+    ) -> [CatalogPickerSection] {
+        CatalogBookSection.sections(groups).map { section in
+            CatalogPickerSection(title: section.title, book: section.book.name, items: section.entries.map(item))
+        }
+    }
+}
+
+extension CatalogBookSection {
+    var header: CatalogSectionHeader {
+        CatalogSectionHeader(book: startsBook ? book.name : nil, title: title)
+    }
+}
+
+/// A picker section's heading: the book's name above its first section, then the group within it, if any.
+struct CatalogSectionHeader: View {
+    /// `nil` when the book was already named by the section above.
+    let book: String?
+    let title: String
+
+    var body: some View {
+        // Well apart, so the book reads as the heading over the groups inside it
+        VStack(alignment: .leading, spacing: 12) {
+            if let book {
+                Text(book)
+                    .themedText(.sectionHeader)
+                    .foregroundStyle(.primary)
+                    .accessibilityAddTraits(.isHeader)
+                    .padding(.top, 8)
+            }
+            if !title.isEmpty {
+                Text(title)
+                    .themedText(.subsectionHeader)
+                    .accessibilityAddTraits(.isHeader)
+            }
+        }
+        .textCase(nil)
+    }
+}
+
+extension Array where Element == CatalogPickerSection {
+    /// The book heading each section shows: its book's name if the section before it was from another book.
+    func bookHeadings() -> [String?] {
+        indices.map { index in
+            let book = self[index].book
+            return index > 0 && self[index - 1].book == book ? nil : book
+        }
+    }
 }
 
 /// A "Custom …" choice at the end of a picker, for homebrew or entries that aren't listed.
@@ -73,13 +129,15 @@ struct CatalogPickerView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(sections) { section in
-                    let items = matching(section.items)
-                    if !items.isEmpty {
-                        Section(header: Text(section.title).themedText(.subsectionHeader)) {
-                            ForEach(items) { item in
-                                row(for: item)
-                            }
+                // Book headings follow the sections that match the search
+                let visible = sections
+                    .map { CatalogPickerSection(title: $0.title, book: $0.book, items: matching($0.items)) }
+                    .filter { !$0.items.isEmpty }
+                let headings = visible.bookHeadings()
+                ForEach(Array(visible.enumerated()), id: \.element.id) { index, section in
+                    Section(header: CatalogSectionHeader(book: headings[index], title: section.title)) {
+                        ForEach(section.items) { item in
+                            row(for: item)
                         }
                     }
                 }

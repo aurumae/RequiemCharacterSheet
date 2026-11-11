@@ -187,6 +187,20 @@ struct ExperienceTests {
         #expect(character.changeLog.map(\.experiences) == [3, 4])
     }
 
+    @Test func coilOfTheQuintessenceCostsAsPartOfTheVoivode() {
+        let character = Character()
+        character.chooseMystery(.catalog("mystery-of-the-voivode"))
+        let quintessence = Coil(mystery: .catalog("coil-of-the-quintessence"))
+        character.coils.append(quintessence)
+        character.xpMode = true
+        change(character) { quintessence.rating = 1 }
+        // Outside the Voivode it costs like any other Coil
+        character.chooseMystery(.catalog("mystery-of-the-wyrm"))
+        change(character) { quintessence.rating = 2 }
+
+        #expect(character.changeLog.map(\.experiences) == [3, 4])
+    }
+
     @Test func devotionsAndScalesCostWhatTheyList() {
         let character = Character()
         character.xpMode = true

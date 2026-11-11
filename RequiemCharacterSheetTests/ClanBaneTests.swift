@@ -139,4 +139,62 @@ struct ClanBaneTests {
         character.banes.append(Bane(text: "Symbols"))
         #expect(!character.canAddBane)
     }
+
+    // MARK: - Elder banes
+
+    @Test func fallingToHumanityThreeActivatesTheElderBane() throws {
+        let character = makeDaeva()
+        #expect(character.elderBaneEntry?.name == "The Captivating Curse")
+
+        character.humanity = 4
+        #expect(!character.elderBaneActive)
+        character.humanity = 3
+        #expect(character.elderBaneActive)
+
+        // Regaining the fourth dot doesn't reverse it
+        character.humanity = 5
+        #expect(character.elderBaneActive)
+    }
+
+    @Test func switchedOffElderBaneStaysOffUntilHumanityFallsToThreeAgain() {
+        let character = makeDaeva()
+        character.humanity = 3
+        character.elderBaneActive = false
+
+        character.humanity = 2
+        #expect(!character.elderBaneActive)
+
+        character.humanity = 4
+        character.humanity = 3
+        #expect(character.elderBaneActive)
+    }
+
+    @Test func changingClanStartsTheElderBaneAfresh() {
+        let character = makeDaeva()
+        character.humanity = 3
+
+        character.clan = "Akhud"
+        #expect(character.elderBaneEntry == nil)
+        #expect(!character.elderBaneActive)
+
+        character.clan = "Gangrel"
+        #expect(character.elderBaneEntry?.name == "The Visceral Curse")
+        #expect(character.elderBaneActive)
+    }
+
+    @Test func elderBaneIsOnlySavedWhenInEffect() throws {
+        let character = makeDaeva()
+        func saved() throws -> [String: Any] {
+            try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(character)) as? [String: Any])
+        }
+        #expect(try saved()["elderBaneActive"] == nil)
+        #expect(try saved()["schemaVersion"] as? Int == 10)
+
+        character.humanity = 3
+        #expect(try saved()["elderBaneActive"] as? Bool == true)
+        #expect(try saved()["schemaVersion"] as? Int == Character.currentSchemaVersion)
+
+        let reloaded = try JSONDecoder().decode(Character.self, from: JSONEncoder().encode(character))
+        #expect(reloaded.elderBaneActive)
+    }
 }

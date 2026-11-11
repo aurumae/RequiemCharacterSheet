@@ -33,13 +33,17 @@ struct BanePickerView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section(footer: Text("A vampire can have at most \(Character.maxBanes) Banes.").themedText(.detail)) {
-                    ForEach(matchingEntries) { entry in
-                        row(for: entry)
+                // By book, so it's clear where each Bane comes from
+                let sections = CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)])
+                ForEach(sections) { section in
+                    Section(header: section.header) {
+                        ForEach(section.entries) { entry in
+                            row(for: entry)
+                        }
                     }
                 }
 
-                Section {
+                Section(footer: Text("A vampire can have at most \(Character.maxBanes) Banes.").themedText(.detail)) {
                     Button {
                         choose(nil)
                     } label: {

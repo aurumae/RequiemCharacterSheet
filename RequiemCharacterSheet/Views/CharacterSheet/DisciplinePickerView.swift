@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// Chooses a Discipline to add: in-clan ones first, then the rest of the catalog, or a custom one.
+/// Chooses a Discipline to add: the in-clan ones first, then every Discipline by book, or a custom one.
 struct DisciplinePickerView: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
@@ -34,19 +34,21 @@ struct DisciplinePickerView: View {
         NavigationStack {
             List {
                 let inClan = matchingEntries.filter { character.inClanDisciplines.contains($0.id) }
-                let others = matchingEntries.filter { !character.inClanDisciplines.contains($0.id) }
-
+                // The clan's or bloodline's in-clan Disciplines always come first, from whichever books; every
+                // Discipline, in-clan ones included, is then listed under its book
                 if !inClan.isEmpty {
-                    Section(header: Text("In-clan for the \(character.inClanGroupName)").themedText(.subsectionHeader)) {
+                    Section(header: CatalogSectionHeader(book: nil, title: "In-clan for the \(character.inClanGroupName)")) {
                         ForEach(inClan) { entry in
                             row(for: entry)
                         }
                     }
                 }
 
-                Section(header: Text(inClan.isEmpty ? "Disciplines" : "Other Disciplines").themedText(.subsectionHeader)) {
-                    ForEach(others) { entry in
-                        row(for: entry)
+                ForEach(CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)])) { section in
+                    Section(header: section.header) {
+                        ForEach(section.entries) { entry in
+                            row(for: entry)
+                        }
                     }
                 }
 

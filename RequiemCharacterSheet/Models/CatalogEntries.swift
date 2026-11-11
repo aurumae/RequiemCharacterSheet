@@ -47,10 +47,11 @@ struct CatalogFile: Decodable {
     let scales: [ScaleEntry]
     let archetypes: [ArchetypeEntry]
     let conditions: [ConditionEntry]
+    let elderBanes: [ElderBaneEntry]
 
     enum CodingKeys: CodingKey {
         case format, version, book, disciplines, merits, banes, clans, bloodlines, covenants
-        case rituals, devotions, mysteries, scales, archetypes, conditions
+        case rituals, devotions, mysteries, scales, archetypes, conditions, elderBanes
     }
 
     init(from decoder: Decoder) throws {
@@ -71,6 +72,7 @@ struct CatalogFile: Decodable {
         scales = try container.decode(.scales, default: [])
         archetypes = try container.decode(.archetypes, default: [])
         conditions = try container.decode(.conditions, default: [])
+        elderBanes = try container.decode(.elderBanes, default: [])
     }
 }
 
@@ -384,6 +386,18 @@ struct ClanBane: Decodable {
     }
 }
 
+/// How a clan's bane deepens in an elder (A Thousand Years of Night p. 23): it takes hold when Humanity first falls
+/// to the threshold, and regaining Humanity doesn't undo it.
+struct ElderBaneEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    /// The clan whose bane this deepens.
+    let clan: CatalogEntryID
+    let source: SourceReference
+    let summary: String
+    let humanityThreshold: Int
+}
+
 /// A bloodline: a lineage within a clan, with its own Disciplines and bane.
 struct BloodlineEntry: CatalogEntry {
     let id: CatalogEntryID
@@ -485,9 +499,12 @@ struct MysteryEntry: CatalogEntry {
     /// A Coil without a Mystery to follow, e.g. the Coil of Zirnitra: it can be learned as a Coil, with its
     /// Scales, but isn't offered as the character's Mystery.
     let coilOnly: Bool
+    /// The Mystery this Coil counts as part of, for Experience costs and the Status limit, e.g. the Coil of the
+    /// Quintessence is part of the Mystery of the Voivode.
+    let partOfMystery: CatalogEntryID?
 
     enum CodingKeys: CodingKey {
-        case id, name, source, summary, coil, tiers, coilOnly
+        case id, name, source, summary, coil, tiers, coilOnly, partOfMystery
     }
 
     init(from decoder: Decoder) throws {
@@ -499,6 +516,7 @@ struct MysteryEntry: CatalogEntry {
         coil = try container.decode(CoilInfo.self, forKey: .coil)
         tiers = try container.decode([CoilTier].self, forKey: .tiers)
         coilOnly = try container.decode(.coilOnly, default: false)
+        partOfMystery = try container.decodeIfPresent(CatalogEntryID.self, forKey: .partOfMystery)
     }
 
     func tier(_ dots: Int) -> CoilTier? {

@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// Chooses a Merit to add, grouped by category, asking for a qualifier when the Merit needs one.
+/// Chooses a Merit to add, grouped by book and then category, asking for a qualifier when the Merit needs one.
 /// Unmet prerequisites are shown as warnings; they don't stop the Merit being taken.
 struct MeritPickerView: View {
     @Environment(\.theme) private var theme
@@ -40,19 +40,13 @@ struct MeritPickerView: View {
         NavigationStack {
             List {
                 let entries = matchingEntries
-                // While searching, one list in relevance order; otherwise grouped by category
-                if searchText.isEmpty {
-                    ForEach(Self.categoryOrder, id: \.self) { category in
-                        let inCategory = entries.filter { $0.category == category }
-                        if !inCategory.isEmpty {
-                            Section(header: Text(category.title).themedText(.subsectionHeader)) {
-                                ForEach(inCategory) { row(for: $0) }
-                            }
-                        }
-                    }
-                } else {
-                    Section {
-                        ForEach(entries) { row(for: $0) }
+                // By book; within each, grouped by category, or while searching one list in relevance order
+                let groups = searchText.isEmpty
+                    ? Self.categoryOrder.map { category in CatalogPickerGroup(category.title, entries.filter { $0.category == category }) }
+                    : [CatalogPickerGroup("", entries)]
+                ForEach(CatalogBookSection.sections(groups)) { section in
+                    Section(header: section.header) {
+                        ForEach(section.entries) { row(for: $0) }
                     }
                 }
 

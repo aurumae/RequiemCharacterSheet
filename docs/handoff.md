@@ -407,3 +407,72 @@ Two fixes from the screenshot review (screenshots 14 and 16 were retaken with th
   that Android's counter doesn't stay stale.
 
 No shared files changed.
+
+## 2026-11-10 23:20 UTC · Claude (iOS) · A Thousand Years of Night, elder banes, save schema 12
+
+`RequiemCharacterSheet/Catalogs/thousand-years-of-night.json` now has the rest of the book, in our own words with pages:
+- **3 archetypes**: Collector, Meddler and Provocateur, all p. 17.
+- **3 clans**: Hollow Mekhet, Julii and Pijavica, pp. 29–30. The Hollow Mekhet are a clan, by the user's choice, with
+  Mekhet's Attributes and Disciplines; their Haunted Curse replaces the Mekhet bane, so there's no `grantsExtraBane`.
+- **5 elder banes**, 11 Devotions, 6 elder rituals, 19 Merits and 15 Conditions.
+- **The Coil of the Quintessence** with 5 tiers, and its 2 Scales.
+- The book's Leveraged (ghoul) is a different Condition from Chronicles of Darkness' Leveraged, so it has the id
+  `leveraged-ghoul`; both are offered, each under its own book.
+- "Elder" requirements are `other` text, unchecked (user's call). The elder character templates (Soldier, Traitor) aren't
+  included, since the app has no templates.
+
+**Shared format additions**
+- **New top-level catalog array `elderBanes`**: `{id, name, clan, source, summary, humanityThreshold}`, one per core clan
+  (threshold 3). Each one deepens that clan's bane. **Follow-up:** load it.
+- **`MysteryEntry.partOfMystery`** (optional id): the Coil of the Quintessence (`coilOnly`) counts as part of the Mystery of
+  the Voivode. It costs 3 XP per dot and is exempt from the Status limit when the character's Mystery is the Voivode, and
+  costs 4 XP otherwise. **Follow-up:** port it.
+
+**Save format: schema 12, written only when needed**
+- New key `elderBaneActive`. It's **only written when true**, and only then is the file saved as **12**; otherwise the
+  10/11 rule is unchanged.
+- It switches on by itself when Humanity falls from above 3 to 3 or less, if the clan has an elder bane. It stays on if
+  Humanity rises, and the player can toggle it, like `clanBaneActive`.
+- Changing clan resets it: on if the new clan has an elder bane and Humanity ≤ its threshold, off otherwise.
+- If the key is absent, it's false. Unlike `clanBaneActive`, it is not inferred from Humanity on load.
+- **Fixtures:**
+  - `shared/fixtures/characters/v12-elder-bane.json`: v11-conditions plus `elderBaneActive: true`, at Humanity 3.
+  - `v13-future.json` is now the iOS future fixture.
+  - I left `v11-future.json` and `v12-future.json` in place for your tests; switch when you read 12.
+- **Follow-up:** read and write 12. Show the elder bane under the clan bane as "Elder Bane: <name>", with an "In effect"
+  toggle, the same status line and its citation.
+
+**UI (iOS)**
+- The Mask/Dirge picker is now sorted alphabetically, so book archetypes don't sit at the end.
+
+## 2026-11-10 23:55 UTC · Claude (iOS) · Every list grouped by book (design decision)
+
+The user has made a standing design decision, now recorded in the new **`docs/design-decisions.md`**. Please read it
+and add a pointer to it in your `AGENTS.md`, as I've done in `CLAUDE.md`.
+
+**What it says:** every list of official options is split into sections, one per source book, each headed by the
+book's name, in catalog order with the Requiem core book first.
+- This covers Masks/Dirges, Clans, Bloodlines, Covenants, Disciplines, Devotions, Merits, Banes, rituals, the Mystery
+  chooser, Add Coil, Scales, Conditions, and any list added later.
+- Groupings a list already had now sit inside each book, as smaller headings:
+  - own-clan Bloodlines first;
+  - Devotions you have the Disciplines for first;
+  - Merit categories;
+  - rituals by Discipline;
+  - Scales by Mystery.
+- If the first group is empty in every book, e.g. no clan chosen, the rest show just the book headings. Otherwise the
+  "Other …" heading is kept, even when it's a book's only group. "Recently Used" Conditions and the Custom options
+  stay outside the book sections.
+- While searching the Merit picker, results are still grouped by book, in relevance order within each.
+- There are no book toggles, and there must never be any; players skip a book's options by not picking them.
+
+- **Disciplines are the exception:** an "In-clan for the <clan or bloodline>" section always comes first, with no
+  book heading, listing the in-clan Disciplines from every book. Every Discipline, in-clan ones included, is then
+  listed again under its book, with no group headings.
+
+**iOS implementation**
+- `CatalogBookSection.sections` and `CatalogPickerGroup` in `Models/CatalogFormatting.swift`, covered by a test.
+- `CatalogPickerSection.byBook` and the `CatalogSectionHeader` view: the book's name in the section-header face,
+  then the group in small capitals.
+
+**Follow-up:** group every Android picker the same way.

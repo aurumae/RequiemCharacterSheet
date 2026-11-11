@@ -114,13 +114,13 @@ struct CharacterDecodingTests {
         #expect(json["conditions"] == nil)
     }
 
-    @Test func saveWithConditionsIsCurrentVersion() throws {
+    @Test func saveWithConditionsIsVersionEleven() throws {
         let character = Character()
         character.addCondition(CharacterCondition(source: .catalog("swooning"), note: "Marcus Vale"))
         let data = try JSONEncoder().encode(character)
         let json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
 
-        #expect(json["schemaVersion"] as? Int == Character.currentSchemaVersion)
+        #expect(json["schemaVersion"] as? Int == 11)
         #expect((json["conditions"] as? [Any])?.count == 1)
     }
 

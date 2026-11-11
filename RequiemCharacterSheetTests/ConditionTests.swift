@@ -44,7 +44,7 @@ struct ConditionTests {
     @Test func catalogFlagsFollowTheCards() throws {
         let entries = Catalog.bundled.conditions
         #expect(entries.all.filter { !$0.beatOnResolve }.map(\.id).sorted() == ["distracted", "stumbled"])
-        #expect(entries.all.filter(\.repeatable).map(\.id).sorted() == ["addicted", "leveraged", "swooning", "tainted"])
+        #expect(entries.all.filter(\.repeatable).map(\.id).sorted() == ["addicted", "anchored-heart", "beloved-enemy", "leveraged", "swooning", "tainted"])
         #expect(entries.all.filter(\.counter).map(\.id).sorted() == ["languid", "lethargic", "tempted"])
     }
 

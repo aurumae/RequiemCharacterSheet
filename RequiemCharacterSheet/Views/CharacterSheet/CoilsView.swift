@@ -88,11 +88,18 @@ struct CoilsView: View {
                 }
             }
             Menu {
-                // Coils without a Mystery, like the Coil of Zirnitra, are learned as Coils, not followed
-                ForEach(Catalog.bundled.mysteries.all.filter { !$0.coilOnly }) { entry in
-                    Button(entry.name) {
-                        editsCustomMystery = false
-                        character.chooseMystery(.catalog(entry.id))
+                // Grouped by book. Coils without a Mystery, like the Coil of Zirnitra, are learned as Coils, not followed
+                ForEach(Catalog.bundled.books, id: \.id) { book in
+                    let mysteries = Catalog.bundled.mysteries.all.filter { !$0.coilOnly && $0.source.book == book.id }
+                    if !mysteries.isEmpty {
+                        Section(book.name) {
+                            ForEach(mysteries) { entry in
+                                Button(entry.name) {
+                                    editsCustomMystery = false
+                                    character.chooseMystery(.catalog(entry.id))
+                                }
+                            }
+                        }
                     }
                 }
                 Button("Custom Mystery") {
@@ -160,27 +167,27 @@ struct CoilsView: View {
 
     // MARK: - Scales
 
-    /// One section per Mystery, the character's own first.
+    /// By book; within each, one group per Mystery, the character's own first.
     private var scalePickerSections: [CatalogPickerSection] {
         let owned = Set(character.scales.compactMap(\.source.catalogID))
         let all = Catalog.bundled.mysteries.all
         let isOwn = { (entry: MysteryEntry) in entry.id == character.mysterySource.catalogID }
         let mysteries = all.filter(isOwn) + all.filter { !isOwn($0) }
-        return mysteries.map { mystery in
-            let items = Catalog.bundled.scales.all.filter { $0.mystery == mystery.id }.map { entry in
-                CatalogPickerItem(
-                    id: entry.id,
-                    name: entry.name,
-                    summary: entry.summary,
-                    details: [
-                        "Prerequisite: \(entry.prerequisiteText)",
-                        "Costs \(experiencesText(character.experienceCost(of: entry)))",
-                    ],
-                    citation: entry.source.citation(),
-                    isOwned: owned.contains(entry.id)
-                )
-            }
-            return CatalogPickerSection(title: mystery.name, items: items)
+        let groups = mysteries.map { mystery in
+            CatalogPickerGroup(mystery.name, Catalog.bundled.scales.all.filter { $0.mystery == mystery.id })
+        }
+        return CatalogPickerSection.byBook(groups) { entry in
+            CatalogPickerItem(
+                id: entry.id,
+                name: entry.name,
+                summary: entry.summary,
+                details: [
+                    "Prerequisite: \(entry.prerequisiteText)",
+                    "Costs \(experiencesText(character.experienceCost(of: entry)))",
+                ],
+                citation: entry.source.citation(),
+                isOwned: owned.contains(entry.id)
+            )
         }
     }
 

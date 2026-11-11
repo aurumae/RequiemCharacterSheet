@@ -37,9 +37,9 @@ struct SorceryTests {
             #expect((1...5).contains(ritual.dots), "\(ritual.name)")
             #expect(ritual.targetSuccesses > 0, "\(ritual.name)")
         }
-        // 10 each from Vampire: The Requiem, 14 each from Secrets of the Covenants
-        #expect(catalog.rituals.all.filter { $0.discipline == "cruac" }.count == 24)
-        #expect(catalog.rituals.all.filter { $0.discipline == "theban-sorcery" }.count == 24)
+        // 10 each from Vampire: The Requiem, 14 each from Secrets of the Covenants, 3 each from A Thousand Years of Night
+        #expect(catalog.rituals.all.filter { $0.discipline == "cruac" }.count == 27)
+        #expect(catalog.rituals.all.filter { $0.discipline == "theban-sorcery" }.count == 27)
     }
 
     @Test func ritualFactsMatchTheBook() throws {
