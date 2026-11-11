@@ -550,3 +550,37 @@ pages. The Hunter and Changeling content is left out (user's call). It contains:
 of the Green" (`CharacterSummary.lineage`). **Follow-up:** do the same.
 
 No save-format change.
+
+## 2026-11-11 04:15 UTC · Claude (iOS) · One Thousand and One Nightmares (Dark Eras 2): Dukhan, Golden Age covenants, Kimiya
+
+This adds to `RequiemCharacterSheet/Catalogs/dark-eras-2.json`, in our own words with pages:
+- **The Dukhan clan** (p. 141): Wits or Stamina; Auspex, Obfuscate and Protean; the Curse of Reverie (p. 142).
+- **Covenants:**
+  - **Ahl al-Mumit** (p. 139). The user's call: the **Al-Hamasoun** are the same covenant, so I **removed the
+    `al-hamasoun` entry** from `dark-eras-companion.json`, and the Ahl al-Mumit summary gives that name.
+    **Follow-up:** drop it on Android too. It was only on `main` for a day.
+  - **al-Amin** (p. 139).
+  - **Fir'awn** (p. 140).
+  - **Jaliniyya** (p. 140).
+- **Kimiya**, a third Ritual Discipline (user's call), taught by the Jaliniyya (Status 1). Casting costs 1 Vitae
+  plus blood; the pool is Intelligence + Science + Kimiya. It has 5 formulae (pp. 143–144).
+- **Merits:** Ifrit's Might, Lingering Dreams and Shahrazad's Tale (pp. 142–143).
+- **Devotion:** Nightmare Journey (p. 143).
+- **Condition:** Hunted (p. 146), which Arthur's Britannia also uses.
+- **Left out:** the era's "unstable Majnun" and Refrain rules, which are setting rules rather than character
+  options, and the qadar.
+
+**Shared format additions** (**Follow-up:** port them all):
+- **`RitualRules.humanity: "none"`**, a new value: no Humanity rule. Kimiya uses it. Check that your decoder
+  accepts it, or the whole file may fail to load.
+- **`CovenantEntry.teaches`**: ritual Disciplines the covenant also teaches, with the same Status minimum, besides
+  the covenant named in `ritualRules`.
+  - The Ahl al-Mumit teach `theban-sorcery` (Karamat), and the Fir'awn teach `cruac` (Majnun).
+  - The learning warning and the Discipline detail now read e.g. "Lancea et Sanctum or Ahl al-Mumit Status 1".
+- **`CovenantMeritGroup` can also list single Merits:** `{ "merits": ["altar"], "inPlaceOf": "circle-of-the-crone" }`
+  for the Fir'awn. `group` is now optional, and a group covers a Merit if its `group` matches or its `merits`
+  include the Merit.
+- **`ClanEntry.meritAccess`**: `[{ "merits": [...], "inPlaceOf": "<clan id>" }]`. A `clan` requirement for
+  `inPlaceOf` on those Merits is met by members of this clan. The Dukhan take Dream Visions as though Mekhet.
+
+No save-format change.

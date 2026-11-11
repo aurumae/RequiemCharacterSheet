@@ -95,7 +95,7 @@ struct RitualsView: View {
         let groups = disciplines.map { discipline in
             CatalogPickerGroup(discipline.name, Catalog.bundled.rituals.all
                 .filter { $0.discipline == discipline.id }
-                .sorted { ($0.dots, $0.name) < ($1.dots, $1.name) })
+                .sorted { $0.dots != $1.dots ? $0.dots < $1.dots : $0.name.localizedStandardCompare($1.name) == .orderedAscending })
         }
         return CatalogPickerSection.byBook(groups) { entry in
             let discipline = disciplines.first { $0.id == entry.discipline }

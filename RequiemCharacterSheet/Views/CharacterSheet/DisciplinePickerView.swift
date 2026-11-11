@@ -17,7 +17,7 @@ struct DisciplinePickerView: View {
 
     /// Alphabetical; when searching, Disciplines whose name matches come before those whose summary does.
     private var matchingEntries: [DisciplineEntry] {
-        let entries = Catalog.bundled.disciplines.all.sorted { $0.name < $1.name }
+        let entries = Catalog.bundled.disciplines.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
         let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
         let summaryMatches = entries.filter {

@@ -5,6 +5,41 @@
     "id": "dark-eras-2",
     "name": "Dark Eras 2"
   },
+  "clans": [
+    {
+      "id": "dukhan",
+      "name": "Dukhan",
+      "nickname": "Succubi, Incubi",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 141
+      },
+      "favoredAttributes": [
+        "wits",
+        "stamina"
+      ],
+      "disciplines": [
+        "auspex",
+        "obfuscate",
+        "protean"
+      ],
+      "bane": {
+        "name": "The Curse of Reverie",
+        "summary": "Blood alone can't sustain you. Go as many nights as your Humanity without spending a full scene in the Astral and you become Languid, until you fall into torpor or spend a scene there.",
+        "humanityThreshold": 6,
+        "page": 142
+      },
+      "summary": "Former Mekhet entangled with the Begotten, who stalk humanity's dreams and travel the Astral more easily than any other Kindred.",
+      "meritAccess": [
+        {
+          "merits": [
+            "dream-visions"
+          ],
+          "inPlaceOf": "mekhet"
+        }
+      ]
+    }
+  ],
   "bloodlines": [
     {
       "id": "bron",
@@ -146,6 +181,33 @@
           "page": 120
         }
       ]
+    },
+    {
+      "id": "kimiya",
+      "name": "Kimiya",
+      "kind": "ritual",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "summary": "Jaliniyya blood alchemy that treats Vitae as an occult science, mixing blood with reagents to work its formulae.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "jaliniyya",
+        "covenantStatusMinimum": 1,
+        "humanity": "none",
+        "castingCost": {
+          "vitae": {
+            "fixed": 1
+          },
+          "note": "plus lethal wounds' worth of the subject's blood equal to the formula's dots − 1 (minimum 1); your own if the subject is an object"
+        },
+        "castingPool": {
+          "attribute": "intelligence",
+          "skill": "science",
+          "includesDiscipline": true
+        }
+      }
     }
   ],
   "covenants": [
@@ -168,6 +230,60 @@
       },
       "statusCountsAs": "circle-of-the-crone",
       "summary": "Small, feuding covens of feather-cloaked Kindred who worship vengeance, the Beast and sometimes the Strix. Its Status counts as Circle of the Crone Status."
+    },
+    {
+      "id": "ahl-al-mumit",
+      "name": "Ahl al-Mumit",
+      "nickname": "The Wrathful",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 139
+      },
+      "teaches": [
+        "theban-sorcery"
+      ],
+      "summary": "Also called al-Hamasoun. Kindred, mostly Muslim, who rage at their curse and turn it on the wicked, hunting monsters while working Karamat (Theban Sorcery) to remind themselves of God's mercy. They claim Iblis as their teacher."
+    },
+    {
+      "id": "al-amin",
+      "name": "al-Amin",
+      "nickname": "The Faithful",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 139
+      },
+      "summary": "Devout storytellers, mediators and caravan-masters who follow Khadijah and Shahrazad, keep the peace between covenants and leave the judgment of their souls to God."
+    },
+    {
+      "id": "firawn",
+      "name": "Fir'awn",
+      "nickname": "The Forbearers",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 140
+      },
+      "teaches": [
+        "cruac"
+      ],
+      "meritGroups": [
+        {
+          "merits": [
+            "altar"
+          ],
+          "inPlaceOf": "circle-of-the-crone"
+        }
+      ],
+      "summary": "A loose alliance of polytheist Kindred who keep the old faiths alive and practise Majnun (Crúac) as forerunners of the Circle of the Crone. They may take Altar as though they were Acolytes."
+    },
+    {
+      "id": "jaliniyya",
+      "name": "Jaliniyya",
+      "nickname": "Alchemists",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 140
+      },
+      "summary": "Scholar-alchemists descended from a Camarilla sect of Galenic physicians, who study Vitae by experiment and teach the blood alchemy of Kimiya."
     }
   ],
   "merits": [
@@ -242,6 +358,186 @@
         }
       ],
       "summary": "Your coven worships one of the Strix. Once a chapter, ask it for knowledge as a Mentor of your Circle of Mor Status, or a Dread Power of up to that Potency, paying twice your Status in Vitae; raising Humanity puts you at its mercy."
+    },
+    {
+      "id": "ifrits-might",
+      "name": "Ifrit's Might",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 142
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "bloodPotency",
+          "minimum": 6
+        },
+        {
+          "kind": "covenant",
+          "id": "firawn",
+          "minimum": 1
+        }
+      ],
+      "summary": "Choose one Majnun (Crúac) rite for each dot of Blood Potency above 5: leading it, three successes count as exceptional. New Blood Potency dots add rites."
+    },
+    {
+      "id": "lingering-dreams",
+      "name": "Lingering Dreams",
+      "category": "vampire",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 142
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "dream-visions",
+          "minimum": 1
+        }
+      ],
+      "summary": "When you interpret a dream vision about someone, they dream of you in turn and become Swooning for you."
+    },
+    {
+      "id": "shahrazads-tale",
+      "name": "Shahrazad's Tale",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 142
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "al-amin",
+          "minimum": 1
+        }
+      ],
+      "summary": "Once a chapter, an hour-long tale can hook up to your dots in listeners (Resolve + Composure, −1 per dot): they become addicted to your Vitae and your stories, and think better of you with each tale."
+    }
+  ],
+  "devotions": [
+    {
+      "id": "nightmare-journey",
+      "name": "Nightmare Journey",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 3,
+      "requirement": "Use while in Twilight Projection.",
+      "summary": "Send your mind from Twilight Projection into a Chamber of the local Hive in a Dream Form that can use Disciplines and feed on dream creatures, while your body lies in true torpor."
+    }
+  ],
+  "rituals": [
+    {
+      "id": "spiders-hijra",
+      "name": "Spider's Hijra",
+      "discipline": "kimiya",
+      "dots": 1,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "targetSuccesses": 6,
+      "summary": "Spin your Vitae into webs filling Potency × 10 yards around you until sunrise, penalising Initiative, Defense, Speed and Physical pools of everyone but you."
+    },
+    {
+      "id": "sayihs-khol",
+      "name": "Sayih's Khol",
+      "discipline": "kimiya",
+      "dots": 2,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "targetSuccesses": 5,
+      "summary": "Words in blood on the subject's eyelids protect them from currents, pressure and waves for the night; the living can breathe underwater."
+    },
+    {
+      "id": "al-ajsad",
+      "name": "al-Ajsad",
+      "discipline": "kimiya",
+      "dots": 3,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "targetSuccesses": 6,
+      "summary": "Make a loyal homunculus from your Vitae, corpse parts, mercury and sulfur; it lives as long as you feed it a Vitae each night."
+    },
+    {
+      "id": "ebony-horse",
+      "name": "Ebony Horse",
+      "discipline": "kimiya",
+      "dots": 4,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 144
+      },
+      "targetSuccesses": 8,
+      "summary": "Runes in blood make an object of up to Size 7 fly and carry passengers until sunrise, at twice the formula's Potency in Speed, wherever you direct it."
+    },
+    {
+      "id": "curse-of-the-monkey-prince",
+      "name": "Curse of the Monkey Prince",
+      "discipline": "kimiya",
+      "dots": 5,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 144
+      },
+      "targetSuccesses": 10,
+      "summary": "Drink a potion of the victim's blood and name a wrong they mean to do you; if they do it before sunrise, they're turned into a small animal until dawn.",
+      "contestedBy": "Stamina + Supernatural Tolerance"
+    }
+  ],
+  "conditions": [
+    {
+      "id": "hunted",
+      "name": "Hunted",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 146
+      },
+      "persistent": true,
+      "summary": "One of the Strix has taken an interest in you, whether to destroy you or simply to torment you.",
+      "resolution": "Stop your persecutors by a bargain, a change of habits that keeps them from you, or force.",
+      "beat": "Your persecutors find you.",
+      "possibleSources": "Casting unstable Majnun"
     }
   ]
 }

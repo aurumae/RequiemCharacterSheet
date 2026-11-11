@@ -219,7 +219,7 @@ struct SorceryTests {
     @Test func learningRitualsNeedsCovenantStatus() throws {
         let cruac = try #require(catalog.disciplines.entry("cruac"))
         let outsider = character(disciplines: [("Crúac", 1)])
-        #expect(outsider.ritualLearningWarning(for: cruac) == "Learning rituals requires Circle of the Crone Status 1")
+        #expect(outsider.ritualLearningWarning(for: cruac) == "Learning rituals requires Circle of the Crone or Fir'awn Status 1")
 
         let acolyte = character(disciplines: [("Crúac", 1)], status: [("Circle of the Crone", 1)])
         #expect(acolyte.ritualLearningWarning(for: cruac) == nil)

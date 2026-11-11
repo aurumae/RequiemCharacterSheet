@@ -250,9 +250,8 @@ extension Character {
             disciplineDots += dots
             if let entry, inClanDisciplines.contains(entry.id), entry.kind != .ritual { continue }
             outOfClan += dots
-            if let rules = entry?.ritualRules, covenantStatus(rules.covenant) < rules.covenantStatusMinimum {
-                let covenant = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
-                report.problems.insert(.sorceryWithoutStatus(discipline: entry?.name ?? "", covenant: covenant))
+            if let entry, entry.ritualRules != nil, !hasRitualStatus(for: entry) {
+                report.problems.insert(.sorceryWithoutStatus(discipline: entry.name, covenant: Self.ritualCovenantsText(for: entry)))
             }
         }
         for coil in coils {

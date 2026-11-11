@@ -79,7 +79,7 @@ extension DisciplineDetailView {
     /// How a Ritual Discipline is learned and cast, and the rituals the character knows.
     @ViewBuilder
     private func ritualSection(_ rules: RitualRules) -> some View {
-        let covenant = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
+        let covenant = Character.ritualCovenantsText(for: entry)
         let known = character.rituals(of: .catalog(entry.id))
         Section(header: Text("Rituals").themedText(.subsectionHeader)) {
             VStack(alignment: .leading, spacing: 4) {

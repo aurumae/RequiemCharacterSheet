@@ -187,7 +187,7 @@ extension Character {
 
     /// Mask and Dirge archetypes for the picker; the same list serves both.
     func archetypePickerSections(chosen: String) -> [CatalogPickerSection] {
-        let archetypes = Catalog.bundled.archetypes.all.sorted { $0.name < $1.name }
+        let archetypes = Catalog.bundled.archetypes.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         return CatalogPickerSection.byBook([CatalogPickerGroup("", archetypes)]) { archetype in
             CatalogPickerItem(
                 id: archetype.id,
@@ -206,7 +206,7 @@ extension Character {
 
     /// Clans for the picker, each with its favoured Attributes and in-clan Disciplines.
     func clanPickerSections() -> [CatalogPickerSection] {
-        let clans = Catalog.bundled.clans.all.sorted { $0.name < $1.name }
+        let clans = Catalog.bundled.clans.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         return CatalogPickerSection.byBook([CatalogPickerGroup("", clans)]) { clan in
             let attributes = clan.favoredAttributes.map(\.name).joined(separator: " or ")
             let disciplines = clan.disciplines.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")
@@ -222,7 +222,7 @@ extension Character {
     }
 
     func covenantPickerSections() -> [CatalogPickerSection] {
-        let covenants = Catalog.bundled.covenants.all.sorted { $0.name < $1.name }
+        let covenants = Catalog.bundled.covenants.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         return CatalogPickerSection.byBook([CatalogPickerGroup("", covenants)]) { covenant in
             CatalogPickerItem(
                 id: covenant.id,
@@ -237,7 +237,7 @@ extension Character {
     /// By book; within each, bloodlines of the character's clan first. Others are listed with their parent clan as a
     /// reminder.
     func bloodlinePickerSections() -> [CatalogPickerSection] {
-        let all = Catalog.bundled.bloodlines.all.sorted { $0.name < $1.name }
+        let all = Catalog.bundled.bloodlines.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         func item(_ bloodline: BloodlineEntry) -> CatalogPickerItem {
             let parents = bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")
             let disciplines = bloodline.disciplines.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")

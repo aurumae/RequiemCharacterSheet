@@ -21,7 +21,7 @@ struct MeritPickerView: View {
     /// Alphabetical; when searching, Merits whose name matches come first, then those whose summary does, then
     /// those from a book whose name matches, e.g. "Covenants" for Secrets of the Covenants.
     private var matchingEntries: [MeritEntry] {
-        let entries = Catalog.bundled.merits.all.sorted { $0.name < $1.name }
+        let entries = Catalog.bundled.merits.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
         let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
         let summaryMatches = entries.filter {
@@ -99,6 +99,7 @@ struct MeritPickerView: View {
                         Button(option) { choose(entry, qualifier: option) }
                     }
                 }
+                Button("Cancel", role: .cancel) {}
             }
             // Free-text qualifiers, e.g. the language for Language
             .alert(
@@ -135,6 +136,10 @@ struct MeritPickerView: View {
         Button {
             if entry.qualifier != nil {
                 qualifierDraft = ""
+                // Close the search keyboard first, so a long list of choices, like Covenant Status's, fits on screen
+                if character.qualifierOptions(for: entry) != nil {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
                 pendingEntry = entry
             } else {
                 choose(entry, qualifier: nil)

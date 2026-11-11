@@ -403,7 +403,7 @@ struct ConditionPickerView: View {
             result.append(CatalogPickerSection(title: "Recently Used", items: recent.map(item)))
         }
         // Books in catalog order, which puts the Requiem core book first
-        return result + CatalogPickerSection.byBook([CatalogPickerGroup("", all.sorted { $0.name < $1.name })], item: item)
+        return result + CatalogPickerSection.byBook([CatalogPickerGroup("", all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending })], item: item)
     }
 
     private func item(_ entry: ConditionEntry) -> CatalogPickerItem {

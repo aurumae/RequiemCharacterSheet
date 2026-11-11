@@ -51,7 +51,7 @@ struct DevotionsView: View {
     /// By book; within each, Devotions the character has the Disciplines for come first.
     private var pickerSections: [CatalogPickerSection] {
         let owned = Set(character.devotions.compactMap(\.source.catalogID))
-        let entries = Catalog.bundled.devotions.all.sorted { $0.name < $1.name }
+        let entries = Catalog.bundled.devotions.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         let available = entries.filter { character.unmetPrerequisites(for: $0).isEmpty }
         let others = entries.filter { !character.unmetPrerequisites(for: $0).isEmpty }
         return CatalogPickerSection.byBook([

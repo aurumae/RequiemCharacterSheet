@@ -17,7 +17,7 @@ struct BanePickerView: View {
 
     /// Alphabetical; when searching, Banes whose name matches come before those whose summary does.
     private var matchingEntries: [BaneEntry] {
-        let entries = Catalog.bundled.banes.all.sorted { $0.name < $1.name }
+        let entries = Catalog.bundled.banes.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
         let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
         let summaryMatches = entries.filter {

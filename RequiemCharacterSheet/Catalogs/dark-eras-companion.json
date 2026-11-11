@@ -91,12 +91,6 @@
       "source": { "book": "dark-eras-companion", "page": 92 },
       "summary": "Messengers, guides and highwaymen who keep Kindred society connected by carrying word and travellers along the dangerous roads and seas between cities. Its members may take Carthian Law Merits, using their Gallows Post Status.",
       "meritGroups": [{ "group": "carthian-law", "inPlaceOf": "carthian-movement" }]
-    },
-    {
-      "id": "al-hamasoun",
-      "name": "Al-Hamasoun",
-      "source": { "book": "dark-eras-companion", "page": 91 },
-      "summary": "Muslim Kindred mystics who take Iblis, who refused to bow to Adam, as their model, and make it their duty to tempt mortals away from God. Frequent rivals of the Lancea et Sanctum."
     }
   ]
 }

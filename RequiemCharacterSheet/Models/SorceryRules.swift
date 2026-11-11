@@ -65,9 +65,28 @@ extension Character {
 
     /// Why the character can't learn new rituals for this Discipline, if they can't: they need Status in its covenant.
     func ritualLearningWarning(for entry: DisciplineEntry) -> String? {
-        guard let rules = entry.ritualRules, covenantStatus(rules.covenant) < rules.covenantStatusMinimum else { return nil }
-        let covenant = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
-        return "Learning rituals requires \(covenant) Status \(rules.covenantStatusMinimum)"
+        guard let rules = entry.ritualRules, !hasRitualStatus(for: entry) else { return nil }
+        return "Learning rituals requires \(Self.ritualCovenantsText(for: entry)) Status \(rules.covenantStatusMinimum)"
+    }
+
+    /// Whether the character has the Status to learn rituals for this Discipline, in its covenant or in another that
+    /// teaches it, e.g. the Ahl al-Mumit for Theban Sorcery.
+    func hasRitualStatus(for entry: DisciplineEntry) -> Bool {
+        guard let rules = entry.ritualRules else { return true }
+        let covenants = [rules.covenant] + Self.otherCovenants(teaching: entry).map(\.id)
+        return covenants.contains { covenantStatus($0) >= rules.covenantStatusMinimum }
+    }
+
+    /// Covenants other than its own that teach a Ritual Discipline.
+    static func otherCovenants(teaching entry: DisciplineEntry) -> [CovenantEntry] {
+        Catalog.bundled.covenants.all.filter { $0.teaches.contains(entry.id) }
+    }
+
+    /// The covenants that teach a Ritual Discipline, e.g. "Lancea et Sanctum or Ahl al-Mumit".
+    static func ritualCovenantsText(for entry: DisciplineEntry) -> String {
+        guard let rules = entry.ritualRules else { return "" }
+        let own = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
+        return ([own] + otherCovenants(teaching: entry).map(\.name)).joined(separator: " or ")
     }
 
     /// Rules the ritual breaks for this character: rated above their Discipline dots, or a Theban miracle above their Humanity.
@@ -177,6 +196,8 @@ extension RitualRules.HumanityRule {
             return "Humanity can't rise above 10 minus its dots. Learning a dot is a breaking point at Humanity 4 or higher."
         case .atLeastRitualDots:
             return "Casting a miracle requires Humanity at least equal to its dots."
+        case .none:
+            return "No limit on Humanity."
         }
     }
 }

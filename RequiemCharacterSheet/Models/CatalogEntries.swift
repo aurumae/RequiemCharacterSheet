@@ -137,6 +137,8 @@ struct RitualRules: Decodable {
         case capAtTenMinusDots
         /// Casting a ritual needs Humanity at least equal to its dots. Theban Sorcery.
         case atLeastRitualDots
+        /// No Humanity limit. Kimiya.
+        case none
     }
 }
 
@@ -363,6 +365,25 @@ struct ClanEntry: CatalogEntry {
     let disciplines: [CatalogEntryID]
     let bane: ClanBane
     let summary: String
+    /// Another clan's Merits its members may take.
+    let meritAccess: [ClanMeritAccess]
+
+    enum CodingKeys: CodingKey {
+        case id, name, nickname, source, favoredAttributes, disciplines, bane, summary, meritAccess
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        favoredAttributes = try container.decode([AttributeKind].self, forKey: .favoredAttributes)
+        disciplines = try container.decode([CatalogEntryID].self, forKey: .disciplines)
+        bane = try container.decode(ClanBane.self, forKey: .bane)
+        summary = try container.decode(String.self, forKey: .summary)
+        meritAccess = try container.decode(.meritAccess, default: [])
+    }
 }
 
 struct ClanBane: Decodable {
@@ -454,9 +475,12 @@ struct CovenantEntry: CatalogEntry {
     /// Another covenant whose Status this covenant's Status counts as, for everything that asks for it, e.g. the
     /// Legion of the Green's for the Invictus (Dark Eras 2 p. 108).
     let statusCountsAs: CatalogEntryID?
+    /// Ritual Disciplines it teaches besides the one whose `ritualRules` names it, with the same Status, e.g. the Ahl
+    /// al-Mumit's Karamat, which is Theban Sorcery (Dark Eras 2 p. 139).
+    let teaches: [CatalogEntryID]
 
     enum CodingKeys: CodingKey {
-        case id, name, nickname, source, summary, meritGroups, statusCountsAs
+        case id, name, nickname, source, summary, meritGroups, statusCountsAs, teaches
     }
 
     init(from decoder: Decoder) throws {
@@ -468,13 +492,39 @@ struct CovenantEntry: CatalogEntry {
         summary = try container.decode(String.self, forKey: .summary)
         meritGroups = try container.decode(.meritGroups, default: [])
         statusCountsAs = try container.decodeIfPresent(CatalogEntryID.self, forKey: .statusCountsAs)
+        teaches = try container.decode(.teaches, default: [])
     }
 }
 
-/// Members may take the Merits in `group`, with their own Covenant Status standing in for Status in `inPlaceOf`,
-/// e.g. Gallows Post Status for the Carthian Laws' Carthian Status (Dark Eras Companion p. 93).
+/// Members may take the Merits in `group`, or those listed in `merits`, with their own Covenant Status standing in
+/// for Status in `inPlaceOf`, e.g. Gallows Post Status for the Carthian Laws' Carthian Status (Dark Eras Companion
+/// p. 93), or the Fir'awn's for Altar (Dark Eras 2 p. 142).
 struct CovenantMeritGroup: Decodable, Equatable {
-    let group: String
+    let group: String?
+    let merits: [CatalogEntryID]
+    let inPlaceOf: CatalogEntryID
+
+    enum CodingKeys: CodingKey {
+        case group, merits, inPlaceOf
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        group = try container.decodeIfPresent(String.self, forKey: .group)
+        merits = try container.decode(.merits, default: [])
+        inPlaceOf = try container.decode(CatalogEntryID.self, forKey: .inPlaceOf)
+    }
+
+    /// Whether it covers this Merit.
+    func covers(_ merit: MeritEntry) -> Bool {
+        (group != nil && group == merit.group) || merits.contains(merit.id)
+    }
+}
+
+/// Members of a clan may take these Merits as though they were of the clan `inPlaceOf`, e.g. the Dukhan with Dream
+/// Visions as though Mekhet (Dark Eras 2 p. 142).
+struct ClanMeritAccess: Decodable, Equatable {
+    let merits: [CatalogEntryID]
     let inPlaceOf: CatalogEntryID
 }
 

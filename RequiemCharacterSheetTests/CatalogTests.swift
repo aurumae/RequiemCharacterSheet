@@ -16,16 +16,16 @@ struct CatalogTests {
 
     @Test func bundledCatalogsLoad() {
         #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "dark-eras-2", "secrets-of-the-covenants"])
-        #expect(catalog.disciplines.all.count == 15)
+        #expect(catalog.disciplines.all.count == 16)
         #expect(catalog.bloodlines.all.count == 2)
         // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
-        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras and 3 from Dark Eras 2
-        #expect(catalog.merits.all.count == 241)
+        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras and 6 from Dark Eras 2
+        #expect(catalog.merits.all.count == 244)
         #expect(catalog.banes.all.count == 14)
-        #expect(catalog.clans.all.count == 9)
-        #expect(catalog.covenants.all.count == 10)
-        #expect(catalog.rituals.all.count == 54)
-        #expect(catalog.devotions.all.count == 40)
+        #expect(catalog.clans.all.count == 10)
+        #expect(catalog.covenants.all.count == 13)
+        #expect(catalog.rituals.all.count == 59)
+        #expect(catalog.devotions.all.count == 41)
         #expect(catalog.mysteries.all.count == 6)
         #expect(catalog.scales.all.count == 16)
         #expect(catalog.elderBanes.all.count == 5)
@@ -146,7 +146,7 @@ struct CatalogTests {
 
     @Test func pickersGroupEntriesByBook() {
         let clans = CatalogBookSection.sections([CatalogPickerGroup("", catalog.clans.all)])
-        #expect(clans.map(\.book.name) == ["Vampire: The Requiem Second Edition", "A Thousand Years of Night"])
+        #expect(clans.map(\.book.name) == ["Vampire: The Requiem Second Edition", "Dark Eras 2", "A Thousand Years of Night"])
         #expect(clans.last?.entries.map(\.id) == ["akhud", "hollow-mekhet", "julii", "pijavica"])
         #expect(clans.allSatisfy { $0.startsBook })
 
@@ -170,13 +170,15 @@ struct CatalogTests {
     @Test func darkErasCovenantsAreLoaded() throws {
         #expect(catalog.book("dark-eras")?.name == "Dark Eras")
         #expect(catalog.covenants.entry("gallows-post")?.source.book == "dark-eras-companion")
-        #expect(catalog.covenants.entry("al-hamasoun")?.source.book == "dark-eras-companion")
+        // The Al-Hamasoun of The Soulless and the Dead are the Ahl al-Mumit, listed once where they're written up
+        #expect(catalog.covenants.entry("al-hamasoun") == nil)
+        #expect(catalog.covenants.entry("ahl-al-mumit")?.source.book == "dark-eras-2")
         #expect(catalog.covenants.entry("weihan-cynn")?.source.book == "dark-eras")
         #expect(catalog.merits.all.filter { $0.source.book == "dark-eras" }.map(\.id) == ["envoy", "contract-with-the-uncanny"])
         // Covenant Status can be taken for any covenant in the catalogs
         let status = try #require(catalog.merits.entry("covenant-status"))
         let options = try #require(Character().qualifierOptions(for: status))
-        #expect(["Gallows Post", "Weihan Cynn", "Al-Hamasoun", "Invictus"].allSatisfy(options.contains))
+        #expect(["Gallows Post", "Weihan Cynn", "Ahl al-Mumit", "Invictus"].allSatisfy(options.contains))
     }
 
     @Test func gallowsPostTakesCarthianLawsWithItsOwnStatus() throws {
@@ -214,6 +216,37 @@ struct CatalogTests {
             merit.prerequisites.contains { $0.kind == .covenant && $0.id == "circle-of-the-crone" && ($0.minimum ?? 1) >= 3 }
         })
         #expect(character.unmetPrerequisites(for: crone).contains { $0.description.hasPrefix("Circles of Mor Status") })
+    }
+
+    @Test func goldenAgeCovenantsTeachSorceryAndShareMerits() throws {
+        let theban = try #require(catalog.disciplines.entry("theban-sorcery"))
+        let cruac = try #require(catalog.disciplines.entry("cruac"))
+        let kimiya = try #require(catalog.disciplines.entry("kimiya"))
+        #expect(kimiya.kind == .ritual && kimiya.ritualRules?.humanity == RitualRules.HumanityRule.none)
+        #expect(catalog.rituals.all.filter { $0.discipline == "kimiya" }.count == 5)
+
+        let character = Character()
+        character.covenantSource = .catalog("ahl-al-mumit")
+        #expect(character.ritualLearningWarning(for: theban) == "Learning rituals requires Lancea et Sanctum or Ahl al-Mumit Status 1")
+        character.merits.append(Merit(source: .catalog("covenant-status"), qualifier: "Ahl al-Mumit", rating: 1))
+        #expect(character.ritualLearningWarning(for: theban) == nil)
+        #expect(character.ritualLearningWarning(for: kimiya) == "Learning rituals requires Jaliniyya Status 1")
+
+        // The Fir'awn work Crúac and take Altar as though Acolytes, with their own Status
+        let altar = try #require(catalog.merits.entry("altar"))
+        character.covenantSource = .catalog("firawn")
+        character.merits[0].qualifier = "Fir'awn"
+        #expect(character.ritualLearningWarning(for: cruac) == nil)
+        #expect(character.unmetPrerequisites(for: altar).isEmpty)
+    }
+
+    @Test func theDukhanTakeDreamVisionsAsThoughMekhet() throws {
+        let dreamVisions = try #require(catalog.merits.entry("dream-visions"))
+        let character = Character()
+        character.clan = "Dukhan"
+        #expect(character.unmetPrerequisites(for: dreamVisions).isEmpty)
+        character.clan = "Daeva"
+        #expect(character.unmetPrerequisites(for: dreamVisions).map(\.description) == ["Clan: Mekhet"])
     }
 
     @Test func theBronHaveTheirOwnFavoredAttributes() throws {
