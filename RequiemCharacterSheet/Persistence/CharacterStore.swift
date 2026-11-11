@@ -11,11 +11,22 @@ struct CharacterSummary: Identifiable, Equatable {
     let id: UUID
     let name: String
     let clan: String
+    /// Empty if the character has none.
+    var bloodline = ""
     let covenant: String
     /// `nil` when the file couldn't be read.
     let modifiedAt: Date?
     /// False when the file couldn't be read. The file is left untouched so nothing is lost.
     let isReadable: Bool
+}
+
+extension CharacterSummary {
+    /// The clan with any bloodline after it, e.g. "Ventrue (Bron)".
+    var lineage: String {
+        let bloodline = bloodline.trimmingCharacters(in: .whitespaces)
+        guard !bloodline.isEmpty else { return clan }
+        return clan.isEmpty ? bloodline : "\(clan) (\(bloodline))"
+    }
 }
 
 enum CharacterStoreError: Error, Equatable {
@@ -88,6 +99,7 @@ final class CharacterStore {
                 id: id,
                 name: character.name,
                 clan: character.clan,
+                bloodline: character.bloodline,
                 covenant: character.covenant,
                 modifiedAt: character.modifiedAt,
                 isReadable: true

@@ -203,7 +203,7 @@ struct CharacterListView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(displayName(for: summary))
                         .themedText(.label)
-                    let details = [summary.clan, summary.covenant].filter { !$0.isEmpty }
+                    let details = [summary.lineage, summary.covenant].filter { !$0.isEmpty }
                     if !details.isEmpty {
                         Text(details.joined(separator: " · "))
                             .themedText(.body)

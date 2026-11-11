@@ -384,7 +384,39 @@ extension Character {
 
     /// Whether the player still has to choose which favoured Attribute takes the clan's dot.
     var needsFavoredAttribute: Bool {
-        isInCreation && clanEntry != nil && creation?.favoredAttribute == nil
+        isInCreation && !creationFavoredAttributes.isEmpty && creation?.favoredAttribute == nil
+    }
+
+    /// The Attributes the free dot can go on during guided creation. A bloodline chosen at creation that has its own
+    /// favoured Attributes, like the Bron's, replaces the clan's.
+    var creationFavoredAttributes: [AttributeKind] {
+        if let own = bloodlineEntry?.favoredAttributes, !own.isEmpty { return own }
+        return clanEntry?.favoredAttributes ?? []
+    }
+
+    /// Who gives the free dot during guided creation: the bloodline when its favoured Attributes replace the clan's.
+    var creationFavoredAttributeGiver: String? {
+        if let bloodline = bloodlineEntry, !bloodline.favoredAttributes.isEmpty { return bloodline.name }
+        return clanEntry?.name
+    }
+
+    /// Outside guided creation, every favoured Attribute of the clan and of the bloodline, each with where it comes
+    /// from, e.g. Presence (Ventrue, Bron). Adopting a bloodline later doesn't move the dot, so the player picks.
+    var favoredAttributeSources: [(attribute: AttributeKind, sources: [String])] {
+        var sources: [(String, [AttributeKind])] = []
+        if let clan = clanEntry { sources.append((clan.name, clan.favoredAttributes)) }
+        if let bloodline = bloodlineEntry, !bloodline.favoredAttributes.isEmpty {
+            sources.append((bloodline.name, bloodline.favoredAttributes))
+        }
+        let attributes = sources.flatMap(\.1).reduce(into: [AttributeKind]()) { if !$0.contains($1) { $0.append($1) } }
+        return attributes.map { kind in (kind, sources.filter { $0.1.contains(kind) }.map(\.0)) }
+    }
+
+    /// The favoured Attributes worded for display, e.g. "Presence (Ventrue and Bron), Resolve (Ventrue) or Stamina (Bron)".
+    var favoredAttributesText: String {
+        let parts = favoredAttributeSources.map { "\($0.attribute.name) (\($0.sources.joined(separator: " and ")))" }
+        guard let last = parts.last else { return "" }
+        return parts.count == 1 ? last : parts.dropLast().joined(separator: ", ") + " or " + last
     }
 
     /// Puts the clan's free dot on one of its favoured Attributes, moving it from any other.

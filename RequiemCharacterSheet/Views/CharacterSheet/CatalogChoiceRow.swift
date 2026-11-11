@@ -143,7 +143,7 @@ extension Character {
     var clanDetail: CatalogChoiceDetail? {
         clanEntry.map { clan in
             CatalogChoiceDetail(title: clan.name, summary: clan.summary, citation: clan.source.citation(), facts: [
-                DetailFact(label: "Favoured Attributes", value: clan.favoredAttributes.map(\.name).joined(separator: " or ")),
+                DetailFact(label: "Favoured Attributes", value: favoredAttributesDetail(clan.favoredAttributes)),
                 DetailFact(label: "Disciplines", value: disciplineNames(clan.disciplines)),
                 DetailFact(label: "Bane", value: "\(clan.bane.name). \(clan.bane.summary)"),
             ])
@@ -156,8 +156,18 @@ extension Character {
                 DetailFact(label: "Parent clan", value: bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")),
                 DetailFact(label: "Disciplines", value: disciplineNames(bloodline.disciplines)),
                 DetailFact(label: "Bane", value: "\(bloodline.bane.name). \(bloodline.bane.summary)"),
-            ])
+            ] + (bloodline.favoredAttributes.isEmpty ? [] : [
+                DetailFact(label: "Favoured Attributes", value: favoredAttributesDetail(bloodline.favoredAttributes)),
+            ]))
         }
+    }
+
+    /// One list's favoured Attributes; with a bloodline that has its own, both lists, each marked with its source.
+    /// During guided creation the bloodline's replace the clan's, so only the bloodline's are shown.
+    private func favoredAttributesDetail(_ own: [AttributeKind]) -> String {
+        if isInCreation { return creationFavoredAttributes.map(\.name).joined(separator: " or ") }
+        if bloodlineEntry?.favoredAttributes.isEmpty == false { return favoredAttributesText }
+        return own.map(\.name).joined(separator: " or ")
     }
 
     var covenantDetail: CatalogChoiceDetail? {
@@ -236,7 +246,8 @@ extension Character {
                 id: bloodline.id,
                 name: bloodline.name,
                 summary: bloodline.summary,
-                details: ["Parent clan: \(parents)", "Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"],
+                details: ["Parent clan: \(parents)", "Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"]
+                    + (bloodline.favoredAttributes.isEmpty ? [] : ["Favoured: \(bloodline.favoredAttributes.map(\.name).joined(separator: " or "))"]),
                 warning: fits ? nil : "A bloodline of the \(parents)",
                 citation: bloodline.source.citation(),
                 isOwned: bloodlineSource == .catalog(bloodline.id)

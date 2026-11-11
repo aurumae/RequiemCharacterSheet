@@ -77,13 +77,21 @@ final class Character: Codable {
                 elderBaneActive = elderBaneEntry.map { humanity <= $0.humanityThreshold } ?? false
             }
             // During guided creation the clan's dot comes off if the new clan doesn't favour that Attribute
-            if let favored = creation?.favoredAttribute, clanEntry?.favoredAttributes.contains(favored) != true {
+            if let favored = creation?.favoredAttribute, !creationFavoredAttributes.contains(favored) {
                 clearFavoredAttribute()
             }
         }
     }
     /// The bloodline: a catalog entry or custom text. Empty custom text if none.
-    var bloodlineSource: TraitSource
+    var bloodlineSource: TraitSource {
+        didSet {
+            // During guided creation a bloodline with its own favoured Attributes replaces the clan's, so the dot
+            // comes off if it's on one the bloodline doesn't favour. Afterwards a bloodline doesn't move it.
+            if let favored = creation?.favoredAttribute, !creationFavoredAttributes.contains(favored) {
+                clearFavoredAttribute()
+            }
+        }
+    }
     /// The covenant: a catalog entry or custom text.
     var covenantSource: TraitSource
 

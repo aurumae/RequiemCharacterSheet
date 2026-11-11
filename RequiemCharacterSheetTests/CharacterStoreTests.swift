@@ -83,6 +83,15 @@ final class CharacterStoreTests {
         ))
     }
 
+    @Test func summaryShowsTheBloodlineAfterTheClan() {
+        func lineage(_ clan: String, _ bloodline: String) -> String {
+            CharacterSummary(id: UUID(), name: "", clan: clan, bloodline: bloodline, covenant: "", modifiedAt: nil, isReadable: true).lineage
+        }
+        #expect(lineage("Ventrue", "Bron") == "Ventrue (Bron)")
+        #expect(lineage("Ventrue", "") == "Ventrue")
+        #expect(lineage("", "Bron") == "Bron")
+    }
+
     @Test func savingAgainReplacesTheSameEntry() throws {
         let store = makeStore()
         let character = Character()

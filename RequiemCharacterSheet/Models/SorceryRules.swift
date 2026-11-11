@@ -23,9 +23,21 @@ extension Character {
     /// Dots of the Covenant Status Merit taken for this covenant.
     func covenantStatus(_ covenantID: CatalogEntryID) -> Int {
         let name = Catalog.bundled.covenants.entry(covenantID)?.name ?? covenantID
-        return merits
+        let own = merits
             .filter { $0.source == .catalog("covenant-status") && $0.qualifier?.caseInsensitiveCompare(name) == .orderedSame }
             .map(\.rating).max() ?? 0
+        // Status in the character's covenant may count as this one's, e.g. the Circles of Mor's as the Crone's
+        if let standIn = statusStandIn(for: covenantID) {
+            return max(own, covenantStatus(standIn.id))
+        }
+        return own
+    }
+
+    /// The character's covenant, if its Status counts as Status in `covenantID`.
+    func statusStandIn(for covenantID: CatalogEntryID) -> CovenantEntry? {
+        guard let own = covenantSource.catalogID.flatMap({ Catalog.bundled.covenants.entry($0) }),
+              own.id != covenantID, own.statusCountsAs == covenantID else { return nil }
+        return own
     }
 
     // MARK: - Blood sorcery (Vampire: The Requiem pp. 150–152)

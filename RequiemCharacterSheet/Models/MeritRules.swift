@@ -95,9 +95,10 @@ extension Character {
                own.meritGroups.contains(CovenantMeritGroup(group: meritGroup, inPlaceOf: id)) {
                 return PrerequisiteCheck(description: "\(own.name) Status \(minimum)", isMet: covenantStatus(own.id) >= minimum)
             }
-            let name = catalog.covenants.entry(id)?.name ?? id
+            // Named for the character's own covenant when its Status counts as this one's
+            let name = statusStandIn(for: id)?.name ?? catalog.covenants.entry(id)?.name ?? id
             guard prerequisite.minimum != nil else {
-                return PrerequisiteCheck(description: "Covenant: \(name)", isMet: covenantSource == .catalog(id))
+                return PrerequisiteCheck(description: "Covenant: \(name)", isMet: covenantSource == .catalog(id) || statusStandIn(for: id) != nil)
             }
             // Measured in Covenant Status with that covenant
             return PrerequisiteCheck(description: "\(name) Status \(minimum)", isMet: covenantStatus(id) >= minimum)

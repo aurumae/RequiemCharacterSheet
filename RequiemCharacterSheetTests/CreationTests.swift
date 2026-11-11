@@ -137,6 +137,24 @@ struct CreationTests {
         #expect(character.needsFavoredAttribute)
     }
 
+    @Test func aBloodlineChosenAtCreationReplacesTheClansFavoredAttributes() {
+        // Ventrue favour Presence or Resolve; the Bron, Stamina or Presence
+        let character = newCharacter(clan: "Ventrue")
+        character.chooseFavoredAttribute(.resolve)
+        character.bloodline = "Bron"
+
+        #expect(character.creationFavoredAttributes == [.stamina, .presence])
+        #expect(character.creationFavoredAttributeGiver == "Bron")
+        // Resolve isn't one of the Bron's, so the dot comes off to be placed again
+        #expect(character.creation?.favoredAttribute == nil)
+        #expect(character.needsFavoredAttribute)
+
+        // Presence is on both lists, so it stays when the bloodline goes
+        character.chooseFavoredAttribute(.presence)
+        character.bloodline = ""
+        #expect(character.creation?.favoredAttribute == .presence)
+    }
+
     @Test func attributeLimitsAreHard() {
         let character = newCharacter(clan: "")
         choosePriorities(on: character)

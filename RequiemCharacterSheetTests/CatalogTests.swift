@@ -15,15 +15,15 @@ struct CatalogTests {
     // MARK: - Bundled data
 
     @Test func bundledCatalogsLoad() {
-        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "secrets-of-the-covenants"])
-        #expect(catalog.disciplines.all.count == 14)
-        #expect(catalog.bloodlines.all.count == 1)
+        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "dark-eras-2", "secrets-of-the-covenants"])
+        #expect(catalog.disciplines.all.count == 15)
+        #expect(catalog.bloodlines.all.count == 2)
         // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
-        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night and 2 from Dark Eras
-        #expect(catalog.merits.all.count == 238)
+        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras and 3 from Dark Eras 2
+        #expect(catalog.merits.all.count == 241)
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 9)
-        #expect(catalog.covenants.all.count == 8)
+        #expect(catalog.covenants.all.count == 10)
         #expect(catalog.rituals.all.count == 54)
         #expect(catalog.devotions.all.count == 40)
         #expect(catalog.mysteries.all.count == 6)
@@ -198,6 +198,34 @@ struct CatalogTests {
         // Others still need Carthian Status for the Laws
         character.covenantSource = .catalog("invictus")
         #expect(character.unmetPrerequisites(for: lexTerrae).map(\.description) == ["Carthian Movement Status 2"])
+    }
+
+    @Test func historicalCovenantStatusCountsAsAModernOne() throws {
+        let character = Character()
+        character.covenantSource = .catalog("circles-of-mor")
+        character.merits.append(Merit(source: .catalog("covenant-status"), qualifier: "Circles of Mor", rating: 2))
+        #expect(character.covenantStatus("circle-of-the-crone") == 2)
+        #expect(character.covenantStatus("invictus") == 0)
+
+        let apostle = try #require(catalog.merits.entry("parliaments-apostle"))
+        #expect(character.unmetPrerequisites(for: apostle).isEmpty)
+        // Merits of the Crone take Circle of Mor Status, and are worded for it
+        let crone = try #require(catalog.merits.all.first { merit in
+            merit.prerequisites.contains { $0.kind == .covenant && $0.id == "circle-of-the-crone" && ($0.minimum ?? 1) >= 3 }
+        })
+        #expect(character.unmetPrerequisites(for: crone).contains { $0.description.hasPrefix("Circles of Mor Status") })
+    }
+
+    @Test func theBronHaveTheirOwnFavoredAttributes() throws {
+        let bron = try #require(catalog.bloodlines.entry("bron"))
+        #expect(bron.favoredAttributes == [.stamina, .presence])
+        #expect(bron.disciplines.contains("crochan"))
+        #expect(catalog.disciplines.entry("crochan")?.powers.count == 5)
+
+        let character = Character()
+        character.clan = "Ventrue"
+        character.bloodline = "Bron"
+        #expect(character.favoredAttributesText == "Presence (Ventrue and Bron), Resolve (Ventrue) or Stamina (Bron)")
     }
 
     @Test func notBeingInACovenantIsChecked() throws {

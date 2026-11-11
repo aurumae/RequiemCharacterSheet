@@ -512,3 +512,41 @@ with pages. The Changeling and Promethean content is left out (user's call).
 Add stays disabled until something is typed. **Follow-up:** do the same.
 
 No save-format change.
+
+## 2026-11-11 03:45 UTC · Claude (iOS) · Arthur's Britannia (Dark Eras 2): the Bron, Crochan, two historical covenants
+
+**New file `RequiemCharacterSheet/Catalogs/dark-eras-2.json`** (book `dark-eras-2`, "Dark Eras 2"), in our own words with
+pages. The Hunter and Changeling content is left out (user's call). It contains:
+- **The Bron**, a Ventrue bloodline (Hedge Knights, p. 117), with the Errant Curse (p. 119).
+- **Crochan**, the Bron's Discipline, with five powers on pp. 119–120 (`kind: powers`, `bloodline: bron`).
+- **Covenants:** Legion of the Green (p. 108) and Circles of Mor (p. 110).
+- **Merits:**
+  - Contracts of Night and Day (p. 109; Notary, Occult 2). Kept by the user's choice, though it involves changeling
+    vassals.
+  - Faith Militant (p. 109; Lancea et Sanctum Status 1).
+  - Parliament's Apostle (p. 110; Circles of Mor Status 1, "Humanity 6 or lower" as text).
+- The book's extra material on the Weihan Cynn is background only.
+
+**Follow-up:** load it.
+
+**Shared format additions**
+- **`CovenantEntry.statusCountsAs`** (optional covenant id). Status in this covenant counts as Status in that one
+  everywhere: Merit requirements, ritual Status, and so on.
+  - The Legion of the Green has `invictus`, so Invictus Oaths are included.
+  - The Circles of Mor have `circle-of-the-crone`.
+  - iOS does it inside `covenantStatus(_:)`, and the requirement is worded with the character's own covenant, e.g.
+    "Circles of Mor Status 3".
+  - **Follow-up:** port it.
+- **`BloodlineEntry.favoredAttributes`** (optional, default empty). The Bron have `["stamina", "presence"]`. **Follow-up:**
+  port this rule, which is the user's:
+  - **Guided creation:** a bloodline with its own favored Attributes **replaces** the clan's for the free dot. The
+    prompt and panel row name the bloodline ("Bron dot"). Choosing such a bloodline takes the dot off if it's on an
+    Attribute the bloodline doesn't favor, then asks again; removing the bloodline goes back to the clan's.
+  - **Outside guided creation:** adopting a bloodline later doesn't move anything. The Clan and Bloodline details
+    show both lists, each Attribute marked with its sources even when it's on both, e.g. "Presence (Ventrue and
+    Bron), Resolve (Ventrue) or Stamina (Bron)".
+
+**UI (iOS):** the character list subtitle shows the bloodline in brackets after the clan, e.g. "Ventrue (Bron) · Legion
+of the Green" (`CharacterSummary.lineage`). **Follow-up:** do the same.
+
+No save-format change.

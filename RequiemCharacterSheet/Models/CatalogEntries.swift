@@ -416,6 +416,25 @@ struct BloodlineEntry: CatalogEntry {
     let disciplines: [CatalogEntryID]
     /// Suffered as well as the parent clan's bane.
     let bane: BloodlineBane
+    /// Its own favoured Attributes, if the book gives them, e.g. the Bron's. Empty if it uses the clan's.
+    let favoredAttributes: [AttributeKind]
+
+    enum CodingKeys: CodingKey {
+        case id, name, nickname, parentClans, source, summary, disciplines, bane, favoredAttributes
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        parentClans = try container.decode([CatalogEntryID].self, forKey: .parentClans)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(String.self, forKey: .summary)
+        disciplines = try container.decode([CatalogEntryID].self, forKey: .disciplines)
+        bane = try container.decode(BloodlineBane.self, forKey: .bane)
+        favoredAttributes = try container.decode(.favoredAttributes, default: [])
+    }
 }
 
 struct BloodlineBane: Decodable {
@@ -432,9 +451,12 @@ struct CovenantEntry: CatalogEntry {
     let summary: String
     /// Families of another covenant's Merits its members may take, e.g. the Gallows Post's use of Carthian Laws.
     let meritGroups: [CovenantMeritGroup]
+    /// Another covenant whose Status this covenant's Status counts as, for everything that asks for it, e.g. the
+    /// Legion of the Green's for the Invictus (Dark Eras 2 p. 108).
+    let statusCountsAs: CatalogEntryID?
 
     enum CodingKeys: CodingKey {
-        case id, name, nickname, source, summary, meritGroups
+        case id, name, nickname, source, summary, meritGroups, statusCountsAs
     }
 
     init(from decoder: Decoder) throws {
@@ -445,6 +467,7 @@ struct CovenantEntry: CatalogEntry {
         source = try container.decode(SourceReference.self, forKey: .source)
         summary = try container.decode(String.self, forKey: .summary)
         meritGroups = try container.decode(.meritGroups, default: [])
+        statusCountsAs = try container.decodeIfPresent(CatalogEntryID.self, forKey: .statusCountsAs)
     }
 }
 

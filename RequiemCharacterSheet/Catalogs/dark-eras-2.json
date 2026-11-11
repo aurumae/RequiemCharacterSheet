@@ -1,0 +1,247 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras-2",
+    "name": "Dark Eras 2"
+  },
+  "bloodlines": [
+    {
+      "id": "bron",
+      "name": "Bron",
+      "nickname": "Hedge Knights",
+      "parentClans": [
+        "ventrue"
+      ],
+      "source": {
+        "book": "dark-eras-2",
+        "page": 117
+      },
+      "summary": "Ventrue whose blood was changed by old magic (the Grail, the Cauldron of Rebirth or the fae, depending on who tells it): knights and hermits who hunt the monsters of the wild and court the favor of the fae.",
+      "disciplines": [
+        "animalism",
+        "crochan",
+        "dominate",
+        "resilience"
+      ],
+      "favoredAttributes": [
+        "stamina",
+        "presence"
+      ],
+      "bane": {
+        "name": "The Errant Curse",
+        "summary": "As well as the Ventrue bane: whenever your permanent Blood Potency changes, all your Touchstones come loose until you defend each attachment again. Each night, roll Humanity for every loose Touchstone; on a failure the Storyteller replaces it with a new one.",
+        "page": 119
+      }
+    }
+  ],
+  "disciplines": [
+    {
+      "id": "crochan",
+      "name": "Crochan",
+      "kind": "powers",
+      "bloodline": "bron",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 119
+      },
+      "summary": "Bron rites of the blood that speed healing, sharpen the hunt and bind others in oaths.",
+      "powers": [
+        {
+          "id": "crochan-swift-flows-the-blood",
+          "name": "Swift Flows the Blood",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "medicine",
+            "includesDiscipline": true
+          },
+          "summary": "Each success lets you spend one more Vitae than Blood Potency allows this turn, for healing only.",
+          "page": 119
+        },
+        {
+          "id": "crochan-blooding-the-hunter",
+          "name": "Blooding the Hunter",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "duration": "One night",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "survival",
+            "includesDiscipline": true
+          },
+          "summary": "Anoint yourself with your quarry's blood: successes (up to 5) add to rolls to track and chase them all night. Works alongside A Taste of Blood.",
+          "page": 119
+        },
+        {
+          "id": "crochan-sealing-the-covenant",
+          "name": "Sealing the Covenant",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "note": "1 Vitae per participant"
+          },
+          "action": "instant",
+          "duration": "Until the Touchstone is destroyed or abandoned",
+          "summary": "Bind willing vampires in a blood oath: each gains an extra Touchstone at Humanity 4 standing for the shared loyalty. Losing it is a breaking point; abandoning it brings Languid.",
+          "page": 120
+        },
+        {
+          "id": "crochan-blood-of-my-blood",
+          "name": "Blood of My Blood",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": "varies"
+          },
+          "action": "instant",
+          "summary": "Heal another with Vitae as if healing yourself, aggravated wounds included, or restore a mortal's scars, eyes and limbs. No blood bond.",
+          "page": 120
+        },
+        {
+          "id": "crochan-conquering-the-challenge-of-the-axe",
+          "name": "Conquering the Challenge of the Axe",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "summary": "Refuse to yield and take no damage from any source, sunlight included, until you attack, feed on the unwilling, use Disciplines aggressively or frenzy.",
+          "page": 120
+        }
+      ]
+    }
+  ],
+  "covenants": [
+    {
+      "id": "legion-of-the-green",
+      "name": "Legion of the Green",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 108
+      },
+      "statusCountsAs": "invictus",
+      "summary": "Allied lords of the Courts of Night, mostly Weihan Cynn and Romans left behind by the Camarilla, bound by blood oaths that will become the Invictus. Its Status counts as Invictus Status for Merits, Oaths included."
+    },
+    {
+      "id": "circles-of-mor",
+      "name": "Circles of Mor",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 110
+      },
+      "statusCountsAs": "circle-of-the-crone",
+      "summary": "Small, feuding covens of feather-cloaked Kindred who worship vengeance, the Beast and sometimes the Strix. Its Status counts as Circle of the Crone Status."
+    }
+  ],
+  "merits": [
+    {
+      "id": "contracts-of-night-and-day",
+      "name": "Contracts of Night and Day",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 109
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "notary",
+          "minimum": 1
+        },
+        {
+          "kind": "skill",
+          "id": "occult",
+          "minimum": 2
+        }
+      ],
+      "summary": "Invoke Invictus Oaths between a Kindred liege and a changeling vassal, who drinks your Vitae for a first-stage blood bond and can use Contracts on you as if through a Loophole."
+    },
+    {
+      "id": "faith-militant",
+      "name": "Faith Militant",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 109
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "lancea-et-sanctum",
+          "minimum": 1
+        }
+      ],
+      "summary": "Your flock serves you: treat Herd as Resources for services, and once a chapter for equipment."
+    },
+    {
+      "id": "parliaments-apostle",
+      "name": "Parliament's Apostle",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 110
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "circles-of-mor",
+          "minimum": 1
+        },
+        {
+          "kind": "other",
+          "text": "Humanity 6 or lower"
+        }
+      ],
+      "summary": "Your coven worships one of the Strix. Once a chapter, ask it for knowledge as a Mentor of your Circle of Mor Status, or a Dread Power of up to that Potency, paying twice your Status in Vitae; raising Humanity puts you at its mercy."
+    }
+  ]
+}
