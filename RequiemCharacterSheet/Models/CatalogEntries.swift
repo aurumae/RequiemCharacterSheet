@@ -139,6 +139,8 @@ struct RitualRules: Decodable {
         case atLeastRitualDots
         /// No Humanity limit. Kimiya.
         case none
+        /// Casting a ritual is a breaking point at Humanity 6 minus its dots or higher. Therion.
+        case breakingPointAtSixMinusDots
     }
 }
 

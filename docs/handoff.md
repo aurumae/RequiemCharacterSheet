@@ -584,3 +584,23 @@ This adds to `RequiemCharacterSheet/Catalogs/dark-eras-2.json`, in our own words
   `inPlaceOf` on those Merits is met by members of this clan. The Dukhan take Dream Visions as though Mekhet.
 
 No save-format change.
+
+## 2026-11-11 04:47 UTC · Claude (iOS) · The Reign of Terror (Dark Eras 2): Tenth Choir and Therion
+
+This adds to `RequiemCharacterSheet/Catalogs/dark-eras-2.json`, in our own words with pages:
+- **The Tenth Choir** covenant (p. 340).
+- **Therion**, a fourth Ritual Discipline (p. 344), taught by the Tenth Choir (Status 1), with 7 Sacrileges (pp. 345–346).
+  - The pool is Presence + Intimidation + Therion.
+  - A Sacrilege costs Vitae equal to its dots, which must come from feeding on a Grigor.
+- **Trials of Job**, a new Theban miracle (p. 339; resisted by Resolve).
+- **Merit:** Party Affiliation Status (p. 344; repeatable, qualifier "Party").
+- **Conditions:** Glitched Blood (p. 343) and Targeted (p. 347).
+  - Hunted, which this chapter also uses, now has a general summary that covers both chapters.
+- **Left out:** the era sidebar letting covenant-less Revolutionaries buy Carthian Laws with City Status during the
+  Terror, as it's a setting rule; and the Demon and Mummy material.
+
+**Shared format addition:** a new `RitualRules.humanity` value, **`"breakingPointAtSixMinusDots"`**. Each ritual is a
+breaking point at Humanity 6 − its dots or higher. Therion uses it. **Follow-up:** make your decoder accept it, as with
+`"none"` for Kimiya.
+
+No save-format change.

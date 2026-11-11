@@ -208,6 +208,31 @@
           "includesDiscipline": true
         }
       }
+    },
+    {
+      "id": "therion",
+      "name": "Therion",
+      "kind": "ritual",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 344
+      },
+      "summary": "The Tenth Choir's blood sorcery, worked with the stolen essence of angels and demons (the Grigori). Its first dot also lets you see, touch and feed on one kind of Grigor in Twilight per dot.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "tenth-choir",
+        "covenantStatusMinimum": 1,
+        "humanity": "breakingPointAtSixMinusDots",
+        "castingCost": {
+          "vitae": "varies",
+          "note": "Vitae equal to the ritual's dots, taken from feeding on a Grigor"
+        },
+        "castingPool": {
+          "attribute": "presence",
+          "skill": "intimidation",
+          "includesDiscipline": true
+        }
+      }
     }
   ],
   "covenants": [
@@ -284,6 +309,16 @@
         "page": 140
       },
       "summary": "Scholar-alchemists descended from a Camarilla sect of Galenic physicians, who study Vitae by experiment and teach the blood alchemy of Kimiya."
+    },
+    {
+      "id": "tenth-choir",
+      "name": "Tenth Choir",
+      "nickname": "Chorists",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 340
+      },
+      "summary": "Revolutionary Kindred out to destroy God, who reject the Masquerade, work openly with the Cult of Reason, and steal power from angels and demons through the sorcery of Therion."
     }
   ],
   "merits": [
@@ -429,6 +464,28 @@
         }
       ],
       "summary": "Once a chapter, an hour-long tale can hook up to your dots in listeners (Resolve + Composure, −1 per dot): they become addicted to your Vitae and your stories, and think better of you with each tale."
+    },
+    {
+      "id": "party-affiliation-status",
+      "name": "Party Affiliation Status",
+      "category": "social",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 344
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": true,
+      "qualifier": {
+        "prompt": "Party",
+        "options": null
+      },
+      "summary": "Standing in a political party such as the Jacobins, working like Status, with its bonus against any citizen while the party is in favor; when it falls from favor, your dots become a penalty instead."
     }
   ],
   "devotions": [
@@ -523,6 +580,105 @@
       "targetSuccesses": 10,
       "summary": "Drink a potion of the victim's blood and name a wrong they mean to do you; if they do it before sunrise, they're turned into a small animal until dawn.",
       "contestedBy": "Stamina + Supernatural Tolerance"
+    },
+    {
+      "id": "demons-tongue",
+      "name": "Demon's Tongue",
+      "discipline": "therion",
+      "dots": 1,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 5,
+      "summary": "Until sunrise, 8-again on Subterfuge, including Disciplines and Devotions that use it; supernatural truth-finding against you means a Clash of Wills."
+    },
+    {
+      "id": "the-morning-star",
+      "name": "The Morning Star",
+      "discipline": "therion",
+      "dots": 1,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 5,
+      "summary": "Until sunrise, look like a fallen angel: add Therion to lashing out with your predatory aura, and an exceptional success inflicts Beaten Down."
+    },
+    {
+      "id": "curse-the-faithful",
+      "name": "Curse the Faithful",
+      "discipline": "therion",
+      "dots": 2,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 6,
+      "summary": "A mortal who saw you feed on a Grigor swaps their Virtue for a second Vice you choose, and is Guilty on any night they don't regain Willpower through a Vice.",
+      "contestedBy": "Resolve + Supernatural Tolerance"
+    },
+    {
+      "id": "avatar-of-apollyon",
+      "name": "Avatar of Apollyon",
+      "discipline": "therion",
+      "dots": 3,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 8,
+      "summary": "Your fangs become a bane to the kind of Grigor that fuelled the rite, and in Twilight they can't touch you, for a scene or until you destroy one."
+    },
+    {
+      "id": "profanity",
+      "name": "Profanity",
+      "discipline": "therion",
+      "dots": 4,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 10,
+      "summary": "Sense the nearest holy or powerful place and profane it with your blood until the chapter ends: −5 to other supernatural powers there, 8-again on Chorists' Disciplines, and mortals turn Wanton."
+    },
+    {
+      "id": "apotheosis",
+      "name": "Apotheosis",
+      "discipline": "therion",
+      "dots": 5,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 346
+      },
+      "targetSuccesses": 10,
+      "summary": "For a scene, become a vampire-angel using the Influences and Numina of the Grigori you fed on, with Power, Finesse and Resistance from your Attributes."
+    },
+    {
+      "id": "nine-choirs-bend-the-knee",
+      "name": "Nine Choirs Bend the Knee",
+      "discipline": "therion",
+      "dots": 5,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 346
+      },
+      "targetSuccesses": 10,
+      "summary": "For a scene, Grigori in Twilight within 30 yards are forced to Materialize unless they resist, and must spend Willpower to disobey your orders."
+    },
+    {
+      "id": "trials-of-job",
+      "name": "Trials of Job",
+      "discipline": "theban-sorcery",
+      "dots": 4,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 339
+      },
+      "targetSuccesses": 10,
+      "resistedBy": "Resolve",
+      "sacrament": "The horn of an ox or sheep",
+      "summary": "Curse a present victim to suffer like Job for Potency nights: every failed mundane action is a dramatic failure, they lose Potency Merit dots, and their unbought Touchstones come loose."
     }
   ],
   "conditions": [
@@ -534,10 +690,36 @@
         "page": 146
       },
       "persistent": true,
-      "summary": "One of the Strix has taken an interest in you, whether to destroy you or simply to torment you.",
+      "summary": "Someone or something dangerous is after you, whether to destroy you or simply torment you: one of the Strix, a wronged Grigor, a hunter.",
       "resolution": "Stop your persecutors by a bargain, a change of habits that keeps them from you, or force.",
       "beat": "Your persecutors find you.",
-      "possibleSources": "Casting unstable Majnun"
+      "possibleSources": "Casting unstable Majnun; a dramatic failure on a Therion Sacrilege"
+    },
+    {
+      "id": "glitched-blood",
+      "name": "Glitched Blood",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 343
+      },
+      "persistent": false,
+      "summary": "Wires of broken Infrastructure spread through your body a part each scene. −3 to contest angelic or demonic powers and −2 to traits that resist them, and anyone who touches or feeds on you risks infection.",
+      "resolution": "An Unchained heals you in a restoration facility, or the infected parts are removed.",
+      "beat": null,
+      "possibleSources": "Feeding on a demon, touching someone infected"
+    },
+    {
+      "id": "targeted",
+      "name": "Targeted",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 347
+      },
+      "persistent": true,
+      "summary": "Your name is on a list for arrest or destruction. −2 on Social rolls with those hunting you or willing to turn you in, +2 with others who are also targeted.",
+      "resolution": "Clear your name, shed the targeted identity, or kill everyone targeting you.",
+      "beat": "You confront those targeting you and survive.",
+      "possibleSources": "Robespierre's lists, the God-Machine, the Malleus Maleficarum, being wanted for a crime"
     }
   ]
 }

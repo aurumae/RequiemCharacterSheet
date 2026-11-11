@@ -198,6 +198,8 @@ extension RitualRules.HumanityRule {
             return "Casting a miracle requires Humanity at least equal to its dots."
         case .none:
             return "No limit on Humanity."
+        case .breakingPointAtSixMinusDots:
+            return "Each ritual is a breaking point at Humanity 6 minus its dots or higher: 5+ for one dot, down to 1+ for five."
         }
     }
 }

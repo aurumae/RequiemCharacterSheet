@@ -16,15 +16,15 @@ struct CatalogTests {
 
     @Test func bundledCatalogsLoad() {
         #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "dark-eras-2", "secrets-of-the-covenants"])
-        #expect(catalog.disciplines.all.count == 16)
+        #expect(catalog.disciplines.all.count == 17)
         #expect(catalog.bloodlines.all.count == 2)
         // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
-        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras and 6 from Dark Eras 2
-        #expect(catalog.merits.all.count == 244)
+        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras and 7 from Dark Eras 2
+        #expect(catalog.merits.all.count == 245)
         #expect(catalog.banes.all.count == 14)
         #expect(catalog.clans.all.count == 10)
-        #expect(catalog.covenants.all.count == 13)
-        #expect(catalog.rituals.all.count == 59)
+        #expect(catalog.covenants.all.count == 14)
+        #expect(catalog.rituals.all.count == 67)
         #expect(catalog.devotions.all.count == 41)
         #expect(catalog.mysteries.all.count == 6)
         #expect(catalog.scales.all.count == 16)
@@ -238,6 +238,19 @@ struct CatalogTests {
         character.merits[0].qualifier = "Fir'awn"
         #expect(character.ritualLearningWarning(for: cruac) == nil)
         #expect(character.unmetPrerequisites(for: altar).isEmpty)
+    }
+
+    @Test func theTenthChoirTeachesTherion() throws {
+        let therion = try #require(catalog.disciplines.entry("therion"))
+        #expect(therion.kind == .ritual)
+        #expect(therion.ritualRules?.humanity == .breakingPointAtSixMinusDots)
+        #expect(catalog.rituals.all.filter { $0.discipline == "therion" }.count == 7)
+        let character = Character()
+        #expect(character.ritualLearningWarning(for: therion) == "Learning rituals requires Tenth Choir Status 1")
+        character.covenantSource = .catalog("tenth-choir")
+        character.merits.append(Merit(source: .catalog("covenant-status"), qualifier: "Tenth Choir", rating: 1))
+        #expect(character.ritualLearningWarning(for: therion) == nil)
+        #expect(catalog.rituals.entry("trials-of-job")?.discipline == "theban-sorcery")
     }
 
     @Test func theDukhanTakeDreamVisionsAsThoughMekhet() throws {
