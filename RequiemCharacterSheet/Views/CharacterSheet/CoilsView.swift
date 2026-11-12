@@ -173,9 +173,11 @@ struct CoilsView: View {
         let all = Catalog.bundled.mysteries.all
         let isOwn = { (entry: MysteryEntry) in entry.id == character.mysterySource.catalogID }
         let mysteries = all.filter(isOwn) + all.filter { !isOwn($0) }
+        // Scales outside any Mystery, e.g. those that work with any Coil, come last
+        let outside = Catalog.bundled.scales.all.filter { Catalog.bundled.mysteries.entry($0.mystery) == nil }
         let groups = mysteries.map { mystery in
             CatalogPickerGroup(mystery.name, Catalog.bundled.scales.all.filter { $0.mystery == mystery.id })
-        }
+        } + [CatalogPickerGroup("Any Mystery", outside)]
         return CatalogPickerSection.byBook(groups) { entry in
             CatalogPickerItem(
                 id: entry.id,

@@ -337,7 +337,8 @@ struct Prerequisite: Decodable {
     enum Kind: String, Decodable {
         /// `notCovenant`: not a member of the covenant, e.g. Casual User for non-Carthians.
         /// `willpower`: Willpower dots (Resolve + Composure), e.g. Mobilize Outrage.
-        case attribute, skill, merit, discipline, bloodPotency, clan, covenant, notCovenant, willpower, other
+        /// `bloodline`: being of that bloodline, e.g. the Lidérc's Devotions.
+        case attribute, skill, merit, discipline, bloodPotency, clan, bloodline, covenant, notCovenant, willpower, other
     }
 }
 
@@ -441,9 +442,13 @@ struct BloodlineEntry: CatalogEntry {
     let bane: BloodlineBane
     /// Its own favoured Attributes, if the book gives them, e.g. the Bron's. Empty if it uses the clan's.
     let favoredAttributes: [AttributeKind]
+    /// The covenant its members must belong to, if any, e.g. the Penumbrae's Circle of the Crone.
+    let requiredCovenant: CatalogEntryID?
+    /// Another clan's Merits its members may take, e.g. the Icelus with Dream Visions as though Mekhet.
+    let meritAccess: [ClanMeritAccess]
 
     enum CodingKeys: CodingKey {
-        case id, name, nickname, parentClans, source, summary, disciplines, bane, favoredAttributes
+        case id, name, nickname, parentClans, source, summary, disciplines, bane, favoredAttributes, requiredCovenant, meritAccess
     }
 
     init(from decoder: Decoder) throws {
@@ -457,6 +462,8 @@ struct BloodlineEntry: CatalogEntry {
         disciplines = try container.decode([CatalogEntryID].self, forKey: .disciplines)
         bane = try container.decode(BloodlineBane.self, forKey: .bane)
         favoredAttributes = try container.decode(.favoredAttributes, default: [])
+        requiredCovenant = try container.decodeIfPresent(CatalogEntryID.self, forKey: .requiredCovenant)
+        meritAccess = try container.decode(.meritAccess, default: [])
     }
 }
 
@@ -650,6 +657,8 @@ struct ScaleEntry: CatalogEntry {
     let source: SourceReference
     /// The Coil tiers it resonates with. Learning it costs less with one of them.
     let prerequisiteCoils: [CoilPrerequisite]
+    /// Resonates with any Coil at this many dots, for Scales outside the Mysteries, e.g. Spirit Tether.
+    let anyCoil: Int?
     let cost: Cost
     let dicePool: DicePool?
     let action: String?
@@ -657,7 +666,7 @@ struct ScaleEntry: CatalogEntry {
     let summary: String
 
     enum CodingKeys: CodingKey {
-        case id, name, mystery, source, prerequisiteCoils, cost, dicePool, action, duration, summary
+        case id, name, mystery, source, prerequisiteCoils, anyCoil, cost, dicePool, action, duration, summary
     }
 
     init(from decoder: Decoder) throws {
@@ -667,6 +676,7 @@ struct ScaleEntry: CatalogEntry {
         mystery = try container.decode(String.self, forKey: .mystery)
         source = try container.decode(SourceReference.self, forKey: .source)
         prerequisiteCoils = try container.decode(.prerequisiteCoils, default: [])
+        anyCoil = try container.decodeIfPresent(Int.self, forKey: .anyCoil)
         cost = try container.decode(.cost, default: Cost())
         dicePool = try container.decodeIfPresent(DicePool.self, forKey: .dicePool)
         action = try container.decodeIfPresent(String.self, forKey: .action)

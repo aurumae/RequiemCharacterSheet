@@ -38,8 +38,8 @@ struct SorceryTests {
             #expect(ritual.targetSuccesses > 0, "\(ritual.name)")
         }
         // 10 each from Vampire: The Requiem, 14 each from Secrets of the Covenants, 3 each from A Thousand Years of Night,
-        // and one Theban miracle from Dark Eras 2
-        #expect(catalog.rituals.all.filter { $0.discipline == "cruac" }.count == 27)
+        // one Theban miracle from Dark Eras 2, and 3 Crúac rites from Spilled Blood
+        #expect(catalog.rituals.all.filter { $0.discipline == "cruac" }.count == 30)
         #expect(catalog.rituals.all.filter { $0.discipline == "theban-sorcery" }.count == 28)
     }
 
@@ -59,13 +59,24 @@ struct SorceryTests {
     @Test func devotionPrerequisitesAreDisciplines() {
         for devotion in catalog.devotions.all {
             let prerequisites = devotion.prerequisites + devotion.prerequisitesAnyOf.flatMap { $0 }
-            #expect(!prerequisites.isEmpty, "\(devotion.name)")
+            #expect(prerequisites.contains { $0.kind == .discipline }, "\(devotion.name)")
             for prerequisite in prerequisites {
-                #expect(prerequisite.kind == .discipline, "\(devotion.name)")
-                #expect(prerequisite.id.flatMap { catalog.disciplines.entry($0) } != nil, "\(devotion.name)")
-                #expect(prerequisite.minimum.map { (1...5).contains($0) } == true, "\(devotion.name)")
+                switch prerequisite.kind {
+                case .discipline:
+                    #expect(prerequisite.id.flatMap { catalog.disciplines.entry($0) } != nil, "\(devotion.name)")
+                    #expect(prerequisite.minimum.map { (1...5).contains($0) } == true, "\(devotion.name)")
+                case .bloodline:
+                    // e.g. the Lidérc's own Devotions
+                    #expect(prerequisite.id.flatMap { catalog.bloodlines.entry($0) } != nil, "\(devotion.name)")
+                case .merit:
+                    #expect(prerequisite.id.flatMap { catalog.merits.entry($0) } != nil, "\(devotion.name)")
+                default:
+                    Issue.record("\(devotion.name) has a \(prerequisite.kind) prerequisite")
+                }
             }
-            #expect(devotion.experienceCost > 0, "\(devotion.name)")
+            // Only a bloodline's own Devotion can be free to its members, e.g. the Nosoi's Infectious Bite
+            let bloodlineOnly = devotion.prerequisites.contains { $0.kind == .bloodline }
+            #expect(devotion.experienceCost > 0 || bloodlineOnly, "\(devotion.name)")
             if let discipline = devotion.dicePool?.discipline {
                 #expect(catalog.disciplines.entry(discipline) != nil, "\(devotion.name)")
             }
@@ -113,8 +124,11 @@ struct SorceryTests {
 
     @Test func scalesNameRealCoilTiers() {
         for scale in catalog.scales.all {
-            #expect(catalog.mysteries.entry(scale.mystery) != nil, "\(scale.name)")
-            #expect(!scale.prerequisiteCoils.isEmpty, "\(scale.name)")
+            // Scales that work with any Coil sit outside the Mysteries, e.g. Spirit Tether
+            if scale.anyCoil == nil {
+                #expect(catalog.mysteries.entry(scale.mystery) != nil, "\(scale.name)")
+                #expect(!scale.prerequisiteCoils.isEmpty, "\(scale.name)")
+            }
             for prerequisite in scale.prerequisiteCoils {
                 let tier = catalog.mysteries.entry(prerequisite.mystery)?.tier(prerequisite.dots)
                 #expect(tier?.id == prerequisite.tier, "\(scale.name)")

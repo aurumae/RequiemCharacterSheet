@@ -87,9 +87,11 @@ extension Character {
         case .bloodPotency:
             return PrerequisiteCheck(description: "Blood Potency \(minimum)", isMet: bloodPotency >= minimum)
         case .clan:
-            // The character's clan may take this Merit as though it were the one named
-            if let merit, let own = clanEntry, own.meritAccess.contains(where: { $0.inPlaceOf == id && $0.merits.contains(merit.id) }) {
-                return PrerequisiteCheck(description: "Clan: \(own.name)", isMet: true)
+            // The character's clan, or bloodline, may take this Merit as though it were the one named
+            let access = (clanEntry?.meritAccess ?? []) + (bloodlineEntry?.meritAccess ?? [])
+            if let merit, access.contains(where: { $0.inPlaceOf == id && $0.merits.contains(merit.id) }) {
+                let name = bloodlineEntry?.meritAccess.isEmpty == false ? bloodlineEntry?.name : clanEntry?.name
+                return PrerequisiteCheck(description: "Clan: \(name ?? id)", isMet: true)
             }
             let name = catalog.clans.entry(id)?.name ?? id
             return PrerequisiteCheck(description: "Clan: \(name)", isMet: clanSource == .catalog(id))
@@ -108,6 +110,9 @@ extension Character {
             return PrerequisiteCheck(description: "\(name) Status \(minimum)", isMet: covenantStatus(id) >= minimum)
         case .willpower:
             return PrerequisiteCheck(description: "Willpower \(minimum)", isMet: willpower >= minimum)
+        case .bloodline:
+            let name = catalog.bloodlines.entry(id)?.name ?? id
+            return PrerequisiteCheck(description: "Bloodline: \(name)", isMet: bloodlineSource == .catalog(id))
         case .notCovenant:
             let name = catalog.covenants.entry(id)?.name ?? id
             return PrerequisiteCheck(description: "Not a member of the \(name)", isMet: covenantSource != .catalog(id))

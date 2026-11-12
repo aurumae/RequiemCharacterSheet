@@ -604,3 +604,57 @@ breaking point at Humanity 6 − its dots or higher. Therion uses it. **Follow-u
 `"none"` for Kimiya.
 
 No save-format change.
+
+## 2026-11-11 05:35 UTC · Claude (iOS) · Night Horrors: Spilled Blood
+
+**New file `RequiemCharacterSheet/Catalogs/spilled-blood.json`** (book `spilled-blood`, "Night Horrors: Spilled Blood"),
+in our own words with pages. **Follow-up:** load it. It contains:
+- **5 clans:** Amari, Bekaak, Hypatians, Nhang and Twice-Cursed (pp. 77–105).
+- **10 bloodlines:**
+  - Ankou, Icelus, Jharana, Lidérc and Nosoi (pp. 12–29).
+  - Parliamentarians, Penumbrae, Scions of the First City, Vardyvle and Vilseduire (pp. 33–50).
+- **2 covenants:** Belial's Brood and the Esoteric Order of the Golden Star.
+- **3 Disciplines:**
+  - Dead Signal, the Jharana's own.
+  - Vitiate, the Bekaak's, as `scaling`.
+  - Triadic Evolution, Belial's Brood's Ritual Discipline, with 15 Manifestations as rituals.
+- **3 Penumbrae Crúac rites.**
+- **5 Merits, 18 Devotions, 4 Scales and 7 Conditions.**
+- **User's calls:**
+  - Amara's Siphoning Scales and Ayanda's ghost Devotions are included even though they belong to sample characters.
+  - The Chimera Virus, Blood Worm and Nereid infections are left out.
+  - Bloodline covenants are warned about, not enforced.
+
+**Shared format additions** (**Follow-up:** port them all):
+- **`Prerequisite.kind: "bloodline"`** (`id`) is met when the character's bloodline is that one. It's used by bloodline-only
+  Merits and Devotions. Your fallback to text is fine until you check it.
+- **A Devotion can cost 0 Experiences** when it's free to its bloodline: Infectious Bite (Nosoi) and City Attunement
+  (Scions).
+- **Empty `parentClans` means any clan.** The Parliamentarians, Penumbrae and Scions use it. Such bloodlines accept every
+  clan, including the new ones, and read "Parent clan: Any clan".
+- **`BloodlineEntry.requiredCovenant`** (optional id), used by the Parliamentarians, Penumbrae and Scions.
+  - The Bloodline picker warns "Members must belong to the …" when the character isn't in that covenant, or in one
+    whose Status counts as it. They can still choose it.
+  - The picker row and the Bloodline detail show "Covenant: …".
+- **`BloodlineEntry.meritAccess`**, like `ClanEntry.meritAccess`. The Icelus take Dream Visions as though Mekhet, which
+  covers Ventrue Icelus.
+- **`ScaleEntry.anyCoil`** (optional dots): the Scale resonates with any Coil at that many dots.
+  - Amara's four Scales have `"mystery": "any"`, empty `prerequisiteCoils` and `anyCoil: 2`.
+  - The Scale picker lists Scales whose `mystery` isn't a catalog Mystery under an "Any Mystery" group.
+  - Prerequisite text reads "Any Coil ••".
+- **`ritualRules.covenantStatusMinimum: 0` means membership only.** Triadic Evolution uses it for Belial's Brood, which
+  has no Status. The warning reads "Learning rituals requires membership of Belial's Brood", and the detail reads
+  "Learned with: Membership of Belial's Brood".
+- The creation problem `sorceryWithoutStatus` now carries the full requirement text, e.g. "Crúac needs Circle of the
+  Crone Status 1".
+
+**Written as text only:** clan and bloodline rules the app doesn't model, including:
+- the Amari's Conservation and Rationing;
+- Bekaak ageing;
+- Nhang physiology;
+- the Twice-Cursed's 5-XP Majesty and Nightmare and their free Merits;
+- Vardyvle desires;
+- Belial's Brood's Claiming;
+- the Nosoi's favored disease.
+
+No save-format change.

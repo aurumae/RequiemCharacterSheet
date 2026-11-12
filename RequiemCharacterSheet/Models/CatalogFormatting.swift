@@ -155,3 +155,17 @@ struct CatalogPickerGroup<Entry: CatalogEntry> {
         self.entries = entries
     }
 }
+
+extension BloodlineEntry {
+    /// Whether members can come from this clan. A bloodline with no parent clans listed takes members from any clan,
+    /// e.g. the Penumbrae.
+    func accepts(clan: CatalogEntryID) -> Bool {
+        parentClans.isEmpty || parentClans.contains(clan)
+    }
+
+    /// e.g. "Daeva or Nosferatu", or "Any clan".
+    var parentClansText: String {
+        guard !parentClans.isEmpty else { return "Any clan" }
+        return parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")
+    }
+}

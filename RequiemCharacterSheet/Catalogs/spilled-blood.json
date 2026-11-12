@@ -1,0 +1,1773 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "spilled-blood",
+    "name": "Night Horrors: Spilled Blood"
+  },
+  "clans": [
+    {
+      "id": "amari",
+      "name": "Amari",
+      "nickname": "Winter Kings",
+      "source": {
+        "book": "spilled-blood",
+        "page": 77
+      },
+      "favoredAttributes": [
+        "manipulation",
+        "stamina"
+      ],
+      "disciplines": [
+        "obfuscate",
+        "protean",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Pale Curse",
+        "summary": "Long nights under the polar dark have cost you: the penalty to resist frenzy from fire and sunlight is 10 - Humanity rather than the usual modifier.",
+        "humanityThreshold": 6,
+        "page": 80
+      },
+      "summary": "An Arctic lost clan, possibly of Gangrel stock, that once ruled ice cities under the polar night and was hunted nearly to extinction. Survivors now seek vengeance on the Kindred behind climate change. They need little blood and can store their Vitae as crystals."
+    },
+    {
+      "id": "bekaak",
+      "name": "Bekaak",
+      "nickname": "Prophets",
+      "source": {
+        "book": "spilled-blood",
+        "page": 86
+      },
+      "favoredAttributes": [
+        "composure",
+        "presence"
+      ],
+      "disciplines": [
+        "animalism",
+        "obfuscate",
+        "vitiate"
+      ],
+      "bane": {
+        "name": "The Righteous Curse",
+        "summary": "Unless you spend Willpower, your base pool to deceive a mortal whose Integrity is higher than your Humanity is capped at your Humanity dots, and that Willpower adds no dice. Ghouls and Kindred are unaffected.",
+        "humanityThreshold": 6,
+        "page": 87
+      },
+      "summary": "Once warrior lords of the Great Lakes, now a clan that ages like the living and wields entropy. Closely tied to the Lancea et Sanctum, they can steal youth from their victims."
+    },
+    {
+      "id": "hypatian",
+      "name": "Hypatians",
+      "nickname": "Blights",
+      "source": {
+        "book": "spilled-blood",
+        "page": 90
+      },
+      "favoredAttributes": [
+        "resolve",
+        "stamina"
+      ],
+      "disciplines": [
+        "animalism",
+        "nightmare",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Paranoiac Curse",
+        "summary": "When you fail a Social action against a human, roll Humanity minus their Composure. On a failure they gain Suspicious, and you roll again after each major interaction. A fourth instance makes everyone Suspicious of you Obsessed with destroying you. Kindred, ghouls, Touchstones and those fully bound to you are exempt.",
+        "humanityThreshold": 6,
+        "page": 92
+      },
+      "summary": "Vampires made through alchemy, not the Embrace, descended from the notes of a 19th-century alchemist who turned herself undead. They make new members with Blood Chymistry potions and draw suspicion wherever they go."
+    },
+    {
+      "id": "nhang",
+      "name": "Nhang",
+      "nickname": "Water Serpents",
+      "source": {
+        "book": "spilled-blood",
+        "page": 94
+      },
+      "favoredAttributes": [
+        "stamina",
+        "wits"
+      ],
+      "disciplines": [
+        "celerity",
+        "protean",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Curse of the Depths",
+        "summary": "With less Vitae than 10 - Humanity your skin turns brittle: bashing damage you take becomes lethal and lethal becomes aggravated.",
+        "humanityThreshold": 6,
+        "page": 96
+      },
+      "summary": "Scaled, reptilian vampires that lurk in lakes and seas, drown victims and wear their stolen shapes. They hate the Kindred for an ancient betrayal and give vampires to the Strix."
+    },
+    {
+      "id": "twice-cursed",
+      "name": "Twice-Cursed",
+      "nickname": "Stalkers",
+      "source": {
+        "book": "spilled-blood",
+        "page": 102
+      },
+      "favoredAttributes": [
+        "dexterity",
+        "strength"
+      ],
+      "disciplines": [
+        "celerity",
+        "obfuscate",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Miserable Curse",
+        "summary": "At Humanity 6 you take on both the Daeva and the Nosferatu clan banes at once.",
+        "humanityThreshold": 6,
+        "page": 103
+      },
+      "summary": "Vampires with the flaws of both Daeva and Nosferatu, first seen in the New England vampire panic. They repel the mortals they long for and often work as hunters of other Kindred.",
+      "meritAccess": [
+        {
+          "merits": [
+            "kiss-of-the-succubus"
+          ],
+          "inPlaceOf": "daeva"
+        },
+        {
+          "merits": [
+            "unsettling-gaze"
+          ],
+          "inPlaceOf": "nosferatu"
+        }
+      ]
+    }
+  ],
+  "bloodlines": [
+    {
+      "id": "ankou",
+      "name": "Ankou",
+      "nickname": "Guardians",
+      "parentClans": [
+        "mekhet"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 12
+      },
+      "summary": "Mekhet executioners bound by a code of death, culling killers, ghouls and Kindred who meddle with the living, and hunting VII and the Strix.",
+      "disciplines": [
+        "auspex",
+        "celerity",
+        "obfuscate",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Distanced Curse",
+        "summary": "When you try to regain Willpower from your Mask, roll Humanity; on a failure you get nothing.",
+        "page": 13
+      }
+    },
+    {
+      "id": "icelus",
+      "name": "Icelus",
+      "nickname": "Auditors",
+      "parentClans": [
+        "mekhet",
+        "ventrue"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 15
+      },
+      "summary": "A dream-therapy foundation of Mekhet and Ventrue who hypnotise patients and feed on their dreams, closely backed by the Ordo Dracul.",
+      "disciplines": [
+        "auspex",
+        "dominate",
+        "obfuscate",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Hypnotic Curse",
+        "summary": "On top of the clan bane, failing a detachment roll also leaves you Mesmerized, which anyone can exploit as if you'd been Mesmerized by Dominate.",
+        "page": 16
+      },
+      "meritAccess": [
+        {
+          "merits": [
+            "dream-visions"
+          ],
+          "inPlaceOf": "mekhet"
+        }
+      ]
+    },
+    {
+      "id": "jharana",
+      "name": "Jharana",
+      "nickname": "Menders",
+      "parentClans": [
+        "daeva"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 20
+      },
+      "summary": "Daeva who were Stigmatics in life, serving and interpreting the God-Machine and easing the Radio Sickness its messages cause.",
+      "disciplines": [
+        "auspex",
+        "dead-signal",
+        "celerity",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Omen Curse",
+        "summary": "Instead of the Daeva risk of attachment, feeding on the same person more than once a chapter calls for a Humanity roll; failure gives a persistent Obsession with them.",
+        "page": 21
+      }
+    },
+    {
+      "id": "liderc",
+      "name": "Lidérc",
+      "nickname": "The Beloved",
+      "parentClans": [
+        "daeva"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 24
+      },
+      "summary": "Daeva who feed on the emotions they stir in their lovers and friends, draining willpower rather than blood.",
+      "disciplines": [
+        "celerity",
+        "majesty",
+        "obfuscate",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Devoted Curse",
+        "summary": "While Dependent from the clan bane, all your Touchstones together add only one die to detachment and you can regain only one Willpower defending them; if your love was a Touchstone, you lose it outright.",
+        "page": 25
+      }
+    },
+    {
+      "id": "nosoi",
+      "name": "Nosoi",
+      "nickname": "Plague Doctors",
+      "parentClans": [
+        "gangrel"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 29
+      },
+      "summary": "Gangrel who cultivate herds of the chronically ill in hospitals and clinics, craving the taste of one particular blood-borne disease.",
+      "disciplines": [
+        "dominate",
+        "obfuscate",
+        "protean",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Calamitous Curse",
+        "summary": "Each night you can gain no more Vitae than your Humanity from blood that doesn't carry your favoured disease.",
+        "page": 30
+      }
+    },
+    {
+      "id": "parliamentarians",
+      "name": "Parliamentarians",
+      "nickname": "Hidebound",
+      "parentClans": [],
+      "source": {
+        "book": "spilled-blood",
+        "page": 33
+      },
+      "summary": "Carthian bureaucrats of any clan who win by outlasting everyone: endless procedure, exhaustive public denunciations and recruits groomed into agreement. They exist only inside the Carthian Movement.",
+      "disciplines": [
+        "animalism",
+        "auspex",
+        "celerity",
+        "majesty"
+      ],
+      "bane": {
+        "name": "The Ordered Curse",
+        "summary": "As well as your clan's bane: whenever your personal routine or order is disrupted, your Humanity dots cap every Social dice pool.",
+        "page": 34
+      },
+      "requiredCovenant": "carthian-movement"
+    },
+    {
+      "id": "penumbrae",
+      "name": "Penumbrae",
+      "nickname": "Seers, Seekers, Sleepers",
+      "parentClans": [],
+      "source": {
+        "book": "spilled-blood",
+        "page": 37
+      },
+      "summary": "Reclusive seers of the Circle of the Crone who blend Mekhet insight with Crúac to read the blood, consult torpid elders and walk through the dreams of sleeping Kindred.",
+      "disciplines": [
+        "auspex",
+        "celerity",
+        "cruac",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Somnolent Curse",
+        "summary": "As well as your clan's bane: torpor lasts as if your Humanity were reduced by your Crúac dots, and rousing you early costs an extra Vitae per Crúac dot. Waking from torpor or from Clotho's Skein leaves you with False Memories until your next daysleep.",
+        "page": 38
+      },
+      "requiredCovenant": "circle-of-the-crone"
+    },
+    {
+      "id": "scions-of-the-first-city",
+      "name": "Scions of the First City",
+      "nickname": "Harbingers, Scions",
+      "parentClans": [],
+      "source": {
+        "book": "spilled-blood",
+        "page": 41
+      },
+      "summary": "An Invictus cult who see every city as one living Mother; they bond with their home city, hunt out its secrets and break whatever they think keeps it from perfection.",
+      "disciplines": [
+        "animalism",
+        "auspex",
+        "obfuscate",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Mother's Curse",
+        "summary": "As well as your clan's bane: away from a proper city (one of at least 10,000 people), every dice pool is capped at your Humanity dots. Stranded for good, you may adopt a new city.",
+        "page": 42
+      },
+      "requiredCovenant": "invictus"
+    },
+    {
+      "id": "vardyvle",
+      "name": "Vardyvle",
+      "nickname": "Doppelgängers, Look-Stealers, Skin-Takers, Tiresias",
+      "parentClans": [
+        "ventrue"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 45
+      },
+      "summary": "Envious Ventrue who live their lost ambitions through mortals, borrowing the faces of those who have what they wanted and sometimes stealing their lives outright.",
+      "disciplines": [
+        "dominate",
+        "obfuscate",
+        "protean",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Covetous Curse",
+        "summary": "As well as the Ventrue bane: when you feed on someone who embodies your open or hidden desire, roll Humanity. On a failure you take one of their memories as your own (False Memories for a week); on a dramatic failure you also become Addicted to their blood.",
+        "page": 47
+      }
+    },
+    {
+      "id": "vilseduire",
+      "name": "Vilseduire",
+      "nickname": "Tempters, Enablers, Devils",
+      "parentClans": [
+        "daeva",
+        "nosferatu"
+      ],
+      "source": {
+        "book": "spilled-blood",
+        "page": 50
+      },
+      "summary": "A meeting of Daeva allure and Nosferatu horror: magnetic, depraved figures who draw cults of followers and drag mortals and Kindred alike into the worst parts of themselves.",
+      "disciplines": [
+        "majesty",
+        "nightmare",
+        "obfuscate",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Ablative Curse",
+        "summary": "As well as your clan's bane: you can never have more than one attached Touchstone, and breaking points count as if your Humanity were half its value, rounded down (minimum 1).",
+        "page": 51
+      }
+    }
+  ],
+  "disciplines": [
+    {
+      "id": "dead-signal",
+      "name": "Dead Signal",
+      "kind": "powers",
+      "bloodline": "jharana",
+      "source": {
+        "book": "spilled-blood",
+        "page": 23
+      },
+      "summary": "Read and retune a person's place in the God-Machine's design: diagnose, heal, treat Radio Sickness and call its servants.",
+      "powers": [
+        {
+          "id": "dead-signal-analyze-signal",
+          "name": "Analyze Signal",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {},
+          "action": "instant",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "occult",
+            "includesDiscipline": true
+          },
+          "summary": "Tell whether someone has Radio Sickness or a Stigmata; an exceptional success reveals how far it's gone or how they got it.",
+          "page": 23
+        },
+        {
+          "id": "dead-signal-minor-repairs",
+          "name": "Minor Repairs",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": "varies",
+            "note": "1 Vitae per Condition or point of bashing damage healed"
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "medicine",
+            "includesDiscipline": true
+          },
+          "summary": "Spend Vitae to clear non-persistent Conditions or heal bashing damage on a target; an exceptional success also reaches persistent Conditions.",
+          "page": 23
+        },
+        {
+          "id": "dead-signal-receive-transmission",
+          "name": "Receive Transmission",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "willpower": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "duration": "One night",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "occult",
+            "includesDiscipline": true
+          },
+          "summary": "Take someone's Radio Sickness onto yourself for a night, buying them time to interpret their omen.",
+          "page": 23
+        },
+        {
+          "id": "dead-signal-configure-receiver",
+          "name": "Configure Receiver",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "willpower": {
+              "fixed": 1
+            },
+            "vitae": "varies",
+            "note": "Plus 2 Vitae per trait raised"
+          },
+          "action": "instant",
+          "duration": "One night",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "medicine",
+            "includesDiscipline": true
+          },
+          "summary": "Rework a target's blood to raise their Skills (to a maximum of 5) for the night; an exceptional success can raise an Attribute too.",
+          "page": 24
+        },
+        {
+          "id": "dead-signal-broadcast",
+          "name": "Broadcast",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "duration": "One scene per Vitae",
+          "dicePool": {
+            "attribute": "manipulation",
+            "skill": "persuasion",
+            "includesDiscipline": true
+          },
+          "summary": "Send out a signal that draws nearby servants of the God-Machine to you in a friendly mood; an exceptional success brings an angel with a message.",
+          "page": 24
+        }
+      ]
+    },
+    {
+      "id": "triadic-evolution",
+      "name": "Triadic Evolution",
+      "kind": "ritual",
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "summary": "Belial's Brood's power over their own Beast. The dots do nothing alone but unlock Manifestations; each dot comes with one free Manifestation, and more cost 2 Experiences each. Brood learn it without a teacher and can't teach it.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "belials-brood",
+        "covenantStatusMinimum": 0,
+        "humanity": "none",
+        "castingCost": {
+          "willpower": {
+            "fixed": 1
+          }
+        },
+        "castingPool": {
+          "attribute": "stamina",
+          "skill": "occult",
+          "includesDiscipline": true
+        }
+      }
+    },
+    {
+      "id": "vitiate",
+      "name": "Vitiate",
+      "kind": "scaling",
+      "source": {
+        "book": "spilled-blood",
+        "page": 89
+      },
+      "summary": "The Bekaak's entropic aura, which saps the strength of anyone who touches them and can inflict sudden infirmities of old age.",
+      "powers": [
+        {
+          "id": "vitiate",
+          "name": "Vitiate",
+          "dots": [
+            1,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": null,
+            "optional": true,
+            "note": "Persistent effects are free; each active effect costs 1 Vitae"
+          },
+          "action": "reflexive",
+          "duration": "Permanent (persistent effects); one turn (active effects)",
+          "summary": "Anyone who touches you or hits you in close combat takes a penalty equal to your dots on their next Physical action. After a Brawl hit, spend Vitae instead of dealing damage to inflict a Tilt like Arm Wrack, Blinded, Deafened, Leg Wrack or Mute for turns equal to your dots, or to drop the target to the end of the Initiative order.",
+          "page": 89
+        }
+      ]
+    }
+  ],
+  "covenants": [
+    {
+      "id": "belials-brood",
+      "name": "Belial's Brood",
+      "nickname": "The Claimed",
+      "source": {
+        "book": "spilled-blood",
+        "page": 57
+      },
+      "summary": "Vampires who fell to the Beast as draugr and came back out of it with their wits but not their Humanity, living by the Bestial Triad. Hated by every other covenant, they gather in small clutches under the strongest, an Apex."
+    },
+    {
+      "id": "esoteric-order-of-the-golden-star",
+      "name": "Esoteric Order of the Golden Star",
+      "nickname": "Orderites",
+      "source": {
+        "book": "spilled-blood",
+        "page": 65
+      },
+      "summary": "A boarding-school cult selling courses in an ancient blood magic that does not exist, run by Lady Jezebel and her twelve teachers. Not a true covenant, but it can stand in for one; members gain nothing beyond Social Merits tied to the Order."
+    }
+  ],
+  "merits": [
+    {
+      "id": "psychognosis",
+      "name": "Psychognosis",
+      "category": "vampire",
+      "source": {
+        "book": "spilled-blood",
+        "page": 19
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "bloodline",
+          "id": "icelus"
+        },
+        {
+          "kind": "other",
+          "text": "Psychology Specialty in Medicine"
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "discipline",
+            "id": "auspex",
+            "minimum": 2
+          }
+        ],
+        [
+          {
+            "kind": "discipline",
+            "id": "dominate",
+            "minimum": 2
+          }
+        ]
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Hypnotic Precognition",
+          "summary": "Needs Dominate 2. Mesmerize or Iron Edict lets you ask a Dream Visions question about the victim, up to your dots in this Merit."
+        },
+        {
+          "dots": 2,
+          "name": "Diagnostic Dreaming",
+          "summary": "Needs Auspex 2. Beast's Hackles successes count as exceptional; spend a Vitae for extra Uncanny Perception questions."
+        },
+        {
+          "dots": 3,
+          "name": "Waking Prescience",
+          "summary": "Needs Auspex 3. The Spirit's Touch succeeds automatically with one success; spend Willpower for more answers."
+        },
+        {
+          "dots": 4,
+          "name": "Morphean Blackmail",
+          "summary": "Needs Dominate 4. Spend a Vitae when using Dominate and victims resist with only half the relevant Attribute."
+        },
+        {
+          "dots": 5,
+          "name": "Shared Minds",
+          "summary": "Needs Auspex 4. Spend a Vitae with Lay Open the Mind to share the victim's senses for a scene, at -3 to your own Perception."
+        }
+      ],
+      "summary": "Hypnotise a consenting patient into dream-sleep (Willpower, Manipulation + Medicine - Resolve), then spend Willpower to fuel techniques that boost your Auspex and Dominate until sunrise."
+    },
+    {
+      "id": "recruitment-tactics",
+      "name": "Recruitment Tactics",
+      "category": "vampire",
+      "source": {
+        "book": "spilled-blood",
+        "page": 36
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "bloodline",
+          "id": "parliamentarians"
+        }
+      ],
+      "summary": "Once per chapter, add your Blood Potency as successes to one Social roll made in a live, back-and-forth argument (not a speech or broadcast). Afterwards you're Competitive for Blood Potency days, or gain Obsession if you already were."
+    },
+    {
+      "id": "denouncement",
+      "name": "Denouncement",
+      "category": "vampire",
+      "source": {
+        "book": "spilled-blood",
+        "page": 36
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "bloodline",
+          "id": "parliamentarians"
+        }
+      ],
+      "summary": "Spend 1 Willpower to denounce someone, true or not, for breaking a group's customs in front of at least two of its members; win a contested Social roll and they're Shamed. You take -2 on Social rolls with that group for a week."
+    },
+    {
+      "id": "blood-chymistry",
+      "name": "Blood Chymistry",
+      "category": "supernatural",
+      "source": {
+        "book": "spilled-blood",
+        "page": 93
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "resources",
+          "minimum": 2
+        },
+        {
+          "kind": "merit",
+          "id": "safe-place",
+          "minimum": 1
+        },
+        {
+          "kind": "other",
+          "text": "Science Specialty: Alchemy"
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Cinnabar",
+          "summary": "A bezoar that heals bashing and lethal damage equal to the donor's Blood Potency and speeds healing for a night."
+        },
+        {
+          "dots": 2,
+          "name": "Colostrum",
+          "summary": "An injection that gives 8-again on two Physical Skills for hours or scenes equal to the donor's Blood Potency."
+        },
+        {
+          "dots": 3,
+          "name": "Ens Primum",
+          "summary": "Lets a vampire or ghoul use Physical Intensity on one Mental or Social Attribute for a night per donor Blood Potency."
+        },
+        {
+          "dots": 4,
+          "name": "Ens Veneris",
+          "summary": "Raises a vampire's Blood Potency by one, or gives a ghoul a dot, for a night per donor Blood Potency."
+        },
+        {
+          "dots": 5,
+          "name": "Terra Figulina",
+          "summary": "A clay that lets the subject spend Willpower to birth a homunculus Minion from their flesh, at a point of aggravated damage, for a week per donor Blood Potency."
+        }
+      ],
+      "summary": "Hypatian alchemy: each dot is a potion brewed with a Vitae donation, rolling Intelligence + Science minus its dots. Anyone benefiting takes -2 on Social actions and risks making people Suspicious."
+    },
+    {
+      "id": "athenian",
+      "name": "Athenian",
+      "category": "social",
+      "source": {
+        "book": "spilled-blood",
+        "page": 115
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Membership of the Athenians, the community that tends and spreads the Blessing of Athena. Each dot grants a bundle of benefits: Allies (Athenians), extra Cacophony Savvy, a Skill dot for your role, Safe Place and a shared Haven, then three dots to spread among those. At four or more dots, no other Status can be above one dot. Characters given the Blessing get the first dot free."
+    }
+  ],
+  "devotions": [
+    {
+      "id": "the-look",
+      "name": "The Look",
+      "source": {
+        "book": "spilled-blood",
+        "page": 27
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 2
+        },
+        {
+          "kind": "bloodline",
+          "id": "liderc"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "duration": "Scene",
+      "experienceCost": 1,
+      "summary": "An exceptional success at stirring a mortal's emotions steals a Willpower from them as Vitae (lethal damage if they have none), once per person per scene; lets Lidérc of high Blood Potency feed on humans this way."
+    },
+    {
+      "id": "the-give-and-take",
+      "name": "The Give-and-Take",
+      "source": {
+        "book": "spilled-blood",
+        "page": 28
+      },
+      "prerequisites": [
+        {
+          "kind": "bloodline",
+          "id": "liderc"
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "discipline",
+            "id": "celerity",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "discipline",
+            "id": "vigor",
+            "minimum": 3
+          }
+        ]
+      ],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "duration": "One night",
+      "requirement": "You must feed on the victim.",
+      "experienceCost": 1,
+      "summary": "Lend the mortal you feed on two dots of your physical Disciplines for the night, fuelled by their Willpower, while you take any Willpower they gain from their Vice."
+    },
+    {
+      "id": "the-one-that-got-away",
+      "name": "The One That Got Away",
+      "source": {
+        "book": "spilled-blood",
+        "page": 28
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 4
+        },
+        {
+          "kind": "bloodline",
+          "id": "liderc"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "duration": "One night per dot of Blood Potency",
+      "requirement": "You has to drink from the sleeping victim.",
+      "experienceCost": 2,
+      "summary": "Cast yourself as the sleeper's lost love: they gain a Vice of sacrificing for you, and three successes count as exceptional when you stir their emotions."
+    },
+    {
+      "id": "the-pledge",
+      "name": "The Pledge",
+      "source": {
+        "book": "spilled-blood",
+        "page": 28
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 2
+        },
+        {
+          "kind": "bloodline",
+          "id": "liderc"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "requirement": "You must feed on a freely consenting mortal.",
+      "experienceCost": 1,
+      "summary": "Pledge true love or friendship to a willing mortal as you feed; you both gain the Promised Condition."
+    },
+    {
+      "id": "infectious-bite",
+      "name": "Infectious Bite",
+      "source": {
+        "book": "spilled-blood",
+        "page": 32
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 4
+        },
+        {
+          "kind": "bloodline",
+          "id": "nosoi"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "manipulation",
+        "skill": "medicine",
+        "discipline": "protean",
+        "resistance": "Stamina + Supernatural Tolerance"
+      },
+      "action": "contested",
+      "experienceCost": 0,
+      "summary": "Permanently give a mortal your favoured blood-borne disease, even one that isn't normally catching. You carry an Addicted Condition to that blood that can never be resolved."
+    },
+    {
+      "id": "plague-doctors-mask",
+      "name": "Plague Doctor's Mask",
+      "source": {
+        "book": "spilled-blood",
+        "page": 32
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 2
+        },
+        {
+          "kind": "bloodline",
+          "id": "nosoi"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "note": "Plus 1 Vitae per extra illness, on top of Touch of Shadow"
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 1,
+      "summary": "Extend Touch of Shadow to hide the symptoms of a blood-borne illness: the patient feels no pain and looks healthy to anyone without medical equipment, though nothing is cured."
+    },
+    {
+      "id": "tiny-guardian",
+      "name": "Tiny Guardian",
+      "source": {
+        "book": "spilled-blood",
+        "page": 32
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 3
+        },
+        {
+          "kind": "merit",
+          "id": "swarm-form",
+          "minimum": 1
+        },
+        {
+          "kind": "bloodline",
+          "id": "nosoi"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": "varies",
+        "note": "1 Vitae per insect"
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 1,
+      "summary": "Shed tiny insects or spiders from your body that follow your wishes at any range and share their senses; each costs a finger joint, and you take lethal damage if one dies or isn't back by sunrise."
+    },
+    {
+      "id": "city-attunement",
+      "name": "City Attunement",
+      "source": {
+        "book": "spilled-blood",
+        "page": 44
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 1
+        },
+        {
+          "kind": "bloodline",
+          "id": "scions-of-the-first-city"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 0,
+      "requirement": "Touch a building or street of a city of at least 10,000 people.",
+      "summary": "Renew your bond with one city (the whole metropolis, not a district), usually each night on leaving your haven. Your other Scion Devotions only work in an attuned city. Free for every Scion."
+    },
+    {
+      "id": "incriminating-evidence",
+      "name": "Incriminating Evidence",
+      "source": {
+        "book": "spilled-blood",
+        "page": 44
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 3
+        },
+        {
+          "kind": "bloodline",
+          "id": "scions-of-the-first-city"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": "varies",
+        "note": "First use in a scene is free; each further use costs 1 Vitae"
+      },
+      "dicePool": {
+        "attribute": "wits",
+        "skill": "empathy",
+        "discipline": "auspex"
+      },
+      "action": "instant",
+      "experienceCost": 1,
+      "requirement": "Use outdoors in your attuned city, on someone you touched earlier that night.",
+      "summary": "The city's signs steer you towards evidence of that person's wrongdoing, one clue per success: a building or garage, never the secret itself or a way past locks. Contests Obfuscate with a Clash of Wills."
+    },
+    {
+      "id": "our-mothers-mind",
+      "name": "Our Mother's Mind",
+      "source": {
+        "book": "spilled-blood",
+        "page": 45
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 5
+        },
+        {
+          "kind": "bloodline",
+          "id": "scions-of-the-first-city"
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        }
+      },
+      "dicePool": {
+        "attribute": "intelligence",
+        "skill": "occult",
+        "discipline": "auspex",
+        "resistance": "Resolve + Blood Potency"
+      },
+      "action": "contested",
+      "experienceCost": 3,
+      "requirement": "Use in your attuned city, against someone who wronged it.",
+      "summary": "Walk barefoot on your own Vitae and the city leads you Blood Potency blocks per success towards a named target, while each success takes 1 from their non-combat pools and Speed. Each success also costs you a dot of Allies, Contacts, Retainer or Resources for a week."
+    },
+    {
+      "id": "shapeshifting",
+      "name": "Shapeshifting",
+      "source": {
+        "book": "spilled-blood",
+        "page": 49
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "note": "1 Vitae per feature copied"
+      },
+      "dicePool": null,
+      "action": "instant",
+      "duration": "One night",
+      "experienceCost": 1,
+      "summary": "Copy small features (face, hair, voice, a birthmark) from someone whose blood you carry, one per Vitae; you can't change Size, and copied organs only look real. Those close to the victim sense something is off: -2 to your Social rolls against them."
+    },
+    {
+      "id": "ghost-skin",
+      "name": "Ghost Skin",
+      "source": {
+        "book": "spilled-blood",
+        "page": 86
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 2,
+      "summary": "When you use Twilight Projection, your projected form can see and physically touch ghosts with your normal traits. Full lethal damage throws you back to your body, and full aggravated damage destroys you.",
+      "requirement": "You must be activating Twilight Projection."
+    },
+    {
+      "id": "pierce-the-veil",
+      "name": "Pierce the Veil",
+      "source": {
+        "book": "spilled-blood",
+        "page": 86
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "willpower": {
+          "fixed": 1
+        },
+        "optional": true,
+        "note": "Spend Willpower to use Disciplines other than Auspex on ghosts"
+      },
+      "dicePool": null,
+      "action": "instant",
+      "duration": "Scene",
+      "experienceCost": 1,
+      "summary": "Sense ghosts within reach of your Kindred Senses, learn their Rank with Wits + Occult, and see and speak to them in Twilight. With Willpower you can use other Disciplines on them too, though you still can't touch them."
+    },
+    {
+      "id": "seance",
+      "name": "Séance",
+      "source": {
+        "book": "spilled-blood",
+        "page": 86
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "resolve",
+        "skill": "occult",
+        "discipline": "auspex",
+        "resistance": "Resistance + Rank"
+      },
+      "action": "contested",
+      "experienceCost": 2,
+      "summary": "Call a ghost to its Anchor and make it Materialized for the scene, or the whole night on an exceptional success. A dramatic failure leaves you Open.",
+      "requirement": "You must be at the ghost's Anchor."
+    },
+    {
+      "id": "null-space",
+      "name": "Null Space",
+      "source": {
+        "book": "spilled-blood",
+        "page": 89
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "vitiate",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "discipline",
+            "id": "animalism",
+            "minimum": 5
+          }
+        ],
+        [
+          {
+            "kind": "discipline",
+            "id": "obfuscate",
+            "minimum": 5
+          }
+        ]
+      ],
+      "cost": {
+        "vitae": "varies",
+        "note": "Half the Vitae spent on Lord of the Land or Oubliette, rounded up"
+      },
+      "dicePool": null,
+      "action": null,
+      "duration": "One week per dot of Blood Potency",
+      "experienceCost": 4,
+      "summary": "Unwelcome visitors to your marked haven must spend Willpower or become Beaten Down if violence starts, and you can force the choice again with Vitae. There you can also use Vitiate's active effects on one victim in sight each turn without hitting them.",
+      "requirement": "You are marking an area with Lord of the Land or Oubliette."
+    },
+    {
+      "id": "water-hibernation",
+      "name": "Water Hibernation",
+      "source": {
+        "book": "spilled-blood",
+        "page": 97
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {},
+      "dicePool": null,
+      "action": "instant",
+      "duration": "Indefinite",
+      "experienceCost": 1,
+      "summary": "Like Unmarked Grave, but underwater: stay submerged as long as you like, safe from almost all harm, even sunlight through the water. You take 1 bashing damage if the water is removed, and full exposure leaves you open to the sun.",
+      "requirement": "You must be fully submerged in water."
+    },
+    {
+      "id": "flesh-form",
+      "name": "Flesh Form",
+      "source": {
+        "book": "spilled-blood",
+        "page": 97
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 3
+        },
+        "note": "Spent again each night on waking to keep the form"
+      },
+      "dicePool": null,
+      "action": "instant",
+      "duration": "Indefinite",
+      "experienceCost": 1,
+      "summary": "Drain a victim and eat their body to take on their exact look and voice, though not their manner. The stolen body ages a decade each week until you look like a walking corpse.",
+      "requirement": "You must drain the victim of blood and devour the body."
+    },
+    {
+      "id": "not-so-special",
+      "name": "Not So Special",
+      "source": {
+        "book": "spilled-blood",
+        "page": 105
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 2
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": "varies",
+        "note": "1 Vitae per Discipline dot suppressed"
+      },
+      "dicePool": {
+        "attribute": "resolve",
+        "skill": "occult",
+        "discipline": "vigor",
+        "resistance": "Stamina + Blood Potency"
+      },
+      "action": "contested",
+      "duration": "Minutes equal to successes",
+      "experienceCost": 2,
+      "summary": "Suppress the top dots of a Kindred victim's clan Discipline and its Devotions, one dot per Vitae. Powers already active provoke a Clash of Wills. It can't touch Animalism, Obfuscate or the physical Disciplines.",
+      "requirement": "You must touch the victim."
+    }
+  ],
+  "rituals": [
+    {
+      "id": "sanguine-auger",
+      "name": "Sanguine Auger",
+      "discipline": "cruac",
+      "dots": 1,
+      "source": {
+        "book": "spilled-blood",
+        "page": 40
+      },
+      "targetSuccesses": 6,
+      "summary": "Divine through your latest victim's blood: your next daysleep brings a cryptic vision of something new about them (Touchstones, Merits, lineage back Crúac generations, a mortal's blood bonds). Extra Vitae buys more facts or clearer visions."
+    },
+    {
+      "id": "wisdom-of-the-blood",
+      "name": "Wisdom of the Blood",
+      "discipline": "cruac",
+      "dots": 3,
+      "source": {
+        "book": "spilled-blood",
+        "page": 40
+      },
+      "targetSuccesses": 6,
+      "summary": "Reach the Kindred's shared unconscious through a torpid vampire's mind: each extra Vitae buys one question, answered with a brief, truthful but cryptic vision coloured by the sleeper's biases."
+    },
+    {
+      "id": "clothos-skein",
+      "name": "Clotho's Skein",
+      "discipline": "cruac",
+      "dots": 5,
+      "source": {
+        "book": "spilled-blood",
+        "page": 40
+      },
+      "targetSuccesses": 9,
+      "resistedBy": "Resolve + Blood Potency",
+      "summary": "In your next daysleep, walk the dream-threads linking Kindred within a mile and plant one idea or goal in a chosen sleeper, who pursues it in their own way. It can't make them harm themselves."
+    },
+    {
+      "id": "animal-magnetism",
+      "name": "Animal Magnetism",
+      "discipline": "triadic-evolution",
+      "dots": 1,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 5,
+      "summary": "Add your Triadic Evolution dots to mundane Expression, Persuasion and Socialize rolls for an hour."
+    },
+    {
+      "id": "dont-look-it-in-the-eye",
+      "name": "Don't Look It in the Eye",
+      "discipline": "triadic-evolution",
+      "dots": 1,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 5,
+      "summary": "Add your Triadic Evolution dots to mundane Animal Ken, Intimidation and Streetwise rolls for an hour."
+    },
+    {
+      "id": "camouflage",
+      "name": "Camouflage",
+      "discipline": "triadic-evolution",
+      "dots": 2,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 6,
+      "summary": "For an hour you can't be seen as long as you stay completely still and do nothing."
+    },
+    {
+      "id": "cover-your-tracks",
+      "name": "Cover Your Tracks",
+      "discipline": "triadic-evolution",
+      "dots": 2,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 5,
+      "summary": "Your scent is hidden for as many nights as you have Triadic Evolution dots."
+    },
+    {
+      "id": "merely-a-flesh-wound",
+      "name": "Merely a Flesh Wound",
+      "discipline": "triadic-evolution",
+      "dots": 2,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 6,
+      "summary": "Ignore wound penalties for as many scenes as you have Triadic Evolution dots."
+    },
+    {
+      "id": "sprint",
+      "name": "Sprint",
+      "discipline": "triadic-evolution",
+      "dots": 2,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 6,
+      "summary": "For an hour, add your Triadic Evolution dots to Speed and to non-combat Athletics feats (not Defense)."
+    },
+    {
+      "id": "acidic-blood",
+      "name": "Acidic Blood",
+      "discipline": "triadic-evolution",
+      "dots": 3,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 7,
+      "summary": "Until sunrise your blood burns whoever drinks it: vampires take 1 lethal per Vitae and get no nourishment, the living 2 lethal."
+    },
+    {
+      "id": "fight-or-flight",
+      "name": "Fight or Flight",
+      "discipline": "triadic-evolution",
+      "dots": 3,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 7,
+      "summary": "You can't be surprised for the next hour."
+    },
+    {
+      "id": "perfect-ambush",
+      "name": "Perfect Ambush",
+      "discipline": "triadic-evolution",
+      "dots": 3,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 7,
+      "summary": "For a scene, add your Triadic Evolution dots to Dexterity + Stealth rolls to surprise others."
+    },
+    {
+      "id": "trophy",
+      "name": "Trophy",
+      "discipline": "triadic-evolution",
+      "dots": 3,
+      "source": {
+        "book": "spilled-blood",
+        "page": 59
+      },
+      "targetSuccesses": 7,
+      "summary": "For the rest of the night, you can keep a Size 1 piece of a Kindred from decaying, for years equal to your Triadic Evolution dots."
+    },
+    {
+      "id": "instinctual-conversation",
+      "name": "Instinctual Conversation",
+      "discipline": "triadic-evolution",
+      "dots": 4,
+      "source": {
+        "book": "spilled-blood",
+        "page": 60
+      },
+      "targetSuccesses": 8,
+      "contestedBy": "Composure + Blood Potency",
+      "summary": "For a scene, swap thoughts as images by line of sight with anyone currently under a Bestial Condition."
+    },
+    {
+      "id": "riding-the-man",
+      "name": "Riding the Man",
+      "discipline": "triadic-evolution",
+      "dots": 4,
+      "source": {
+        "book": "spilled-blood",
+        "page": 60
+      },
+      "targetSuccesses": 8,
+      "summary": "For a scene, add your Triadic Evolution dots to Intelligence or Wits rolls (choose one; not Defense)."
+    },
+    {
+      "id": "survive",
+      "name": "Survive",
+      "discipline": "triadic-evolution",
+      "dots": 4,
+      "source": {
+        "book": "spilled-blood",
+        "page": 60
+      },
+      "targetSuccesses": 8,
+      "summary": "Add your Triadic Evolution dots to Defense for that many scenes, as long as you attack no one."
+    },
+    {
+      "id": "enter-the-zone",
+      "name": "Enter the Zone",
+      "discipline": "triadic-evolution",
+      "dots": 5,
+      "source": {
+        "book": "spilled-blood",
+        "page": 60
+      },
+      "targetSuccesses": 10,
+      "summary": "For five scenes, gain frenzy's edge without frenzying: add Blood Potency to Physical rolls and resistances, ignore wound penalties, and grab-and-bite in one action for lethal damage and a Vitae."
+    },
+    {
+      "id": "hounds-to-the-hunters",
+      "name": "Hounds to the Hunters",
+      "discipline": "triadic-evolution",
+      "dots": 5,
+      "source": {
+        "book": "spilled-blood",
+        "page": 60
+      },
+      "targetSuccesses": 10,
+      "contestedBy": "Composure + Blood Potency",
+      "summary": "Follow the scent of anyone who passed through the area in the last five nights, past Obfuscate and other cover, with no Clash of Wills."
+    }
+  ],
+  "scales": [
+    {
+      "id": "spirit-tether",
+      "name": "Spirit Tether",
+      "mystery": "any",
+      "source": {
+        "book": "spilled-blood",
+        "page": 101
+      },
+      "prerequisiteCoils": [],
+      "cost": {},
+      "dicePool": null,
+      "summary": "Needs Resolve 4. Drug yourself with a hallucinogen and Vitae mixture, then train yourself to rest while staying aware. Afterwards you can project your mind as with Twilight Projection, and use your other Siphoning Scales while projected.",
+      "anyCoil": 2
+    },
+    {
+      "id": "psychic-leech",
+      "name": "Psychic Leech",
+      "mystery": "any",
+      "source": {
+        "book": "spilled-blood",
+        "page": 101
+      },
+      "prerequisiteCoils": [],
+      "cost": {
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "summary": "Needs Spirit Tether and Empathy 3. Once attuned by anointing places or people with your blood, you see Vitae glow while tethered. Spend Willpower to drain up to your Blood Potency in Vitae from a vampire and feed on it. If they start starving, they must resist frenzy.",
+      "anyCoil": 2
+    },
+    {
+      "id": "beseech-the-sleeping",
+      "name": "Beseech the Sleeping",
+      "mystery": "any",
+      "source": {
+        "book": "spilled-blood",
+        "page": 101
+      },
+      "prerequisiteCoils": [],
+      "cost": {},
+      "dicePool": null,
+      "summary": "Needs Spirit Tether and Expression 2. After sleeping the night and spending a day under Blush of Life (repeated for each use), reach into a sleeping mortal's last 24 hours of memories, coloured by their feelings.",
+      "anyCoil": 2
+    },
+    {
+      "id": "command-the-mind",
+      "name": "Command the Mind",
+      "mystery": "any",
+      "source": {
+        "book": "spilled-blood",
+        "page": 101
+      },
+      "prerequisiteCoils": [],
+      "cost": {
+        "vitae": "varies",
+        "note": "Learning it costs a Willpower dot and 1 Vitae; each use costs Vitae"
+      },
+      "dicePool": null,
+      "summary": "Needs Manipulation 3, Dominate 1 and Psychic Leech. While awake and touching someone skin to skin, drain Willpower from them for each Vitae you spend: half your Blood Potency, rounded down, with a minimum of 1.",
+      "anyCoil": 2
+    }
+  ],
+  "conditions": [
+    {
+      "id": "radio-sickness",
+      "name": "Radio Sickness",
+      "source": {
+        "book": "spilled-blood",
+        "page": 23
+      },
+      "persistent": true,
+      "summary": "You failed to understand or act on a message from the God-Machine. Ringing ears and nerve pain give -1 to Mental, Stealth and combat rolls, worsening each week to -5, and it can kill.",
+      "resolution": "A vampire treats you with Dead Signal, or you carry out the God-Machine's orders.",
+      "beat": "Someone notices your strange behaviour in a way that puts you at risk.",
+      "possibleSources": "Dead Signal, the God-Machine speaking to you"
+    },
+    {
+      "id": "promised",
+      "name": "Promised",
+      "source": {
+        "book": "spilled-blood",
+        "page": 28
+      },
+      "persistent": true,
+      "summary": "A Lidérc and a mortal are pledged to each other. The mortal gains dots of Allies, Resources or Status equal to the vampire's Majesty; the vampire can't use Siphon Devotions on anyone else, but regains a Willpower on any exceptional success at stirring their emotions.",
+      "resolution": "Either loses Integrity over the relationship, the vampire binds the mortal with a Vinculum, the vampire ends it (a Humanity 1 breaking point), or the mortal dies.",
+      "beat": "The mortal loses their last Willpower, or the vampire goes a week feeding on no one else.",
+      "possibleSources": "The Pledge",
+      "notePrompt": "With"
+    },
+    {
+      "id": "shamed",
+      "name": "Shamed",
+      "source": {
+        "book": "spilled-blood",
+        "page": 36
+      },
+      "persistent": false,
+      "summary": "Publicly disgraced before a group, which now sees you as an embarrassment or a traitor. You lose your Status with that group and any Merits that need it.",
+      "resolution": "Disprove the accusation, get your accuser to retract it, win an appeal to the group's higher authority, or make public amends.",
+      "beat": null,
+      "repeatable": true,
+      "possibleSources": "A Parliamentarian's Denouncement",
+      "notePrompt": "Shamed before"
+    },
+    {
+      "id": "geriatric",
+      "name": "Geriatric",
+      "source": {
+        "book": "spilled-blood",
+        "page": 87
+      },
+      "persistent": true,
+      "summary": "Extreme old age has dulled your mind. Mundane Wits rolls other than Perception lose 10-again and any failure is dramatic, and Social actions needing quick thinking take -3.",
+      "resolution": "Grow young enough again.",
+      "beat": "Your muddled behaviour embarrasses you or causes trouble.",
+      "possibleSources": "Bekaak aging."
+    },
+    {
+      "id": "suspicious",
+      "name": "Suspicious",
+      "source": {
+        "book": "spilled-blood",
+        "page": 92
+      },
+      "persistent": false,
+      "summary": "You don't trust the vampire. Each instance, up to three, gives +1 effective Composure against them (not against Disciplines) and on rolls to turn others against them. Success spreads the Condition and restores a Willpower. It fades on its own after about two weeks.",
+      "resolution": "Get to the bottom of what the vampire is doing, wreck their reputation, or see them dead.",
+      "beat": null,
+      "possibleSources": "Hypatian clan bane; Blood Chymistry.",
+      "repeatable": true,
+      "notePrompt": "Of"
+    },
+    {
+      "id": "blessing-of-athena",
+      "name": "Blessing of Athena",
+      "source": {
+        "book": "spilled-blood",
+        "page": 114
+      },
+      "persistent": true,
+      "summary": "A teratoma grows on your head or neck and you love it as your child; your Dirge becomes Martyr (Baby). Threats to it can trigger frenzy as for a loved one. After a week all your blood bonds break and you can't form new ones. The first Vitae you take each night feeds the growth, you must spend Willpower to resist feeding your Vitae to anyone you could infect, and you take 1 damage a night (bashing for the first month, lethal after, aggravated after three years). −1 to Stamina rolls; −1 to Social rolls with vampires, −2 with mortals.",
+      "resolution": "Have the growth cut out, then get through the frenzy that follows (−4, as for losing a lover) without drinking infected blood again.",
+      "beat": null,
+      "possibleSources": "Drinking infected Vitae (Stamina + Resilience + Blood Potency to resist; −1 per later exposure, −2 more if injected with concentrated Vitae)",
+      "affects": [
+        {
+          "targets": [
+            "attribute:stamina"
+          ],
+          "text": "Blessing of Athena: −1 to Stamina rolls"
+        },
+        {
+          "targets": [
+            "attributeCategory:social",
+            "skillCategory:social"
+          ],
+          "text": "Blessing of Athena: −1 to Social rolls with vampires, −2 with mortals"
+        }
+      ]
+    },
+    {
+      "id": "hearts-bane",
+      "name": "Heart's Bane",
+      "source": {
+        "book": "spilled-blood",
+        "page": 136
+      },
+      "persistent": true,
+      "summary": "Your Vitae wants out of you. Until a wound is bound or stitched, each point of lethal damage drains 1 Vitae a round in combat, or 1 a scene otherwise.",
+      "resolution": "Survive fire to the edge of destruction (traditionally cauterizing the exposed heart), or have all your Vitae drained and replaced with clean blood.",
+      "beat": "You give up something you wanted, violent or pleasant, to avoid a chance of bleeding.",
+      "possibleSources": "Drinking from an infected vampire, or from a ghoul or mortal carrier (roll Health dice; one success avoids it)"
+    }
+  ]
+}

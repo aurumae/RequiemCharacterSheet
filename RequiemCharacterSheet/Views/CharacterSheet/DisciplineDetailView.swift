@@ -79,11 +79,10 @@ extension DisciplineDetailView {
     /// How a Ritual Discipline is learned and cast, and the rituals the character knows.
     @ViewBuilder
     private func ritualSection(_ rules: RitualRules) -> some View {
-        let covenant = Character.ritualCovenantsText(for: entry)
         let known = character.rituals(of: .catalog(entry.id))
         Section(header: Text("Rituals").themedText(.subsectionHeader)) {
             VStack(alignment: .leading, spacing: 4) {
-                fact("Learned with", "\(covenant) Status \(rules.covenantStatusMinimum)")
+                fact("Learned with", Character.ritualRequirementText(for: entry).prefix(1).uppercased() + Character.ritualRequirementText(for: entry).dropFirst())
                 fact("Casting cost", rules.castingCost.displayText == "Varies"
                      ? (rules.castingCost.note ?? "Varies")
                      : rules.castingCost.displayText + (rules.castingCost.note.map { " (\($0))" } ?? ""))

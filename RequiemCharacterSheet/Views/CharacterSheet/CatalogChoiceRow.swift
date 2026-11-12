@@ -153,7 +153,8 @@ extension Character {
     var bloodlineDetail: CatalogChoiceDetail? {
         bloodlineEntry.map { bloodline in
             CatalogChoiceDetail(title: bloodline.name, summary: bloodline.summary, citation: bloodline.source.citation(), facts: [
-                DetailFact(label: "Parent clan", value: bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")),
+                DetailFact(label: "Parent clan", value: bloodline.parentClansText),
+            ] + (bloodline.requiredCovenant.map { [DetailFact(label: "Covenant", value: Catalog.bundled.covenants.entry($0)?.name ?? $0)] } ?? []) + [
                 DetailFact(label: "Disciplines", value: disciplineNames(bloodline.disciplines)),
                 DetailFact(label: "Bane", value: "\(bloodline.bane.name). \(bloodline.bane.summary)"),
             ] + (bloodline.favoredAttributes.isEmpty ? [] : [
@@ -239,16 +240,23 @@ extension Character {
     func bloodlinePickerSections() -> [CatalogPickerSection] {
         let all = Catalog.bundled.bloodlines.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         func item(_ bloodline: BloodlineEntry) -> CatalogPickerItem {
-            let parents = bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")
+            let parents = bloodline.parentClansText
             let disciplines = bloodline.disciplines.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")
-            let fits = clanEntry.map { bloodline.parentClans.contains($0.id) } ?? true
+            let fits = clanEntry.map { bloodline.accepts(clan: $0.id) } ?? true
+            // Some bloodlines take members from one covenant only, e.g. the Penumbrae from the Circle of the Crone
+            let covenantWarning = bloodline.requiredCovenant.flatMap { required -> String? in
+                guard covenantSource != .catalog(required), statusStandIn(for: required) == nil else { return nil }
+                return "Members must belong to the \(Catalog.bundled.covenants.entry(required)?.name ?? required)"
+            }
             return CatalogPickerItem(
                 id: bloodline.id,
                 name: bloodline.name,
                 summary: bloodline.summary,
-                details: ["Parent clan: \(parents)", "Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"]
+                details: ["Parent clan: \(parents)"]
+                    + (bloodline.requiredCovenant.map { ["Covenant: \(Catalog.bundled.covenants.entry($0)?.name ?? $0)"] } ?? [])
+                    + ["Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"]
                     + (bloodline.favoredAttributes.isEmpty ? [] : ["Favoured: \(bloodline.favoredAttributes.map(\.name).joined(separator: " or "))"]),
-                warning: fits ? nil : "A bloodline of the \(parents)",
+                warning: fits ? covenantWarning : "A bloodline of the \(parents)",
                 citation: bloodline.source.citation(),
                 isOwned: bloodlineSource == .catalog(bloodline.id)
             )
@@ -256,8 +264,8 @@ extension Character {
         guard let clan = clanEntry else {
             return CatalogPickerSection.byBook([CatalogPickerGroup("", all)], item: item)
         }
-        let own = all.filter { $0.parentClans.contains(clan.id) }
-        let others = all.filter { !$0.parentClans.contains(clan.id) }
+        let own = all.filter { $0.accepts(clan: clan.id) }
+        let others = all.filter { !$0.accepts(clan: clan.id) }
         return CatalogPickerSection.byBook([
             CatalogPickerGroup("\(clan.name) Bloodlines", own),
             CatalogPickerGroup(own.isEmpty ? "" : "Other Bloodlines", others),

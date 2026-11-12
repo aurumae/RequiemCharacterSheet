@@ -15,19 +15,20 @@ struct CatalogTests {
     // MARK: - Bundled data
 
     @Test func bundledCatalogsLoad() {
-        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "dark-eras-2", "secrets-of-the-covenants"])
-        #expect(catalog.disciplines.all.count == 17)
-        #expect(catalog.bloodlines.all.count == 2)
+        #expect(Set(catalog.books.map(\.id)) == ["vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "dark-eras", "dark-eras-2", "secrets-of-the-covenants", "spilled-blood"])
+        #expect(catalog.disciplines.all.count == 20)
+        #expect(catalog.bloodlines.all.count == 12)
         // 85 from Vampire: The Requiem, 72 from Chronicles of Darkness that Requiem doesn't reprint,
-        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras and 7 from Dark Eras 2
-        #expect(catalog.merits.all.count == 245)
+        // 60 from Secrets of the Covenants, 19 from A Thousand Years of Night, 2 from Dark Eras, 7 from Dark Eras 2
+        // and 5 from Spilled Blood
+        #expect(catalog.merits.all.count == 250)
         #expect(catalog.banes.all.count == 14)
-        #expect(catalog.clans.all.count == 10)
-        #expect(catalog.covenants.all.count == 14)
-        #expect(catalog.rituals.all.count == 67)
-        #expect(catalog.devotions.all.count == 41)
+        #expect(catalog.clans.all.count == 15)
+        #expect(catalog.covenants.all.count == 16)
+        #expect(catalog.rituals.all.count == 85)
+        #expect(catalog.devotions.all.count == 59)
         #expect(catalog.mysteries.all.count == 6)
-        #expect(catalog.scales.all.count == 16)
+        #expect(catalog.scales.all.count == 20)
         #expect(catalog.elderBanes.all.count == 5)
     }
 
@@ -101,6 +102,8 @@ struct CatalogTests {
                 #expect(catalog.covenants.entry(id) != nil, "covenant \(id)")
             case .clan:
                 #expect(catalog.clans.entry(id) != nil, "clan \(id)")
+            case .bloodline:
+                #expect(catalog.bloodlines.entry(id) != nil, "bloodline \(id)")
             case .bloodPotency, .willpower, .other:
                 break
             }
@@ -146,7 +149,7 @@ struct CatalogTests {
 
     @Test func pickersGroupEntriesByBook() {
         let clans = CatalogBookSection.sections([CatalogPickerGroup("", catalog.clans.all)])
-        #expect(clans.map(\.book.name) == ["Vampire: The Requiem Second Edition", "Dark Eras 2", "A Thousand Years of Night"])
+        #expect(clans.map(\.book.name) == ["Vampire: The Requiem Second Edition", "Dark Eras 2", "Night Horrors: Spilled Blood", "A Thousand Years of Night"])
         #expect(clans.last?.entries.map(\.id) == ["akhud", "hollow-mekhet", "julii", "pijavica"])
         #expect(clans.allSatisfy { $0.startsBook })
 
@@ -251,6 +254,45 @@ struct CatalogTests {
         character.merits.append(Merit(source: .catalog("covenant-status"), qualifier: "Tenth Choir", rating: 1))
         #expect(character.ritualLearningWarning(for: therion) == nil)
         #expect(catalog.rituals.entry("trials-of-job")?.discipline == "theban-sorcery")
+    }
+
+    @Test func spilledBloodBloodlinesAndCovenants() throws {
+        let book = "spilled-blood"
+        #expect(catalog.clans.all.filter { $0.source.book == book }.count == 5)
+        #expect(catalog.bloodlines.all.filter { $0.source.book == book }.count == 10)
+        #expect(catalog.covenants.all.filter { $0.source.book == book }.map(\.id).sorted() == ["belials-brood", "esoteric-order-of-the-golden-star"])
+
+        // Any-clan bloodlines accept every clan, including the new ones
+        let penumbrae = try #require(catalog.bloodlines.entry("penumbrae"))
+        #expect(penumbrae.accepts(clan: "amari") && penumbrae.accepts(clan: "ventrue"))
+        #expect(penumbrae.parentClansText == "Any clan")
+        #expect(catalog.bloodlines.entry("vilseduire")?.parentClansText == "Daeva or Nosferatu")
+
+        // Bloodline-only Devotions check the bloodline
+        let look = try #require(catalog.devotions.entry("the-look"))
+        let character = Character()
+        character.clan = "Daeva"
+        #expect(character.unmetPrerequisites(for: look).map(\.description).contains("Bloodline: Lidérc"))
+        character.bloodline = "Lidérc"
+        #expect(!character.unmetPrerequisites(for: look).map(\.description).contains("Bloodline: Lidérc"))
+
+        // An Icelus Ventrue takes Dream Visions as though Mekhet
+        let dreamVisions = try #require(catalog.merits.entry("dream-visions"))
+        character.clan = "Ventrue"
+        character.bloodline = "Icelus"
+        #expect(character.unmetPrerequisites(for: dreamVisions).isEmpty)
+
+        // Triadic Evolution is learned by membership, not Status
+        let triadic = try #require(catalog.disciplines.entry("triadic-evolution"))
+        #expect(character.ritualLearningWarning(for: triadic) == "Learning rituals requires membership of Belial's Brood")
+        character.covenantSource = .catalog("belials-brood")
+        #expect(character.ritualLearningWarning(for: triadic) == nil)
+
+        // Siphoning Scales work with any Coil at 2
+        let tether = try #require(catalog.scales.entry("spirit-tether"))
+        #expect(!character.meetsPrerequisite(of: tether))
+        character.coils.append(Coil(mystery: .catalog("mystery-of-the-wyrm"), rating: 2))
+        #expect(character.meetsPrerequisite(of: tether))
     }
 
     @Test func theDukhanTakeDreamVisionsAsThoughMekhet() throws {

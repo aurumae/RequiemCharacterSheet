@@ -97,6 +97,7 @@
 		BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36EA2C9E0087008D03F7 /* BanesView.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
+		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
 		BCAFCCD6309D6A5500A5D9F1 /* CharacterFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */; };
 		BCAFCCDA309EA8B200A5D9F1 /* SpecialtyRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */; };
 		BCAFCCDC309EA90A00A5D9F1 /* SpecialtyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */; };
@@ -225,7 +226,8 @@
 		BC6D36EA2C9E0087008D03F7 /* BanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanesView.swift; sourceTree = "<group>"; };
 		BC6D36EC2C9E457F008D03F7 /* RequiemCharacterSheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RequiemCharacterSheet.entitlements; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
-		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; path = "dark-eras-2.json"; sourceTree = "<group>"; };
+		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
+		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; path = "spilled-blood.json"; sourceTree = "<group>"; };
 		BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFile.swift; sourceTree = "<group>"; };
 		BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyRules.swift; sourceTree = "<group>"; };
 		BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyTests.swift; sourceTree = "<group>"; };
@@ -385,6 +387,7 @@
 				BC460D9A30A236AA0062F53F /* secrets-of-the-covenants.json */,
 				BCA1AE1B30A410C7001317CA /* dark-eras.json */,
 				BCA1AE1D30A41B00001317CA /* dark-eras-2.json */,
+				BCA1AE1F30A433D0001317CA /* spilled-blood.json */,
 			);
 			path = Catalogs;
 			sourceTree = "<group>";
@@ -636,6 +639,7 @@
 				BC460D9B30A236AA0062F53F /* secrets-of-the-covenants.json in Resources */,
 				BC2B4440309A30A600720F0C /* thousand-years-of-night.json in Resources */,
 				BC2B443E309A30A500720F0C /* vtr2e-core.json in Resources */,
+				BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */,
 				BC2B4494309CCD2C00720F0C /* Cinzel-Medium.ttf in Resources */,
 				BC2B4490309CC46200720F0C /* IMFellEnglish-Regular.ttf in Resources */,
 				BC2B4496309CCD2D00720F0C /* Cinzel-OFL.txt in Resources */,

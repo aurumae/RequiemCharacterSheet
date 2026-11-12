@@ -66,7 +66,7 @@ extension Character {
     /// Why the character can't learn new rituals for this Discipline, if they can't: they need Status in its covenant.
     func ritualLearningWarning(for entry: DisciplineEntry) -> String? {
         guard let rules = entry.ritualRules, !hasRitualStatus(for: entry) else { return nil }
-        return "Learning rituals requires \(Self.ritualCovenantsText(for: entry)) Status \(rules.covenantStatusMinimum)"
+        return "Learning rituals requires \(Self.ritualRequirementText(for: entry))"
     }
 
     /// Whether the character has the Status to learn rituals for this Discipline, in its covenant or in another that
@@ -74,12 +74,24 @@ extension Character {
     func hasRitualStatus(for entry: DisciplineEntry) -> Bool {
         guard let rules = entry.ritualRules else { return true }
         let covenants = [rules.covenant] + Self.otherCovenants(teaching: entry).map(\.id)
+        // No Status needed, only membership, e.g. Belial's Brood's Triadic Evolution
+        if rules.covenantStatusMinimum == 0 {
+            return covenants.contains { covenantSource == .catalog($0) || statusStandIn(for: $0) != nil }
+        }
         return covenants.contains { covenantStatus($0) >= rules.covenantStatusMinimum }
     }
 
     /// Covenants other than its own that teach a Ritual Discipline.
     static func otherCovenants(teaching entry: DisciplineEntry) -> [CovenantEntry] {
         Catalog.bundled.covenants.all.filter { $0.teaches.contains(entry.id) }
+    }
+
+    /// What learning a Ritual Discipline's rituals needs, e.g. "Lancea et Sanctum or Ahl al-Mumit Status 1", or
+    /// "membership of Belial's Brood".
+    static func ritualRequirementText(for entry: DisciplineEntry) -> String {
+        guard let rules = entry.ritualRules else { return "" }
+        if rules.covenantStatusMinimum == 0 { return "membership of \(ritualCovenantsText(for: entry))" }
+        return "\(ritualCovenantsText(for: entry)) Status \(rules.covenantStatusMinimum)"
     }
 
     /// The covenants that teach a Ritual Discipline, e.g. "Lancea et Sanctum or Ahl al-Mumit".
@@ -167,7 +179,8 @@ extension Character {
 
     /// Whether the character has one of the Coil tiers the Scale resonates with.
     func meetsPrerequisite(of scale: ScaleEntry) -> Bool {
-        scale.prerequisiteCoils.contains { coilRating($0.mystery) >= $0.dots }
+        if let anyCoil = scale.anyCoil, coils.contains(where: { $0.rating >= anyCoil }) { return true }
+        return scale.prerequisiteCoils.contains { coilRating($0.mystery) >= $0.dots }
     }
 
     /// A Scale costs 1 Experience with its prerequisite Coil, 2 without.
@@ -179,11 +192,12 @@ extension Character {
 extension ScaleEntry {
     /// e.g. "Beast's Hunger (Mystery of the Wyrm ••)".
     var prerequisiteText: String {
-        prerequisiteCoils.map { prerequisite in
+        let any = anyCoil.map { ["Any Coil \(String(repeating: "•", count: $0))"] } ?? []
+        return (any + prerequisiteCoils.map { prerequisite in
             let mystery = Catalog.bundled.mysteries.entry(prerequisite.mystery)
             let tier = mystery?.tier(prerequisite.dots)?.name ?? prerequisite.tier
             return "\(tier) (\(mystery?.name ?? prerequisite.mystery) \(String(repeating: "•", count: prerequisite.dots)))"
-        }
+        })
         .joined(separator: " or ")
     }
 }

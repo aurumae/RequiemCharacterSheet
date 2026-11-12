@@ -104,7 +104,8 @@ enum CreationProblem: Hashable {
     case tooManyDisciplineDots
     case tooFewInClanDisciplineDots
     /// Crúac or Theban Sorcery without Status in its covenant.
-    case sorceryWithoutStatus(discipline: String, covenant: String)
+    /// `requirement` is e.g. "Circle of the Crone Status 1".
+    case sorceryWithoutStatus(discipline: String, requirement: String)
     case coilWithoutStatus
     case coilOutsideMystery
     case tooManyRituals(discipline: String)
@@ -140,8 +141,8 @@ enum CreationProblem: Hashable {
             return "More than 3 Discipline dots"
         case .tooFewInClanDisciplineDots:
             return "At least 2 Discipline dots must be in-clan"
-        case .sorceryWithoutStatus(let discipline, let covenant):
-            return "\(discipline) needs \(covenant) Status"
+        case .sorceryWithoutStatus(let discipline, let requirement):
+            return "\(discipline) needs \(requirement)"
         case .coilWithoutStatus:
             return "Coils need Ordo Dracul Status"
         case .coilOutsideMystery:
@@ -251,7 +252,7 @@ extension Character {
             if let entry, inClanDisciplines.contains(entry.id), entry.kind != .ritual { continue }
             outOfClan += dots
             if let entry, entry.ritualRules != nil, !hasRitualStatus(for: entry) {
-                report.problems.insert(.sorceryWithoutStatus(discipline: entry.name, covenant: Self.ritualCovenantsText(for: entry)))
+                report.problems.insert(.sorceryWithoutStatus(discipline: entry.name, requirement: Self.ritualRequirementText(for: entry)))
             }
         }
         for coil in coils {
