@@ -5,6 +5,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// One of a character's Crúac rites or Theban miracles: a catalog entry, or a custom one with its own dots.
 @Observable

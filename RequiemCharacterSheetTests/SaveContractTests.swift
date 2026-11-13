@@ -1,6 +1,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 private final class FixtureBundleMarker: NSObject {}
 
@@ -21,7 +24,7 @@ enum SaveFixtures {
 
 @MainActor
 struct SaveContractTests {
-    private static let current = ["v10-advanced", "v10-guided", "v10-morbus", "v11-conditions"]
+    private static let current = ["v10-advanced", "v10-guided", "v10-morbus", "v11-conditions", "v12-elder-bane"]
     private static let historical = ["v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided", "v9-advanced", "v9-guided"]
     private static let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"]
     private let encoder = JSONEncoder()
@@ -249,12 +252,12 @@ struct SaveContractTests {
                 #expect(character.creation?.favoredAttribute == nil)
             }
         }
-        // Version 11 (Conditions) is current on iOS; v11-future stays for apps that don't read it yet
-        let future = try SaveFixtures.data("v12-future")
+        // Version 12 (elder banes) is current on iOS; v11-future and v12-future stay for apps that don't read them yet
+        let future = try SaveFixtures.data("v13-future")
         let id = UUID()
         let url = directory.appendingPathComponent(id.uuidString + ".json")
         try future.write(to: url)
-        #expect(throws: CharacterStoreError.newerFormat(version: 12)) { try store.load(id) }
+        #expect(throws: CharacterStoreError.newerFormat(version: 13)) { try store.load(id) }
         #expect(try Data(contentsOf: url) == future)
     }
 

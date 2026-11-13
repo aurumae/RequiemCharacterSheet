@@ -35,11 +35,11 @@ struct CreationPanelView: View {
                 CreationStepRow(step: step)
             }
 
-            if let clan = character.clanEntry {
-                // The clan's free dot, chosen by the player and changeable
+            if let giver = character.creationFavoredAttributeGiver {
+                // The clan's (or bloodline's) free dot, chosen by the player and changeable
                 Button(action: chooseFavoredAttribute) {
                     HStack {
-                        Text("\(clan.name) dot")
+                        Text("\(giver) dot")
                             .themedText(.traitName)
                         Spacer()
                         Text(character.creation?.favoredAttribute?.name ?? "Choose")

@@ -22,10 +22,28 @@ struct BanesView: View {
         SheetSectionBlock(.banes) {
             if let clan = character.clanEntry {
                 ClanBaneRow(
-                    clan: clan,
+                    title: "Clan Bane: \(clan.bane.name)",
+                    baneName: clan.bane.name,
+                    summary: clan.bane.summary,
+                    citation: nil,
+                    grantsExtraBane: clan.bane.grantsExtraBane,
                     threshold: character.clanBaneThreshold,
                     humanity: character.humanity,
                     isActive: $character.clanBaneActive
+                )
+            }
+
+            if let elderBane = character.elderBaneEntry {
+                // Deepens the clan bane once an elder falls to Humanity 3
+                ClanBaneRow(
+                    title: "Elder Bane: \(elderBane.name)",
+                    baneName: elderBane.name,
+                    summary: elderBane.summary,
+                    citation: elderBane.source.citation(),
+                    grantsExtraBane: false,
+                    threshold: elderBane.humanityThreshold,
+                    humanity: character.humanity,
+                    isActive: $character.elderBaneActive
                 )
             }
 
@@ -86,18 +104,24 @@ struct BanesView: View {
 
 /// The clan's bane, with a switch for whether it's in effect. It switches on by itself when Humanity
 /// falls to the threshold; switching it off undoes that, e.g. after trying out changes.
+/// A bane that takes hold at a Humanity threshold and can be switched off: the clan bane, or an elder's deeper one.
 private struct ClanBaneRow: View {
     @Environment(\.theme) private var theme
-    let clan: ClanEntry
+    let title: String
+    let baneName: String
+    let summary: String
+    /// Where it comes from, when that isn't the clan's own book.
+    let citation: String?
+    let grantsExtraBane: Bool
     let threshold: Int
     let humanity: Int
     @Binding var isActive: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Clan Bane: \(clan.bane.name)")
+            Text(title)
                 .themedText(.traitName)
-            Text(clan.bane.summary)
+            Text(summary)
                 .themedText(.detail)
 
             Toggle(isOn: $isActive) {
@@ -105,19 +129,24 @@ private struct ClanBaneRow: View {
                     .themedText(.body)
             }
             .tint(theme.accent)
-            .accessibilityLabel("\(clan.bane.name) in effect")
+            .accessibilityLabel("\(baneName) in effect")
             .accessibilityHint("Turns on by itself when Humanity falls to \(threshold).")
 
             Text(status)
                 .themedText(.detail)
                 .foregroundStyle(theme.muted)
+            if let citation {
+                Text(citation)
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
         }
         .padding(.vertical, 4)
     }
 
     private var status: String {
         if isActive {
-            if clan.bane.grantsExtraBane {
+            if grantsExtraBane {
                 return "Record the extra Bane below; it counts toward the limit of \(Character.maxBanes)."
             }
             return "Stays in effect if Humanity rises again."

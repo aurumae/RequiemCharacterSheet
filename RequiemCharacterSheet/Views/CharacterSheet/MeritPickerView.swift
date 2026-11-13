@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// Chooses a Merit to add, grouped by category, asking for a qualifier when the Merit needs one.
+/// Chooses a Merit to add, grouped by book and then category, asking for a qualifier when the Merit needs one.
 /// Unmet prerequisites are shown as warnings; they don't stop the Merit being taken.
 struct MeritPickerView: View {
     @Environment(\.theme) private var theme
@@ -21,7 +21,7 @@ struct MeritPickerView: View {
     /// Alphabetical; when searching, Merits whose name matches come first, then those whose summary does, then
     /// those from a book whose name matches, e.g. "Covenants" for Secrets of the Covenants.
     private var matchingEntries: [MeritEntry] {
-        let entries = Catalog.bundled.merits.all.sorted { $0.name < $1.name }
+        let entries = Catalog.bundled.merits.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
         let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
         let summaryMatches = entries.filter {
@@ -40,19 +40,13 @@ struct MeritPickerView: View {
         NavigationStack {
             List {
                 let entries = matchingEntries
-                // While searching, one list in relevance order; otherwise grouped by category
-                if searchText.isEmpty {
-                    ForEach(Self.categoryOrder, id: \.self) { category in
-                        let inCategory = entries.filter { $0.category == category }
-                        if !inCategory.isEmpty {
-                            Section(header: Text(category.title).themedText(.subsectionHeader)) {
-                                ForEach(inCategory) { row(for: $0) }
-                            }
-                        }
-                    }
-                } else {
-                    Section {
-                        ForEach(entries) { row(for: $0) }
+                // By book; within each, grouped by category, or while searching one list in relevance order
+                let groups = searchText.isEmpty
+                    ? Self.categoryOrder.map { category in CatalogPickerGroup(category.title, entries.filter { $0.category == category }) }
+                    : [CatalogPickerGroup("", entries)]
+                ForEach(CatalogBookSection.sections(groups)) { section in
+                    Section(header: section.header) {
+                        ForEach(section.entries) { row(for: $0) }
                     }
                 }
 
@@ -101,10 +95,11 @@ struct MeritPickerView: View {
                         Button("\(choice.specialty) (\(choice.skill))") { choose(entry, qualifier: choice.specialty) }
                     }
                 } else {
-                    ForEach(entry.qualifier?.options ?? [], id: \.self) { option in
+                    ForEach(character.qualifierOptions(for: entry) ?? [], id: \.self) { option in
                         Button(option) { choose(entry, qualifier: option) }
                     }
                 }
+                Button("Cancel", role: .cancel) {}
             }
             // Free-text qualifiers, e.g. the language for Language
             .alert(
@@ -116,10 +111,12 @@ struct MeritPickerView: View {
                 presenting: pendingEntry
             ) { entry in
                 TextField(entry.qualifier?.prompt ?? "Qualifier", text: $qualifierDraft)
+                // Read when tapped: the alert doesn't redraw its button on every keystroke
                 Button("Add") {
-                    let trimmed = qualifierDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-                    choose(entry, qualifier: trimmed.isEmpty ? nil : trimmed)
+                    choose(entry, qualifier: qualifierDraft.trimmingCharacters(in: .whitespacesAndNewlines))
                 }
+                // The Merit needs to say what it's for, e.g. which Language
+                .disabled(qualifierDraft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 Button("Cancel", role: .cancel) {}
             } message: { entry in
                 Text("Enter the \(entry.qualifier?.prompt.lowercased() ?? "qualifier") this Merit is for.")
@@ -139,6 +136,10 @@ struct MeritPickerView: View {
         Button {
             if entry.qualifier != nil {
                 qualifierDraft = ""
+                // Close the search keyboard first, so a long list of choices, like Covenant Status's, fits on screen
+                if character.qualifierOptions(for: entry) != nil {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
                 pendingEntry = entry
             } else {
                 choose(entry, qualifier: nil)
@@ -215,6 +216,7 @@ extension MeritEntry.Category {
         case .covenant: return "Covenant"
         case .supernatural: return "Supernatural (not for Kindred)"
         case .other: return "Other"
+        default: return rawValue.capitalized
         }
     }
 }

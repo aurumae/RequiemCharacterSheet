@@ -1074,7 +1074,7 @@
           "willpower": {
             "fixed": 1
           },
-          "note": "Plus the miracle's sacrament"
+          "note": "plus the miracle's sacrament"
         },
         "castingPool": {
           "attribute": "intelligence",
@@ -1609,7 +1609,8 @@
           "Invictus",
           "Lancea et Sanctum",
           "Ordo Dracul"
-        ]
+        ],
+        "fromCovenants": true
       },
       "repeatable": true,
       "summary": "Rank within a covenant; works like Status there and unlocks covenant Merits."
@@ -1981,7 +1982,8 @@
           "minimum": 1
         }
       ],
-      "summary": "Blood poached from your feeding ground sickens and marks the poacher."
+      "summary": "Blood poached from your feeding ground sickens and marks the poacher.",
+      "group": "carthian-law"
     },
     {
       "id": "mandate-from-the-masses",
@@ -2002,7 +2004,8 @@
           "minimum": 5
         }
       ],
-      "summary": "A Movement vote strips Blood Potency from an enemy."
+      "summary": "A Movement vote strips Blood Potency from an enemy.",
+      "group": "carthian-law"
     },
     {
       "id": "right-of-return",
@@ -2028,7 +2031,8 @@
           "minimum": 1
         }
       ],
-      "summary": "Carthian Status doesn't count against holding other Covenant Status."
+      "summary": "Carthian Status doesn't count against holding other Covenant Status.",
+      "group": "carthian-law"
     },
     {
       "id": "strength-of-resolution",
@@ -2049,7 +2053,8 @@
           "minimum": 1
         }
       ],
-      "summary": "Add Carthian Status to resist powers pushing you to break city law."
+      "summary": "Add Carthian Status to resist powers pushing you to break city law.",
+      "group": "carthian-law"
     },
     {
       "id": "plausible-deniability",
@@ -2070,7 +2075,8 @@
           "minimum": 3
         }
       ],
-      "summary": "Supernatural attempts to prove your guilt in breaking city law fail."
+      "summary": "Supernatural attempts to prove your guilt in breaking city law fail.",
+      "group": "carthian-law"
     },
     {
       "id": "notary",

@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 extension Character {
     // MARK: - Totals
@@ -136,7 +139,7 @@ extension Character {
             return 2
         case .bloodPotency:
             return 5
-        case .condition:
+        default:
             // Conditions are logged but never bought
             return 0
         }

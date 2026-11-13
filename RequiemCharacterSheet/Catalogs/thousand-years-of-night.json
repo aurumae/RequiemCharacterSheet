@@ -74,6 +74,1385 @@
         "page": 28
       },
       "summary": "A near-extinct Babylonian lost clan steeped in diablerie, bound by an oath of kinship."
+    },
+    {
+      "id": "hollow-mekhet",
+      "name": "Hollow Mekhet",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 29
+      },
+      "favoredAttributes": [
+        "intelligence",
+        "wits"
+      ],
+      "disciplines": [
+        "auspex",
+        "celerity",
+        "obfuscate"
+      ],
+      "bane": {
+        "name": "The Haunted Curse",
+        "summary": "Replaces the Mekhet bane. Your Ka, a hungry ghost of yourself, harasses you as an ephemeral being whose Rank rises as Humanity falls (1 at Humanity 9–10, up to 5 at 1–2). It only appears in reflections, recordings and calls; you earn a Beat when it turns up more often than your Humanity allows.",
+        "humanityThreshold": 6,
+        "page": 30
+      },
+      "summary": "Mekhet without shadow, reflection or echo: all of it lives on in the Ka, a jealous ghost-double that haunts them."
+    },
+    {
+      "id": "julii",
+      "name": "Julii",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 30
+      },
+      "favoredAttributes": [
+        "composure",
+        "presence"
+      ],
+      "disciplines": [
+        "dominate",
+        "resilience",
+        "vigor"
+      ],
+      "bane": {
+        "name": "The Strigid Curse",
+        "summary": "Your dice pools to resist the Numina, Embodiments and Dread Powers of the Strix and other ephemeral beings can't be higher than your Humanity.",
+        "humanityThreshold": 6,
+        "page": 30
+      },
+      "summary": "Warrior-emperors of the Kindred Camarilla of Rome, brought down by the Strix and all but gone."
+    },
+    {
+      "id": "pijavica",
+      "name": "Pijavica",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 30
+      },
+      "favoredAttributes": [
+        "stamina",
+        "wits"
+      ],
+      "disciplines": [
+        "animalism",
+        "protean",
+        "resilience"
+      ],
+      "bane": {
+        "name": "The Mutative Curse",
+        "summary": "−1 to Mental and Social Attributes for each dot of Blood Potency below 4, and −1 to Physical Attributes for each dot above 7. Before an action with a reduced Attribute, roll Humanity minus the reduction; success restores it for that action.",
+        "humanityThreshold": 6,
+        "page": 30
+      },
+      "summary": "Vampires grown from a mass of congealed Vitae, whose shape and mind hold together only within a narrow band of Blood Potency."
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "collector",
+      "name": "Collector",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 17
+      },
+      "singleWillpower": "Go out of your way to acquire something typical of the time and place you're in.",
+      "allWillpower": "Put adding to your collection ahead of your own safety or the Masquerade."
+    },
+    {
+      "id": "meddler",
+      "name": "Meddler",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 17
+      },
+      "singleWillpower": "Get involved in someone else's business without being asked.",
+      "allWillpower": "Interfere in a precarious or dangerous situation so you can take the credit for how it turns out."
+    },
+    {
+      "id": "provocateur",
+      "name": "Provocateur",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 17
+      },
+      "singleWillpower": "Stir up dissent among others for no reason but to do it.",
+      "allWillpower": "Set others against each other when you know lives and futures are at stake."
+    }
+  ],
+  "elderBanes": [
+    {
+      "id": "captivating-curse",
+      "name": "The Captivating Curse",
+      "clan": "daeva",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 24
+      },
+      "humanityThreshold": 3,
+      "summary": "On top of the Wanton Curse with mortals, you're no longer immune to other blood bonds once you're fully bound to one regnant."
+    },
+    {
+      "id": "visceral-curse",
+      "name": "The Visceral Curse",
+      "clan": "gangrel",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 25
+      },
+      "humanityThreshold": 3,
+      "summary": "Bestial, Wanton and Competitive are no longer limited to once a month: you take them every time your Beast rises close to the surface."
+    },
+    {
+      "id": "primeval-curse",
+      "name": "The Primeval Curse",
+      "clan": "mekhet",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 26
+      },
+      "humanityThreshold": 3,
+      "summary": "Any bane you suffer, fire and sunlight included, can be used to ward a place against you or bind you there, as if you were an ephemeral being."
+    },
+    {
+      "id": "desolate-curse",
+      "name": "The Desolate Curse",
+      "clan": "nosferatu",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 27
+      },
+      "humanityThreshold": 3,
+      "summary": "Detachment rolls made away from all of your Touchstones take −2, on top of any other penalties."
+    },
+    {
+      "id": "apathetic-curse",
+      "name": "The Apathetic Curse",
+      "clan": "ventrue",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 28
+      },
+      "humanityThreshold": 3,
+      "summary": "You can only regain all your Willpower through your Mask with one of your Touchstones present; with no Touchstones, your Mask restores none."
+    }
+  ],
+  "devotions": [
+    {
+      "id": "annals-of-death",
+      "name": "Annals of Death",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 72
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {},
+      "dicePool": {
+        "attribute": "intelligence",
+        "skill": "occult",
+        "discipline": "auspex"
+      },
+      "action": "instant",
+      "experienceCost": 1,
+      "summary": "Read a place's history of deaths, Embraces and Final Deaths: one question per success, or spend them to foresee who dies there next. Once per location per scene."
+    },
+    {
+      "id": "bones-of-the-mountain",
+      "name": "Bones of the Mountain",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 73
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 3
+        },
+        "note": "Plus 3 Vitae for each extra turn"
+      },
+      "dicePool": {
+        "attribute": "stamina",
+        "skill": "survival",
+        "discipline": "protean"
+      },
+      "action": "instant",
+      "experienceCost": 5,
+      "summary": "Turn your body to living stone: every active Resilience and Vigor effect for free, Protean added to Resilience, and lethal unarmed attacks."
+    },
+    {
+      "id": "celebrity",
+      "name": "Celebrity",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 73
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 3
+        }
+      },
+      "dicePool": {
+        "attribute": "presence",
+        "skill": "empathy",
+        "discipline": "majesty",
+        "resistance": "Resolve + Supernatural Tolerance"
+      },
+      "action": "contested",
+      "experienceCost": 2,
+      "summary": "A Charmed or Enthralled fan spreads your fame, earning you a temporary dot of Allies, Fame, Herd, Retainer, Staff or Status each scene, and Majesty in their area gains 9-again.",
+      "requirement": "The target must have the Charmed or Enthralled Condition from you; against Enthralled, no roll is needed."
+    },
+    {
+      "id": "consumption",
+      "name": "Consumption",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 74
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 5
+        },
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "intelligence",
+        "skill": "intimidation",
+        "discipline": "dominate",
+        "resistance": "Resolve"
+      },
+      "action": "contested",
+      "experienceCost": 4,
+      "summary": "Hollow out a possessed mortal's will, leaving them Enslaved: you can possess them again for 1 Vitae, without a roll, whenever they can hear your voice.",
+      "requirement": "You must be possessing a mortal with Dominate; anyone with a Supernatural Tolerance trait is immune."
+    },
+    {
+      "id": "crush-of-years",
+      "name": "Crush of Years",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 74
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "majesty",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 4
+        },
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": {
+        "attribute": "presence",
+        "skill": "expression",
+        "discipline": "nightmare",
+        "resistance": "Composure + Supernatural Tolerance"
+      },
+      "action": "contested",
+      "experienceCost": 3,
+      "summary": "Everyone younger than a century within twice your Blood Potency in yards who sees you and loses the contest is Crushed by the weight of your years."
+    },
+    {
+      "id": "legion",
+      "name": "Legion",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 74
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "animalism",
+          "minimum": 5
+        },
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 3
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "note": "Plus 1 Vitae per active glimpse"
+      },
+      "dicePool": {
+        "attribute": "composure",
+        "skill": "animal-ken",
+        "discipline": "animalism"
+      },
+      "action": "instant",
+      "experienceCost": 4,
+      "summary": "Link to every animal of one kind within your Blood Potency in miles: +5 to Perception and search rolls, and spend Vitae to ride one animal's senses.",
+      "duration": "Scene",
+      "requirement": "First drink the equivalent of 10 Vitae from a single kind of animal."
+    },
+    {
+      "id": "malignant-smog",
+      "name": "Malignant Smog",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 75
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "protean",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 2
+        },
+        "note": "On top of Primeval Miasma"
+      },
+      "dicePool": null,
+      "action": "none",
+      "experienceCost": 3,
+      "summary": "Your Primeval Miasma becomes a poisonous gas twice as wide that moves at your Speed, inflicting a Tilt you choose on those inside who fail Stamina rolls."
+    },
+    {
+      "id": "pass-into-yesteryear",
+      "name": "Pass into Yesteryear",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 76
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "obfuscate",
+          "minimum": 3
+        },
+        {
+          "kind": "discipline",
+          "id": "nightmare",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 3
+        },
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 2,
+      "summary": "Anyone your blood starts or strengthens a Vinculum in also becomes Forgotten by the people they know."
+    },
+    {
+      "id": "preternatural-instinct",
+      "name": "Preternatural Instinct",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 76
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 4
+        },
+        {
+          "kind": "discipline",
+          "id": "celerity",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 2,
+      "summary": "Apply Defense against attacks you can't see coming, and win Clashes of Wills over who acts first after spending Vitae for Initiative.",
+      "duration": "One turn"
+    },
+    {
+      "id": "spontaneous-ignition",
+      "name": "Spontaneous Ignition",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 76
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "celerity",
+          "minimum": 5
+        },
+        {
+          "kind": "discipline",
+          "id": "resilience",
+          "minimum": 1
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 6
+        }
+      },
+      "dicePool": {
+        "attribute": "dexterity",
+        "skill": "athletics",
+        "discipline": "celerity",
+        "resistance": "− Stamina"
+      },
+      "action": "instant",
+      "experienceCost": 4,
+      "summary": "Vibrate a touched victim until they burst into flames, at torch size and heat plus one step per success, burning for your Blood Potency in turns.",
+      "requirement": "You must touch the target. Resisted by Stamina."
+    },
+    {
+      "id": "unbridled-force",
+      "name": "Unbridled Force",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 76
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "vigor",
+          "minimum": 5
+        },
+        {
+          "kind": "discipline",
+          "id": "dominate",
+          "minimum": 2
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 5
+        }
+      },
+      "dicePool": null,
+      "action": "reflexive",
+      "experienceCost": 4,
+      "summary": "Push, pull, lift, throw and punch at a distance of up to ten times your Blood Potency in yards, always at full strength.",
+      "duration": "Scene"
+    }
+  ],
+  "rituals": [
+    {
+      "id": "manananggals-working",
+      "name": "Manananggal's Working",
+      "discipline": "cruac",
+      "dots": 4,
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 78
+      },
+      "targetSuccesses": 8,
+      "summary": "Elder rite: costs twice as much to cast. Tear off parts of your body that move and act on their own until sunrise; any part lost or destroyed bursts and hurts you. All the Vitae must be your own."
+    },
+    {
+      "id": "gwydions-curse",
+      "name": "Gwydion's Curse",
+      "discipline": "cruac",
+      "dots": 5,
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 78
+      },
+      "targetSuccesses": 10,
+      "summary": "Elder rite: costs twice as much to cast. Vitae soaked into the earth animates trees and large plants within Potency yards to attack anyone in reach until sunrise."
+    },
+    {
+      "id": "scapegoat",
+      "name": "Scapegoat",
+      "discipline": "cruac",
+      "dots": 5,
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 78
+      },
+      "targetSuccesses": 12,
+      "summary": "Elder rite: costs twice as much to cast. Until sunrise a mortal suffers your banes and breaking points in your place; afterwards you're Wanton, with −3 to breaking points until it resolves.",
+      "contestedBy": "Resolve"
+    },
+    {
+      "id": "curse-of-isolation",
+      "name": "Curse of Isolation",
+      "discipline": "theban-sorcery",
+      "dots": 4,
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 79
+      },
+      "targetSuccesses": 15,
+      "summary": "Elder miracle: costs two Willpower to cast. Steal a vampire's Touchstone, who must be present, as your own for seven nights, or keep them by buying the Touchstone Merit.",
+      "contestedBy": "Resolve + Blood Potency of the Touchstone's vampire",
+      "sacrament": "Any bladed weapon"
+    },
+    {
+      "id": "orison-of-voices",
+      "name": "Orison of Voices",
+      "discipline": "theban-sorcery",
+      "dots": 5,
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 79
+      },
+      "targetSuccesses": 8,
+      "summary": "Elder miracle: costs two Willpower to cast. For three nights, hear anyone anywhere who speaks your name, with enough context to know what they mean by it.",
+      "sacrament": "Rosary beads"
+    },
+    {
+      "id": "sins-of-the-ancestors",
+      "name": "Sins of the Ancestors",
+      "discipline": "theban-sorcery",
+      "dots": 5,
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 79
+      },
+      "targetSuccesses": 6,
+      "summary": "Elder miracle: costs two Willpower to cast. Ask Potency simple questions about the subject's close blood relations: sire, childer and near blood kin, or a mortal's family.",
+      "sacrament": "At least 1 Vitae, or 2 lethal Health of blood from a mortal, from the subject"
+    }
+  ],
+  "mysteries": [
+    {
+      "id": "coil-of-the-quintessence",
+      "name": "Coil of the Quintessence",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 80
+      },
+      "coilOnly": true,
+      "partOfMystery": "mystery-of-the-voivode",
+      "summary": "An elder Coil that makes a Dragon one with her domain. It counts as part of the Mystery of the Voivode, usually learned after its fifth dot, and needs a domain she has called home for a century.",
+      "coil": {
+        "name": "Coil of the Quintessence",
+        "summary": "Binds the Dragon to her domain, which feeds, shelters and informs her."
+      },
+      "tiers": [
+        {
+          "dots": 1,
+          "id": "forever-mine",
+          "name": "Forever Mine",
+          "page": 81,
+          "summary": "Sense any Kindred who feeds or kills in your domain without leave, and lash out at them with your predatory aura from any distance."
+        },
+        {
+          "dots": 2,
+          "id": "home-turf",
+          "name": "Home Turf",
+          "page": 81,
+          "summary": "People of your domain must spend Willpower to resist your attempts to feed on them."
+        },
+        {
+          "dots": 3,
+          "id": "smother",
+          "name": "Smother",
+          "page": 82,
+          "summary": "Fires near you count one step smaller and cooler; in your domain, +1 to resist fire and heat powers, and Vitae starts a Clash of Wills to put out supernatural fire."
+        },
+        {
+          "dots": 4,
+          "id": "in-the-motherlands-arms",
+          "name": "In the Motherland's Arms",
+          "page": 82,
+          "summary": "Sleeping in your domain counts as Haven and Safe Place of half your Blood Potency; in a haven you own, both count one dot higher."
+        },
+        {
+          "dots": 5,
+          "id": "fingers-on-a-dead-pulse",
+          "name": "Fingers on a Dead Pulse",
+          "page": 82,
+          "summary": "For a Vitae, learn a local's Vice and shameful Conditions; once a scene, gain Willpower when you see one regain it from their Vice."
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "codependency",
+      "name": "Codependency",
+      "mystery": "coil-of-the-quintessence",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 82
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "coil-of-the-quintessence",
+          "tier": "fingers-on-a-dead-pulse",
+          "dots": 5
+        }
+      ],
+      "cost": {},
+      "dicePool": null,
+      "summary": "Bury ghouls alive across your domain and pour out all your Vitae on their graves: for a year, persuading locals to aid your Aspirations gains 9-again, and every vampire who lives there shares Fingers on a Dead Pulse."
+    },
+    {
+      "id": "cold-of-the-grave",
+      "name": "Cold of the Grave",
+      "mystery": "coil-of-the-quintessence",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 82
+      },
+      "prerequisiteCoils": [
+        {
+          "mystery": "coil-of-the-quintessence",
+          "tier": "smother",
+          "dots": 3
+        }
+      ],
+      "cost": {},
+      "dicePool": null,
+      "summary": "Put out a pyre at the heart of your domain with your Vitae, other vampires' blood and the remains of its dead: for a year, every vampire who lives there gains Smother."
+    }
+  ],
+  "merits": [
+    {
+      "id": "around-the-block",
+      "name": "Around the Block",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "You've seen and done it all: no untrained penalty on any Skill.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "At least one Skill at 6 dots or more"
+        },
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ]
+    },
+    {
+      "id": "beloved",
+      "name": "Beloved",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "+1 to detachment rolls on nights you spend an hour with your mortal beloved; if they die, roll detachment at once.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "A mortal or ghoul Touchstone"
+        }
+      ]
+    },
+    {
+      "id": "call-the-beast",
+      "name": "Call the Beast",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "summary": "Use Animalism and its Devotions on revenants, resisted by Resolve + current Vitae.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Humanity 4 or lower"
+        }
+      ]
+    },
+    {
+      "id": "civilization-stalker",
+      "name": "Civilization Stalker",
+      "category": "mental",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Centuries of watching empires rise and fall: 9-again on Politics, Socialize or Streetwise when that experience applies.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "intelligence",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "attribute",
+            "id": "manipulation",
+            "minimum": 3
+          }
+        ]
+      ]
+    },
+    {
+      "id": "heart-of-stone",
+      "name": "Heart of Stone",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Your Touchstones are lasting institutions: losing them all costs only −1 on detachment, but your bonus is at most +2.",
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "feeding-grounds",
+          "minimum": 1
+        }
+      ]
+    },
+    {
+      "id": "majordomo",
+      "name": "Majordomo",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "You keep a safe meeting place for Kindred: +2 to Persuasion, Intimidation and Socialize with Kindred, but −2 if one is harmed there until you make amends."
+    },
+    {
+      "id": "married-by-blood",
+      "name": "Married by Blood",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "You and your vampire spouse pool your Haven and Retainers, but lose shared Status together.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "A Kindred Touchstone: your spouse"
+        }
+      ]
+    },
+    {
+      "id": "mentor-in-immortality",
+      "name": "Mentor in Immortality",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 83
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "One student per dot, each owing a favor once a story in return for your secrets; the Storyteller may endanger them once a story, for a Beat.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ]
+    },
+    {
+      "id": "mother-goddess-altar",
+      "name": "Mother-Goddess' Altar",
+      "category": "covenant",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 84
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "summary": "When you lead Crúac with teamwork on your Altar, the time between rolls isn't doubled, even with helpers who lack Crúac.",
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "altar",
+          "minimum": 1
+        },
+        {
+          "kind": "covenant",
+          "id": "circle-of-the-crone",
+          "minimum": 5
+        },
+        {
+          "kind": "bloodPotency",
+          "minimum": 6
+        }
+      ]
+    },
+    {
+      "id": "practiced-puppeteer",
+      "name": "Practiced Puppeteer",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 84
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": true,
+      "summary": "9-again with a chosen Discipline and its Devotions against mortals or those whose Supernatural Tolerance is 4 or more below your Blood Potency.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "The chosen Discipline at 5 dots"
+        },
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ],
+      "qualifier": {
+        "prompt": "Discipline",
+        "options": null
+      }
+    },
+    {
+      "id": "prima-donna",
+      "name": "Prima Donna",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 84
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Free of the covenants: once a story per dot, spend Willpower to shrug off soft leverage, end a mundane Social Condition, raise a Status, or gain 8-again socially against a covenant member.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Elder"
+        },
+        {
+          "kind": "other",
+          "text": "No Covenant Status; buying any loses this Merit"
+        }
+      ]
+    },
+    {
+      "id": "receptive-mind",
+      "name": "Receptive Mind",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 84
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Lay Open the Mind reaches one extra target per dot at no extra cost.",
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 4
+        },
+        {
+          "kind": "bloodPotency",
+          "minimum": 6
+        }
+      ]
+    },
+    {
+      "id": "savior-of-the-lost",
+      "name": "Savior of the Lost",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 84
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Uplift a willing revenant without losing Humanity on a successful detachment roll, spending Willpower instead."
+    },
+    {
+      "id": "special-treat",
+      "name": "Special Treat",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 84
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "A ghoul with addictive blood, which you can become addicted to; he needs 2 Vitae a month.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "A ghoul Retainer"
+        }
+      ]
+    },
+    {
+      "id": "spectral-communion",
+      "name": "Spectral Communion",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 85
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "summary": "Once a story, bind your Ka in a mirror anointed with 3 Vitae, then trap it there or let it walk with you for a while.",
+      "prerequisites": [
+        {
+          "kind": "clan",
+          "id": "hollow-mekhet"
+        },
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ]
+    },
+    {
+      "id": "undeniable-aura",
+      "name": "Undeniable Aura",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 85
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Your predatory aura is always out: those who resist it and lose give you an exceptional success on 3 for your first Social roll against them.",
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ],
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "merit",
+            "id": "atrocious",
+            "minimum": 1
+          }
+        ],
+        [
+          {
+            "kind": "merit",
+            "id": "cutthroat",
+            "minimum": 1
+          }
+        ],
+        [
+          {
+            "kind": "merit",
+            "id": "enticing",
+            "minimum": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "stare-decisis",
+      "name": "Stare Decisis",
+      "category": "covenant",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 85
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Carthian Law: your opinions set legal precedent. Others spend Willpower to oppose you over accusations, and you regain Willpower when a ruling goes your way.",
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "carthian-movement",
+          "minimum": 3
+        },
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ],
+      "group": "carthian-law"
+    },
+    {
+      "id": "dynasty-progenitor",
+      "name": "Dynasty Progenitor",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 85
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "You founded your dynasty: double the blood sympathy bonus to Disciplines and Devotions used on its members.",
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "dynasty-membership",
+          "minimum": 3
+        },
+        {
+          "kind": "other",
+          "text": "Elder"
+        }
+      ]
+    },
+    {
+      "id": "oath-of-dynasty",
+      "name": "Oath of Dynasty",
+      "category": "vampire",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 85
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "Bound to a small cyclical dynasty: borrow a member's Social Merit once a chapter, share thrice-removed blood sympathy, and speak with or rouse torpid members.",
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "covenant-status",
+          "minimum": 3
+        },
+        {
+          "kind": "merit",
+          "id": "dynasty-membership",
+          "minimum": 3
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "id": "anchored-heart",
+      "name": "Anchored Heart",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 135
+      },
+      "persistent": true,
+      "summary": "You've invested yourself in a mortal and steer them, openly or from the shadows, toward the life you think they should have.",
+      "resolution": "They die, or you cut them loose and roll detachment.",
+      "beat": "They gain a Beat or face a breaking point through a situation you set up.",
+      "possibleSources": null,
+      "repeatable": true,
+      "notePrompt": "For"
+    },
+    {
+      "id": "beasts-bargain",
+      "name": "Beast's Bargain",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 135
+      },
+      "persistent": true,
+      "summary": "No frenzy penalty for hunger, but you must feed whenever it's safe to, even when you're full.",
+      "resolution": "Regain a dot of Humanity, lose one, or get an exceptional success on a breaking point tied to the bargain.",
+      "beat": "You feed at a moment that costs you dearly.",
+      "possibleSources": null
+    },
+    {
+      "id": "beloved-enemy",
+      "name": "Beloved Enemy",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 135
+      },
+      "persistent": true,
+      "summary": "Someone you love has become your enemy. He comes at you with everything; you can hurt his interests but can't bring yourself to kill him.",
+      "resolution": "He stops fighting you, or you finally kill him, which is always a breaking point.",
+      "beat": "He hurts you badly and you don't strike back.",
+      "possibleSources": null,
+      "repeatable": true,
+      "notePrompt": "Enemy"
+    },
+    {
+      "id": "children-of-the-blood",
+      "name": "Children of the Blood",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 135
+      },
+      "persistent": true,
+      "summary": "A revenant you created follows you wherever you go, with blood sympathy of +6 to you. The Storyteller decides what she wants.",
+      "resolution": "The revenant stops haunting you.",
+      "beat": "She causes you psychological trauma or makes other vampires shun you.",
+      "possibleSources": null,
+      "notePrompt": "Revenant"
+    },
+    {
+      "id": "crushed",
+      "name": "Crushed",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 135
+      },
+      "persistent": false,
+      "summary": "The weight of centuries flattens you. You can't regain Willpower at all, and every Willpower you spend costs two.",
+      "resolution": "Face a breaking point, or take lethal or aggravated damage in one of your three rightmost Health boxes.",
+      "beat": null,
+      "possibleSources": "Crush of Years"
+    },
+    {
+      "id": "curated",
+      "name": "Curated",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 136
+      },
+      "persistent": true,
+      "summary": "You and other elders share a ghoul who enforces a bargain between you, and won't bend on it. You can buy him as a Retainer.",
+      "resolution": "The ghoul or your partners die, or the bargain ends.",
+      "beat": "The bargain gets in the way of your own plans.",
+      "possibleSources": null,
+      "notePrompt": "Bargain"
+    },
+    {
+      "id": "forgotten",
+      "name": "Forgotten",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 136
+      },
+      "persistent": true,
+      "summary": "Everyone you know assumes you've gone. You count as under Face in the Crowd, and those who know you see a stranger unless you spend Willpower for the scene. Your regnant, thralls and those you've Dominated or swayed with Majesty still know you.",
+      "resolution": "Break your blood bond to your regnant, or lose a dot of Humanity or Integrity forcing someone to recognize you.",
+      "beat": "You hurt yourself or others trying to be noticed.",
+      "possibleSources": "Pass into Yesteryear"
+    },
+    {
+      "id": "immutable-heart",
+      "name": "Immutable Heart",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 136
+      },
+      "persistent": true,
+      "summary": "You've given yourself wholly to an institution or way of life. Your first Touchstone reflects it and gives +3 on detachment, +4 with more, but none of them can be replaced.",
+      "resolution": "You lose the Touchstone and take Languid, or give it up, rolling detachment.",
+      "beat": "You risk your existence to protect the Touchstone.",
+      "possibleSources": null
+    },
+    {
+      "id": "imprisoned-echo",
+      "name": "Imprisoned Echo",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 136
+      },
+      "persistent": false,
+      "summary": "Your Ka is trapped in a mirror. Its fury adds its Rank to rolls to escape captivity or flee danger. Left alone, it ends after your Blood Potency in nights, and the Ka's Rank is a penalty on Social rolls for a chapter.",
+      "resolution": "Smash the mirror to set it free, dramatically failing a Social roll as it meddles at once.",
+      "beat": null,
+      "possibleSources": "Spectral Communion"
+    },
+    {
+      "id": "leveraged-ghoul",
+      "name": "Leveraged",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 136
+      },
+      "persistent": true,
+      "summary": "Your ghoul is perfect in every way but one: he knows you too well, senses your moods as thrice-removed blood sympathy, and knows where the bodies are buried.",
+      "resolution": "The ghoul dies.",
+      "beat": "You go out of your way to keep him happy, in case he talks.",
+      "possibleSources": null,
+      "notePrompt": "Ghoul"
+    },
+    {
+      "id": "living-legend",
+      "name": "Living Legend",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 136
+      },
+      "persistent": true,
+      "summary": "A famous work of fiction is about you. −1 to Social rolls with Kindred who know, −2 with the Invictus, but +2 with mortals.",
+      "resolution": "You separate yourself from the character, by rewriting the story or burying the evidence.",
+      "beat": "Your story threatens the Masquerade.",
+      "possibleSources": null,
+      "notePrompt": "Work"
+    },
+    {
+      "id": "lost-lineage",
+      "name": "Lost Lineage",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 137
+      },
+      "persistent": true,
+      "summary": "You come from a clan or bloodline long gone. You never gain Clan Status and must pass as a modern clan or risk your Social Merits or a Blood Hunt. Choose three in-clan Disciplines and a bane with the Storyteller.",
+      "resolution": "Only a rare ritual that re-Embraces you into a modern clan, with the Storyteller's permission.",
+      "beat": "You suffer a real loss protecting the secret.",
+      "possibleSources": null,
+      "notePrompt": "Lineage"
+    },
+    {
+      "id": "quiet-echo",
+      "name": "Quiet Echo",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 137
+      },
+      "persistent": false,
+      "summary": "Your Ka walks free beside you, in Twilight and seen only by you, doing as it pleases. It ends with no other effect at sunrise.",
+      "resolution": "The Ka does you a significant favor and you regain a Willpower.",
+      "beat": null,
+      "possibleSources": "Spectral Communion"
+    },
+    {
+      "id": "synchronized",
+      "name": "Synchronized",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 137
+      },
+      "persistent": false,
+      "summary": "You fed too deeply and became one with your victim: their damage and Conditions are yours too, though you still take damage as a vampire. Only one at a time; a new victim replaces the old.",
+      "resolution": "The victim dies, you gain a dot of Humanity, or a new victim replaces this one.",
+      "beat": null,
+      "possibleSources": null,
+      "notePrompt": "Victim"
+    },
+    {
+      "id": "vitaes-resoluteness",
+      "name": "Vitae's Resoluteness",
+      "source": {
+        "book": "thousand-years-of-night",
+        "page": 137
+      },
+      "persistent": true,
+      "summary": "With nothing left to care for, you turned to drink. Ignore Languid in any scene you drank Vitae, but torpor is worked out as if your Humanity were 2 lower.",
+      "resolution": "No resolution given; it lasts while you're Languid and Addicted to Vitae.",
+      "beat": null,
+      "possibleSources": "Taken with Languid while Addicted to Vitae"
     }
   ]
 }

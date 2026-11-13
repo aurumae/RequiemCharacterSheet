@@ -143,7 +143,7 @@ extension Character {
     var clanDetail: CatalogChoiceDetail? {
         clanEntry.map { clan in
             CatalogChoiceDetail(title: clan.name, summary: clan.summary, citation: clan.source.citation(), facts: [
-                DetailFact(label: "Favoured Attributes", value: clan.favoredAttributes.map(\.name).joined(separator: " or ")),
+                DetailFact(label: "Favoured Attributes", value: favoredAttributesDetail(clan.favoredAttributes)),
                 DetailFact(label: "Disciplines", value: disciplineNames(clan.disciplines)),
                 DetailFact(label: "Bane", value: "\(clan.bane.name). \(clan.bane.summary)"),
             ])
@@ -153,11 +153,22 @@ extension Character {
     var bloodlineDetail: CatalogChoiceDetail? {
         bloodlineEntry.map { bloodline in
             CatalogChoiceDetail(title: bloodline.name, summary: bloodline.summary, citation: bloodline.source.citation(), facts: [
-                DetailFact(label: "Parent clan", value: bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")),
+                DetailFact(label: "Parent clan", value: bloodline.parentClansText),
+            ] + (bloodline.requiredCovenant.map { [DetailFact(label: "Covenant", value: Catalog.bundled.covenants.entry($0)?.name ?? $0)] } ?? []) + [
                 DetailFact(label: "Disciplines", value: disciplineNames(bloodline.disciplines)),
                 DetailFact(label: "Bane", value: "\(bloodline.bane.name). \(bloodline.bane.summary)"),
-            ])
+            ] + (bloodline.favoredAttributes.isEmpty ? [] : [
+                DetailFact(label: "Favoured Attributes", value: favoredAttributesDetail(bloodline.favoredAttributes)),
+            ]))
         }
+    }
+
+    /// One list's favoured Attributes; with a bloodline that has its own, both lists, each marked with its source.
+    /// During guided creation the bloodline's replace the clan's, so only the bloodline's are shown.
+    private func favoredAttributesDetail(_ own: [AttributeKind]) -> String {
+        if isInCreation { return creationFavoredAttributes.map(\.name).joined(separator: " or ") }
+        if bloodlineEntry?.favoredAttributes.isEmpty == false { return favoredAttributesText }
+        return own.map(\.name).joined(separator: " or ")
     }
 
     var covenantDetail: CatalogChoiceDetail? {
@@ -177,7 +188,8 @@ extension Character {
 
     /// Mask and Dirge archetypes for the picker; the same list serves both.
     func archetypePickerSections(chosen: String) -> [CatalogPickerSection] {
-        let items = Catalog.bundled.archetypes.all.map { archetype in
+        let archetypes = Catalog.bundled.archetypes.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        return CatalogPickerSection.byBook([CatalogPickerGroup("", archetypes)]) { archetype in
             CatalogPickerItem(
                 id: archetype.id,
                 name: archetype.name,
@@ -187,7 +199,6 @@ extension Character {
                 isOwned: archetype.name == chosen
             )
         }
-        return [CatalogPickerSection(title: "Archetypes", items: items)]
     }
 
     private func disciplineNames(_ ids: [CatalogEntryID]) -> String {
@@ -196,7 +207,8 @@ extension Character {
 
     /// Clans for the picker, each with its favoured Attributes and in-clan Disciplines.
     func clanPickerSections() -> [CatalogPickerSection] {
-        let items = Catalog.bundled.clans.all.sorted { $0.name < $1.name }.map { clan in
+        let clans = Catalog.bundled.clans.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        return CatalogPickerSection.byBook([CatalogPickerGroup("", clans)]) { clan in
             let attributes = clan.favoredAttributes.map(\.name).joined(separator: " or ")
             let disciplines = clan.disciplines.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")
             return CatalogPickerItem(
@@ -208,11 +220,11 @@ extension Character {
                 isOwned: clanSource == .catalog(clan.id)
             )
         }
-        return [CatalogPickerSection(title: "Clans", items: items)]
     }
 
     func covenantPickerSections() -> [CatalogPickerSection] {
-        let items = Catalog.bundled.covenants.all.sorted { $0.name < $1.name }.map { covenant in
+        let covenants = Catalog.bundled.covenants.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        return CatalogPickerSection.byBook([CatalogPickerGroup("", covenants)]) { covenant in
             CatalogPickerItem(
                 id: covenant.id,
                 name: covenant.name,
@@ -221,34 +233,42 @@ extension Character {
                 isOwned: covenantSource == .catalog(covenant.id)
             )
         }
-        return [CatalogPickerSection(title: "Covenants", items: items)]
     }
 
-    /// Bloodlines of the character's clan first. Others are listed with their parent clan as a reminder.
+    /// By book; within each, bloodlines of the character's clan first. Others are listed with their parent clan as a
+    /// reminder.
     func bloodlinePickerSections() -> [CatalogPickerSection] {
-        let all = Catalog.bundled.bloodlines.all.sorted { $0.name < $1.name }
+        let all = Catalog.bundled.bloodlines.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         func item(_ bloodline: BloodlineEntry) -> CatalogPickerItem {
-            let parents = bloodline.parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")
+            let parents = bloodline.parentClansText
             let disciplines = bloodline.disciplines.compactMap { Catalog.bundled.disciplines.entry($0)?.name }.joined(separator: ", ")
-            let fits = clanEntry.map { bloodline.parentClans.contains($0.id) } ?? true
+            let fits = clanEntry.map { bloodline.accepts(clan: $0.id) } ?? true
+            // Some bloodlines take members from one covenant only, e.g. the Penumbrae from the Circle of the Crone
+            let covenantWarning = bloodline.requiredCovenant.flatMap { required -> String? in
+                guard covenantSource != .catalog(required), statusStandIn(for: required) == nil else { return nil }
+                return "Members must belong to the \(Catalog.bundled.covenants.entry(required)?.name ?? required)"
+            }
             return CatalogPickerItem(
                 id: bloodline.id,
                 name: bloodline.name,
                 summary: bloodline.summary,
-                details: ["Parent clan: \(parents)", "Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"],
-                warning: fits ? nil : "A bloodline of the \(parents)",
+                details: ["Parent clan: \(parents)"]
+                    + (bloodline.requiredCovenant.map { ["Covenant: \(Catalog.bundled.covenants.entry($0)?.name ?? $0)"] } ?? [])
+                    + ["Disciplines: \(disciplines)", "Bane: \(bloodline.bane.name)"]
+                    + (bloodline.favoredAttributes.isEmpty ? [] : ["Favoured: \(bloodline.favoredAttributes.map(\.name).joined(separator: " or "))"]),
+                warning: fits ? covenantWarning : "A bloodline of the \(parents)",
                 citation: bloodline.source.citation(),
                 isOwned: bloodlineSource == .catalog(bloodline.id)
             )
         }
         guard let clan = clanEntry else {
-            return [CatalogPickerSection(title: "Bloodlines", items: all.map(item))]
+            return CatalogPickerSection.byBook([CatalogPickerGroup("", all)], item: item)
         }
-        let own = all.filter { $0.parentClans.contains(clan.id) }
-        let others = all.filter { !$0.parentClans.contains(clan.id) }
-        return [
-            CatalogPickerSection(title: "\(clan.name) Bloodlines", items: own.map(item)),
-            CatalogPickerSection(title: own.isEmpty ? "Bloodlines" : "Other Bloodlines", items: others.map(item)),
-        ]
+        let own = all.filter { $0.accepts(clan: clan.id) }
+        let others = all.filter { !$0.accepts(clan: clan.id) }
+        return CatalogPickerSection.byBook([
+            CatalogPickerGroup("\(clan.name) Bloodlines", own),
+            CatalogPickerGroup(own.isEmpty ? "" : "Other Bloodlines", others),
+        ], item: item)
     }
 }

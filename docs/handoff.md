@@ -558,3 +558,300 @@ including Area of Expertise, Flock, standalone Coils and indicators. Privacy-lin
 backup policy and Play-delivered update tasks remain separate. No Play upload or
 rollout occurred. **Follow-up (iOS):** after PR #7 merges, pull/read these entries;
 Android now reads 11 and conditionally writes 10/11 with the same raw file format.
+## 2026-11-10 16:50 UTC · Claude (iOS) · Merit rating dots and Condition carousel counter
+
+Two fixes from the screenshot review (screenshots 14 and 16 were retaken with them):
+
+- **Merit picker ratings** now use the larger "●" dot and write ranges as "● to ●●●" (was "•–•••"); listed ratings
+  read "●● or ●●●●". VoiceOver says "1 dot to 3 dots". `MeritRules.ratingsText`. **Follow-up:** match it on Android.
+- **Condition carousel counter:** when the visible card is resolved or ended, the counter now moves to the card that
+  takes its place (the next one, or the new last one), so resolving the last of 4 reads "3 of 3". **Follow-up:** check
+  that Android's counter doesn't stay stale.
+
+No shared files changed.
+
+## 2026-11-10 23:20 UTC · Claude (iOS) · A Thousand Years of Night, elder banes, save schema 12
+
+`RequiemCharacterSheet/Catalogs/thousand-years-of-night.json` now has the rest of the book, in our own words with pages:
+- **3 archetypes**: Collector, Meddler and Provocateur, all p. 17.
+- **3 clans**: Hollow Mekhet, Julii and Pijavica, pp. 29–30. The Hollow Mekhet are a clan, by the user's choice, with
+  Mekhet's Attributes and Disciplines; their Haunted Curse replaces the Mekhet bane, so there's no `grantsExtraBane`.
+- **5 elder banes**, 11 Devotions, 6 elder rituals, 19 Merits and 15 Conditions.
+- **The Coil of the Quintessence** with 5 tiers, and its 2 Scales.
+- The book's Leveraged (ghoul) is a different Condition from Chronicles of Darkness' Leveraged, so it has the id
+  `leveraged-ghoul`; both are offered, each under its own book.
+- "Elder" requirements are `other` text, unchecked (user's call). The elder character templates (Soldier, Traitor) aren't
+  included, since the app has no templates.
+
+**Shared format additions**
+- **New top-level catalog array `elderBanes`**: `{id, name, clan, source, summary, humanityThreshold}`, one per core clan
+  (threshold 3). Each one deepens that clan's bane. **Follow-up:** load it.
+- **`MysteryEntry.partOfMystery`** (optional id): the Coil of the Quintessence (`coilOnly`) counts as part of the Mystery of
+  the Voivode. It costs 3 XP per dot and is exempt from the Status limit when the character's Mystery is the Voivode, and
+  costs 4 XP otherwise. **Follow-up:** port it.
+
+**Save format: schema 12, written only when needed**
+- New key `elderBaneActive`. It's **only written when true**, and only then is the file saved as **12**; otherwise the
+  10/11 rule is unchanged.
+- It switches on by itself when Humanity falls from above 3 to 3 or less, if the clan has an elder bane. It stays on if
+  Humanity rises, and the player can toggle it, like `clanBaneActive`.
+- Changing clan resets it: on if the new clan has an elder bane and Humanity ≤ its threshold, off otherwise.
+- If the key is absent, it's false. Unlike `clanBaneActive`, it is not inferred from Humanity on load.
+- **Fixtures:**
+  - `shared/fixtures/characters/v12-elder-bane.json`: v11-conditions plus `elderBaneActive: true`, at Humanity 3.
+  - `v13-future.json` is now the iOS future fixture.
+  - I left `v11-future.json` and `v12-future.json` in place for your tests; switch when you read 12.
+- **Follow-up:** read and write 12. Show the elder bane under the clan bane as "Elder Bane: <name>", with an "In effect"
+  toggle, the same status line and its citation.
+
+**UI (iOS)**
+- The Mask/Dirge picker is now sorted alphabetically, so book archetypes don't sit at the end.
+
+## 2026-11-10 23:55 UTC · Claude (iOS) · Every list grouped by book (design decision)
+
+The user has made a standing design decision, now recorded in the new **`docs/design-decisions.md`**. Please read it
+and add a pointer to it in your `AGENTS.md`, as I've done in `CLAUDE.md`.
+
+**What it says:** every list of official options is split into sections, one per source book, each headed by the
+book's name, in catalog order with the Requiem core book first.
+- This covers Masks/Dirges, Clans, Bloodlines, Covenants, Disciplines, Devotions, Merits, Banes, rituals, the Mystery
+  chooser, Add Coil, Scales, Conditions, and any list added later.
+- Groupings a list already had now sit inside each book, as smaller headings:
+  - own-clan Bloodlines first;
+  - Devotions you have the Disciplines for first;
+  - Merit categories;
+  - rituals by Discipline;
+  - Scales by Mystery.
+- If the first group is empty in every book, e.g. no clan chosen, the rest show just the book headings. Otherwise the
+  "Other …" heading is kept, even when it's a book's only group. "Recently Used" Conditions and the Custom options
+  stay outside the book sections.
+- While searching the Merit picker, results are still grouped by book, in relevance order within each.
+- There are no book toggles, and there must never be any; players skip a book's options by not picking them.
+
+- **Disciplines are the exception:** an "In-clan for the <clan or bloodline>" section always comes first, with no
+  book heading, listing the in-clan Disciplines from every book. Every Discipline, in-clan ones included, is then
+  listed again under its book, with no group headings.
+
+**iOS implementation**
+- `CatalogBookSection.sections` and `CatalogPickerGroup` in `Models/CatalogFormatting.swift`, covered by a test.
+- `CatalogPickerSection.byBook` and the `CatalogSectionHeader` view: the book's name in the section-header face,
+  then the group in small capitals.
+
+**Follow-up:** group every Android picker the same way.
+
+## 2026-11-11 03:00 UTC · Claude (iOS) · Dark Eras covenants: Gallows Post, Weihan Cynn, Al-Hamasoun
+
+This comes from Requiem for Regina (Dark Eras) and The Soulless and the Dead (Dark Eras Companion), in our own words
+with pages. The Changeling and Promethean content is left out (user's call).
+
+**Catalogs**
+- **New file `RequiemCharacterSheet/Catalogs/dark-eras.json`** (book `dark-eras`, "Dark Eras"). **Follow-up:** load it.
+  It contains:
+  - the Weihan Cynn covenant (p. 270);
+  - Envoy (p. 266, Gallows Post Status 1);
+  - Contract With the Uncanny (p. 271, Weihan Cynn Status 1, repeatable, qualifier "Faction").
+- **`dark-eras-companion.json`** gains a `covenants` array:
+  - the Gallows Post (p. 92). Its full write-up is here, so it's listed under Dark Eras Companion (user's call), even
+    though Regina also describes it.
+  - the Al-Hamasoun (p. 91), offered as a covenant at the user's request.
+- All three are in the Covenant picker under their books.
+
+**Shared format additions**
+- **`MeritEntry.group`** (optional string): `"carthian-law"` is now set on the 12 Carthian Laws. The user named
+  them: Lex Terrae, Mandate from the Masses, Plausible Deniability, Right of Return, Strength of Resolution (core);
+  Breaking the Chains, Cease Fire, Coda Against Sorcery, Empower Judiciary, Establish Precedent, Weaponize Dissent
+  (Secrets of the Covenants); and Stare Decisis (A Thousand Years of Night).
+- **`CovenantEntry.meritGroups`**: `[{group, inPlaceOf}]`. The Gallows Post has
+  `{ "group": "carthian-law", "inPlaceOf": "carthian-movement" }`. When the character's covenant has an entry for a
+  Merit's group, that Merit's `covenant` requirement for `inPlaceOf` is checked against their own covenant's Status
+  instead. It's worded "Gallows Post Status 2". Carthian Merits that aren't Laws still need Carthian Status.
+  **Follow-up:** port it.
+- **`QualifierRule.fromCovenants`**: Covenant Status now has `fromCovenants: true`, so its choices are every covenant
+  in the catalogs. Its `options` list still holds the five core covenants as a fallback. **Follow-up:** use
+  `fromCovenants`, so Gallows Post, Weihan Cynn and Al-Hamasoun Status can be bought.
+
+**UI (iOS):** a typed Merit qualifier (Language, Contract With the Uncanny's faction…) can no longer be left empty;
+Add stays disabled until something is typed. **Follow-up:** do the same.
+
+No save-format change.
+
+## 2026-11-11 03:45 UTC · Claude (iOS) · Arthur's Britannia (Dark Eras 2): the Bron, Crochan, two historical covenants
+
+**New file `RequiemCharacterSheet/Catalogs/dark-eras-2.json`** (book `dark-eras-2`, "Dark Eras 2"), in our own words with
+pages. The Hunter and Changeling content is left out (user's call). It contains:
+- **The Bron**, a Ventrue bloodline (Hedge Knights, p. 117), with the Errant Curse (p. 119).
+- **Crochan**, the Bron's Discipline, with five powers on pp. 119–120 (`kind: powers`, `bloodline: bron`).
+- **Covenants:** Legion of the Green (p. 108) and Circles of Mor (p. 110).
+- **Merits:**
+  - Contracts of Night and Day (p. 109; Notary, Occult 2). Kept by the user's choice, though it involves changeling
+    vassals.
+  - Faith Militant (p. 109; Lancea et Sanctum Status 1).
+  - Parliament's Apostle (p. 110; Circles of Mor Status 1, "Humanity 6 or lower" as text).
+- The book's extra material on the Weihan Cynn is background only.
+
+**Follow-up:** load it.
+
+**Shared format additions**
+- **`CovenantEntry.statusCountsAs`** (optional covenant id). Status in this covenant counts as Status in that one
+  everywhere: Merit requirements, ritual Status, and so on.
+  - The Legion of the Green has `invictus`, so Invictus Oaths are included.
+  - The Circles of Mor have `circle-of-the-crone`.
+  - iOS does it inside `covenantStatus(_:)`, and the requirement is worded with the character's own covenant, e.g.
+    "Circles of Mor Status 3".
+  - **Follow-up:** port it.
+- **`BloodlineEntry.favoredAttributes`** (optional, default empty). The Bron have `["stamina", "presence"]`. **Follow-up:**
+  port this rule, which is the user's:
+  - **Guided creation:** a bloodline with its own favored Attributes **replaces** the clan's for the free dot. The
+    prompt and panel row name the bloodline ("Bron dot"). Choosing such a bloodline takes the dot off if it's on an
+    Attribute the bloodline doesn't favor, then asks again; removing the bloodline goes back to the clan's.
+  - **Outside guided creation:** adopting a bloodline later doesn't move anything. The Clan and Bloodline details
+    show both lists, each Attribute marked with its sources even when it's on both, e.g. "Presence (Ventrue and
+    Bron), Resolve (Ventrue) or Stamina (Bron)".
+
+**UI (iOS):** the character list subtitle shows the bloodline in brackets after the clan, e.g. "Ventrue (Bron) · Legion
+of the Green" (`CharacterSummary.lineage`). **Follow-up:** do the same.
+
+No save-format change.
+
+## 2026-11-11 04:15 UTC · Claude (iOS) · One Thousand and One Nightmares (Dark Eras 2): Dukhan, Golden Age covenants, Kimiya
+
+This adds to `RequiemCharacterSheet/Catalogs/dark-eras-2.json`, in our own words with pages:
+- **The Dukhan clan** (p. 141): Wits or Stamina; Auspex, Obfuscate and Protean; the Curse of Reverie (p. 142).
+- **Covenants:**
+  - **Ahl al-Mumit** (p. 139). The user's call: the **Al-Hamasoun** are the same covenant, so I **removed the
+    `al-hamasoun` entry** from `dark-eras-companion.json`, and the Ahl al-Mumit summary gives that name.
+    **Follow-up:** drop it on Android too. It was only on `main` for a day.
+  - **al-Amin** (p. 139).
+  - **Fir'awn** (p. 140).
+  - **Jaliniyya** (p. 140).
+- **Kimiya**, a third Ritual Discipline (user's call), taught by the Jaliniyya (Status 1). Casting costs 1 Vitae
+  plus blood; the pool is Intelligence + Science + Kimiya. It has 5 formulae (pp. 143–144).
+- **Merits:** Ifrit's Might, Lingering Dreams and Shahrazad's Tale (pp. 142–143).
+- **Devotion:** Nightmare Journey (p. 143).
+- **Condition:** Hunted (p. 146), which Arthur's Britannia also uses.
+- **Left out:** the era's "unstable Majnun" and Refrain rules, which are setting rules rather than character
+  options, and the qadar.
+
+**Shared format additions** (**Follow-up:** port them all):
+- **`RitualRules.humanity: "none"`**, a new value: no Humanity rule. Kimiya uses it. Check that your decoder
+  accepts it, or the whole file may fail to load.
+- **`CovenantEntry.teaches`**: ritual Disciplines the covenant also teaches, with the same Status minimum, besides
+  the covenant named in `ritualRules`.
+  - The Ahl al-Mumit teach `theban-sorcery` (Karamat), and the Fir'awn teach `cruac` (Majnun).
+  - The learning warning and the Discipline detail now read e.g. "Lancea et Sanctum or Ahl al-Mumit Status 1".
+- **`CovenantMeritGroup` can also list single Merits:** `{ "merits": ["altar"], "inPlaceOf": "circle-of-the-crone" }`
+  for the Fir'awn. `group` is now optional, and a group covers a Merit if its `group` matches or its `merits`
+  include the Merit.
+- **`ClanEntry.meritAccess`**: `[{ "merits": [...], "inPlaceOf": "<clan id>" }]`. A `clan` requirement for
+  `inPlaceOf` on those Merits is met by members of this clan. The Dukhan take Dream Visions as though Mekhet.
+
+No save-format change.
+
+## 2026-11-11 04:47 UTC · Claude (iOS) · The Reign of Terror (Dark Eras 2): Tenth Choir and Therion
+
+This adds to `RequiemCharacterSheet/Catalogs/dark-eras-2.json`, in our own words with pages:
+- **The Tenth Choir** covenant (p. 340).
+- **Therion**, a fourth Ritual Discipline (p. 344), taught by the Tenth Choir (Status 1), with 7 Sacrileges (pp. 345–346).
+  - The pool is Presence + Intimidation + Therion.
+  - A Sacrilege costs Vitae equal to its dots, which must come from feeding on a Grigor.
+- **Trials of Job**, a new Theban miracle (p. 339; resisted by Resolve).
+- **Merit:** Party Affiliation Status (p. 344; repeatable, qualifier "Party").
+- **Conditions:** Glitched Blood (p. 343) and Targeted (p. 347).
+  - Hunted, which this chapter also uses, now has a general summary that covers both chapters.
+- **Left out:** the era sidebar letting covenant-less Revolutionaries buy Carthian Laws with City Status during the
+  Terror, as it's a setting rule; and the Demon and Mummy material.
+
+**Shared format addition:** a new `RitualRules.humanity` value, **`"breakingPointAtSixMinusDots"`**. Each ritual is a
+breaking point at Humanity 6 − its dots or higher. Therion uses it. **Follow-up:** make your decoder accept it, as with
+`"none"` for Kimiya.
+
+No save-format change.
+
+## 2026-11-11 05:35 UTC · Claude (iOS) · Night Horrors: Spilled Blood
+
+**New file `RequiemCharacterSheet/Catalogs/spilled-blood.json`** (book `spilled-blood`, "Night Horrors: Spilled Blood"),
+in our own words with pages. **Follow-up:** load it. It contains:
+- **5 clans:** Amari, Bekaak, Hypatians, Nhang and Twice-Cursed (pp. 77–105).
+- **10 bloodlines:**
+  - Ankou, Icelus, Jharana, Lidérc and Nosoi (pp. 12–29).
+  - Parliamentarians, Penumbrae, Scions of the First City, Vardyvle and Vilseduire (pp. 33–50).
+- **2 covenants:** Belial's Brood and the Esoteric Order of the Golden Star.
+- **3 Disciplines:**
+  - Dead Signal, the Jharana's own.
+  - Vitiate, the Bekaak's, as `scaling`.
+  - Triadic Evolution, Belial's Brood's Ritual Discipline, with 15 Manifestations as rituals.
+- **3 Penumbrae Crúac rites.**
+- **5 Merits, 18 Devotions, 4 Scales and 7 Conditions.**
+- **User's calls:**
+  - Amara's Siphoning Scales and Ayanda's ghost Devotions are included even though they belong to sample characters.
+  - The Chimera Virus, Blood Worm and Nereid infections are left out.
+  - Bloodline covenants are warned about, not enforced.
+
+**Shared format additions** (**Follow-up:** port them all):
+- **`Prerequisite.kind: "bloodline"`** (`id`) is met when the character's bloodline is that one. It's used by bloodline-only
+  Merits and Devotions. Your fallback to text is fine until you check it.
+- **A Devotion can cost 0 Experiences** when it's free to its bloodline: Infectious Bite (Nosoi) and City Attunement
+  (Scions).
+- **Empty `parentClans` means any clan.** The Parliamentarians, Penumbrae and Scions use it. Such bloodlines accept every
+  clan, including the new ones, and read "Parent clan: Any clan".
+- **`BloodlineEntry.requiredCovenant`** (optional id), used by the Parliamentarians, Penumbrae and Scions.
+  - The Bloodline picker warns "Members must belong to the …" when the character isn't in that covenant, or in one
+    whose Status counts as it. They can still choose it.
+  - The picker row and the Bloodline detail show "Covenant: …".
+- **`BloodlineEntry.meritAccess`**, like `ClanEntry.meritAccess`. The Icelus take Dream Visions as though Mekhet, which
+  covers Ventrue Icelus.
+- **`ScaleEntry.anyCoil`** (optional dots): the Scale resonates with any Coil at that many dots.
+  - Amara's four Scales have `"mystery": "any"`, empty `prerequisiteCoils` and `anyCoil: 2`.
+  - The Scale picker lists Scales whose `mystery` isn't a catalog Mystery under an "Any Mystery" group.
+  - Prerequisite text reads "Any Coil ••".
+- **`ritualRules.covenantStatusMinimum: 0` means membership only.** Triadic Evolution uses it for Belial's Brood, which
+  has no Status. The warning reads "Learning rituals requires membership of Belial's Brood", and the detail reads
+  "Learned with: Membership of Belial's Brood".
+- The creation problem `sorceryWithoutStatus` now carries the full requirement text, e.g. "Crúac needs Circle of the
+  Crone Status 1".
+
+**Written as text only:** clan and bloodline rules the app doesn't model, including:
+- the Amari's Conservation and Rationing;
+- Bekaak ageing;
+- Nhang physiology;
+- the Twice-Cursed's 5-XP Majesty and Nightmare and their free Merits;
+- Vardyvle desires;
+- Belial's Brood's Claiming;
+- the Nosoi's favored disease.
+
+No save-format change.
+
+## 2026-11-12 22:30 UTC · Claude (iOS) · Multi-game plan agreed; Phase 1 core extraction (iOS)
+
+**Decisions (user)**
+- There will be separate apps per game line, in this repo: "Requiem Character Sheet", and **"Forsaken Character Sheet"**
+  (Werewolf: The Forsaken 2e) to come. They share a Chronicles of Darkness core.
+- Phase 1 extracts the core first, as its own release, with no visible or save-format change.
+- Werewolf rules call: a Wolf Gift Facet costs 1 Experience.
+- The plan is in **`docs/multi-game-plan.md`**, and the decisions are in `docs/design-decisions.md`.
+- **Question:** are you happy to mirror the plan on Android, with Gradle modules `:core`, `:requiem` and `:forsaken`, plus
+  two app modules? Phase 1 on Android would be the same kind of extraction, with no behaviour change.
+
+**What changed on iOS** (details in the plan's "Phase 1 as built")
+- New `Chronicles/Core/`, which is the **`ChroniclesCore` SwiftPM target**, and `Chronicles/UI/`.
+- **`Package.swift` changed (shared file):**
+  - the new `ChroniclesCore` target;
+  - the Requiem target depends on it, and its `Utilities` folder is gone;
+  - the tests depend on both.
+
+  `swift test` and the CI workflow commands are unchanged. **Follow-up:** none, unless your scripts build the
+  package's target list.
+- **Prerequisite kinds and Merit categories are now open names** in Swift, as unknown kinds already were in Kotlin.
+- **No changes to** catalogs, fonts, fixtures, the save format, `scripts/` or `.github/workflows/`.
+- I checked every shared fixture: it encodes byte-for-byte as before, apart from files with no saved ids, which get
+  fresh ones on every read.
+
+## 2026-11-13 · Claude (iOS) · 1.4 submitted; 1.5 with the core extraction and two accessibility fixes
+
+- iOS 1.4 is in App Store review, built from `340b690`. `main` is now **1.5**, which includes the Phase 1 core extraction
+  described in the entry above.
+- **Accessibility fixes:**
+  - The XP badge's VoiceOver value now says "1 Experience" in the singular.
+  - The character list's "Edited …" time refreshes every minute, so the text and VoiceOver no longer disagree.
+  - **Follow-up:** check both on Android.
+- **User:** the app will always be free.

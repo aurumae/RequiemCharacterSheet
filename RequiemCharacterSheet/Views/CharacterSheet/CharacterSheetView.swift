@@ -189,8 +189,9 @@ struct CharacterSheetView: View {
         }
         .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
         .sheetHost($hostedSheet, lastPresented: $lastHostedSheet)
-        // Choosing a clan during guided creation asks where its free Attribute dot goes
-        .onChange(of: character.clanSource) {
+        // Choosing a clan, or a bloodline with its own favoured Attributes, during guided creation asks where the free
+        // Attribute dot goes
+        .onChange(of: [character.clanSource, character.bloodlineSource]) {
             // The clan is usually chosen in a picker; ask once it has closed, as an alert can't show over it
             Task {
                 try? await Task.sleep(for: .milliseconds(700))
@@ -201,15 +202,15 @@ struct CharacterSheetView: View {
         }
         // An alert, not a menu: it always sits in the middle of the screen and always shows "Not Now"
         .alert(
-            "\(character.clan) Favoured Attribute",
+            "\(character.creationFavoredAttributeGiver ?? character.clan) Favoured Attribute",
             isPresented: $choosingFavoredAttribute
         ) {
-            ForEach(character.clanEntry?.favoredAttributes ?? [], id: \.self) { kind in
+            ForEach(character.creationFavoredAttributes, id: \.self) { kind in
                 Button(kind.name) { character.chooseFavoredAttribute(kind) }
             }
             Button("Not Now", role: .cancel) {}
         } message: {
-            Text("The clan gives one free dot to one of these. It doesn't count against your 5, 4 and 3 Attribute dots.")
+            Text("The \(character.creationFavoredAttributeGiver == character.bloodlineEntry?.name ? "bloodline" : "clan") gives one free dot to one of these. It doesn't count against your 5, 4 and 3 Attribute dots.")
         }
         // Log every change to a trait, and charge for it in XP Mode
         .background(TraitChangeRecorder(character: character, onExperiencesBelowZero: showNegativeExperienceNotice))

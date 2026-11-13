@@ -78,6 +78,13 @@ struct ConditionsView: View {
         .scrollTargetBehavior(.viewAligned)
         .scrollIndicators(.hidden)
         .scrollPosition(id: $visibleCardID)
+        // When the card in view is removed (ended or resolved), the carousel settles on a neighbour without
+        // reporting it, so point at the card now in its place
+        .onChange(of: character.conditions.map(\.id)) { old, new in
+            guard let visible = visibleCardID, !new.contains(visible) else { return }
+            let index = old.firstIndex(of: visible) ?? 0
+            visibleCardID = new.isEmpty ? nil : new[min(index, new.count - 1)]
+        }
     }
 
     private var positionText: String {
@@ -396,13 +403,7 @@ struct ConditionPickerView: View {
             result.append(CatalogPickerSection(title: "Recently Used", items: recent.map(item)))
         }
         // Books in catalog order, which puts the Requiem core book first
-        for book in Catalog.bundled.books {
-            let entries = all.filter { $0.source.book == book.id }.sorted { $0.name < $1.name }
-            if !entries.isEmpty {
-                result.append(CatalogPickerSection(title: book.name, items: entries.map(item)))
-            }
-        }
-        return result
+        return result + CatalogPickerSection.byBook([CatalogPickerGroup("", all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending })], item: item)
     }
 
     private func item(_ entry: ConditionEntry) -> CatalogPickerItem {

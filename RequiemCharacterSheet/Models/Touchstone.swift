@@ -8,6 +8,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 @Observable
 final class Touchstone: Identifiable, Codable {

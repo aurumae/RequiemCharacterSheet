@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// One requirement of a Merit or Devotion, worded for display, and whether the character meets it.
 struct PrerequisiteCheck: Equatable {
@@ -31,7 +34,7 @@ extension Character {
     /// Every requirement of the Merit: each prerequisite, then one line per "one of" choice.
     func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck] {
         let kindred = entry.unavailableToKindred ? [PrerequisiteCheck(description: PrerequisiteCheck.notForKindred, isMet: false)] : []
-        return kindred + prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf)
+        return kindred + prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf, merit: entry)
     }
 
     /// Every Discipline a Devotion needs, then one line per "one of" choice.
@@ -44,7 +47,8 @@ extension Character {
         prerequisiteChecks(for: entry).filter { $0.isMet == false }
     }
 
-    private func prerequisiteChecks(_ prerequisites: [Prerequisite], anyOf: [[Prerequisite]]) -> [PrerequisiteCheck] {
+    private func prerequisiteChecks(_ prerequisites: [Prerequisite], anyOf: [[Prerequisite]], merit: MeritEntry? = nil) -> [PrerequisiteCheck] {
+        let check = { (prerequisite: Prerequisite) in self.check(prerequisite, merit: merit) }
         var checks = prerequisites.map(check)
         if !anyOf.isEmpty {
             let groups = anyOf.map { $0.map(check) }
@@ -61,7 +65,9 @@ extension Character {
         prerequisiteChecks(for: entry).filter { $0.isMet == false }
     }
 
-    private func check(_ prerequisite: Prerequisite) -> PrerequisiteCheck {
+    /// `merit` is the Merit being checked, which some covenants and clans may take in another's place, e.g. the
+    /// Carthian Laws with Gallows Post Status.
+    private func check(_ prerequisite: Prerequisite, merit: MeritEntry? = nil) -> PrerequisiteCheck {
         let id = prerequisite.id ?? ""
         let minimum = prerequisite.minimum ?? 1
         let catalog = Catalog.bundled
@@ -84,21 +90,37 @@ extension Character {
         case .bloodPotency:
             return PrerequisiteCheck(description: "Blood Potency \(minimum)", isMet: bloodPotency >= minimum)
         case .clan:
+            // The character's clan, or bloodline, may take this Merit as though it were the one named
+            let access = (clanEntry?.meritAccess ?? []) + (bloodlineEntry?.meritAccess ?? [])
+            if let merit, access.contains(where: { $0.inPlaceOf == id && $0.merits.contains(merit.id) }) {
+                let name = bloodlineEntry?.meritAccess.isEmpty == false ? bloodlineEntry?.name : clanEntry?.name
+                return PrerequisiteCheck(description: "Clan: \(name ?? id)", isMet: true)
+            }
             let name = catalog.clans.entry(id)?.name ?? id
             return PrerequisiteCheck(description: "Clan: \(name)", isMet: clanSource == .catalog(id))
         case .covenant:
-            let name = catalog.covenants.entry(id)?.name ?? id
+            // The character's covenant may take this family of Merits with its own Status instead
+            if let merit, let own = covenantSource.catalogID.flatMap({ catalog.covenants.entry($0) }),
+               own.meritGroups.contains(where: { $0.inPlaceOf == id && $0.covers(merit) }) {
+                return PrerequisiteCheck(description: "\(own.name) Status \(minimum)", isMet: covenantStatus(own.id) >= minimum)
+            }
+            // Named for the character's own covenant when its Status counts as this one's
+            let name = statusStandIn(for: id)?.name ?? catalog.covenants.entry(id)?.name ?? id
             guard prerequisite.minimum != nil else {
-                return PrerequisiteCheck(description: "Covenant: \(name)", isMet: covenantSource == .catalog(id))
+                return PrerequisiteCheck(description: "Covenant: \(name)", isMet: covenantSource == .catalog(id) || statusStandIn(for: id) != nil)
             }
             // Measured in Covenant Status with that covenant
             return PrerequisiteCheck(description: "\(name) Status \(minimum)", isMet: covenantStatus(id) >= minimum)
         case .willpower:
             return PrerequisiteCheck(description: "Willpower \(minimum)", isMet: willpower >= minimum)
+        case .bloodline:
+            let name = catalog.bloodlines.entry(id)?.name ?? id
+            return PrerequisiteCheck(description: "Bloodline: \(name)", isMet: bloodlineSource == .catalog(id))
         case .notCovenant:
             let name = catalog.covenants.entry(id)?.name ?? id
             return PrerequisiteCheck(description: "Not a member of the \(name)", isMet: covenantSource != .catalog(id))
-        case .other:
+        default:
+            // Free text, or a kind this app doesn't check
             return unknown(prerequisite)
         }
     }
@@ -112,12 +134,13 @@ extension MeritEntry {
     /// The ratings it can be bought at, as dots: "•", "•–•••", or "•• or ••••" when there are gaps.
     var ratingsText: String {
         guard let lowest = ratings.min(), let highest = ratings.max() else { return "" }
-        let dots = { (count: Int) in String(repeating: "•", count: count) }
+        // The larger dot, as in DotsText; a range reads as the books write it, "● to ●●●"
+        let dots = { (count: Int) in String(repeating: "●", count: count) }
         if lowest == highest {
             return dots(lowest)
         }
         if ratings.sorted() == Array(lowest...highest) {
-            return "\(dots(lowest))–\(dots(highest))"
+            return "\(dots(lowest)) to \(dots(highest))"
         }
         return ratings.sorted().map(dots).joined(separator: " or ")
     }

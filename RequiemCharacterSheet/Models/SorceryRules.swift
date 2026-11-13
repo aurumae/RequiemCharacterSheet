@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// The limit a Ritual Discipline puts on Humanity, e.g. Crúac 3 caps it at 7.
 struct HumanityCap: Equatable {
@@ -23,9 +26,21 @@ extension Character {
     /// Dots of the Covenant Status Merit taken for this covenant.
     func covenantStatus(_ covenantID: CatalogEntryID) -> Int {
         let name = Catalog.bundled.covenants.entry(covenantID)?.name ?? covenantID
-        return merits
+        let own = merits
             .filter { $0.source == .catalog("covenant-status") && $0.qualifier?.caseInsensitiveCompare(name) == .orderedSame }
             .map(\.rating).max() ?? 0
+        // Status in the character's covenant may count as this one's, e.g. the Circles of Mor's as the Crone's
+        if let standIn = statusStandIn(for: covenantID) {
+            return max(own, covenantStatus(standIn.id))
+        }
+        return own
+    }
+
+    /// The character's covenant, if its Status counts as Status in `covenantID`.
+    func statusStandIn(for covenantID: CatalogEntryID) -> CovenantEntry? {
+        guard let own = covenantSource.catalogID.flatMap({ Catalog.bundled.covenants.entry($0) }),
+              own.id != covenantID, own.statusCountsAs == covenantID else { return nil }
+        return own
     }
 
     // MARK: - Blood sorcery (Vampire: The Requiem pp. 150–152)
@@ -53,9 +68,40 @@ extension Character {
 
     /// Why the character can't learn new rituals for this Discipline, if they can't: they need Status in its covenant.
     func ritualLearningWarning(for entry: DisciplineEntry) -> String? {
-        guard let rules = entry.ritualRules, covenantStatus(rules.covenant) < rules.covenantStatusMinimum else { return nil }
-        let covenant = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
-        return "Learning rituals requires \(covenant) Status \(rules.covenantStatusMinimum)"
+        guard entry.ritualRules != nil, !hasRitualStatus(for: entry) else { return nil }
+        return "Learning rituals requires \(Self.ritualRequirementText(for: entry))"
+    }
+
+    /// Whether the character has the Status to learn rituals for this Discipline, in its covenant or in another that
+    /// teaches it, e.g. the Ahl al-Mumit for Theban Sorcery.
+    func hasRitualStatus(for entry: DisciplineEntry) -> Bool {
+        guard let rules = entry.ritualRules else { return true }
+        let covenants = [rules.covenant] + Self.otherCovenants(teaching: entry).map(\.id)
+        // No Status needed, only membership, e.g. Belial's Brood's Triadic Evolution
+        if rules.covenantStatusMinimum == 0 {
+            return covenants.contains { covenantSource == .catalog($0) || statusStandIn(for: $0) != nil }
+        }
+        return covenants.contains { covenantStatus($0) >= rules.covenantStatusMinimum }
+    }
+
+    /// Covenants other than its own that teach a Ritual Discipline.
+    static func otherCovenants(teaching entry: DisciplineEntry) -> [CovenantEntry] {
+        Catalog.bundled.covenants.all.filter { $0.teaches.contains(entry.id) }
+    }
+
+    /// What learning a Ritual Discipline's rituals needs, e.g. "Lancea et Sanctum or Ahl al-Mumit Status 1", or
+    /// "membership of Belial's Brood".
+    static func ritualRequirementText(for entry: DisciplineEntry) -> String {
+        guard let rules = entry.ritualRules else { return "" }
+        if rules.covenantStatusMinimum == 0 { return "membership of \(ritualCovenantsText(for: entry))" }
+        return "\(ritualCovenantsText(for: entry)) Status \(rules.covenantStatusMinimum)"
+    }
+
+    /// The covenants that teach a Ritual Discipline, e.g. "Lancea et Sanctum or Ahl al-Mumit".
+    static func ritualCovenantsText(for entry: DisciplineEntry) -> String {
+        guard let rules = entry.ritualRules else { return "" }
+        let own = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
+        return ([own] + otherCovenants(teaching: entry).map(\.name)).joined(separator: " or ")
     }
 
     /// Rules the ritual breaks for this character: rated above their Discipline dots, or a Theban miracle above their Humanity.
@@ -111,7 +157,11 @@ extension Character {
     }
 
     func isMysteryCoil(_ coil: Coil) -> Bool {
-        mysterySource != .custom("") && coil.mystery == mysterySource
+        guard mysterySource != .custom("") else { return false }
+        if coil.mystery == mysterySource { return true }
+        // A Coil that counts as part of the character's Mystery
+        let partOf = coil.mystery.catalogID.flatMap { Catalog.bundled.mysteries.entry($0) }?.partOfMystery
+        return partOf != nil && partOf == mysterySource.catalogID
     }
 
     var ordoDraculStatus: Int {
@@ -132,7 +182,8 @@ extension Character {
 
     /// Whether the character has one of the Coil tiers the Scale resonates with.
     func meetsPrerequisite(of scale: ScaleEntry) -> Bool {
-        scale.prerequisiteCoils.contains { coilRating($0.mystery) >= $0.dots }
+        if let anyCoil = scale.anyCoil, coils.contains(where: { $0.rating >= anyCoil }) { return true }
+        return scale.prerequisiteCoils.contains { coilRating($0.mystery) >= $0.dots }
     }
 
     /// A Scale costs 1 Experience with its prerequisite Coil, 2 without.
@@ -144,11 +195,12 @@ extension Character {
 extension ScaleEntry {
     /// e.g. "Beast's Hunger (Mystery of the Wyrm ••)".
     var prerequisiteText: String {
-        prerequisiteCoils.map { prerequisite in
+        let any = anyCoil.map { ["Any Coil \(String(repeating: "•", count: $0))"] } ?? []
+        return (any + prerequisiteCoils.map { prerequisite in
             let mystery = Catalog.bundled.mysteries.entry(prerequisite.mystery)
             let tier = mystery?.tier(prerequisite.dots)?.name ?? prerequisite.tier
             return "\(tier) (\(mystery?.name ?? prerequisite.mystery) \(String(repeating: "•", count: prerequisite.dots)))"
-        }
+        })
         .joined(separator: " or ")
     }
 }
@@ -161,6 +213,10 @@ extension RitualRules.HumanityRule {
             return "Humanity can't rise above 10 minus its dots. Learning a dot is a breaking point at Humanity 4 or higher."
         case .atLeastRitualDots:
             return "Casting a miracle requires Humanity at least equal to its dots."
+        case .none:
+            return "No limit on Humanity."
+        case .breakingPointAtSixMinusDots:
+            return "Each ritual is a breaking point at Humanity 6 minus its dots or higher: 5+ for one dot, down to 1+ for five."
         }
     }
 }

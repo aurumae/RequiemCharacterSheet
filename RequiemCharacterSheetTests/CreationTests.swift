@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// Guided creation's starting dots, inferred priorities and hard limits.
 @MainActor
@@ -135,6 +138,24 @@ struct CreationTests {
         #expect(character.creation?.favoredAttribute == nil)
         #expect(character.attributes.first { $0.kind == .dexterity }?.rating == 1)
         #expect(character.needsFavoredAttribute)
+    }
+
+    @Test func aBloodlineChosenAtCreationReplacesTheClansFavoredAttributes() {
+        // Ventrue favour Presence or Resolve; the Bron, Stamina or Presence
+        let character = newCharacter(clan: "Ventrue")
+        character.chooseFavoredAttribute(.resolve)
+        character.bloodline = "Bron"
+
+        #expect(character.creationFavoredAttributes == [.stamina, .presence])
+        #expect(character.creationFavoredAttributeGiver == "Bron")
+        // Resolve isn't one of the Bron's, so the dot comes off to be placed again
+        #expect(character.creation?.favoredAttribute == nil)
+        #expect(character.needsFavoredAttribute)
+
+        // Presence is on both lists, so it stays when the bloodline goes
+        character.chooseFavoredAttribute(.presence)
+        character.bloodline = ""
+        #expect(character.creation?.favoredAttribute == .presence)
     }
 
     @Test func attributeLimitsAreHard() {
@@ -314,7 +335,7 @@ struct CreationTests {
 
     @Test func maskAndDirgeArchetypes() {
         let archetypes = Catalog.bundled.archetypes.all
-        #expect(archetypes.count == 27)
+        #expect(archetypes.count == 30)
         #expect(archetypes.first?.name == "Authoritarian")
         #expect(Catalog.bundled.archetypes.entry(named: "social chameleon") != nil)
     }
@@ -322,7 +343,8 @@ struct CreationTests {
     @Test func everyArchetypeHasItsWillpowerActions() {
         for archetype in Catalog.bundled.archetypes.all {
             #expect(archetype.willpowerFacts.map(\.label) == ["Single Willpower", "All Willpower"], "\(archetype.name)")
-            #expect((84...87).contains(archetype.source.page ?? 0), "\(archetype.name)")
+            let pages = archetype.source.book == "vtr2e-core" ? 84...87 : 17...17
+            #expect(pages.contains(archetype.source.page ?? 0), "\(archetype.name)")
         }
         #expect(Catalog.bundled.archetypes.entry(named: "Nomad")?.singleWillpower == "Abandon a home.")
     }

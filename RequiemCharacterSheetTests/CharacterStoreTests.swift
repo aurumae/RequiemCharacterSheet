@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// Each test gets its own temporary directory and UserDefaults suite, removed afterwards.
 @MainActor
@@ -81,6 +84,15 @@ final class CharacterStoreTests {
             modifiedAt: Date(timeIntervalSinceReferenceDate: 1_000),
             isReadable: true
         ))
+    }
+
+    @Test func summaryShowsTheBloodlineAfterTheClan() {
+        func lineage(_ clan: String, _ bloodline: String) -> String {
+            CharacterSummary(id: UUID(), name: "", clan: clan, bloodline: bloodline, covenant: "", modifiedAt: nil, isReadable: true).lineage
+        }
+        #expect(lineage("Ventrue", "Bron") == "Ventrue (Bron)")
+        #expect(lineage("Ventrue", "") == "Ventrue")
+        #expect(lineage("", "Bron") == "Bron")
     }
 
     @Test func savingAgainReplacesTheSameEntry() throws {

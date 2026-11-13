@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 extension Cost {
     /// The cost in words, e.g. "1 Vitae and 1 Willpower", "Optional: 1 Vitae" or "Free".
@@ -113,5 +116,26 @@ extension Character {
     var inClanDisciplines: Set<CatalogEntryID> {
         // A bloodline's Disciplines replace its parent clan's
         Set(bloodlineEntry?.disciplines ?? clanEntry?.disciplines ?? [])
+    }
+}
+
+extension BloodlineEntry {
+    /// Whether members can come from this clan. A bloodline with no parent clans listed takes members from any clan,
+    /// e.g. the Penumbrae.
+    func accepts(clan: CatalogEntryID) -> Bool {
+        parentClans.isEmpty || parentClans.contains(clan)
+    }
+
+    /// e.g. "Daeva or Nosferatu", or "Any clan".
+    var parentClansText: String {
+        guard !parentClans.isEmpty else { return "Any clan" }
+        return parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")
+    }
+}
+
+extension CatalogBookSection {
+    /// Every book in the bundled catalogs, in catalog order, and within each the groups that have entries from it.
+    static func sections(_ groups: [CatalogPickerGroup<Entry>]) -> [CatalogBookSection] {
+        sections(groups, books: Catalog.bundled.books)
     }
 }

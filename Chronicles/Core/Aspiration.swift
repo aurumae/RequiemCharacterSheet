@@ -10,28 +10,28 @@ import Foundation
 import Observation
 
 @Observable
-final class Aspiration: Identifiable, Codable {
-    var id: UUID
-    var text: String
+package final class Aspiration: Identifiable, Codable {
+    package var id: UUID
+    package var text: String
 
-    enum CodingKeys: CodingKey {
+    package enum CodingKeys: CodingKey {
         case id, text
     }
 
-    init(id: UUID = UUID(), text: String = "") {
+    package init(id: UUID = UUID(), text: String = "") {
         self.id = id
         self.text = text
     }
 
     // Encoding
-    func encode(to encoder: Encoder) throws {
+    package func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(text, forKey: .text)
     }
 
     // Decoding
-    required init(from decoder: Decoder) throws {
+    package required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(.id, default: UUID())
         text = try container.decode(.text, default: "")

@@ -8,6 +8,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// One of a character's Banes: a catalog entry or the player's own description.
 @Observable

@@ -17,7 +17,7 @@ struct BanePickerView: View {
 
     /// Alphabetical; when searching, Banes whose name matches come before those whose summary does.
     private var matchingEntries: [BaneEntry] {
-        let entries = Catalog.bundled.banes.all.sorted { $0.name < $1.name }
+        let entries = Catalog.bundled.banes.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
         let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
         let summaryMatches = entries.filter {
@@ -33,13 +33,17 @@ struct BanePickerView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section(footer: Text("A vampire can have at most \(Character.maxBanes) Banes.").themedText(.detail)) {
-                    ForEach(matchingEntries) { entry in
-                        row(for: entry)
+                // By book, so it's clear where each Bane comes from
+                let sections = CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)])
+                ForEach(sections) { section in
+                    Section(header: section.header) {
+                        ForEach(section.entries) { entry in
+                            row(for: entry)
+                        }
                     }
                 }
 
-                Section {
+                Section(footer: Text("A vampire can have at most \(Character.maxBanes) Banes.").themedText(.detail)) {
                     Button {
                         choose(nil)
                     } label: {

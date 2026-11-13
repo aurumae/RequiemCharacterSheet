@@ -48,10 +48,16 @@ struct DevotionsView: View {
         }
     }
 
-    /// Devotions the character has the Disciplines for come first.
+    /// By book; within each, Devotions the character has the Disciplines for come first.
     private var pickerSections: [CatalogPickerSection] {
         let owned = Set(character.devotions.compactMap(\.source.catalogID))
-        let items = Catalog.bundled.devotions.all.sorted { $0.name < $1.name }.map { entry in
+        let entries = Catalog.bundled.devotions.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        let available = entries.filter { character.unmetPrerequisites(for: $0).isEmpty }
+        let others = entries.filter { !character.unmetPrerequisites(for: $0).isEmpty }
+        return CatalogPickerSection.byBook([
+            CatalogPickerGroup("You have the Disciplines", available),
+            CatalogPickerGroup(available.isEmpty ? "" : "Other Devotions", others),
+        ]) { entry in
             let unmet = character.unmetPrerequisites(for: entry)
             let requires = character.prerequisiteChecks(for: entry).map(\.description).joined(separator: ", ")
             return CatalogPickerItem(
@@ -64,12 +70,6 @@ struct DevotionsView: View {
                 isOwned: owned.contains(entry.id)
             )
         }
-        let available = items.filter { $0.warning == nil }
-        let others = items.filter { $0.warning != nil }
-        return [
-            CatalogPickerSection(title: "You have the Disciplines", items: available),
-            CatalogPickerSection(title: available.isEmpty ? "Devotions" : "Other Devotions", items: others),
-        ]
     }
 
     private func addCustomDevotionIfChosen() {

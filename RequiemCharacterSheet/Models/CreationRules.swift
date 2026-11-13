@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// A character being made with guided creation (Vampire: The Requiem pp. 79–84). While it's set,
 /// the sheet holds the character to the book's starting dots: hard limits, not warnings.
@@ -104,7 +107,8 @@ enum CreationProblem: Hashable {
     case tooManyDisciplineDots
     case tooFewInClanDisciplineDots
     /// Crúac or Theban Sorcery without Status in its covenant.
-    case sorceryWithoutStatus(discipline: String, covenant: String)
+    /// `requirement` is e.g. "Circle of the Crone Status 1".
+    case sorceryWithoutStatus(discipline: String, requirement: String)
     case coilWithoutStatus
     case coilOutsideMystery
     case tooManyRituals(discipline: String)
@@ -140,8 +144,8 @@ enum CreationProblem: Hashable {
             return "More than 3 Discipline dots"
         case .tooFewInClanDisciplineDots:
             return "At least 2 Discipline dots must be in-clan"
-        case .sorceryWithoutStatus(let discipline, let covenant):
-            return "\(discipline) needs \(covenant) Status"
+        case .sorceryWithoutStatus(let discipline, let requirement):
+            return "\(discipline) needs \(requirement)"
         case .coilWithoutStatus:
             return "Coils need Ordo Dracul Status"
         case .coilOutsideMystery:
@@ -250,9 +254,8 @@ extension Character {
             disciplineDots += dots
             if let entry, inClanDisciplines.contains(entry.id), entry.kind != .ritual { continue }
             outOfClan += dots
-            if let rules = entry?.ritualRules, covenantStatus(rules.covenant) < rules.covenantStatusMinimum {
-                let covenant = Catalog.bundled.covenants.entry(rules.covenant)?.name ?? rules.covenant
-                report.problems.insert(.sorceryWithoutStatus(discipline: entry?.name ?? "", covenant: covenant))
+            if let entry, entry.ritualRules != nil, !hasRitualStatus(for: entry) {
+                report.problems.insert(.sorceryWithoutStatus(discipline: entry.name, requirement: Self.ritualRequirementText(for: entry)))
             }
         }
         for coil in coils {
@@ -384,7 +387,39 @@ extension Character {
 
     /// Whether the player still has to choose which favoured Attribute takes the clan's dot.
     var needsFavoredAttribute: Bool {
-        isInCreation && clanEntry != nil && creation?.favoredAttribute == nil
+        isInCreation && !creationFavoredAttributes.isEmpty && creation?.favoredAttribute == nil
+    }
+
+    /// The Attributes the free dot can go on during guided creation. A bloodline chosen at creation that has its own
+    /// favoured Attributes, like the Bron's, replaces the clan's.
+    var creationFavoredAttributes: [AttributeKind] {
+        if let own = bloodlineEntry?.favoredAttributes, !own.isEmpty { return own }
+        return clanEntry?.favoredAttributes ?? []
+    }
+
+    /// Who gives the free dot during guided creation: the bloodline when its favoured Attributes replace the clan's.
+    var creationFavoredAttributeGiver: String? {
+        if let bloodline = bloodlineEntry, !bloodline.favoredAttributes.isEmpty { return bloodline.name }
+        return clanEntry?.name
+    }
+
+    /// Outside guided creation, every favoured Attribute of the clan and of the bloodline, each with where it comes
+    /// from, e.g. Presence (Ventrue, Bron). Adopting a bloodline later doesn't move the dot, so the player picks.
+    var favoredAttributeSources: [(attribute: AttributeKind, sources: [String])] {
+        var sources: [(String, [AttributeKind])] = []
+        if let clan = clanEntry { sources.append((clan.name, clan.favoredAttributes)) }
+        if let bloodline = bloodlineEntry, !bloodline.favoredAttributes.isEmpty {
+            sources.append((bloodline.name, bloodline.favoredAttributes))
+        }
+        let attributes = sources.flatMap(\.1).reduce(into: [AttributeKind]()) { if !$0.contains($1) { $0.append($1) } }
+        return attributes.map { kind in (kind, sources.filter { $0.1.contains(kind) }.map(\.0)) }
+    }
+
+    /// The favoured Attributes worded for display, e.g. "Presence (Ventrue and Bron), Resolve (Ventrue) or Stamina (Bron)".
+    var favoredAttributesText: String {
+        let parts = favoredAttributeSources.map { "\($0.attribute.name) (\($0.sources.joined(separator: " and ")))" }
+        guard let last = parts.last else { return "" }
+        return parts.count == 1 ? last : parts.dropLast().joined(separator: ", ") + " or " + last
     }
 
     /// Puts the clan's free dot on one of its favoured Attributes, moving it from any other.

@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// The Condition catalog, adding, ending and resolving Conditions, their Beats, log and saving.
 @MainActor
@@ -44,7 +47,7 @@ struct ConditionTests {
     @Test func catalogFlagsFollowTheCards() throws {
         let entries = Catalog.bundled.conditions
         #expect(entries.all.filter { !$0.beatOnResolve }.map(\.id).sorted() == ["distracted", "stumbled"])
-        #expect(entries.all.filter(\.repeatable).map(\.id).sorted() == ["addicted", "leveraged", "swooning", "tainted"])
+        #expect(entries.all.filter(\.repeatable).map(\.id).sorted() == ["addicted", "anchored-heart", "beloved-enemy", "leveraged", "shamed", "suspicious", "swooning", "tainted"])
         #expect(entries.all.filter(\.counter).map(\.id).sorted() == ["languid", "lethargic", "tempted"])
     }
 

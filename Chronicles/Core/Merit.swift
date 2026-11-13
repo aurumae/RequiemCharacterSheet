@@ -1,60 +1,38 @@
 //
 //  Merit.swift
-//  RequiemCharacterSheet
+//  ChroniclesCore
 //
 //  Created by Oisín McColgan on 20/09/2024.
 //
-
 
 import Foundation
 import Observation
 
 /// One of a character's Merits: a catalog entry (with its qualifier, if any) or a custom one, with its dots.
+/// Each game's app looks entries up in its own catalog, e.g. `merit.entry`.
 @Observable
-final class Merit: Identifiable, Codable {
-    let id: UUID
-    var source: TraitSource
+package final class Merit: Identifiable, Codable {
+    package let id: UUID
+    package var source: TraitSource
     /// What the Merit is taken for, e.g. "French" in Language (French).
-    var qualifier: String?
-    var rating: Int
+    package var qualifier: String?
+    package var rating: Int
 
-    /// The catalog entry, if this isn't a custom Merit.
-    var entry: MeritEntry? {
-        source.catalogID.flatMap { Catalog.bundled.merits.entry($0) }
-    }
-
-    /// The name shown on the sheet, e.g. "Language (French)". Setting it links to the catalog entry
-    /// with that name, reading a trailing "(…)" as the qualifier.
-    var name: String {
-        get {
-            let base = Catalog.bundled.merits.name(of: source)
-            return qualifier.map { "\(base) (\($0))" } ?? base
-        }
-        set {
-            (source, qualifier) = Self.parse(newValue)
-        }
-    }
-
-    enum CodingKeys: CodingKey {
+    package enum CodingKeys: CodingKey {
         case id, source, qualifier, rating
         // Saves before version 5 stored only a name
         case name
     }
 
-    init(id: UUID = UUID(), source: TraitSource, qualifier: String? = nil, rating: Int = 0) {
+    package init(id: UUID = UUID(), source: TraitSource, qualifier: String? = nil, rating: Int = 0) {
         self.id = id
         self.source = source
         self.qualifier = qualifier
         self.rating = rating
     }
 
-    convenience init(id: UUID = UUID(), name: String = "", rating: Int = 0) {
-        let (source, qualifier) = Self.parse(name)
-        self.init(id: id, source: source, qualifier: qualifier, rating: rating)
-    }
-
     // Encoding
-    func encode(to encoder: Encoder) throws {
+    package func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(source, forKey: .source)
@@ -62,29 +40,47 @@ final class Merit: Identifiable, Codable {
         try container.encode(rating, forKey: .rating)
     }
 
-    // Decoding
-    required init(from decoder: Decoder) throws {
+    // Decoding. A custom name, or a name from before version 5, is kept as custom text until `relink(in:)` matches it
+    // against the game's catalog.
+    package required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(.id, default: UUID())
         if let source = try container.decodeIfPresent(TraitSource.self, forKey: .source) {
-            if case .custom(let name) = source {
-                // A custom name that now matches a catalog entry (e.g. one added since the save) is linked to it
-                (self.source, qualifier) = Self.parse(name)
+            self.source = source
+            if case .custom = source {
+                qualifier = nil
             } else {
-                self.source = source
                 qualifier = try container.decodeIfPresent(String.self, forKey: .qualifier)
             }
         } else {
             let name: String = try container.decode(.name, default: "")
-            (source, qualifier) = Self.parse(name.trimmingCharacters(in: .whitespacesAndNewlines))
+            source = .custom(name.trimmingCharacters(in: .whitespacesAndNewlines))
+            qualifier = nil
         }
         rating = try container.decode(.rating, default: 0)
     }
 
+    /// The catalog entry, if this isn't a custom Merit.
+    package func entry(in merits: CatalogIndex<MeritEntry>) -> MeritEntry? {
+        source.catalogID.flatMap { merits.entry($0) }
+    }
+
+    /// The name shown on the sheet, e.g. "Language (French)".
+    package func name(in merits: CatalogIndex<MeritEntry>) -> String {
+        let base = merits.name(of: source)
+        return qualifier.map { "\(base) (\($0))" } ?? base
+    }
+
+    /// Links a custom name that matches a catalog entry (e.g. one added since the save) to it.
+    package func relink(in merits: CatalogIndex<MeritEntry>) {
+        if case .custom(let name) = source {
+            (source, qualifier) = Self.parse(name, in: merits)
+        }
+    }
+
     /// Matches a name such as "Language (French)" to a catalog entry and qualifier.
     /// Names that don't match a catalog entry are kept whole as custom text.
-    private static func parse(_ name: String) -> (TraitSource, String?) {
-        let merits = Catalog.bundled.merits
+    package static func parse(_ name: String, in merits: CatalogIndex<MeritEntry>) -> (TraitSource, String?) {
         if let entry = merits.entry(named: name) {
             return (.catalog(entry.id), nil)
         }

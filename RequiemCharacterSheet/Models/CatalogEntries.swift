@@ -4,28 +4,9 @@
 //
 
 import Foundation
-
-/// Identifies a catalog entry within its kind, e.g. "vigor" or "defensive-combat". Stable across versions.
-typealias CatalogEntryID = String
-
-/// Anything listed in a catalog: a Discipline, Merit, Bane, Clan, Covenant, ritual, Devotion, Mystery or Scale.
-protocol CatalogEntry: Identifiable, Decodable where ID == CatalogEntryID {
-    var name: String { get }
-    var source: SourceReference { get }
-    /// Our own one-line description. Never book text.
-    var summary: String { get }
-}
-
-struct Book: Codable, Hashable {
-    let id: String
-    let name: String
-}
-
-/// Where an entry is described: a book, and the page if known.
-struct SourceReference: Codable, Hashable {
-    let book: String
-    let page: Int?
-}
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// One catalog file, bundled with the app (and later, imported).
 struct CatalogFile: Decodable {
@@ -47,10 +28,11 @@ struct CatalogFile: Decodable {
     let scales: [ScaleEntry]
     let archetypes: [ArchetypeEntry]
     let conditions: [ConditionEntry]
+    let elderBanes: [ElderBaneEntry]
 
     enum CodingKeys: CodingKey {
         case format, version, book, disciplines, merits, banes, clans, bloodlines, covenants
-        case rituals, devotions, mysteries, scales, archetypes, conditions
+        case rituals, devotions, mysteries, scales, archetypes, conditions, elderBanes
     }
 
     init(from decoder: Decoder) throws {
@@ -71,6 +53,7 @@ struct CatalogFile: Decodable {
         scales = try container.decode(.scales, default: [])
         archetypes = try container.decode(.archetypes, default: [])
         conditions = try container.decode(.conditions, default: [])
+        elderBanes = try container.decode(.elderBanes, default: [])
     }
 }
 
@@ -135,6 +118,10 @@ struct RitualRules: Decodable {
         case capAtTenMinusDots
         /// Casting a ritual needs Humanity at least equal to its dots. Theban Sorcery.
         case atLeastRitualDots
+        /// No Humanity limit. Kimiya.
+        case none
+        /// Casting a ritual is a breaking point at Humanity 6 minus its dots or higher. Therion.
+        case breakingPointAtSixMinusDots
     }
 }
 
@@ -255,87 +242,6 @@ struct DicePool: Decodable {
     }
 }
 
-// MARK: - Merits
-
-struct MeritEntry: CatalogEntry {
-    let id: CatalogEntryID
-    let name: String
-    let category: Category
-    let source: SourceReference
-    /// Every rating the Merit can be bought at.
-    let ratings: [Int]
-    /// What the Merit is taken for, e.g. the language in Language (French).
-    let qualifier: QualifierRule?
-    let repeatable: Bool
-    let prerequisites: [Prerequisite]
-    /// Alternative sets of prerequisites, any one of which is enough.
-    let prerequisitesAnyOf: [[Prerequisite]]
-    /// For Fighting Styles: the maneuver each dot grants.
-    let styleManeuvers: [StyleManeuver]
-    let summary: String
-    /// Always-on effects on the sheet, e.g. Fleet of Foot adding to Speed.
-    let effects: [Effect]
-    /// Kindred can't take it: the Supernatural Merits, and Vice-Ridden and Virtuous, since vampires
-    /// have no Virtue or Vice (Vampire: The Requiem p. 81).
-    let unavailableToKindred: Bool
-
-    enum Category: String, Decodable {
-        case mental, physical, social, fighting, vampire, covenant, supernatural, other
-    }
-
-    enum CodingKeys: CodingKey {
-        case id, name, category, source, ratings, qualifier, repeatable
-        case prerequisites, prerequisitesAnyOf, styleManeuvers, summary, effects, unavailableToKindred
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        category = try container.decode(.category, default: .other)
-        source = try container.decode(SourceReference.self, forKey: .source)
-        ratings = try container.decode([Int].self, forKey: .ratings)
-        qualifier = try container.decodeIfPresent(QualifierRule.self, forKey: .qualifier)
-        repeatable = try container.decode(.repeatable, default: false)
-        prerequisites = try container.decode(.prerequisites, default: [])
-        prerequisitesAnyOf = try container.decode(.prerequisitesAnyOf, default: [])
-        styleManeuvers = try container.decode(.styleManeuvers, default: [])
-        summary = try container.decode(String.self, forKey: .summary)
-        effects = try container.decodeEffects(.effects)
-        unavailableToKindred = try container.decode(.unavailableToKindred, default: false)
-    }
-}
-
-struct QualifierRule: Decodable {
-    /// What the player is asked for, e.g. "Skill" or "Language".
-    let prompt: String
-    /// The allowed choices, if limited.
-    let options: [String]?
-    /// The choices are the character's Skill Specialties, e.g. for Area of Expertise.
-    let fromSpecialties: Bool?
-}
-
-struct Prerequisite: Decodable {
-    let kind: Kind
-    /// The attribute, skill, merit, discipline, clan or covenant id.
-    let id: String?
-    let minimum: Int?
-    /// For prerequisites that can't be checked automatically.
-    let text: String?
-
-    enum Kind: String, Decodable {
-        /// `notCovenant`: not a member of the covenant, e.g. Casual User for non-Carthians.
-        /// `willpower`: Willpower dots (Resolve + Composure), e.g. Mobilize Outrage.
-        case attribute, skill, merit, discipline, bloodPotency, clan, covenant, notCovenant, willpower, other
-    }
-}
-
-struct StyleManeuver: Decodable {
-    let dots: Int
-    let name: String
-    let summary: String
-}
-
 // MARK: - Banes, Clans and Covenants
 
 struct BaneEntry: CatalogEntry {
@@ -356,6 +262,25 @@ struct ClanEntry: CatalogEntry {
     let disciplines: [CatalogEntryID]
     let bane: ClanBane
     let summary: String
+    /// Another clan's Merits its members may take.
+    let meritAccess: [ClanMeritAccess]
+
+    enum CodingKeys: CodingKey {
+        case id, name, nickname, source, favoredAttributes, disciplines, bane, summary, meritAccess
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        favoredAttributes = try container.decode([AttributeKind].self, forKey: .favoredAttributes)
+        disciplines = try container.decode([CatalogEntryID].self, forKey: .disciplines)
+        bane = try container.decode(ClanBane.self, forKey: .bane)
+        summary = try container.decode(String.self, forKey: .summary)
+        meritAccess = try container.decode(.meritAccess, default: [])
+    }
 }
 
 struct ClanBane: Decodable {
@@ -384,6 +309,18 @@ struct ClanBane: Decodable {
     }
 }
 
+/// How a clan's bane deepens in an elder (A Thousand Years of Night p. 23): it takes hold when Humanity first falls
+/// to the threshold, and regaining Humanity doesn't undo it.
+struct ElderBaneEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    /// The clan whose bane this deepens.
+    let clan: CatalogEntryID
+    let source: SourceReference
+    let summary: String
+    let humanityThreshold: Int
+}
+
 /// A bloodline: a lineage within a clan, with its own Disciplines and bane.
 struct BloodlineEntry: CatalogEntry {
     let id: CatalogEntryID
@@ -397,6 +334,31 @@ struct BloodlineEntry: CatalogEntry {
     let disciplines: [CatalogEntryID]
     /// Suffered as well as the parent clan's bane.
     let bane: BloodlineBane
+    /// Its own favoured Attributes, if the book gives them, e.g. the Bron's. Empty if it uses the clan's.
+    let favoredAttributes: [AttributeKind]
+    /// The covenant its members must belong to, if any, e.g. the Penumbrae's Circle of the Crone.
+    let requiredCovenant: CatalogEntryID?
+    /// Another clan's Merits its members may take, e.g. the Icelus with Dream Visions as though Mekhet.
+    let meritAccess: [ClanMeritAccess]
+
+    enum CodingKeys: CodingKey {
+        case id, name, nickname, parentClans, source, summary, disciplines, bane, favoredAttributes, requiredCovenant, meritAccess
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        parentClans = try container.decode([CatalogEntryID].self, forKey: .parentClans)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(String.self, forKey: .summary)
+        disciplines = try container.decode([CatalogEntryID].self, forKey: .disciplines)
+        bane = try container.decode(BloodlineBane.self, forKey: .bane)
+        favoredAttributes = try container.decode(.favoredAttributes, default: [])
+        requiredCovenant = try container.decodeIfPresent(CatalogEntryID.self, forKey: .requiredCovenant)
+        meritAccess = try container.decode(.meritAccess, default: [])
+    }
 }
 
 struct BloodlineBane: Decodable {
@@ -411,6 +373,62 @@ struct CovenantEntry: CatalogEntry {
     let nickname: String?
     let source: SourceReference
     let summary: String
+    /// Families of another covenant's Merits its members may take, e.g. the Gallows Post's use of Carthian Laws.
+    let meritGroups: [CovenantMeritGroup]
+    /// Another covenant whose Status this covenant's Status counts as, for everything that asks for it, e.g. the
+    /// Legion of the Green's for the Invictus (Dark Eras 2 p. 108).
+    let statusCountsAs: CatalogEntryID?
+    /// Ritual Disciplines it teaches besides the one whose `ritualRules` names it, with the same Status, e.g. the Ahl
+    /// al-Mumit's Karamat, which is Theban Sorcery (Dark Eras 2 p. 139).
+    let teaches: [CatalogEntryID]
+
+    enum CodingKeys: CodingKey {
+        case id, name, nickname, source, summary, meritGroups, statusCountsAs, teaches
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        source = try container.decode(SourceReference.self, forKey: .source)
+        summary = try container.decode(String.self, forKey: .summary)
+        meritGroups = try container.decode(.meritGroups, default: [])
+        statusCountsAs = try container.decodeIfPresent(CatalogEntryID.self, forKey: .statusCountsAs)
+        teaches = try container.decode(.teaches, default: [])
+    }
+}
+
+/// Members may take the Merits in `group`, or those listed in `merits`, with their own Covenant Status standing in
+/// for Status in `inPlaceOf`, e.g. Gallows Post Status for the Carthian Laws' Carthian Status (Dark Eras Companion
+/// p. 93), or the Fir'awn's for Altar (Dark Eras 2 p. 142).
+struct CovenantMeritGroup: Decodable, Equatable {
+    let group: String?
+    let merits: [CatalogEntryID]
+    let inPlaceOf: CatalogEntryID
+
+    enum CodingKeys: CodingKey {
+        case group, merits, inPlaceOf
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        group = try container.decodeIfPresent(String.self, forKey: .group)
+        merits = try container.decode(.merits, default: [])
+        inPlaceOf = try container.decode(CatalogEntryID.self, forKey: .inPlaceOf)
+    }
+
+    /// Whether it covers this Merit.
+    func covers(_ merit: MeritEntry) -> Bool {
+        (group != nil && group == merit.group) || merits.contains(merit.id)
+    }
+}
+
+/// Members of a clan may take these Merits as though they were of the clan `inPlaceOf`, e.g. the Dukhan with Dream
+/// Visions as though Mekhet (Dark Eras 2 p. 142).
+struct ClanMeritAccess: Decodable, Equatable {
+    let merits: [CatalogEntryID]
+    let inPlaceOf: CatalogEntryID
 }
 
 // MARK: - Blood sorcery, Devotions, Coils and Scales
@@ -485,9 +503,12 @@ struct MysteryEntry: CatalogEntry {
     /// A Coil without a Mystery to follow, e.g. the Coil of Zirnitra: it can be learned as a Coil, with its
     /// Scales, but isn't offered as the character's Mystery.
     let coilOnly: Bool
+    /// The Mystery this Coil counts as part of, for Experience costs and the Status limit, e.g. the Coil of the
+    /// Quintessence is part of the Mystery of the Voivode.
+    let partOfMystery: CatalogEntryID?
 
     enum CodingKeys: CodingKey {
-        case id, name, source, summary, coil, tiers, coilOnly
+        case id, name, source, summary, coil, tiers, coilOnly, partOfMystery
     }
 
     init(from decoder: Decoder) throws {
@@ -499,6 +520,7 @@ struct MysteryEntry: CatalogEntry {
         coil = try container.decode(CoilInfo.self, forKey: .coil)
         tiers = try container.decode([CoilTier].self, forKey: .tiers)
         coilOnly = try container.decode(.coilOnly, default: false)
+        partOfMystery = try container.decodeIfPresent(CatalogEntryID.self, forKey: .partOfMystery)
     }
 
     func tier(_ dots: Int) -> CoilTier? {
@@ -529,6 +551,8 @@ struct ScaleEntry: CatalogEntry {
     let source: SourceReference
     /// The Coil tiers it resonates with. Learning it costs less with one of them.
     let prerequisiteCoils: [CoilPrerequisite]
+    /// Resonates with any Coil at this many dots, for Scales outside the Mysteries, e.g. Spirit Tether.
+    let anyCoil: Int?
     let cost: Cost
     let dicePool: DicePool?
     let action: String?
@@ -536,7 +560,7 @@ struct ScaleEntry: CatalogEntry {
     let summary: String
 
     enum CodingKeys: CodingKey {
-        case id, name, mystery, source, prerequisiteCoils, cost, dicePool, action, duration, summary
+        case id, name, mystery, source, prerequisiteCoils, anyCoil, cost, dicePool, action, duration, summary
     }
 
     init(from decoder: Decoder) throws {
@@ -546,6 +570,7 @@ struct ScaleEntry: CatalogEntry {
         mystery = try container.decode(String.self, forKey: .mystery)
         source = try container.decode(SourceReference.self, forKey: .source)
         prerequisiteCoils = try container.decode(.prerequisiteCoils, default: [])
+        anyCoil = try container.decodeIfPresent(Int.self, forKey: .anyCoil)
         cost = try container.decode(.cost, default: Cost())
         dicePool = try container.decodeIfPresent(DicePool.self, forKey: .dicePool)
         action = try container.decodeIfPresent(String.self, forKey: .action)
@@ -598,199 +623,22 @@ struct ArchetypeEntry: CatalogEntry {
     }
 }
 
-// MARK: - Conditions
 
-/// A Condition, e.g. Swooning: what it does, how it's resolved, and what earns a Beat while it lasts.
-struct ConditionEntry: CatalogEntry {
-    let id: CatalogEntryID
-    let name: String
-    let source: SourceReference
-    /// Lasts until resolved, and usually earns Beats along the way.
-    let persistent: Bool
-    /// What it does, in our own words.
-    let summary: String
-    let resolution: String
-    /// How it earns a Beat while it lasts; `nil` when it doesn't.
-    let beat: String?
-    let possibleSources: String?
-    /// Resolving it earns a Beat. A few say they don't, e.g. Distracted.
-    let beatOnResolve: Bool
-    /// A character can have it more than once, e.g. Swooning for two people.
-    let repeatable: Bool
-    /// What the note on the sheet is for, e.g. "For" (whom) or "Addicted to"; `nil` if it has none.
-    let notePrompt: String?
-    /// It has a growing penalty, shown as "Tempted −3".
-    let counter: Bool
-    /// The traits it clearly affects, marked on the sheet. Situational effects aren't listed.
-    let affects: [ConditionEffect]
+// MARK: - Requiem's Merit categories and requirement kinds
 
-    enum CodingKeys: CodingKey {
-        case id, name, source, persistent, summary, resolution, beat, possibleSources, beatOnResolve, repeatable
-        case notePrompt, counter, affects
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        source = try container.decode(SourceReference.self, forKey: .source)
-        persistent = try container.decode(.persistent, default: false)
-        summary = try container.decode(String.self, forKey: .summary)
-        resolution = try container.decode(.resolution, default: "")
-        beat = try container.decodeIfPresent(String.self, forKey: .beat)
-        possibleSources = try container.decodeIfPresent(String.self, forKey: .possibleSources)
-        beatOnResolve = try container.decode(.beatOnResolve, default: true)
-        repeatable = try container.decode(.repeatable, default: false)
-        notePrompt = try container.decodeIfPresent(String.self, forKey: .notePrompt)
-        counter = try container.decode(.counter, default: false)
-        affects = try container.decode(.affects, default: [])
-    }
+extension MeritEntry.Category {
+    static let vampire = MeritEntry.Category(rawValue: "vampire")
+    static let covenant = MeritEntry.Category(rawValue: "covenant")
 }
 
-/// Traits a Condition affects, and how, e.g. Deprived: "−1 to dice pools using Stamina, Resolve or Composure".
-struct ConditionEffect: Decodable, Equatable {
-    let targets: [ConditionTarget]
-    let text: String
-
-    enum CodingKeys: CodingKey {
-        case targets, text
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        // Targets this version doesn't know are skipped, so a newer catalog still loads
-        targets = try container.decode([String].self, forKey: .targets).compactMap(ConditionTarget.init)
-        text = try container.decode(String.self, forKey: .text)
-    }
-}
-
-/// A trait or group of traits a Condition affects. Saved as "attribute:stamina", "skill:intimidation",
-/// "attributeCategory:social", "skillCategory:physical" or "defense".
-enum ConditionTarget: Equatable, Hashable {
-    case attribute(AttributeKind)
-    case skill(SkillID)
-    case attributeCategory(TraitCategory)
-    case skillCategory(TraitCategory)
-    case defense
-
-    init?(_ text: String) {
-        let parts = text.split(separator: ":", maxSplits: 1).map(String.init)
-        switch (parts.first, parts.count == 2 ? parts[1] : nil) {
-        case ("attribute", let id?):
-            guard let kind = AttributeKind(rawValue: id) else { return nil }
-            self = .attribute(kind)
-        case ("skill", let id?):
-            self = .skill(SkillID(id))
-        case ("attributeCategory", let id?):
-            guard let category = TraitCategory(rawValue: id) else { return nil }
-            self = .attributeCategory(category)
-        case ("skillCategory", let id?):
-            guard let category = TraitCategory(rawValue: id) else { return nil }
-            self = .skillCategory(category)
-        case ("defense", nil):
-            self = .defense
-        default:
-            return nil
-        }
-    }
-}
-
-// MARK: - Effects
-
-/// A rules effect a Discipline or Merit has on the sheet. The character's rules add these up
-/// instead of recognising Disciplines and Merits by name.
-enum Effect: Decodable, Equatable {
-    /// Raises the Attribute itself, so everything derived from it (Speed, Defense, Health) and every roll includes it.
-    /// Vigor (Strength), Resilience (Stamina).
-    case attribute(AttributeKind, Amount)
-    /// Adds to the Attribute only when it's rolled, not to traits derived from it. Praestantia (Dexterity).
-    case attributeRolls(AttributeKind, Amount)
-    /// Celerity.
-    case defense(Amount)
-    /// Praestantia, Fast Reflexes.
-    case initiative(Amount)
-    /// Fleet of Foot.
-    case speed(Amount)
-    /// Changes Size, and so Health. Giant, Small-Framed.
-    case size(Amount)
-    /// Defense may use the Skill named by the Merit's qualifier instead of Athletics. Defensive Combat.
-    case defenseSkillFromQualifier
-    /// Adds dots to another Merit, which may go above five. Flock (Herd).
-    case merit(CatalogEntryID, Amount)
-
-    private enum CodingKeys: CodingKey {
-        case type, attribute, merit, amount
-    }
-
-    /// Saved as e.g. {"type": "attribute", "attribute": "strength", "amount": "rating"}.
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(String.self, forKey: .type)
-        switch type {
-        case "attribute":
-            self = .attribute(try container.decode(AttributeKind.self, forKey: .attribute), try container.decode(Amount.self, forKey: .amount))
-        case "attributeRolls":
-            self = .attributeRolls(try container.decode(AttributeKind.self, forKey: .attribute), try container.decode(Amount.self, forKey: .amount))
-        case "defense":
-            self = .defense(try container.decode(Amount.self, forKey: .amount))
-        case "initiative":
-            self = .initiative(try container.decode(Amount.self, forKey: .amount))
-        case "speed":
-            self = .speed(try container.decode(Amount.self, forKey: .amount))
-        case "size":
-            self = .size(try container.decode(Amount.self, forKey: .amount))
-        case "defenseSkillFromQualifier":
-            self = .defenseSkillFromQualifier
-        case "merit":
-            self = .merit(try container.decode(String.self, forKey: .merit), try container.decode(Amount.self, forKey: .amount))
-        default:
-            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown effect \(type)")
-        }
-    }
-}
-
-/// How much an effect adds.
-enum Amount: Decodable, Equatable {
-    /// The Discipline's or Merit's dots.
-    case rating
-    case fixed(Int)
-
-    private enum CodingKeys: CodingKey {
-        case fixed
-    }
-
-    /// Saved as "rating" or {"fixed": 1}.
-    init(from decoder: Decoder) throws {
-        if let text = try? decoder.singleValueContainer().decode(String.self), text == "rating" {
-            self = .rating
-        } else {
-            self = .fixed(try decoder.container(keyedBy: CodingKeys.self).decode(Int.self, forKey: .fixed))
-        }
-    }
-
-    func value(forRating rating: Int) -> Int {
-        switch self {
-        case .rating:
-            return rating
-        case .fixed(let amount):
-            return amount
-        }
-    }
-}
-
-extension KeyedDecodingContainer {
-    /// Decodes a list of effects, skipping any this version doesn't understand
-    /// (e.g. from a newer or imported catalog) rather than failing the whole entry.
-    func decodeEffects(_ key: Key) throws -> [Effect] {
-        try decode(key, default: [Lossy<Effect>]()).compactMap(\.value)
-    }
-}
-
-/// Decodes a value if it can, or `nil` if it can't, without failing the surrounding list.
-private struct Lossy<Value: Decodable>: Decodable {
-    let value: Value?
-
-    init(from decoder: Decoder) throws {
-        value = try? Value(from: decoder)
-    }
+extension Prerequisite.Kind {
+    static let discipline = Prerequisite.Kind(rawValue: "discipline")
+    static let bloodPotency = Prerequisite.Kind(rawValue: "bloodPotency")
+    static let clan = Prerequisite.Kind(rawValue: "clan")
+    /// Being of that bloodline, e.g. the Lidérc's Devotions.
+    static let bloodline = Prerequisite.Kind(rawValue: "bloodline")
+    /// Covenant Status, or membership when no minimum is given.
+    static let covenant = Prerequisite.Kind(rawValue: "covenant")
+    /// Not a member of the covenant, e.g. Casual User for non-Carthians.
+    static let notCovenant = Prerequisite.Kind(rawValue: "notCovenant")
 }

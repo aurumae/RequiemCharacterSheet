@@ -1,0 +1,725 @@
+{
+  "format": "requiem-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras-2",
+    "name": "Dark Eras 2"
+  },
+  "clans": [
+    {
+      "id": "dukhan",
+      "name": "Dukhan",
+      "nickname": "Succubi, Incubi",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 141
+      },
+      "favoredAttributes": [
+        "wits",
+        "stamina"
+      ],
+      "disciplines": [
+        "auspex",
+        "obfuscate",
+        "protean"
+      ],
+      "bane": {
+        "name": "The Curse of Reverie",
+        "summary": "Blood alone can't sustain you. Go as many nights as your Humanity without spending a full scene in the Astral and you become Languid, until you fall into torpor or spend a scene there.",
+        "humanityThreshold": 6,
+        "page": 142
+      },
+      "summary": "Former Mekhet entangled with the Begotten, who stalk humanity's dreams and travel the Astral more easily than any other Kindred.",
+      "meritAccess": [
+        {
+          "merits": [
+            "dream-visions"
+          ],
+          "inPlaceOf": "mekhet"
+        }
+      ]
+    }
+  ],
+  "bloodlines": [
+    {
+      "id": "bron",
+      "name": "Bron",
+      "nickname": "Hedge Knights",
+      "parentClans": [
+        "ventrue"
+      ],
+      "source": {
+        "book": "dark-eras-2",
+        "page": 117
+      },
+      "summary": "Ventrue whose blood was changed by old magic (the Grail, the Cauldron of Rebirth or the fae, depending on who tells it): knights and hermits who hunt the monsters of the wild and court the favor of the fae.",
+      "disciplines": [
+        "animalism",
+        "crochan",
+        "dominate",
+        "resilience"
+      ],
+      "favoredAttributes": [
+        "stamina",
+        "presence"
+      ],
+      "bane": {
+        "name": "The Errant Curse",
+        "summary": "As well as the Ventrue bane: whenever your permanent Blood Potency changes, all your Touchstones come loose until you defend each attachment again. Each night, roll Humanity for every loose Touchstone; on a failure the Storyteller replaces it with a new one.",
+        "page": 119
+      }
+    }
+  ],
+  "disciplines": [
+    {
+      "id": "crochan",
+      "name": "Crochan",
+      "kind": "powers",
+      "bloodline": "bron",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 119
+      },
+      "summary": "Bron rites of the blood that speed healing, sharpen the hunt and bind others in oaths.",
+      "powers": [
+        {
+          "id": "crochan-swift-flows-the-blood",
+          "name": "Swift Flows the Blood",
+          "dots": [
+            1,
+            1
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "dicePool": {
+            "attribute": "intelligence",
+            "skill": "medicine",
+            "includesDiscipline": true
+          },
+          "summary": "Each success lets you spend one more Vitae than Blood Potency allows this turn, for healing only.",
+          "page": 119
+        },
+        {
+          "id": "crochan-blooding-the-hunter",
+          "name": "Blooding the Hunter",
+          "dots": [
+            2,
+            2
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "duration": "One night",
+          "dicePool": {
+            "attribute": "wits",
+            "skill": "survival",
+            "includesDiscipline": true
+          },
+          "summary": "Anoint yourself with your quarry's blood: successes (up to 5) add to rolls to track and chase them all night. Works alongside A Taste of Blood.",
+          "page": 119
+        },
+        {
+          "id": "crochan-sealing-the-covenant",
+          "name": "Sealing the Covenant",
+          "dots": [
+            3,
+            3
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 1
+            },
+            "willpower": {
+              "fixed": 1
+            },
+            "note": "1 Vitae per participant"
+          },
+          "action": "instant",
+          "duration": "Until the Touchstone is destroyed or abandoned",
+          "summary": "Bind willing vampires in a blood oath: each gains an extra Touchstone at Humanity 4 standing for the shared loyalty. Losing it is a breaking point; abandoning it brings Languid.",
+          "page": 120
+        },
+        {
+          "id": "crochan-blood-of-my-blood",
+          "name": "Blood of My Blood",
+          "dots": [
+            4,
+            4
+          ],
+          "cost": {
+            "vitae": "varies"
+          },
+          "action": "instant",
+          "summary": "Heal another with Vitae as if healing yourself, aggravated wounds included, or restore a mortal's scars, eyes and limbs. No blood bond.",
+          "page": 120
+        },
+        {
+          "id": "crochan-conquering-the-challenge-of-the-axe",
+          "name": "Conquering the Challenge of the Axe",
+          "dots": [
+            5,
+            5
+          ],
+          "cost": {
+            "vitae": {
+              "fixed": 2
+            },
+            "willpower": {
+              "fixed": 1
+            }
+          },
+          "action": "instant",
+          "duration": "Scene",
+          "summary": "Refuse to yield and take no damage from any source, sunlight included, until you attack, feed on the unwilling, use Disciplines aggressively or frenzy.",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": "kimiya",
+      "name": "Kimiya",
+      "kind": "ritual",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "summary": "Jaliniyya blood alchemy that treats Vitae as an occult science, mixing blood with reagents to work its formulae.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "jaliniyya",
+        "covenantStatusMinimum": 1,
+        "humanity": "none",
+        "castingCost": {
+          "vitae": {
+            "fixed": 1
+          },
+          "note": "plus lethal wounds' worth of the subject's blood equal to the formula's dots − 1 (minimum 1); your own if the subject is an object"
+        },
+        "castingPool": {
+          "attribute": "intelligence",
+          "skill": "science",
+          "includesDiscipline": true
+        }
+      }
+    },
+    {
+      "id": "therion",
+      "name": "Therion",
+      "kind": "ritual",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 344
+      },
+      "summary": "The Tenth Choir's blood sorcery, worked with the stolen essence of angels and demons (the Grigori). Its first dot also lets you see, touch and feed on one kind of Grigor in Twilight per dot.",
+      "powers": [],
+      "ritualRules": {
+        "covenant": "tenth-choir",
+        "covenantStatusMinimum": 1,
+        "humanity": "breakingPointAtSixMinusDots",
+        "castingCost": {
+          "vitae": "varies",
+          "note": "Vitae equal to the ritual's dots, taken from feeding on a Grigor"
+        },
+        "castingPool": {
+          "attribute": "presence",
+          "skill": "intimidation",
+          "includesDiscipline": true
+        }
+      }
+    }
+  ],
+  "covenants": [
+    {
+      "id": "legion-of-the-green",
+      "name": "Legion of the Green",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 108
+      },
+      "statusCountsAs": "invictus",
+      "summary": "Allied lords of the Courts of Night, mostly Weihan Cynn and Romans left behind by the Camarilla, bound by blood oaths that will become the Invictus. Its Status counts as Invictus Status for Merits, Oaths included."
+    },
+    {
+      "id": "circles-of-mor",
+      "name": "Circles of Mor",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 110
+      },
+      "statusCountsAs": "circle-of-the-crone",
+      "summary": "Small, feuding covens of feather-cloaked Kindred who worship vengeance, the Beast and sometimes the Strix. Its Status counts as Circle of the Crone Status."
+    },
+    {
+      "id": "ahl-al-mumit",
+      "name": "Ahl al-Mumit",
+      "nickname": "The Wrathful",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 139
+      },
+      "teaches": [
+        "theban-sorcery"
+      ],
+      "summary": "Also called al-Hamasoun. Kindred, mostly Muslim, who rage at their curse and turn it on the wicked, hunting monsters while working Karamat (Theban Sorcery) to remind themselves of God's mercy. They claim Iblis as their teacher."
+    },
+    {
+      "id": "al-amin",
+      "name": "al-Amin",
+      "nickname": "The Faithful",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 139
+      },
+      "summary": "Devout storytellers, mediators and caravan-masters who follow Khadijah and Shahrazad, keep the peace between covenants and leave the judgment of their souls to God."
+    },
+    {
+      "id": "firawn",
+      "name": "Fir'awn",
+      "nickname": "The Forbearers",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 140
+      },
+      "teaches": [
+        "cruac"
+      ],
+      "meritGroups": [
+        {
+          "merits": [
+            "altar"
+          ],
+          "inPlaceOf": "circle-of-the-crone"
+        }
+      ],
+      "summary": "A loose alliance of polytheist Kindred who keep the old faiths alive and practise Majnun (Crúac) as forerunners of the Circle of the Crone. They may take Altar as though they were Acolytes."
+    },
+    {
+      "id": "jaliniyya",
+      "name": "Jaliniyya",
+      "nickname": "Alchemists",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 140
+      },
+      "summary": "Scholar-alchemists descended from a Camarilla sect of Galenic physicians, who study Vitae by experiment and teach the blood alchemy of Kimiya."
+    },
+    {
+      "id": "tenth-choir",
+      "name": "Tenth Choir",
+      "nickname": "Chorists",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 340
+      },
+      "summary": "Revolutionary Kindred out to destroy God, who reject the Masquerade, work openly with the Cult of Reason, and steal power from angels and demons through the sorcery of Therion."
+    }
+  ],
+  "merits": [
+    {
+      "id": "contracts-of-night-and-day",
+      "name": "Contracts of Night and Day",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 109
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "notary",
+          "minimum": 1
+        },
+        {
+          "kind": "skill",
+          "id": "occult",
+          "minimum": 2
+        }
+      ],
+      "summary": "Invoke Invictus Oaths between a Kindred liege and a changeling vassal, who drinks your Vitae for a first-stage blood bond and can use Contracts on you as if through a Loophole."
+    },
+    {
+      "id": "faith-militant",
+      "name": "Faith Militant",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 109
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "lancea-et-sanctum",
+          "minimum": 1
+        }
+      ],
+      "summary": "Your flock serves you: treat Herd as Resources for services, and once a chapter for equipment."
+    },
+    {
+      "id": "parliaments-apostle",
+      "name": "Parliament's Apostle",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 110
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "circles-of-mor",
+          "minimum": 1
+        },
+        {
+          "kind": "other",
+          "text": "Humanity 6 or lower"
+        }
+      ],
+      "summary": "Your coven worships one of the Strix. Once a chapter, ask it for knowledge as a Mentor of your Circle of Mor Status, or a Dread Power of up to that Potency, paying twice your Status in Vitae; raising Humanity puts you at its mercy."
+    },
+    {
+      "id": "ifrits-might",
+      "name": "Ifrit's Might",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 142
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "bloodPotency",
+          "minimum": 6
+        },
+        {
+          "kind": "covenant",
+          "id": "firawn",
+          "minimum": 1
+        }
+      ],
+      "summary": "Choose one Majnun (Crúac) rite for each dot of Blood Potency above 5: leading it, three successes count as exceptional. New Blood Potency dots add rites."
+    },
+    {
+      "id": "lingering-dreams",
+      "name": "Lingering Dreams",
+      "category": "vampire",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 142
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "dream-visions",
+          "minimum": 1
+        }
+      ],
+      "summary": "When you interpret a dream vision about someone, they dream of you in turn and become Swooning for you."
+    },
+    {
+      "id": "shahrazads-tale",
+      "name": "Shahrazad's Tale",
+      "category": "covenant",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 142
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "covenant",
+          "id": "al-amin",
+          "minimum": 1
+        }
+      ],
+      "summary": "Once a chapter, an hour-long tale can hook up to your dots in listeners (Resolve + Composure, −1 per dot): they become addicted to your Vitae and your stories, and think better of you with each tale."
+    },
+    {
+      "id": "party-affiliation-status",
+      "name": "Party Affiliation Status",
+      "category": "social",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 344
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": true,
+      "qualifier": {
+        "prompt": "Party",
+        "options": null
+      },
+      "summary": "Standing in a political party such as the Jacobins, working like Status, with its bonus against any citizen while the party is in favor; when it falls from favor, your dots become a penalty instead."
+    }
+  ],
+  "devotions": [
+    {
+      "id": "nightmare-journey",
+      "name": "Nightmare Journey",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "prerequisites": [
+        {
+          "kind": "discipline",
+          "id": "auspex",
+          "minimum": 5
+        }
+      ],
+      "prerequisitesAnyOf": [],
+      "cost": {
+        "vitae": {
+          "fixed": 1
+        },
+        "willpower": {
+          "fixed": 1
+        }
+      },
+      "dicePool": null,
+      "action": "instant",
+      "experienceCost": 3,
+      "requirement": "Use while in Twilight Projection.",
+      "summary": "Send your mind from Twilight Projection into a Chamber of the local Hive in a Dream Form that can use Disciplines and feed on dream creatures, while your body lies in true torpor."
+    }
+  ],
+  "rituals": [
+    {
+      "id": "spiders-hijra",
+      "name": "Spider's Hijra",
+      "discipline": "kimiya",
+      "dots": 1,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "targetSuccesses": 6,
+      "summary": "Spin your Vitae into webs filling Potency × 10 yards around you until sunrise, penalising Initiative, Defense, Speed and Physical pools of everyone but you."
+    },
+    {
+      "id": "sayihs-khol",
+      "name": "Sayih's Khol",
+      "discipline": "kimiya",
+      "dots": 2,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "targetSuccesses": 5,
+      "summary": "Words in blood on the subject's eyelids protect them from currents, pressure and waves for the night; the living can breathe underwater."
+    },
+    {
+      "id": "al-ajsad",
+      "name": "al-Ajsad",
+      "discipline": "kimiya",
+      "dots": 3,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 143
+      },
+      "targetSuccesses": 6,
+      "summary": "Make a loyal homunculus from your Vitae, corpse parts, mercury and sulfur; it lives as long as you feed it a Vitae each night."
+    },
+    {
+      "id": "ebony-horse",
+      "name": "Ebony Horse",
+      "discipline": "kimiya",
+      "dots": 4,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 144
+      },
+      "targetSuccesses": 8,
+      "summary": "Runes in blood make an object of up to Size 7 fly and carry passengers until sunrise, at twice the formula's Potency in Speed, wherever you direct it."
+    },
+    {
+      "id": "curse-of-the-monkey-prince",
+      "name": "Curse of the Monkey Prince",
+      "discipline": "kimiya",
+      "dots": 5,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 144
+      },
+      "targetSuccesses": 10,
+      "summary": "Drink a potion of the victim's blood and name a wrong they mean to do you; if they do it before sunrise, they're turned into a small animal until dawn.",
+      "contestedBy": "Stamina + Supernatural Tolerance"
+    },
+    {
+      "id": "demons-tongue",
+      "name": "Demon's Tongue",
+      "discipline": "therion",
+      "dots": 1,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 5,
+      "summary": "Until sunrise, 8-again on Subterfuge, including Disciplines and Devotions that use it; supernatural truth-finding against you means a Clash of Wills."
+    },
+    {
+      "id": "the-morning-star",
+      "name": "The Morning Star",
+      "discipline": "therion",
+      "dots": 1,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 5,
+      "summary": "Until sunrise, look like a fallen angel: add Therion to lashing out with your predatory aura, and an exceptional success inflicts Beaten Down."
+    },
+    {
+      "id": "curse-the-faithful",
+      "name": "Curse the Faithful",
+      "discipline": "therion",
+      "dots": 2,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 6,
+      "summary": "A mortal who saw you feed on a Grigor swaps their Virtue for a second Vice you choose, and is Guilty on any night they don't regain Willpower through a Vice.",
+      "contestedBy": "Resolve + Supernatural Tolerance"
+    },
+    {
+      "id": "avatar-of-apollyon",
+      "name": "Avatar of Apollyon",
+      "discipline": "therion",
+      "dots": 3,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 8,
+      "summary": "Your fangs become a bane to the kind of Grigor that fuelled the rite, and in Twilight they can't touch you, for a scene or until you destroy one."
+    },
+    {
+      "id": "profanity",
+      "name": "Profanity",
+      "discipline": "therion",
+      "dots": 4,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 345
+      },
+      "targetSuccesses": 10,
+      "summary": "Sense the nearest holy or powerful place and profane it with your blood until the chapter ends: −5 to other supernatural powers there, 8-again on Chorists' Disciplines, and mortals turn Wanton."
+    },
+    {
+      "id": "apotheosis",
+      "name": "Apotheosis",
+      "discipline": "therion",
+      "dots": 5,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 346
+      },
+      "targetSuccesses": 10,
+      "summary": "For a scene, become a vampire-angel using the Influences and Numina of the Grigori you fed on, with Power, Finesse and Resistance from your Attributes."
+    },
+    {
+      "id": "nine-choirs-bend-the-knee",
+      "name": "Nine Choirs Bend the Knee",
+      "discipline": "therion",
+      "dots": 5,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 346
+      },
+      "targetSuccesses": 10,
+      "summary": "For a scene, Grigori in Twilight within 30 yards are forced to Materialize unless they resist, and must spend Willpower to disobey your orders."
+    },
+    {
+      "id": "trials-of-job",
+      "name": "Trials of Job",
+      "discipline": "theban-sorcery",
+      "dots": 4,
+      "source": {
+        "book": "dark-eras-2",
+        "page": 339
+      },
+      "targetSuccesses": 10,
+      "resistedBy": "Resolve",
+      "sacrament": "The horn of an ox or sheep",
+      "summary": "Curse a present victim to suffer like Job for Potency nights: every failed mundane action is a dramatic failure, they lose Potency Merit dots, and their unbought Touchstones come loose."
+    }
+  ],
+  "conditions": [
+    {
+      "id": "hunted",
+      "name": "Hunted",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 146
+      },
+      "persistent": true,
+      "summary": "Someone or something dangerous is after you, whether to destroy you or simply torment you: one of the Strix, a wronged Grigor, a hunter.",
+      "resolution": "Stop your persecutors by a bargain, a change of habits that keeps them from you, or force.",
+      "beat": "Your persecutors find you.",
+      "possibleSources": "Casting unstable Majnun; a dramatic failure on a Therion Sacrilege"
+    },
+    {
+      "id": "glitched-blood",
+      "name": "Glitched Blood",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 343
+      },
+      "persistent": false,
+      "summary": "Wires of broken Infrastructure spread through your body a part each scene. −3 to contest angelic or demonic powers and −2 to traits that resist them, and anyone who touches or feeds on you risks infection.",
+      "resolution": "An Unchained heals you in a restoration facility, or the infected parts are removed.",
+      "beat": null,
+      "possibleSources": "Feeding on a demon, touching someone infected"
+    },
+    {
+      "id": "targeted",
+      "name": "Targeted",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 347
+      },
+      "persistent": true,
+      "summary": "Your name is on a list for arrest or destruction. −2 on Social rolls with those hunting you or willing to turn you in, +2 with others who are also targeted.",
+      "resolution": "Clear your name, shed the targeted identity, or kill everyone targeting you.",
+      "beat": "You confront those targeting you and survive.",
+      "possibleSources": "Robespierre's lists, the God-Machine, the Malleus Maleficarum, being wanted for a crime"
+    }
+  ]
+}

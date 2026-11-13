@@ -198,7 +198,7 @@ struct XPModeBadge: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("XP Mode")
-        .accessibilityValue(character.xpMode ? "On, \(character.experiencesAvailable) Experiences available" : "Off")
+        .accessibilityValue(character.xpMode ? "On, \(experiencesText(character.experiencesAvailable)) available" : "Off")
         .accessibilityHint("Double-tap to turn XP Mode \(character.xpMode ? "off" : "on")")
     }
 }

@@ -5,23 +5,12 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
-/// A Condition on a character: a catalog entry or the player's own, with its note and counter.
-@Observable
-final class CharacterCondition: Identifiable, Codable {
-    let id: UUID
-    var source: TraitSource
-    /// Who or what it's about, e.g. "Marcus Vale" for Swooning.
-    var note: String
-    /// The growing penalty of Conditions like Tempted, shown as "−3". 0 for others.
-    var counter: Int
-    let addedAt: Date
-    /// For a custom Condition: the player's own description of what it does, how it's resolved and its Beat.
-    var customEffect: String
-    var customResolution: String
-    var customBeat: String
-    var customPersistent: Bool
-
+/// A Condition looked up in the bundled catalogs.
+extension CharacterCondition {
     /// The catalog entry, if this isn't a custom Condition.
     var entry: ConditionEntry? {
         source.catalogID.flatMap { Catalog.bundled.conditions.entry($0) }
@@ -49,55 +38,6 @@ final class CharacterCondition: Identifiable, Codable {
         hasCounter && counter > 0 ? "\(name) −\(counter)" : name
     }
 
-    enum CodingKeys: CodingKey {
-        case id, source, note, counter, addedAt, customEffect, customResolution, customBeat, customPersistent
-    }
-
-    init(id: UUID = UUID(), source: TraitSource, note: String = "", counter: Int = 0, addedAt: Date = .now) {
-        self.id = id
-        self.source = source
-        self.note = note
-        self.counter = counter
-        self.addedAt = addedAt
-        customEffect = ""
-        customResolution = ""
-        customBeat = ""
-        customPersistent = false
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(source, forKey: .source)
-        try container.encode(note, forKey: .note)
-        try container.encode(counter, forKey: .counter)
-        try container.encode(addedAt, forKey: .addedAt)
-        // Only a custom Condition has its own text
-        if source.catalogID == nil {
-            try container.encode(customEffect, forKey: .customEffect)
-            try container.encode(customResolution, forKey: .customResolution)
-            try container.encode(customBeat, forKey: .customBeat)
-            try container.encode(customPersistent, forKey: .customPersistent)
-        }
-    }
-
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(.id, default: UUID())
-        source = try container.decodeTraitSource(.source, in: Catalog.bundled.conditions)
-        note = try container.decode(.note, default: "")
-        counter = try container.decode(.counter, default: 0)
-        addedAt = try container.decode(.addedAt, default: .now)
-        customEffect = try container.decode(.customEffect, default: "")
-        customResolution = try container.decode(.customResolution, default: "")
-        customBeat = try container.decode(.customBeat, default: "")
-        customPersistent = try container.decode(.customPersistent, default: false)
-    }
-}
-
-/// What happened to a Condition, for the change log.
-enum ConditionEvent: String, Codable {
-    case added, ended, resolved, beat
 }
 
 extension Character {

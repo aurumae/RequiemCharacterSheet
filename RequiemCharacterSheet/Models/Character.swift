@@ -8,6 +8,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 @Observable
 final class Character: Codable {
@@ -26,12 +29,15 @@ final class Character: Codable {
     /// - 10: bloodline saved as a catalog id or custom text (`TraitSource`) instead of a name.
     /// - 11: adds `conditions`, and Condition entries in `changeLog`. Only characters with either are saved
     ///   as 11; others are still saved as 10, so apps that can't read Conditions can still open them.
-    static let currentSchemaVersion = 11
+    /// - 12: adds `elderBaneActive`, saved only when true. Only characters whose elder clan bane is in effect are
+    ///   saved as 12.
+    static let currentSchemaVersion = 12
 
-    /// The version this character needs: 11 only with Conditions, so that older apps refuse such a file
-    /// instead of opening it and dropping its Conditions.
+    /// The version this character needs: 12 with an elder clan bane in effect, 11 with Conditions, so that older
+    /// apps refuse such a file instead of opening it and dropping what they can't read.
     var savedSchemaVersion: Int {
-        !conditions.isEmpty || changeLog.contains { $0.trait.kind == .condition } ? 11 : 10
+        if elderBaneActive { return 12 }
+        return !conditions.isEmpty || changeLog.contains { $0.trait.kind == .condition } ? 11 : 10
     }
 
     /// A vampire can have at most three Banes (Vampire: The Requiem p. 108).
@@ -69,14 +75,26 @@ final class Character: Codable {
             if clanSource != oldValue, clanEntry != nil, humanity <= clanBaneThreshold {
                 clanBaneActive = true
             }
+            // An elder's deeper bane belongs to the clan, so a new clan starts it afresh from the current Humanity
+            if clanSource != oldValue {
+                elderBaneActive = elderBaneEntry.map { humanity <= $0.humanityThreshold } ?? false
+            }
             // During guided creation the clan's dot comes off if the new clan doesn't favour that Attribute
-            if let favored = creation?.favoredAttribute, clanEntry?.favoredAttributes.contains(favored) != true {
+            if let favored = creation?.favoredAttribute, !creationFavoredAttributes.contains(favored) {
                 clearFavoredAttribute()
             }
         }
     }
     /// The bloodline: a catalog entry or custom text. Empty custom text if none.
-    var bloodlineSource: TraitSource
+    var bloodlineSource: TraitSource {
+        didSet {
+            // During guided creation a bloodline with its own favoured Attributes replaces the clan's, so the dot
+            // comes off if it's on one the bloodline doesn't favour. Afterwards a bloodline doesn't move it.
+            if let favored = creation?.favoredAttribute, !creationFavoredAttributes.contains(favored) {
+                clearFavoredAttribute()
+            }
+        }
+    }
     /// The covenant: a catalog entry or custom text.
     var covenantSource: TraitSource
 
@@ -95,11 +113,18 @@ final class Character: Codable {
             if clanEntry != nil, humanity <= clanBaneThreshold, oldValue > clanBaneThreshold {
                 clanBaneActive = true
             }
+            // So does an elder's deeper bane (A Thousand Years of Night p. 23)
+            if let threshold = elderBaneEntry?.humanityThreshold, humanity <= threshold, oldValue > threshold {
+                elderBaneActive = true
+            }
         }
     }
     /// Whether the clan bane is in effect. Set automatically when Humanity falls to the threshold;
     /// the player can switch it off, e.g. if that happened while trying out changes.
     var clanBaneActive: Bool
+    /// Whether the clan's elder bane, such as the Daeva's Captivating Curse, is in effect. Like `clanBaneActive`,
+    /// it's set automatically when Humanity falls to its threshold and stays set if Humanity rises.
+    var elderBaneActive: Bool
     var touchstones: [Touchstone]
 
     var disciplines: [Discipline]
@@ -138,7 +163,7 @@ final class Character: Codable {
         case schemaVersion, id, createdAt, modifiedAt,
              attributes, bloodPotency, healthTrack, willpowerTrack, skills, skillList,
              name, player, chronicle, mask, dirge, concept, clan, bloodline, covenant,
-             currentVitae, humanity, clanBaneActive, touchstones, disciplines, merits,
+             currentVitae, humanity, clanBaneActive, elderBaneActive, touchstones, disciplines, merits,
              rituals, devotions, mystery, coils, scales, aspirations, banes, size, armor, beats, experiences,
              xpMode, changeLog, paidDots, creation, conditions
         // Read from saves before version 3 only
@@ -175,6 +200,10 @@ final class Character: Codable {
 
         try container.encode(humanity, forKey: .humanity)
         try container.encode(clanBaneActive, forKey: .clanBaneActive)
+        // Only written when true, so files without it stay readable by apps that only know schema 10 or 11
+        if elderBaneActive {
+            try container.encode(true, forKey: .elderBaneActive)
+        }
         try container.encode(touchstones, forKey: .touchstones)
 
         try container.encode(disciplines, forKey: .disciplines)
@@ -253,9 +282,13 @@ final class Character: Codable {
         humanity = try container.decode(.humanity, default: 7)
         let savedClanBaneActive = try container.decodeIfPresent(Bool.self, forKey: .clanBaneActive)
         clanBaneActive = false
+        elderBaneActive = false
 
         disciplines = try container.decode(.disciplines, default: [])
-        merits = try container.decode(.merits, default: [])
+        // Custom names that now match the catalog, and names from before version 5, are linked to their entries
+        let savedMerits: [Merit] = try container.decode(.merits, default: [])
+        savedMerits.forEach { $0.relink(in: Catalog.bundled.merits) }
+        merits = savedMerits
         rituals = try container.decode(.rituals, default: [])
         devotions = try container.decode(.devotions, default: [])
         mysterySource = try container.decodeTraitSource(.mystery, in: Catalog.bundled.mysteries)
@@ -274,7 +307,9 @@ final class Character: Codable {
         changeLog = try container.decode(.changeLog, default: [])
         paidDots = try container.decode(.paidDots, default: [:])
         creation = try container.decodeIfPresent(CreationState.self, forKey: .creation)
-        conditions = try container.decode(.conditions, default: [])
+        let savedConditions: [CharacterCondition] = try container.decode(.conditions, default: [])
+        savedConditions.forEach { $0.relink(in: Catalog.bundled.conditions) }
+        conditions = savedConditions
 
         // Bring loaded values within the limits set by Blood Potency
         clampBaseRatings()
@@ -282,6 +317,8 @@ final class Character: Codable {
 
         // Saves before version 6 didn't record it, so assume it from the current Humanity
         clanBaneActive = savedClanBaneActive ?? (humanity <= clanBaneThreshold)
+        // Absent means off: it's only saved when true
+        elderBaneActive = try container.decode(.elderBaneActive, default: false)
     }
 
     init() {
@@ -311,6 +348,7 @@ final class Character: Codable {
 
         humanity = 7
         clanBaneActive = false
+        elderBaneActive = false
         touchstones = Character.defaultTouchstones()
 
         disciplines = [] // Added through the Discipline picker
@@ -429,6 +467,12 @@ final class Character: Codable {
         clanEntry?.bane.humanityThreshold ?? 6
     }
 
+    /// How the clan's bane deepens in an elder, if the catalog has it for this clan.
+    var elderBaneEntry: ElderBaneEntry? {
+        guard let clan = clanSource.catalogID else { return nil }
+        return Catalog.bundled.elderBanes.all.first { $0.clan == clan }
+    }
+
     var canAddBane: Bool {
         banes.count < Character.maxBanes
     }
@@ -438,14 +482,6 @@ final class Character: Codable {
     }
 
     // MARK: - Lookups
-
-    func attribute(_ kind: AttributeKind) -> Attribute? {
-        attributes.first { $0.kind == kind }
-    }
-
-    func skill(_ id: SkillID) -> Skill? {
-        skills.first { $0.skillID == id }
-    }
 
     var skillList: SkillList {
         SkillList.withID(skillListID) ?? .vampireCore
@@ -524,10 +560,6 @@ final class Character: Codable {
 
     var health: Int {
         adjustedStamina + effectiveSize
-    }
-
-    var willpower: Int {
-        rating(of: .resolve) + rating(of: .composure)
     }
 
     /// Size including Merits such as Giant.
@@ -610,16 +642,6 @@ final class Character: Codable {
         rollRating(of: .strength) + skillDiceContribution(.weaponry)
     }
 
-    /// The attribute's dots, without bonuses.
-    func rating(of kind: AttributeKind) -> Int {
-        attribute(kind)?.rating ?? 0
-    }
-
-    /// The skill's dots; 0 if the character has no record of it.
-    func rating(of id: SkillID) -> Int {
-        skill(id)?.rating ?? 0
-    }
-
     /// The Attribute as a trait, including bonuses that raise it (e.g. Vigor). Used for Speed, Defense and Health.
     func totalRating(of kind: AttributeKind) -> Int {
         rating(of: kind) + attributeBonus(for: kind)
@@ -695,19 +717,6 @@ final class Character: Codable {
     }
 
     // Methods to handle Beats and Experiences
-    func incrementBeats() {
-        beats += 1
-        if beats >= 5 { // If beats reaches 5, set beats to 0 and increase exp by 1
-            beats = 0
-            experiences += 1
-        }
-    }
-
-    func decrementBeats() {
-        if beats > 0 {
-            beats -= 1
-        }
-    }
 
     func incrementExperiences() {
         experiences += 1
@@ -728,3 +737,6 @@ private struct LegacyHealthBox: Decodable {
 private struct LegacyWillpowerBox: Decodable {
     let state: WillpowerBoxFillType?
 }
+
+/// The traits and rules every Chronicles of Darkness character shares live in ChroniclesCore.
+extension Character: ChroniclesCharacter {}
