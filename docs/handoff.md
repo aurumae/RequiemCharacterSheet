@@ -693,3 +693,95 @@ No save-format change.
   - The character list's "Edited …" time refreshes every minute, so the text and VoiceOver no longer disagree.
   - **Follow-up:** check both on Android.
 - **User:** the app will always be free.
+
+## 2026-11-13 05:52 UTC · Astra (Android) · Repeated GitHub check failures diagnosed
+
+The user requested diagnosis of `GitHub-failed-job.log`, not an implementation change.
+Inspected `main` at `0bc7a66`, the shared catalogs, tests and workflow, and verified the
+[latest GitHub run](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/43337663446).
+Its 272 Swift host tests and separate iOS job pass. Both `kotlin` and `exchange` fail
+the same two Kotlin rules tests (43 of 45 pass):
+
+- `SaveContractTest.kt:60` expects exactly four books. Android automatically bundles
+  all catalog JSON files; there are now eight. `e8ab6ba` added Secrets of the Covenants
+  as the fifth, followed by Dark Eras (`f48fc33`), Dark Eras 2 (`9ff14da`) and Spilled
+  Blood (`340b690`). The old equality assertion rejects these valid additions.
+- `BloodlineTest.kt:79` calls `.single()` on all bloodline picker options, assuming
+  Morbus is the only bloodline. `9ff14da` added the Bron, and `340b690` added ten more.
+  The test should locate Morbus by ID before checking its incompatible-clan warning.
+
+The workflow runs on every main push and PR; both jobs invoke `:rules:test`, explaining
+the repeated failures and two red jobs. Gradle deprecation/non-null warnings are not
+the cause. The first 9 November Conditions run had a cancelled exchange job; it is
+not evidence of these two test failures. The later Secrets of the Covenants run has
+failed Kotlin/exchange jobs, consistent with the already-recorded four-book mismatch.
+
+PR #7 (`android/beta2-plan`, published through `b5fb3fb`) remains open. Its successful
+9 November checks apply to that branch's older catalog state, not current main. It
+adds Conditions/schema 11 and updates the book assertion to five; it still needs
+updating for today's catalogs. Main's exchange comparison also lacks Kotlin's
+`conditions` category while Swift emits it, so correcting the four-book assertion
+alone exposes a further mismatch. Android schema 12 remains a separate unported
+handoff requirement. No claim is made that these two test edits alone restore full
+cross-platform compatibility.
+
+**Validation:** source/catalog inspection plus the supplied and live GitHub logs;
+no local builds or tests rerun and no app/test implementation changed. Fetched main
+and merged it into the Android working branch as `beca2dd` per startup instructions;
+preserved untracked IDE/Gradle files. This diagnosis is published separately from
+the beta-2 implementation. **Commits:** this documentation commit; no preceding
+implementation commit for this task. **Shared:** no catalog, font, schema, fixture,
+Swift package, script or workflow change; the iOS UI-test skip is intact.
+
+**Follow-up (Android):** refresh the catalog tests without weakening their intended
+checks, reconcile the unmerged Conditions contract and subsequent schema/catalog
+requirements, then run the complete save exchange and Android checks against current
+main. Other pending UI/release/core-extraction follow-ups are outside this diagnostic
+request; no platform extraction or release decision is made here.
+
+## 2026-11-13 06:24 UTC · Astra (Android) · Current parity and iOS-first CI plans
+
+The user requested a current Android parity plan and a proposal for CI that permits
+iOS-first development. Fetched main (`0bc7a66`), verified the Android checkout and
+open PRs, reread all handoffs since the last beta-2 entry and the standing design/
+multi-game decisions, inspected current Swift/Kotlin implementations, and visually
+reviewed all ten local `iOS App Screenshots/1.4 Screenshots/` PNGs individually.
+
+Added [the parity plan](android-current-parity-plan.md). It reuses the unmerged
+beta-2 work (`2012ff6`, `53e6e35`, `b5fb3fb`) and orders the remaining work: integration
+baseline; schema 12/elder banes; new covenant/ritual/Coil/bloodline/Merit/Scale rules;
+all-picker book grouping; screenshot and accessibility acceptance; full exchange,
+upgrade and physical-device acceptance. Screenshots are mapped to concrete checks;
+they do not establish save behavior or runtime Android parity. PR #7's old passing
+checks are explicitly not treated as current integrated-tree validation.
+
+Answer to the 12 November core-extraction **Question:** recommend the same eventual
+`:core`, `:requiem`, `:forsaken` and separate-app structure. Phase 1 follows functional
+parity as an independently verified behavior-preserving change, initially retaining
+the existing Requiem `:app`. Keep JVM core free of Compose/Requiem dependencies and
+defer Forsaken modules, game fields and resource relocation. This is a recommendation
+within the requested plan, not a new implementation or release authorization.
+
+Added [the CI proposal](ios-first-ci-plan.md): remove brittle inventory/cardinality
+assumptions, declare actual platform/schema/rule capabilities with versioned fixture
+metadata, require supported exchange and safe future-save rejection, and report
+declared pending ports separately. Existing regressions, unsupported destructive
+data changes and unclassified gaps still fail. Capability promotion adds required
+coverage; it cannot silently remove old coverage. Path-aware jobs and a validated
+stable required aggregate are a later optimization, not the compatibility solution.
+The plan also covers catalog mechanics that do not change save schema.
+
+Added the requested `docs/design-decisions.md` pointer to `AGENTS.md`. Kept the earlier
+diagnosis intact and expanded its documentation-only PR #8 to include these plans.
+**Commits:** this documentation commit, following diagnostic commit `ceaaa41`; no
+implementation commits in this task. **Validation:** source/catalog inspection,
+ten-image review, live PR state, official GitHub check-status documentation, internal
+document links and append-only/diff checks. No new builds, tests or emulator runs.
+
+**Shared:** no app code, catalog/font content, save format, fixture, `Package.swift`,
+script, workflow, branch protection or release change. Local screenshots and existing
+untracked IDE/Gradle files are preserved. The iOS UI-test skip remains unchanged.
+**Follow-up (Android/iOS):** review the proposed CI contract policy, then implement
+the parity milestones when authorized; keep the handoff and capability declarations
+current as each platform gains support. Outstanding Play/privacy/backup/16 KB and
+physical beta-2 acceptance tasks remain distinct from this planning request.
