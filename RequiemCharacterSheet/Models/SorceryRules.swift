@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// The limit a Ritual Discipline puts on Humanity, e.g. Crúac 3 caps it at 7.
 struct HumanityCap: Equatable {
@@ -65,7 +68,7 @@ extension Character {
 
     /// Why the character can't learn new rituals for this Discipline, if they can't: they need Status in its covenant.
     func ritualLearningWarning(for entry: DisciplineEntry) -> String? {
-        guard let rules = entry.ritualRules, !hasRitualStatus(for: entry) else { return nil }
+        guard entry.ritualRules != nil, !hasRitualStatus(for: entry) else { return nil }
         return "Learning rituals requires \(Self.ritualRequirementText(for: entry))"
     }
 

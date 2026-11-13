@@ -8,6 +8,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// One of a character's Disciplines: a catalog entry or a custom one, with its dots.
 @Observable

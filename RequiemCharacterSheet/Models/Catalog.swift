@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// Reference data for Disciplines, Merits, Banes, Clans, Bloodlines, Covenants, rituals, Devotions, Mysteries, Scales,
 /// archetypes, Conditions and elder clan banes, merged from every catalog file.
@@ -83,48 +86,3 @@ struct Catalog {
     }
 }
 
-/// The entries of one kind, looked up by id or by name.
-struct CatalogIndex<Entry: CatalogEntry> {
-    /// In catalog order.
-    let all: [Entry]
-    private let byID: [CatalogEntryID: Entry]
-    private let byName: [String: Entry]
-
-    init(_ entries: [Entry]) {
-        var seen = Set<CatalogEntryID>()
-        all = entries.filter { seen.insert($0.id).inserted }
-        byID = Dictionary(uniqueKeysWithValues: all.map { ($0.id, $0) })
-        byName = Dictionary(all.map { (Self.matchKey($0.name), $0) }, uniquingKeysWith: { first, _ in first })
-    }
-
-    func entry(_ id: CatalogEntryID) -> Entry? {
-        byID[id]
-    }
-
-    /// The entry with this name, ignoring case, accents, curly apostrophes and a leading "The", but not spaces,
-    /// so a partly typed "Vigor B…" doesn't match Vigor.
-    func entry(named name: String) -> Entry? {
-        byName[Self.matchKey(name)]
-    }
-
-    /// Links a name to its catalog entry if there is one, otherwise keeps it as custom text.
-    func source(named name: String) -> TraitSource {
-        entry(named: name).map { .catalog($0.id) } ?? .custom(name)
-    }
-
-    /// The name to show for a source. Unknown catalog ids (e.g. from a catalog that's since been removed) show the id.
-    func name(of source: TraitSource) -> String {
-        switch source {
-        case .catalog(let id):
-            return entry(id)?.name ?? id
-        case .custom(let name):
-            return name
-        }
-    }
-
-    private static func matchKey(_ name: String) -> String {
-        let folded = name.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
-            .replacingOccurrences(of: "\u{2019}", with: "'")
-        return folded.hasPrefix("the ") ? String(folded.dropFirst(4)) : folded
-    }
-}

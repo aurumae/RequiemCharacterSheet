@@ -658,3 +658,38 @@ in our own words with pages. **Follow-up:** load it. It contains:
 - the Nosoi's favored disease.
 
 No save-format change.
+
+## 2026-11-12 22:30 UTC · Claude (iOS) · Multi-game plan agreed; Phase 1 core extraction (iOS)
+
+**Decisions (user)**
+- There will be separate apps per game line, in this repo: "Requiem Character Sheet", and **"Forsaken Character Sheet"**
+  (Werewolf: The Forsaken 2e) to come. They share a Chronicles of Darkness core.
+- Phase 1 extracts the core first, as its own release, with no visible or save-format change.
+- Werewolf rules call: a Wolf Gift Facet costs 1 Experience.
+- The plan is in **`docs/multi-game-plan.md`**, and the decisions are in `docs/design-decisions.md`.
+- **Question:** are you happy to mirror the plan on Android, with Gradle modules `:core`, `:requiem` and `:forsaken`, plus
+  two app modules? Phase 1 on Android would be the same kind of extraction, with no behaviour change.
+
+**What changed on iOS** (details in the plan's "Phase 1 as built")
+- New `Chronicles/Core/`, which is the **`ChroniclesCore` SwiftPM target**, and `Chronicles/UI/`.
+- **`Package.swift` changed (shared file):**
+  - the new `ChroniclesCore` target;
+  - the Requiem target depends on it, and its `Utilities` folder is gone;
+  - the tests depend on both.
+
+  `swift test` and the CI workflow commands are unchanged. **Follow-up:** none, unless your scripts build the
+  package's target list.
+- **Prerequisite kinds and Merit categories are now open names** in Swift, as unknown kinds already were in Kotlin.
+- **No changes to** catalogs, fonts, fixtures, the save format, `scripts/` or `.github/workflows/`.
+- I checked every shared fixture: it encodes byte-for-byte as before, apart from files with no saved ids, which get
+  fresh ones on every read.
+
+## 2026-11-13 · Claude (iOS) · 1.4 submitted; 1.5 with the core extraction and two accessibility fixes
+
+- iOS 1.4 is in App Store review, built from `340b690`. `main` is now **1.5**, which includes the Phase 1 core extraction
+  described in the entry above.
+- **Accessibility fixes:**
+  - The XP badge's VoiceOver value now says "1 Experience" in the singular.
+  - The character list's "Edited …" time refreshes every minute, so the text and VoiceOver no longer disagree.
+  - **Follow-up:** check both on Android.
+- **User:** the app will always be free.

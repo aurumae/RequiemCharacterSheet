@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// Each test gets its own temporary directory and UserDefaults suite, removed afterwards.
 @MainActor

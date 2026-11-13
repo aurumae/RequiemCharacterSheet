@@ -11,33 +11,33 @@ import Observation
 
 /// A character's dots and specialties in one skill.
 @Observable
-final class Skill: Identifiable, Codable {
-    let skillID: SkillID
-    var rating: Int
-    var specialties: [String]
+package final class Skill: Identifiable, Codable {
+    package let skillID: SkillID
+    package var rating: Int
+    package var specialties: [String]
 
-    var id: SkillID { skillID }
+    package var id: SkillID { skillID }
 
-    var definition: SkillDefinition? {
+    package var definition: SkillDefinition? {
         SkillDefinition.withID(skillID)
     }
 
-    var name: String {
+    package var name: String {
         definition?.name ?? skillID.rawValue.capitalized
     }
 
-    var category: TraitCategory {
+    package var category: TraitCategory {
         definition?.category ?? .mental
     }
 
-    enum CodingKeys: CodingKey {
+    package enum CodingKeys: CodingKey {
         case skill, rating, specialties
         // Saves before version 4 identified skills by display name, with a single specialty
         case name, specialty
     }
 
     // Encoding
-    func encode(to encoder: Encoder) throws {
+    package func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(skillID, forKey: .skill)
         try container.encode(rating, forKey: .rating)
@@ -45,7 +45,7 @@ final class Skill: Identifiable, Codable {
     }
 
     // Decoding
-    required init(from decoder: Decoder) throws {
+    package required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if let skillID = try container.decodeIfPresent(SkillID.self, forKey: .skill) {
             self.skillID = skillID
@@ -63,7 +63,7 @@ final class Skill: Identifiable, Codable {
         }
     }
 
-    init(_ skillID: SkillID, rating: Int = 0, specialties: [String] = []) {
+    package init(_ skillID: SkillID, rating: Int = 0, specialties: [String] = []) {
         self.skillID = skillID
         self.rating = rating
         self.specialties = specialties

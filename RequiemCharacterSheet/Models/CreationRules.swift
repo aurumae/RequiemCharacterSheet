@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// A character being made with guided creation (Vampire: The Requiem pp. 79–84). While it's set,
 /// the sheet holds the character to the book's starting dots: hard limits, not warnings.

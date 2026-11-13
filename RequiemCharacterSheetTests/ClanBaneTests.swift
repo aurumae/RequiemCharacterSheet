@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// Clan banes take hold when Humanity first falls to 6 and stay, unless the player switches them off.
 @MainActor

@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// One requirement of a Merit or Devotion, worded for display, and whether the character meets it.
 struct PrerequisiteCheck: Equatable {
@@ -116,7 +119,8 @@ extension Character {
         case .notCovenant:
             let name = catalog.covenants.entry(id)?.name ?? id
             return PrerequisiteCheck(description: "Not a member of the \(name)", isMet: covenantSource != .catalog(id))
-        case .other:
+        default:
+            // Free text, or a kind this app doesn't check
             return unknown(prerequisite)
         }
     }

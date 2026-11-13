@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// Blood sorcery, Devotions, Coils and Scales: the catalog data is consistent, and characters save them.
 @MainActor

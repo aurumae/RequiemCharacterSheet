@@ -8,6 +8,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 @Observable
 final class Character: Codable {
@@ -282,7 +285,10 @@ final class Character: Codable {
         elderBaneActive = false
 
         disciplines = try container.decode(.disciplines, default: [])
-        merits = try container.decode(.merits, default: [])
+        // Custom names that now match the catalog, and names from before version 5, are linked to their entries
+        let savedMerits: [Merit] = try container.decode(.merits, default: [])
+        savedMerits.forEach { $0.relink(in: Catalog.bundled.merits) }
+        merits = savedMerits
         rituals = try container.decode(.rituals, default: [])
         devotions = try container.decode(.devotions, default: [])
         mysterySource = try container.decodeTraitSource(.mystery, in: Catalog.bundled.mysteries)
@@ -301,7 +307,9 @@ final class Character: Codable {
         changeLog = try container.decode(.changeLog, default: [])
         paidDots = try container.decode(.paidDots, default: [:])
         creation = try container.decodeIfPresent(CreationState.self, forKey: .creation)
-        conditions = try container.decode(.conditions, default: [])
+        let savedConditions: [CharacterCondition] = try container.decode(.conditions, default: [])
+        savedConditions.forEach { $0.relink(in: Catalog.bundled.conditions) }
+        conditions = savedConditions
 
         // Bring loaded values within the limits set by Blood Potency
         clampBaseRatings()
@@ -475,14 +483,6 @@ final class Character: Codable {
 
     // MARK: - Lookups
 
-    func attribute(_ kind: AttributeKind) -> Attribute? {
-        attributes.first { $0.kind == kind }
-    }
-
-    func skill(_ id: SkillID) -> Skill? {
-        skills.first { $0.skillID == id }
-    }
-
     var skillList: SkillList {
         SkillList.withID(skillListID) ?? .vampireCore
     }
@@ -560,10 +560,6 @@ final class Character: Codable {
 
     var health: Int {
         adjustedStamina + effectiveSize
-    }
-
-    var willpower: Int {
-        rating(of: .resolve) + rating(of: .composure)
     }
 
     /// Size including Merits such as Giant.
@@ -646,16 +642,6 @@ final class Character: Codable {
         rollRating(of: .strength) + skillDiceContribution(.weaponry)
     }
 
-    /// The attribute's dots, without bonuses.
-    func rating(of kind: AttributeKind) -> Int {
-        attribute(kind)?.rating ?? 0
-    }
-
-    /// The skill's dots; 0 if the character has no record of it.
-    func rating(of id: SkillID) -> Int {
-        skill(id)?.rating ?? 0
-    }
-
     /// The Attribute as a trait, including bonuses that raise it (e.g. Vigor). Used for Speed, Defense and Health.
     func totalRating(of kind: AttributeKind) -> Int {
         rating(of: kind) + attributeBonus(for: kind)
@@ -731,19 +717,6 @@ final class Character: Codable {
     }
 
     // Methods to handle Beats and Experiences
-    func incrementBeats() {
-        beats += 1
-        if beats >= 5 { // If beats reaches 5, set beats to 0 and increase exp by 1
-            beats = 0
-            experiences += 1
-        }
-    }
-
-    func decrementBeats() {
-        if beats > 0 {
-            beats -= 1
-        }
-    }
 
     func incrementExperiences() {
         experiences += 1
@@ -764,3 +737,6 @@ private struct LegacyHealthBox: Decodable {
 private struct LegacyWillpowerBox: Decodable {
     let state: WillpowerBoxFillType?
 }
+
+/// The traits and rules every Chronicles of Darkness character shares live in ChroniclesCore.
+extension Character: ChroniclesCharacter {}

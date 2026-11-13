@@ -6,16 +6,16 @@
 import Foundation
 
 /// The three categories every attribute and skill belongs to.
-enum TraitCategory: String, CaseIterable, Codable, CodingKeyRepresentable {
+package enum TraitCategory: String, CaseIterable, Codable, CodingKeyRepresentable {
     case mental, physical, social
 
     /// "Mental", "Physical" or "Social".
-    var name: String {
+    package var name: String {
         rawValue.capitalized
     }
 
     /// Dice modifier for rolling a skill in this category with no dots.
-    var unskilledPenalty: Int {
+    package var unskilledPenalty: Int {
         self == .mental ? -3 : -1
     }
 }
@@ -23,16 +23,16 @@ enum TraitCategory: String, CaseIterable, Codable, CodingKeyRepresentable {
 // MARK: - Attributes
 
 /// The nine attributes, shared by every Chronicles of Darkness game.
-enum AttributeKind: String, CaseIterable, Codable {
+package enum AttributeKind: String, CaseIterable, Codable {
     case intelligence, wits, resolve
     case strength, dexterity, stamina
     case presence, manipulation, composure
 
-    var name: String {
+    package var name: String {
         rawValue.capitalized
     }
 
-    var category: TraitCategory {
+    package var category: TraitCategory {
         switch self {
         case .intelligence, .wits, .resolve:
             return .mental
@@ -44,7 +44,7 @@ enum AttributeKind: String, CaseIterable, Codable {
     }
 
     /// Matches a display name such as "Strength", as used by saves before version 4.
-    init?(name: String) {
+    package init?(name: String) {
         self.init(rawValue: name.lowercased())
     }
 }
@@ -53,55 +53,55 @@ enum AttributeKind: String, CaseIterable, Codable {
 
 /// A stable identifier for a skill. Saves and rules refer to skills by id, so display names can
 /// change and different skill lists (e.g. Dark Eras) can add skills without touching existing ones.
-struct SkillID: RawRepresentable, Hashable, Codable {
-    let rawValue: String
+package struct SkillID: RawRepresentable, Hashable, Codable {
+    package let rawValue: String
 
-    init(rawValue: String) {
+    package init(rawValue: String) {
         self.rawValue = rawValue
     }
 
-    init(_ rawValue: String) {
+    package init(_ rawValue: String) {
         self.rawValue = rawValue
     }
 }
 
 extension SkillID {
     // Mental
-    static let academics = SkillID("academics")
-    static let computer = SkillID("computer")
-    static let crafts = SkillID("crafts")
-    static let investigation = SkillID("investigation")
-    static let medicine = SkillID("medicine")
-    static let occult = SkillID("occult")
-    static let politics = SkillID("politics")
-    static let science = SkillID("science")
+    package static let academics = SkillID("academics")
+    package static let computer = SkillID("computer")
+    package static let crafts = SkillID("crafts")
+    package static let investigation = SkillID("investigation")
+    package static let medicine = SkillID("medicine")
+    package static let occult = SkillID("occult")
+    package static let politics = SkillID("politics")
+    package static let science = SkillID("science")
     // Physical
-    static let athletics = SkillID("athletics")
-    static let brawl = SkillID("brawl")
-    static let drive = SkillID("drive")
-    static let firearms = SkillID("firearms")
-    static let larceny = SkillID("larceny")
-    static let stealth = SkillID("stealth")
-    static let survival = SkillID("survival")
-    static let weaponry = SkillID("weaponry")
+    package static let athletics = SkillID("athletics")
+    package static let brawl = SkillID("brawl")
+    package static let drive = SkillID("drive")
+    package static let firearms = SkillID("firearms")
+    package static let larceny = SkillID("larceny")
+    package static let stealth = SkillID("stealth")
+    package static let survival = SkillID("survival")
+    package static let weaponry = SkillID("weaponry")
     // Social
-    static let animalKen = SkillID("animal-ken")
-    static let empathy = SkillID("empathy")
-    static let expression = SkillID("expression")
-    static let intimidation = SkillID("intimidation")
-    static let persuasion = SkillID("persuasion")
-    static let socialize = SkillID("socialize")
-    static let streetwise = SkillID("streetwise")
-    static let subterfuge = SkillID("subterfuge")
+    package static let animalKen = SkillID("animal-ken")
+    package static let empathy = SkillID("empathy")
+    package static let expression = SkillID("expression")
+    package static let intimidation = SkillID("intimidation")
+    package static let persuasion = SkillID("persuasion")
+    package static let socialize = SkillID("socialize")
+    package static let streetwise = SkillID("streetwise")
+    package static let subterfuge = SkillID("subterfuge")
 }
 
-struct SkillDefinition: Identifiable, Hashable {
-    let id: SkillID
-    let name: String
-    let category: TraitCategory
+package struct SkillDefinition: Identifiable, Hashable {
+    package let id: SkillID
+    package let name: String
+    package let category: TraitCategory
 
     /// Every skill known to the app, across all skill lists.
-    static let all: [SkillDefinition] = [
+    package static let all: [SkillDefinition] = [
         SkillDefinition(id: .academics, name: "Academics", category: .mental),
         SkillDefinition(id: .computer, name: "Computer", category: .mental),
         SkillDefinition(id: .crafts, name: "Crafts", category: .mental),
@@ -130,24 +130,24 @@ struct SkillDefinition: Identifiable, Hashable {
 
     private static let byID = Dictionary(uniqueKeysWithValues: all.map { ($0.id, $0) })
 
-    static func withID(_ id: SkillID) -> SkillDefinition? {
+    package static func withID(_ id: SkillID) -> SkillDefinition? {
         byID[id]
     }
 
     /// Matches a display name such as "Animal Ken", as used by saves before version 4.
-    static func named(_ name: String) -> SkillDefinition? {
+    package static func named(_ name: String) -> SkillDefinition? {
         all.first { $0.name.caseInsensitiveCompare(name) == .orderedSame }
     }
 }
 
 /// The skills a character sheet shows, in order. Different settings use different lists;
 /// a skill can appear in several lists, and a character keeps dots in skills outside their list.
-struct SkillList: Identifiable {
-    let id: String
-    let name: String
-    let skills: [SkillID]
+package struct SkillList: Identifiable {
+    package let id: String
+    package let name: String
+    package let skills: [SkillID]
 
-    static let vampireCore = SkillList(
+    package static let vampireCore = SkillList(
         id: "vampire-core",
         name: "Vampire: The Requiem (2nd Edition)",
         skills: [
@@ -157,9 +157,9 @@ struct SkillList: Identifiable {
         ]
     )
 
-    static let all: [SkillList] = [vampireCore]
+    package static let all: [SkillList] = [vampireCore]
 
-    static func withID(_ id: String) -> SkillList? {
+    package static func withID(_ id: String) -> SkillList? {
         all.first { $0.id == id }
     }
 }

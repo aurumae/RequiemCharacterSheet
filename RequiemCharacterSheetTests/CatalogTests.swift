@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// The bundled catalogs load completely, their cross-references resolve, and characters link to them.
 @MainActor
@@ -106,6 +109,9 @@ struct CatalogTests {
                 #expect(catalog.bloodlines.entry(id) != nil, "bloodline \(id)")
             case .bloodPotency, .willpower, .other:
                 break
+            default:
+                // Every kind the catalogs use must be one the app checks or shows
+                Issue.record("Unknown prerequisite kind \(prerequisite.kind.rawValue)")
             }
         }
     }

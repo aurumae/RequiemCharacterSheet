@@ -6,6 +6,9 @@
 import Foundation
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// The Condition catalog, adding, ending and resolving Conditions, their Beats, log and saving.
 @MainActor

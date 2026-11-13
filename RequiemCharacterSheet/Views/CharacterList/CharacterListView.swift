@@ -87,7 +87,7 @@ struct CharacterListView: View {
                             AddRowButton("Import Character", systemImage: "square.and.arrow.down") {
                                 choosingImportFile = true
                             }
-                            .fileImporter(isPresented: $choosingImportFile, allowedContentTypes: [.requiemCharacter, .json]) { result in
+                            .fileImporter(isPresented: $choosingImportFile, allowedContentTypes: [.characterFile, .json]) { result in
                                 switch result {
                                 case .success(let url):
                                     importFile(at: url)
@@ -209,9 +209,12 @@ struct CharacterListView: View {
                             .themedText(.body)
                     }
                     if let modifiedAt = summary.modifiedAt {
-                        Text("Edited \(modifiedAt, format: .relative(presentation: .named))")
-                            .themedText(.detail)
-                            .foregroundStyle(theme.muted)
+                        // Redrawn every minute, so "Edited now" doesn't go stale while the list is open
+                        TimelineView(.everyMinute) { _ in
+                            Text("Edited \(modifiedAt, format: .relative(presentation: .named))")
+                                .themedText(.detail)
+                                .foregroundStyle(theme.muted)
+                        }
                     }
                 }
                 .padding(.vertical, 4)

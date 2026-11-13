@@ -5,6 +5,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// A saved character as shown in the character list.
 struct CharacterSummary: Identifiable, Equatable {

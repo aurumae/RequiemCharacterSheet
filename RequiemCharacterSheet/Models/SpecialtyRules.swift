@@ -4,33 +4,11 @@
 //
 
 import Foundation
-
-/// One of the character's Skill Specialties, e.g. Firearms (Rifles).
-struct SpecialtyChoice: Hashable {
-    let skill: String
-    let specialty: String
-}
-
-extension QualifierRule {
-    /// The qualifier is one of the character's Specialties, e.g. for Area of Expertise.
-    var usesSpecialty: Bool {
-        fromSpecialties == true
-    }
-}
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 extension Character {
-    /// Every Specialty on the sheet, in Skill order, each name once.
-    var specialtyChoices: [SpecialtyChoice] {
-        var seen = Set<String>()
-        return skills.flatMap { skill in
-            skill.specialties.compactMap { specialty in
-                let name = specialty.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !name.isEmpty, seen.insert(name).inserted else { return nil }
-                return SpecialtyChoice(skill: skill.name, specialty: name)
-            }
-        }
-    }
-
     /// The choices for a Merit's qualifier, or `nil` when the player types it.
     func qualifierOptions(for entry: MeritEntry) -> [String]? {
         guard let rule = entry.qualifier else { return nil }

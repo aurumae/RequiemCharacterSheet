@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 extension Cost {
     /// The cost in words, e.g. "1 Vitae and 1 Willpower", "Optional: 1 Vitae" or "Free".
@@ -116,46 +119,6 @@ extension Character {
     }
 }
 
-// MARK: - Grouping by book
-
-/// A book's entries in one group, for pickers that lay out their own rows.
-struct CatalogBookSection<Entry: CatalogEntry>: Identifiable {
-    var id: String { book.id + "/" + title }
-    let book: Book
-    let title: String
-    let entries: [Entry]
-    /// Whether it's the first section of its book, which carries the book's heading.
-    let startsBook: Bool
-
-    /// Every book in catalog order, and within each the groups that have entries from it, in the order given.
-    static func sections(_ groups: [CatalogPickerGroup<Entry>]) -> [CatalogBookSection] {
-        Catalog.bundled.books.flatMap { book in
-            let inBook = groups.map { group in (group, group.entries.filter { $0.source.book == book.id }) }
-                .filter { !$0.1.isEmpty }
-            return inBook.enumerated().map { index, pair in
-                CatalogBookSection(
-                    book: book,
-                    title: pair.0.title,
-                    entries: pair.1,
-                    startsBook: index == 0
-                )
-            }
-        }
-    }
-}
-
-/// Entries that share a heading within each book, e.g. a clan's in-clan Disciplines. An empty title shows just the
-/// book's heading.
-struct CatalogPickerGroup<Entry: CatalogEntry> {
-    let title: String
-    let entries: [Entry]
-
-    init(_ title: String, _ entries: [Entry]) {
-        self.title = title
-        self.entries = entries
-    }
-}
-
 extension BloodlineEntry {
     /// Whether members can come from this clan. A bloodline with no parent clans listed takes members from any clan,
     /// e.g. the Penumbrae.
@@ -167,5 +130,12 @@ extension BloodlineEntry {
     var parentClansText: String {
         guard !parentClans.isEmpty else { return "Any clan" }
         return parentClans.compactMap { Catalog.bundled.clans.entry($0)?.name }.joined(separator: " or ")
+    }
+}
+
+extension CatalogBookSection {
+    /// Every book in the bundled catalogs, in catalog order, and within each the groups that have entries from it.
+    static func sections(_ groups: [CatalogPickerGroup<Entry>]) -> [CatalogBookSection] {
+        sections(groups, books: Catalog.bundled.books)
     }
 }

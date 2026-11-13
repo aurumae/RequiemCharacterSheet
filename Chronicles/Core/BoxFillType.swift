@@ -8,14 +8,14 @@
 
 import Foundation
 
-enum HealthBoxFillType: String, Codable {
+package enum HealthBoxFillType: String, Codable {
     case none
     case bashing
     case lethal
     case aggravated
 }
 
-enum WillpowerBoxFillType: String, Codable {
+package enum WillpowerBoxFillType: String, Codable {
     case none
     case spent
 }

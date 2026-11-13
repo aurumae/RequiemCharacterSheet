@@ -216,6 +216,7 @@ extension MeritEntry.Category {
         case .covenant: return "Covenant"
         case .supernatural: return "Supernatural (not for Kindred)"
         case .other: return "Other"
+        default: return rawValue.capitalized
         }
     }
 }

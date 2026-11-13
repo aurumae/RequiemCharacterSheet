@@ -7,6 +7,9 @@
 
 import Testing
 @testable import RequiemCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 /// Rating caps, Discipline bonuses, dice pools and Defense.
 @MainActor

@@ -26,3 +26,15 @@ Content from a new book must go under its own book section in every list it adds
 
 **Players exclude books only by seeing which book an option comes from and choosing not to pick it.** There are
 no per-book toggles, filters or settings, and none should be added.
+
+## Separate apps for each game line, on a shared base (2026-11-12)
+
+Each Chronicles of Darkness game gets its own app: "Requiem Character Sheet" for Vampire and "Forsaken Character Sheet"
+for Werewolf. They share the game-neutral code (Attributes, Skills, Merits, Conditions, tracks, Experiences, catalogs,
+saving) but have their own sheets, catalogs, themes and store listings. A character belongs to one game and opens only
+in that game's app. See `docs/multi-game-plan.md`.
+
+## Werewolf: Wolf Gift Facets cost 1 Experience (2026-11-12)
+
+The Forsaken core book gives 1 in the quick reference (p. 84) and 2 in the text (p. 85). The user ruled for **1**.
+
