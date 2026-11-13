@@ -43,7 +43,7 @@ class GuidedCreationContractTest {
             s["available"]?.let { assertEquals("Step $index", it.jsonPrimitive.int, c.experiencesAvailable) }
             if (c.creation != null) { assertFalse(c.xpMode); assertEquals(0, c.experiences); assertTrue(c.paidDots.isEmpty()); assertTrue(c.changeLog.all { it.duringCreation == true }) }
             trace += trace(c)
-            s.str("checkpoint")?.let { checkpoint -> System.getProperty("exchangeDir")?.let { directory ->
+            s.str("checkpoint")?.let { checkpoint -> ContractFixtures.exchange("guided-creation.json")?.let { directory ->
                 val swift = codec.decode(File(directory, "swift-guided-$checkpoint.json").readText())
                 assertEquals("Checkpoint $checkpoint", trace(c), trace(swift))
                 File(directory, "kotlin-guided-$checkpoint.json").writeText(codec.encode(c))
@@ -54,7 +54,7 @@ class GuidedCreationContractTest {
         assertEquals(listOf(4, -4, 0, 5, 0), c.changeLog.takeLast(5).map { it.experiences })
         assertTrue(c.changeLog.dropLast(5).all { it.experiences == 0 && it.duringCreation == true })
         assertTrue(c.changeLog.takeLast(5).all { it.duringCreation == null })
-        System.getProperty("exchangeDir")?.let { directory ->
+        ContractFixtures.exchange("guided-creation.json")?.let { directory ->
             val swift = Json.parseToJsonElement(File(directory, "swift-guided-trace.json").readText())
             assertEquals(swift, JsonArray(trace))
         }

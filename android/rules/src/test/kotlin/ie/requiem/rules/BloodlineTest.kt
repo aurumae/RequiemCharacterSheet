@@ -50,7 +50,7 @@ class BloodlineTest {
             assertEquals(s.int("logCount"), c.changeLog.size)
         }
         assertEquals(mapOf(1 to 3, 2 to 3), c.paidDots["discipline:${id.toString().uppercase()}"])
-        System.getProperty("exchangeDir")?.let { dir ->
+        ContractFixtures.exchange("bloodline-advancement.json")?.let { dir ->
             File(dir, "kotlin-bloodline.json").writeText(codec.encode(c))
             val swift = codec.decode(File(dir, "swift-bloodline.json").readText())
             assertEquals(c.bloodline, swift.bloodline)
@@ -76,7 +76,7 @@ class BloodlineTest {
         c = c.edit(SheetEdit.Detail(CharacterDetail.Clan, "Ventrue"), catalog)
         assertEquals("morbus", c.bloodline.catalog)
         assertEquals(3, c.disciplineRating("cachexy"))
-        assertNotNull(c.identityOptions(CharacterDetail.Bloodline, catalog).single().warning)
+        assertNotNull(c.identityOptions(CharacterDetail.Bloodline, catalog).single { it.entry.id == "morbus" }.warning)
         c = c.edit(SheetEdit.Detail(CharacterDetail.Bloodline, "Khaibit"), catalog)
         assertEquals(listOf("animalism", "dominate", "resilience"), c.inClanDisciplines(catalog))
         assertEquals(3, c.disciplineRating("cachexy"))

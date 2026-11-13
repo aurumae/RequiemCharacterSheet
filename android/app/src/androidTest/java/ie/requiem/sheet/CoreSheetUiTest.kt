@@ -35,6 +35,7 @@ class CoreSheetUiTest {
         ui.onNodeWithContentDescription("Player").performImeAction()
         sheetNode(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Ventrue")
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-ventrue"))
         ui.onNodeWithTag("identity-option-ventrue").performClick()
         ui.onNodeWithContentDescription("Clan").assert(hasStateDescription("Ventrue"))
         sheetNode(hasContentDescription("Mask")).performClick()

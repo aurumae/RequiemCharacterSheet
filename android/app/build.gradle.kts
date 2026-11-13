@@ -32,8 +32,8 @@ android {
         applicationId = "ie.requiem.sheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 10
-        versionName = "1.0.0-beta.2"
+        versionCode = 11
+        versionName = "1.0.0-beta.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -53,6 +53,16 @@ android {
     }
     buildFeatures { compose = true; buildConfig = true }
     sourceSets["test"].resources.srcDir("../../shared/fixtures")
+    sourceSets["test"].kotlin.srcDir("../test-support")
+    sourceSets["androidTest"].assets.srcDir("../../shared/fixtures")
+    testOptions.unitTests.all {
+        providers.gradleProperty("exchangeDir").orNull?.let { directory ->
+            it.systemProperty("exchangeDir", directory)
+            it.outputs.upToDateWhen { false }
+            it.outputs.doNotCacheIf("uses an external exchange directory") { true }
+        }
+        providers.gradleProperty("contractPlan").orNull?.let { path -> it.systemProperty("contractPlan", path) }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -99,6 +109,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     androidTestImplementation(platform("androidx.compose:compose-bom:2025.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

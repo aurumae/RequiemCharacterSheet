@@ -90,9 +90,9 @@ private fun IdentityPicker(field: CharacterDetail, c: CharacterSave, catalog: Ca
                     TextButton(onClick = { finish { onChoose("") } }, enabled = !closing) { SheetText(if (field == CharacterDetail.Bloodline) "No Bloodline" else "Unaligned") }
                 }
                 if (options.isEmpty()) item { SheetText("No matching entries", Modifier.padding(12.dp)) }
-                options.groupBy { it.group }.forEach { (group, rows) ->
-                    item("group-$group") { SubsectionLabel(group) }
-                    items(rows, key = { it.entry.id }) { option ->
+                catalog.bookSections(options, { it.entry }, { it.group }).forEach { section ->
+                    item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
+                    items(section.entries, key = { "${section.id}/${it.entry.id}" }) { option ->
                         val selected = option.entry.name == field.value(c, catalog)
                         Column(Modifier.fillMaxWidth().clickable(enabled = !closing, role = Role.Button) { finish { onChoose(option.entry.name) } }
                             .testTag("identity-option-${option.entry.id}").padding(vertical = 12.dp)

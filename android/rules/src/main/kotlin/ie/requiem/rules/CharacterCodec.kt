@@ -57,6 +57,7 @@ class CharacterCodec(private val catalog: Catalog) {
             healthTrack = List(character.health(catalog).coerceAtLeast(0)) { character.healthTrack.getOrElse(it) { Damage.none } },
             willpowerTrack = List(character.willpower.coerceAtLeast(0)) { character.willpowerTrack.getOrElse(it) { WillpowerMark.none } },
         )).jsonObject.toMutableMap()
+        if (!character.elderBaneActive) encoded.remove("elderBaneActive")
         if (character.conditions.isEmpty()) encoded.remove("conditions")
         else encoded["conditions"] = JsonArray(encoded.getValue("conditions").jsonArray.map { element ->
             val fields = element.jsonObject

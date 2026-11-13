@@ -947,3 +947,45 @@ untracked IDE/Gradle files are preserved. The iOS UI-test skip remains unchanged
 the parity milestones when authorized; keep the handoff and capability declarations
 current as each platform gains support. Outstanding Play/privacy/backup/16 KB and
 physical beta-2 acceptance tasks remain distinct from this planning request.
+
+## 2026-11-13 07:06 UTC · Astra (Android) · Current Requiem parity and iOS-first CI
+
+The user approved both plans and designated the next tester release beta-3. Play's
+latest version code is 10 (user confirmation); Android is now `1.0.0-beta.3` / 11.
+This commit follows integration commits `beca2dd` and `f679dc0`; main remains
+`0bc7a66`. It reuses the beta-2 implementation rather than replacing it.
+
+Implemented schema 12 elder banes and conditional 10/11/12 writing, all eight books'
+new covenant/Status/Merit/ritual/Coil/Scale and Bron creation mechanics, explicit
+required qualifiers, and free-Devotion ledger coverage. Pickers now group by book
+with nested categories and repeated in-clan Disciplines. Added library lineage and
+minute/resume refresh, selected-section emphasis, larger Merit ratings, singular
+Experience speech, and valid Condition pages/hints after removal. Text-only rules
+remain descriptive. Source catalogs, fonts, historical fixture bytes and Swift
+production code are unchanged.
+
+**Shared changes:** new capability/fixture manifest and catalog field/semantic
+contract; dynamic fixture selection in both languages; real store exchange both
+ways; all newer saves refused without modifying their bytes; test-evidence and
+PR-base regression checks. `scripts/check-save-contract` supports staged ports and
+strict parity. The always-triggered workflow routes jobs by changed paths, retains
+reports, and validates the stable `CI result` aggregate. Pending ports must be
+explicit and safe; existing support cannot be silently downgraded. The iOS UI-test
+skip is preserved. No branch protection was changed (main currently has none).
+See `docs/ci-contract-policy.md`. `Package.swift` and catalog/font content unchanged.
+
+**Validation:** strict producer/store/consumer exchange passed: 275 Swift host
+cases, 68 Kotlin rules cases, 11 Android storage cases, and six Swift consumer
+cases (the producer-only Kotlin-reader skip is exercised in the consumer phase).
+All 11 CI-policy regression tests passed. Debug/test APK, unsigned release bundle,
+and debug/release lint passed (zero errors). Five focused Compose parity/capture
+cases passed; all ten reference states were captured and reviewed at normal text,
+150% text and landscape. Images remain local. Full 25-case UI regression is being
+rerun after updating older tests to scroll through book headings and resetting
+an emulator rotation lock; its result will be recorded separately. The Scale
+prerequisite description also retains both any-Coil and explicit alternatives.
+
+**Follow-up:** complete full UI/upgrade/signing checks, then extract the JVM core
+as a separate behavior-preserving commit and revalidate. Physical S24 FE, TalkBack,
+real-device iOS exchange, Play-delivered upgrade and 16 KB runtime acceptance are
+not established by host/emulator checks. No Play upload or rollout performed.

@@ -33,6 +33,12 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ie.requiem.rules.experiencesText
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.ui.text.font.FontWeight
+import kotlinx.coroutines.delay
 import android.text.format.DateUtils
 import kotlinx.coroutines.delay
 import java.text.DateFormat
@@ -189,7 +195,8 @@ private fun SheetSectionMenu(sections: List<SheetSection>, current: SheetSection
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             sections.forEach { section ->
-                DropdownMenuItem(text = { SheetText(section.title) }, modifier = Modifier.semantics { selected = section == current },
+                DropdownMenuItem(text = { SheetText(section.title, color = if (section == current) SheetColors.accent else SheetColors.ink,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (section == current) FontWeight.Bold else FontWeight.Normal)) }, modifier = Modifier.semantics { selected = section == current },
                     trailingIcon = { if (section == current) SheetText("✓", color = SheetColors.accent) }, onClick = { expanded = false; select(section) })
             }
         }
@@ -203,7 +210,7 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
         .clickable(enabled = interactive, role = Role.Switch, onClick = toggle)
         .clearAndSetSemantics {
             contentDescription = "XP Mode"
-            stateDescription = if (enabled) "On, $available Experiences available" else "Off"
+            stateDescription = if (enabled) "On, ${experiencesText(available)} available" else "Off"
             role = Role.Switch
             if (interactive) onClick(label = "Toggle XP Mode") { toggle(); true }
         }, contentAlignment = Alignment.Center) {
@@ -219,6 +226,13 @@ private fun XpBadge(enabled: Boolean, available: Int, interactive: Boolean, togg
 private fun Library(rows: List<LibraryRow>, model: SheetModel, importCharacter: () -> Unit, about: () -> Unit) {
     var exportPicker by rememberSaveable { mutableStateOf(false) }
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
+    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            while (true) { now = System.currentTimeMillis(); delay(DateUtils.MINUTE_IN_MILLIS) }
+        }
+    }
     LazyColumn(Modifier.fillMaxSize().pageEdges().testTag("character-library"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
         item { SectionBand("CHARACTERS") }
         if (rows.isEmpty()) item {
@@ -238,7 +252,7 @@ private fun Library(rows: List<LibraryRow>, model: SheetModel, importCharacter: 
                     if (row.problem != null) SheetText(row.problem, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     else row.edited?.let {
                         SheetText("Edited " + DateUtils.getRelativeTimeSpanString((it * 1000).toLong() + 978_307_200_000L,
-                            System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
+                            now, DateUtils.MINUTE_IN_MILLIS),
                             style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     }
                 }

@@ -28,6 +28,7 @@ sealed interface SheetEdit {
     data class Number(val field: NumberField, val value: Int) : SheetEdit
     data class Counter(val field: NumberField, val delta: Int) : SheetEdit
     data class ClanBane(val active: Boolean) : SheetEdit
+    data class ElderBane(val active: Boolean) : SheetEdit
     data class TouchstoneText(val level: Int, val text: String) : SheetEdit
     data class AspirationText(val id: UUID, val text: String) : SheetEdit
     data class AddAspiration(val text: String, val id: UUID = UUID.randomUUID()) : SheetEdit
@@ -102,6 +103,7 @@ internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog, at: Do
         else setNumber(action.field, (number(action.field).toLong() + action.delta).coerceIn(0, Int.MAX_VALUE.toLong()).toInt(), catalog)
     }
     is SheetEdit.ClanBane -> copy(clanBaneActive = action.active)
+    is SheetEdit.ElderBane -> copy(elderBaneActive = action.active)
     is SheetEdit.TouchstoneText -> copy(touchstones = touchstones.map { if (it.level == action.level) it.copy(text = action.text) else it })
     is SheetEdit.AspirationText -> copy(aspirations = aspirations.map { if (it.id == action.id) it.copy(text = action.text) else it })
     is SheetEdit.AddAspiration -> if (aspirations.any { it.id == action.id }) this else copy(aspirations = aspirations + Aspiration(action.text, action.id))
@@ -111,8 +113,8 @@ internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog, at: Do
     is SheetEdit.EntryRating -> rateEntry(action, catalog)
     is SheetEdit.RenameEntry -> renameEntry(action, catalog)
     is SheetEdit.MeritQualifier -> copy(merits = merits.map {
-        val options = catalog.entry(CatalogKind.merits, it.source)?.let(::qualifierChoices)
-        if (it.id != action.id || (options != null && action.text.trim() !in options)) it else it.copy(qualifier = action.text.trim().ifEmpty { null }) })
+        val entry = catalog.entry(CatalogKind.merits, it.source)
+        if (it.id != action.id || (entry != null && !validQualifier(entry, action.text, catalog))) it else it.copy(qualifier = action.text.trim().ifEmpty { null }) })
     is SheetEdit.CustomRitual -> copy(rituals = rituals.map { if (it.id == action.id && catalog.entry(CatalogKind.rituals, it.source) == null)
         it.copy(customDiscipline = action.discipline, customDots = action.dots.coerceIn(1, 5)) else it })
     is SheetEdit.CustomDevotionCost -> copy(devotions = devotions.map { if (it.id == action.id && catalog.entry(CatalogKind.devotions, it.source) == null)
@@ -127,7 +129,9 @@ private fun CharacterSave.setNumber(field: NumberField, value: Int, catalog: Cat
             val cap = legalRatings(RatingKind.Attribute, to).last
             copy(bloodPotency = to, attributes = attributes.map { it.copy(rating = it.rating.coerceIn(1, cap)) }, skills = skills.map { it.copy(rating = it.rating.coerceIn(0, cap)) })
         }
-        NumberField.Humanity -> copy(humanity = to, clanBaneActive = clanBaneActive || (clanBane(catalog)?.let { to <= it.threshold && humanity > it.threshold } == true))
+        NumberField.Humanity -> copy(humanity = to,
+            clanBaneActive = clanBaneActive || (clanBane(catalog)?.let { to <= it.threshold && humanity > it.threshold } == true),
+            elderBaneActive = elderBaneActive || (elderBane(catalog)?.let { to <= it.threshold && humanity > it.threshold } == true))
         NumberField.Vitae -> copy(currentVitae = to)
         NumberField.Armor -> copy(armor = to)
         NumberField.Beats -> copy(beats = to)
@@ -139,13 +143,14 @@ private fun CharacterSave.editDetail(field: CharacterDetail, text: String, catal
     CharacterDetail.Name -> copy(name = text); CharacterDetail.Player -> copy(player = text)
     CharacterDetail.Chronicle -> copy(chronicle = text); CharacterDetail.Mask -> copy(mask = text)
     CharacterDetail.Dirge -> copy(dirge = text); CharacterDetail.Concept -> copy(concept = text)
-    CharacterDetail.Bloodline -> copy(bloodline = catalog.source(CatalogKind.bloodlines, text))
+    CharacterDetail.Bloodline -> copy(bloodline = catalog.source(CatalogKind.bloodlines, text)).reconcileFavoredAttribute(catalog)
     CharacterDetail.Covenant -> copy(covenant = catalog.source(CatalogKind.covenants, text))
     CharacterDetail.Clan -> {
         val source = catalog.source(CatalogKind.clans, text)
         val changed = copy(clan = source)
-        val next = if (creation?.favoredAttribute != null && creation.favoredAttribute !in changed.favoredAttributes(catalog)) changed.chooseFavoredAttribute(null, catalog) else changed
-        next.copy(clanBaneActive = clanBaneActive || (clan != source && next.clanBane(catalog)?.let { humanity <= it.threshold } == true))
+        val next = changed.reconcileFavoredAttribute(catalog)
+        next.copy(clanBaneActive = clanBaneActive || (clan != source && next.clanBane(catalog)?.let { humanity <= it.threshold } == true),
+            elderBaneActive = if (clan == source) elderBaneActive else next.elderBane(catalog)?.let { humanity <= it.threshold } == true)
     }
 }
 
@@ -158,7 +163,7 @@ private fun CharacterSave.addEntry(a: SheetEdit.AddEntry, catalog: Catalog): Cha
     return when (a.kind) {
         EntryKind.Discipline -> copy(disciplines = disciplines + Discipline(a.source, 1, a.id))
         EntryKind.Merit -> {
-            if (entry?.let(::qualifierChoices)?.let { a.qualifier?.trim() !in it } == true) this
+            if (entry != null && !validQualifier(entry, a.qualifier, catalog)) this
             else copy(merits = merits + Merit(a.source, a.qualifier?.trim()?.ifEmpty { null }, entry?.ratings?.minOrNull() ?: 1, a.id))
         }
         EntryKind.Bane -> if (banes.size >= 3) this else copy(banes = banes + Bane(a.source, a.id))

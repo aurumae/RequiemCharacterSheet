@@ -38,11 +38,11 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
     val list = rememberLazyListState()
     var jumping by remember { mutableStateOf(false) }
     var localSection by rememberSaveable { mutableStateOf<SheetSection?>(null) }
-    var previousClan by rememberSaveable { mutableStateOf(c.clan.catalog ?: c.clan.custom.orEmpty()) }
-    LaunchedEffect(c.clan) {
-        val clan = c.clan.catalog ?: c.clan.custom.orEmpty()
-        if (clan != previousClan && c.needsFavoredAttribute(catalog)) overlay = "creation|favored"
-        previousClan = clan
+    val lineage = "${c.clan}/${c.bloodline}"
+    var previousLineage by rememberSaveable { mutableStateOf(lineage) }
+    LaunchedEffect(lineage) {
+        if (lineage != previousLineage && c.needsFavoredAttribute(catalog)) overlay = "creation|favored"
+        previousLineage = lineage
     }
     val keys = SheetSection.available(c, catalog).flatMap { if (it == SheetSection.Skills) TraitCategory.entries.map { category -> "skills-${category.name}" } else listOf(it.itemKey) }
     val reportSection by rememberUpdatedState(onCurrentSection)
@@ -122,7 +122,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                             TraitRatingControl(definition.name, attribute.rating, c.attributeBonus(definition.id, catalog) + c.rollBonus(definition.id, catalog),
                                 legalRatings(RatingKind.Attribute, c.bloodPotency), editable, allowedValues = c.attributeChoices(definition.id, catalog),
                                 onConditions = conditionAction("attribute:${definition.id}"),
-                                note = if (c.creation?.favoredAttribute == definition.id) "Includes the ${catalog.name(CatalogKind.clans, c.clan)} dot" else null) { edit(SheetEdit.AttributeRating(definition.id, it)) }
+                                note = if (c.creation?.favoredAttribute == definition.id) "Includes the ${c.favoredAttributeGiver(catalog)?.name.orEmpty()} dot" else null) { edit(SheetEdit.AttributeRating(definition.id, it)) }
                         }
                         SheetRule()
                     }
@@ -163,7 +163,7 @@ internal fun SheetEditor(c: CharacterSave, catalog: Catalog, busy: Boolean, edit
                 } }
                 AddSheetRow("Add Aspiration", editable) { overlay = "aspAdd" }
             }
-            item("banes") { band("BANES"); ClanBaneRow(c, catalog, editable, edit); BloodlineBaneRow(c, catalog); entries(EntryKind.Bane) }
+            item("banes") { band("BANES"); ClanBaneRow(c, catalog, editable, edit); ElderBaneRow(c, catalog, editable, edit); BloodlineBaneRow(c, catalog); entries(EntryKind.Bane) }
             item("health") {
                 Spacer(Modifier.height(16.dp))
                 SectionBand("HEALTH")

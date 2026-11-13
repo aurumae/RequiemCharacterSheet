@@ -7,8 +7,13 @@ val CharacterSave.specialtyChoices: List<SpecialtyChoice> get() = skills.flatMap
     skill.specialties.mapNotNull { it.trim().takeIf(String::isNotEmpty)?.let { name -> SpecialtyChoice(skill.skill, name) } }
 }.distinctBy { it.specialty }
 /** Null means free text; an empty list means there is no legal choice yet. */
-fun CharacterSave.qualifierChoices(entry: BookEntry): List<String>? = if (entry.qualifierFromSpecialties)
-    specialtyChoices.map { it.specialty } else entry.qualifierOptions.takeIf { it.isNotEmpty() }
+fun CharacterSave.qualifierChoices(entry: BookEntry, catalog: Catalog): List<String>? = when {
+    entry.qualifierFromSpecialties -> specialtyChoices.map { it.specialty }
+    entry.qualifierFromCovenants -> catalog.names(CatalogKind.covenants).ifEmpty { entry.qualifierOptions }
+    else -> entry.qualifierOptions.takeIf { it.isNotEmpty() }
+}
+fun CharacterSave.validQualifier(entry: BookEntry, value: String?, catalog: Catalog): Boolean =
+    if (entry.qualifierPrompt == null) true else !value.isNullOrBlank() && (qualifierChoices(entry, catalog)?.let { value.trim() in it } != false)
 fun CharacterSave.meritsFollowing(specialty: String, catalog: Catalog): List<Merit> = merits.filter {
     it.qualifier == specialty.trim() && catalog.entry(CatalogKind.merits, it.source)?.qualifierFromSpecialties == true
 }

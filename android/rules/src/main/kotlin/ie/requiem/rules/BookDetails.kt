@@ -30,6 +30,8 @@ internal fun JsonObject.poolFormula(catalog: Catalog, disciplineName: String = "
 private fun JsonObject.humanityRule(): String = when (str("humanity")) {
     "capAtTenMinusDots" -> "Humanity can't rise above 10 minus its dots. Learning a dot is a breaking point at Humanity 4 or higher."
     "atLeastRitualDots" -> "Casting a miracle requires Humanity at least equal to its dots."
+    "none" -> "No limit on Humanity."
+    "breakingPointAtSixMinusDots" -> "Each ritual is a breaking point at Humanity 6 minus its dots or higher: 5+ for one dot, down to 1+ for five."
     else -> ""
 }
 
@@ -56,15 +58,18 @@ fun CharacterSave.bookDetail(entry: BookEntry, catalog: Catalog, rating: Int = 0
         CatalogKind.archetypes, CatalogKind.clans, CatalogKind.bloodlines, CatalogKind.covenants -> {
             fact("Also known as", e.str("nickname"))
             fact("Single Willpower", e.str("singleWillpower")); fact("All Willpower", e.str("allWillpower"))
-            e.strings("parentClans").takeIf { it.isNotEmpty() }?.let { fact("Parent clan", it.joinToString { id -> catalog.name(CatalogKind.clans, TraitSource(catalog = id)) }) }
-            e.strings("favoredAttributes").takeIf { it.isNotEmpty() }?.let { fact("Favoured Attributes", it.joinToString(transform = ::traitName)) }
+            if (entry.kind == CatalogKind.bloodlines) {
+                fact("Parent clan", e.strings("parentClans").joinToString { id -> catalog.name(CatalogKind.clans, TraitSource(catalog = id)) }.ifEmpty { "Any clan" })
+                e.str("requiredCovenant")?.let { fact("Covenant", catalog.name(CatalogKind.covenants, TraitSource(catalog = it))) }
+            }
+            if (entry.kind == CatalogKind.clans || entry.kind == CatalogKind.bloodlines) fact("Favoured Attributes", favoredAttributesText(catalog))
             e.strings("disciplines").takeIf { it.isNotEmpty() }?.let { fact("Disciplines", it.joinToString { id -> catalog.name(CatalogKind.disciplines, TraitSource(catalog = id)) }) }
             e.obj("bane")?.let { fact(it.str("name") ?: "Bane", it.str("summary")) }
         }
         CatalogKind.disciplines -> {
             if (entry.id in inClanDisciplines(catalog)) fact("Clan", "In-clan for ${inClanGroupName(catalog)}")
             e.obj("ritualRules")?.let { rules ->
-                fact("Learned with", "${catalog.name(CatalogKind.covenants, TraitSource(catalog = rules.str("covenant").orEmpty()))} Status ${rules.int("covenantStatusMinimum", 1)}")
+                fact("Learned with", entry.ritualRequirementText(catalog).replaceFirstChar { it.uppercaseChar() })
                 val cost = rules.obj("castingCost")
                 fact("Casting cost", if (cost?.costText(false) == "Varies") cost.str("note") ?: "Varies" else cost?.costText())
                 facts += poolFacts(rules.obj("castingPool"), rating > 0, rating, entry.name)

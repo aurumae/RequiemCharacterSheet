@@ -21,23 +21,26 @@ fun CharacterSave.identityOptions(field: CharacterDetail, catalog: Catalog, quer
     val kind = field.catalogKind ?: return emptyList()
     val options = catalog.bookEntries(kind).map { entry ->
         val parents = entry.raw.strings("parentClans")
-        val matches = clan.catalog in parents
-        val group = if (kind == CatalogKind.bloodlines && matches) "${catalog.name(CatalogKind.clans, clan)} Bloodlines" else field.label + "s"
+        val matches = parents.isEmpty() || clan.catalog in parents
+        val group = if (kind != CatalogKind.bloodlines) "" else if (matches) "${catalog.name(CatalogKind.clans, clan).ifBlank { "Any clan" }} Bloodlines" else "Other Bloodlines"
+        val requiredCovenant = entry.raw.str("requiredCovenant")
         val details = buildList {
             entry.raw.str("singleWillpower")?.let { add("Single Willpower: $it") }
             entry.raw.str("allWillpower")?.let { add("All Willpower: $it") }
-            if (parents.isNotEmpty()) add("Parent clan: " + parents.joinToString { catalog.name(CatalogKind.clans, TraitSource(catalog = it)) })
+            if (kind == CatalogKind.bloodlines) add("Parent clan: " + if (parents.isEmpty()) "Any clan" else parents.joinToString { catalog.name(CatalogKind.clans, TraitSource(catalog = it)) })
+            requiredCovenant?.let { add("Required covenant: " + catalog.name(CatalogKind.covenants, TraitSource(catalog = it))) }
             entry.raw.strings("favoredAttributes").takeIf { it.isNotEmpty() }?.let { add("Favoured Attributes: " + it.joinToString(transform = ::traitName)) }
             entry.raw.strings("disciplines").takeIf { it.isNotEmpty() }?.let { ids ->
                 add("Disciplines: " + ids.joinToString { catalog.name(CatalogKind.disciplines, TraitSource(catalog = it)) })
             }
             entry.raw.obj("bane")?.let { add("Bane: ${it.str("name").orEmpty()} — ${it.str("summary").orEmpty()}") }
         }
-        IdentityOption(entry, group, details, if (parents.isNotEmpty() && !matches)
-            "A bloodline of the " + parents.joinToString { catalog.name(CatalogKind.clans, TraitSource(catalog = it)) } else null)
+        val warnings = buildList {
+            if (!matches) add("A bloodline of the " + parents.joinToString { catalog.name(CatalogKind.clans, TraitSource(catalog = it)) })
+            if (requiredCovenant != null && !belongsToCovenant(requiredCovenant, catalog)) add("Requires " + catalog.name(CatalogKind.covenants, TraitSource(catalog = requiredCovenant)))
+        }
+        IdentityOption(entry, group, details, warnings.joinToString(". ").ifEmpty { null })
     }
-    val own = options.any { it.warning == null && kind == CatalogKind.bloodlines }
-    return options.sortedWith(compareBy<IdentityOption> { it.warning != null }.thenBy { it.entry.name })
-        .map { if (own && it.warning != null) it.copy(group = "Other Bloodlines") else it }
+    return options.sortedWith(compareBy<IdentityOption> { it.group == "Other Bloodlines" }.thenBy { it.entry.name })
         .filter { query.isBlank() || (it.entry.name + " " + it.entry.summary + " " + it.entry.bookName + " " + it.details.joinToString(" ")).contains(query.trim(), ignoreCase = true) }
 }

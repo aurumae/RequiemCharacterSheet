@@ -23,7 +23,7 @@ import ie.requiem.rules.*
 internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, choosingMystery: Boolean,
     choose: (BookEntry) -> Unit, custom: () -> Unit, none: () -> Unit, dismiss: () -> Unit) {
     var search by rememberSaveable { mutableStateOf("") }
-    val options = remember(c, kind, catalog, search, choosingMystery) { c.catalogOptions(kind, catalog, search, choosingMystery) }
+    val sections = remember(c, kind, catalog, search, choosingMystery) { c.catalogSections(kind, catalog, search, choosingMystery) }
     val title = if (choosingMystery) "Choose Mystery" else "Add ${kind.title}"
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).imePadding()) {
@@ -34,10 +34,10 @@ internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, ch
             LazyColumn(Modifier.weight(1f, fill = false).testTag("catalog-options")) {
                 item { TextButton(onClick = custom, modifier = Modifier.fillMaxWidth()) { SheetText(if (choosingMystery) "Custom Mystery" else "Custom ${kind.title}") } }
                 if (choosingMystery) item { TextButton(onClick = none, modifier = Modifier.fillMaxWidth()) { SheetText("None") } }
-                if (options.isEmpty()) item { SheetText("No matching entries", Modifier.padding(16.dp)) }
-                options.groupBy { it.group }.forEach { (group, rows) ->
-                    item("group-$group") { SubsectionLabel(group) }
-                    items(rows, key = { it.entry.id }) { option ->
+                if (sections.isEmpty()) item { SheetText("No matching entries", Modifier.padding(16.dp)) }
+                sections.forEach { section ->
+                    item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
+                    items(section.entries, key = { "${section.id}/${it.entry.id}" }) { option ->
                         Column(Modifier.fillMaxWidth().clickable(enabled = !option.owned && option.blockedReason == null) { choose(option.entry) }
                             .testTag("catalog-${option.entry.id}").padding(vertical = 12.dp)
                             .semantics(mergeDescendants = true) { stateDescription = if (option.owned) "Already on the sheet" else option.blockedReason.orEmpty() }) {
@@ -45,7 +45,9 @@ internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, ch
                                 SheetText(option.title, Modifier.weight(1f), style = LocalSheetType.current.trait)
                                 if (option.owned) SheetText("✓", Modifier.clearAndSetSemantics {}, color = SheetColors.accent)
                             }
-                            option.details.forEach { SheetText(it, style = MaterialTheme.typography.bodySmall, color = SheetColors.accent) }
+                            option.details.forEach { detail -> SheetText(detail,
+                                if (kind == EntryKind.Merit) Modifier.clearAndSetSemantics { contentDescription = option.entry.ratingsDescription() } else Modifier,
+                                style = if (kind == EntryKind.Merit) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodySmall, color = SheetColors.accent) }
                             if (option.entry.summary.isNotBlank()) SheetText(option.entry.summary, style = MaterialTheme.typography.bodySmall)
                             option.blockedReason?.let { WarningText(it) } ?: option.warning?.let { WarningText(it) }
                             SheetText(option.entry.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
@@ -57,6 +59,12 @@ internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, ch
             }
         }
     }
+}
+
+@Composable internal fun CatalogSectionHeading(book: String?, title: String) {
+    if (book != null) SheetText(book, Modifier.fillMaxWidth().padding(top = 20.dp, bottom = 6.dp).semantics { heading() },
+        style = LocalSheetType.current.trait, color = SheetColors.accent)
+    if (title.isNotBlank()) SubsectionLabel(title)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

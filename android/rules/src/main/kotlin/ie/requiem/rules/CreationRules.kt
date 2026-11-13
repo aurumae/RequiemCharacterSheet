@@ -25,7 +25,7 @@ data class CreationProblem(val kind: CreationProblemKind, val subject: String = 
         CreationProblemKind.Specialties -> "More than 3 Specialties"
         CreationProblemKind.DisciplineDots -> "More than 3 Discipline dots"
         CreationProblemKind.InClanDots -> "At least 2 Discipline dots must be in-clan"
-        CreationProblemKind.SorceryStatus -> "$subject needs $extra Status"
+        CreationProblemKind.SorceryStatus -> "$subject needs $extra"
         CreationProblemKind.CoilStatus -> "Coils need Ordo Dracul Status"
         CreationProblemKind.OtherCoil -> "Only your Mystery's Coil can be learned at creation"
         CreationProblemKind.RitualCount -> "More $subject rituals than $subject dots"
@@ -87,17 +87,15 @@ internal fun CharacterSave.creationReport(catalog: Catalog, levels: Map<String, 
         disciplineDots += dots
         if (entry != null && !entry.isRitualDiscipline && entry.id in inClanDisciplines(catalog)) continue
         outOfClan += dots
-        entry?.raw?.obj("ritualRules")?.let { rules ->
-            val covenant = rules.str("covenant").orEmpty()
-            if (covenantStatus(covenant, catalog) < rules.int("covenantStatusMinimum", 1))
-                problem(CreationProblemKind.SorceryStatus, entry.name, catalog.name(CatalogKind.covenants, TraitSource(catalog = covenant)))
+        entry?.let {
+            if (!hasRitualStatus(it, catalog)) problem(CreationProblemKind.SorceryStatus, it.name, it.ritualRequirementText(catalog))
         }
     }
     for (coil in coils) {
         val dots = level("coil:${coil.id.swiftKey()}")
         if (dots <= 0) continue
         disciplineDots += dots; outOfClan += dots
-        if (!isMysteryCoil(coil)) problem(CreationProblemKind.OtherCoil)
+        if (!isMysteryCoil(coil, catalog)) problem(CreationProblemKind.OtherCoil)
         if (covenantStatus("ordo-dracul", catalog) < 1) problem(CreationProblemKind.CoilStatus)
     }
     if (disciplineDots > 3) problem(CreationProblemKind.DisciplineDots)
@@ -139,8 +137,20 @@ fun CharacterSave.attributeChoices(id: String, catalog: Catalog): List<Int> {
 }
 fun CharacterSave.skillChoices(id: String, catalog: Catalog): List<Int> = (0..creationMaximum("skill:$id", staminaCap, catalog)).toList()
 val CharacterSave.canAddSpecialty: Boolean get() = creation == null || skills.filter { it.skill in coreSkillIds }.sumOf { it.specialties.count(String::isNotBlank) } < 3
-fun CharacterSave.favoredAttributes(catalog: Catalog): List<String> = catalog.entry(CatalogKind.clans, clan)?.raw?.strings("favoredAttributes").orEmpty()
-fun CharacterSave.needsFavoredAttribute(catalog: Catalog): Boolean = creation != null && creation.favoredAttribute == null && catalog.entry(CatalogKind.clans, clan) != null
+fun CharacterSave.favoredAttributeGiver(catalog: Catalog): BookEntry? =
+    catalog.entry(CatalogKind.bloodlines, bloodline)?.takeIf { it.raw.strings("favoredAttributes").isNotEmpty() }
+        ?: catalog.entry(CatalogKind.clans, clan)
+fun CharacterSave.favoredAttributes(catalog: Catalog): List<String> = favoredAttributeGiver(catalog)?.raw?.strings("favoredAttributes").orEmpty()
+fun CharacterSave.needsFavoredAttribute(catalog: Catalog): Boolean = creation != null && creation.favoredAttribute == null && favoredAttributes(catalog).isNotEmpty()
+internal fun CharacterSave.reconcileFavoredAttribute(catalog: Catalog): CharacterSave =
+    if (creation?.favoredAttribute != null && creation.favoredAttribute !in favoredAttributes(catalog)) chooseFavoredAttribute(null, catalog) else this
+fun CharacterSave.favoredAttributesText(catalog: Catalog): String {
+    val sources = listOfNotNull(catalog.entry(CatalogKind.clans, clan), catalog.entry(CatalogKind.bloodlines, bloodline))
+    val parts = sources.flatMap { it.raw.strings("favoredAttributes") }.distinct().map { id ->
+        "${traitName(id)} (${sources.filter { id in it.raw.strings("favoredAttributes") }.joinToString(" and ") { it.name }})"
+    }
+    return if (parts.size < 2) parts.firstOrNull().orEmpty() else parts.dropLast(1).joinToString(", ") + " or " + parts.last()
+}
 fun CharacterSave.firstTouchstoneLevel(catalog: Catalog): Int = catalog.entry(CatalogKind.clans, clan)?.raw?.obj("bane")?.int("firstTouchstoneHumanity", 6) ?: 6
 
 internal fun CharacterSave.setPriority(action: SheetEdit.Priority): CharacterSave {

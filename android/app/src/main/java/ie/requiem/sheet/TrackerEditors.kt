@@ -86,6 +86,26 @@ internal fun ClanBaneRow(c: CharacterSave, catalog: Catalog, editable: Boolean, 
 }
 
 @Composable
+internal fun ElderBaneRow(c: CharacterSave, catalog: Catalog, editable: Boolean, edit: (SheetEdit) -> Unit) {
+    val bane = c.elderBane(catalog) ?: return
+    Column(Modifier.fillMaxWidth().background(Color.White).padding(8.dp)) {
+        SheetText("Elder Bane: ${bane.name}", style = LocalSheetType.current.trait)
+        SheetText(bane.summary, style = MaterialTheme.typography.bodySmall)
+        Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).toggleable(c.elderBaneActive, enabled = editable, role = Role.Switch,
+            onValueChange = { edit(SheetEdit.ElderBane(it)) }).semantics { contentDescription = "${bane.name} in effect" }, verticalAlignment = Alignment.CenterVertically) {
+            SheetText("In effect", Modifier.weight(1f)); Switch(c.elderBaneActive, onCheckedChange = null, enabled = editable)
+        }
+        SheetText(when {
+            c.elderBaneActive -> "Stays in effect if Humanity rises again. Does not count toward the limit of 3 Banes."
+            c.humanity <= bane.threshold -> "Switched off. Turns on again if Humanity falls to ${bane.threshold} from above."
+            else -> "Takes effect when Humanity falls to ${bane.threshold}."
+        }, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+        SheetText(bane.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+    }
+    SheetRule()
+}
+
+@Composable
 internal fun HumanityRows(c: CharacterSave, catalog: Catalog, editable: Boolean, edit: (SheetEdit) -> Unit, openTouchstone: (Int) -> Unit) {
     c.humanityCap(catalog)?.let { cap -> SheetText(cap.description, Modifier.fillMaxWidth().background(Color.White).padding(8.dp),
         style = MaterialTheme.typography.bodySmall, color = if (c.humanity > cap.limit) SheetColors.accent else SheetColors.muted) }

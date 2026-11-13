@@ -16,7 +16,7 @@ class CharacterDocumentTest {
             assertEquals("The file isn't a character file, or it's damaged.", e.message)
         }
         assertThrows(CharacterDocumentError::class.java) { documents.read(byteArrayOf(0xc3.toByte(), 0x28)) }
-        val future = assertThrows(CharacterDocumentError::class.java) { documents.read("{\"schemaVersion\":12}".toByteArray()) }
+        val future = assertThrows(CharacterDocumentError::class.java) { documents.read(ContractFixtures.future()) }
         assertEquals("This character was saved by a newer version of the app. Update the app to open it.", future.message)
     }
 
@@ -55,15 +55,15 @@ class CharacterDocumentTest {
 
     @Test fun exchangesActualExportedFilesAndCopiesWithSwift() {
         val directory = System.getProperty("exchangeDir")?.let(::File)
-        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v8-paid", "v11-conditions")) {
-            val bytes = directory?.resolve("swift-transfer-$name.vtrcharacter")?.readBytes()
+        for (name in ContractFixtures.names("transfer")) {
+            val bytes = directory?.takeIf { ContractFixtures.selected("characters/$name.json") }?.resolve("swift-transfer-$name.vtrcharacter")?.readBytes()
                 ?: javaClass.getResource("/characters/$name.json")!!.readBytes()
             val imported = documents.read(bytes)
             assertArrayEquals(bytes, imported.bytes)
             val copy = documents.copy(imported, emptySet())
             assertEquals(imported.character.copy(id = copy.character.id, name = copy.character.name), copy.character)
-            directory?.resolve("kotlin-transfer-$name.vtrcharacter")?.writeBytes(imported.bytes)
-            directory?.resolve("kotlin-transfer-copy-$name.vtrcharacter")?.writeBytes(copy.bytes)
+            directory?.takeIf { ContractFixtures.selected("characters/$name.json") }?.resolve("kotlin-document-$name.vtrcharacter")?.writeBytes(imported.bytes)
+            directory?.takeIf { ContractFixtures.selected("characters/$name.json") }?.resolve("kotlin-document-copy-$name.vtrcharacter")?.writeBytes(copy.bytes)
         }
     }
 }

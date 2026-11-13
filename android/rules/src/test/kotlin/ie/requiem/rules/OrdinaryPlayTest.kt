@@ -47,7 +47,7 @@ class OrdinaryPlayTest {
         assertEquals(mapOf(1 to 1), c.paidDots["scale:${id(12).swiftKey()}"])
         assertEquals(mapOf(1 to 0), c.paidDots["ritual:${id(9).swiftKey()}"])
         assertFalse(c.paidDots.containsKey("discipline:${id(1).swiftKey()}"))
-        System.getProperty("exchangeDir")?.let {
+        ContractFixtures.exchange("ordinary-play.json")?.let {
             val swift = codec.decode(File(it, "swift-ordinary-play.json").readText())
             assertEquals(c.experiencesAvailable, swift.experiencesAvailable)
             assertEquals(c.changeLog.map { change -> change.experiences }, swift.changeLog.map { change -> change.experiences })
@@ -153,7 +153,7 @@ class OrdinaryPlayTest {
         c = c.edit(SheetEdit.Mystery(TraitSource(custom = "Serpent")), catalog)
         val coil = c.coils.single()
         c = c.edit(SheetEdit.EntryRating(EntryKind.Coil, coil.id, 2), catalog).edit(SheetEdit.Mystery(TraitSource(custom = "Serpents"), rename = true), catalog)
-        assertEquals(coil.id, c.coils.single().id); assertEquals(2, c.coils.single().rating); assertTrue(c.isMysteryCoil(c.coils.single()))
+        assertEquals(coil.id, c.coils.single().id); assertEquals(2, c.coils.single().rating); assertTrue(c.isMysteryCoil(c.coils.single(), catalog))
         c = c.edit(SheetEdit.Mystery(TraitSource(catalog = "mystery-of-the-wyrm")), catalog)
         assertEquals(2, c.coils.size); assertNotNull(c.coilWarning(c.coils.last(), catalog))
         assertEquals(2, c.scaleCost(book(CatalogKind.scales, "kindred-sense-endowment")))

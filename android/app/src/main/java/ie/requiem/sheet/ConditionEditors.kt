@@ -30,6 +30,9 @@ internal fun ConditionsSection(c: CharacterSave, catalog: Catalog, editable: Boo
         if (c.conditions.isEmpty()) SheetText("No Conditions", Modifier.padding(12.dp), color = SheetColors.muted)
         else {
             val pager = rememberPagerState { c.conditions.size }
+            LaunchedEffect(c.conditions.map { it.id }) {
+                if (pager.currentPage >= c.conditions.size) pager.scrollToPage(c.conditions.lastIndex)
+            }
             HorizontalPager(pager, key = { c.conditions[it].id.toString() }, contentPadding = PaddingValues(start = 8.dp, end = 64.dp),
                 pageSpacing = 8.dp, modifier = Modifier.padding(top = 8.dp).testTag("condition-carousel")) { index ->
                 val condition = c.conditions[index]; val info = condition.info(catalog)
@@ -47,7 +50,8 @@ internal fun ConditionsSection(c: CharacterSave, catalog: Catalog, editable: Boo
                     }
                 }
             }
-            SheetText("${pager.currentPage + 1} of ${c.conditions.size}" + if (c.conditions.size > 1) " · swipe for more" else "",
+            val page = pager.currentPage.coerceIn(c.conditions.indices)
+            SheetText("${page + 1} of ${c.conditions.size}" + if (page < c.conditions.lastIndex) " · swipe for more" else "",
                 Modifier.align(Alignment.CenterHorizontally).padding(12.dp), style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
         }
         AddSheetRow("Add Condition", editable) { navigate("conditionPick") }
@@ -157,10 +161,10 @@ internal fun ConditionDialogs(route: String, c: CharacterSave, catalog: Catalog,
             ModalHeading("Add Condition", "Cancel", dismiss)
             OutlinedTextField(search, { search = it }, label = { SheetText("Search Conditions") }, singleLine = true, modifier = Modifier.fillMaxWidth().testTag("condition-search"))
             LazyColumn(Modifier.weight(1f, fill = false).testTag("condition-options"), contentPadding = PaddingValues(bottom = 24.dp)) {
-                val groups = (if (recent.isEmpty()) emptyList() else listOf("Recently used" to recent)) + options.groupBy { it.bookName }.map { it.key to it.value.sortedBy(BookEntry::name) }
-                groups.forEach { (group, entries) ->
-                    item("group-$group") { SubsectionLabel(group) }
-                    items(entries, key = { "$group/${it.id}" }) { entry ->
+                val groups = (if (recent.isEmpty()) emptyList() else listOf(CatalogSection("recent", null, "Recently used", recent))) + catalog.bookSections(options.sortedBy { it.name }, { it })
+                groups.forEach { section ->
+                    item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
+                    items(section.entries, key = { "${section.id}/${it.id}" }) { entry ->
                         val info = CharacterCondition(entry.source()).info(catalog)
                         val allowed = c.canAddCondition(entry)
                         Column(Modifier.fillMaxWidth().clickable(enabled = allowed, role = Role.Button) { choose(entry.source()) }.padding(vertical = 12.dp)

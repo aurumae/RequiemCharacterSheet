@@ -26,9 +26,12 @@ tasks.processResources {
 }
 sourceSets.test {
     resources.srcDir("../../shared/fixtures")
+    kotlin.srcDir("../test-support")
 }
 
 tasks.test {
+    providers.gradleProperty("contractPlan").orNull?.let { systemProperty("contractPlan", it) }
+    systemProperty("catalogSourceDir", file("../../RequiemCharacterSheet/Catalogs").absolutePath)
     providers.gradleProperty("exchangeDir").orNull?.let { directory ->
         // The side effects are the exchange files consumed by Swift in this invocation.
         systemProperty("exchangeDir", directory)

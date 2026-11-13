@@ -3,6 +3,14 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: Require full declared iOS/Android parity
+        type: boolean
+        default: true
 concurrency:
   group: saves-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -10,7 +18,50 @@ permissions:
   contents: read
 
 jobs:
-  kotlin:
+  policy:
+    runs-on: ubuntu-latest
+    outputs:
+      selection: ${{ steps.route.outputs.selection }}
+      android: ${{ steps.route.outputs.android }}
+      exchange: ${{ steps.route.outputs.exchange }}
+      ios: ${{ steps.route.outputs.ios }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 -m unittest discover -s scripts/tests -v
+      - name: Validate shared contracts and prevent coverage regressions
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          STRICT: ${{ inputs.strict }}
+        run: |
+          args=()
+          if [[ -n "$PR_BASE" ]]; then args+=(--base "$PR_BASE"); fi
+          if [[ "$STRICT" == true ]]; then args+=(--strict); fi
+          python3 scripts/contract_policy.py "${args[@]}" --output .contract-reports/policy
+      - name: Select dependent jobs
+        id: route
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [[ -n "$PR_BASE" ]]; then
+            python3 scripts/ci_policy.py route --base "$PR_BASE"
+          else
+            python3 scripts/ci_policy.py route --full
+          fi
+      - name: Publish capability summary
+        if: always()
+        run: |
+          if [[ -f .contract-reports/policy/summary.md ]]; then cat .contract-reports/policy/summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compatibility-policy
+          path: .contract-reports/
+
+  android:
+    needs: policy
+    if: needs.policy.outputs.android == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,13 +70,22 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Verify declared Android capabilities were exercised
+        run: python3 scripts/contract_policy.py --evidence android --reports android/rules/build/test-results/test/TEST-*.xml android/app/build/test-results/testDebugUnitTest/TEST-*.xml
       - name: Check release packaging without private signing credentials
         run: android/gradlew -p android :app:lintRelease :app:bundleRelease -PrequiemUnsignedRelease=true
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: requiem-android-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: requiem-android-results
+          path: |
+            android/*/build/test-results/
+            android/*/build/reports/
+            android/app/build/outputs/apk/debug/app-debug.apk
+
   exchange:
+    needs: policy
+    if: needs.policy.outputs.exchange == 'true'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -33,13 +93,33 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - run: scripts/check-save-contract
+      - name: Exchange supported saves through both apps
+        env:
+          STRICT: ${{ inputs.strict }}
+        run: |
+          args=()
+          if [[ "$STRICT" == true ]]; then args+=(--strict); fi
+          scripts/check-save-contract "${args[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: requiem-save-exchange-results
+          path: |
+            .contract-reports/
+            android/*/build/test-results/
+            android/*/build/reports/tests/
 
   ios:
+    needs: policy
+    if: needs.policy.outputs.ios == 'true'
     runs-on: macos-26
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Test host models and declared iOS capabilities
+        run: |
+          swift test --xunit-output ios-host-tests.xml
+          python3 scripts/contract_policy.py --evidence ios --reports ios-host-tests*.xml
       - name: Choose an available iPhone simulator
         run: |
           python3 - <<'PYTHON'
@@ -49,8 +129,7 @@ jobs:
           with open(os.environ["GITHUB_ENV"], "a") as output:
               output.write("REQUIEM_SIMULATOR=" + phone["udid"] + "\n")
           PYTHON
-      # UI tests run in Xcode Cloud and locally; on GitHub's slower shared runners their first look at the
-      # character sheet can time out, so only the unit tests run here.
+      # UI tests remain in Xcode Cloud/local runs until shared-runner timeouts are addressed.
       - name: Build and test the Xcode app
         run: >-
           xcodebuild test -project RequiemCharacterSheet.xcodeproj
@@ -63,4 +142,18 @@ jobs:
         if: always()
         with:
           name: requiem-ios-test-results
-          path: ios-test-results.xcresult
+          path: |
+            ios-host-tests*.xml
+            ios-test-results.xcresult
+
+  result:
+    name: CI result
+    if: always()
+    needs: [policy, android, exchange, ios]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require every selected job to succeed
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: python3 scripts/ci_policy.py aggregate

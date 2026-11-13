@@ -22,6 +22,7 @@ class BookEntry internal constructor(val kind: CatalogKind, internal val raw: Js
     val qualifierPrompt: String? get() = raw.obj("qualifier")?.str("prompt")
     val qualifierOptions: List<String> get() = raw.obj("qualifier")?.strings("options").orEmpty()
     val qualifierFromSpecialties: Boolean get() = raw.obj("qualifier")?.flag("fromSpecialties") == true
+    val qualifierFromCovenants: Boolean get() = raw.obj("qualifier")?.flag("fromCovenants") == true
     val coilOnly: Boolean get() = raw.flag("coilOnly")
     val bookId: String get() = raw.obj("source")?.str("book").orEmpty()
     val bookName: String get() = books[bookId] ?: bookId
@@ -60,9 +61,12 @@ fun Ritual.dots(catalog: Catalog): Int = catalog.entry(CatalogKind.rituals, sour
 
 fun traitName(id: String): String = (attributeDefinitions + skillDefinitions).firstOrNull { it.id == id }?.name ?: id
 internal fun dotsText(value: Int): String = "•".repeat(value.coerceIn(0, 10))
+fun BookEntry.ratingsDescription(): String = ratings.joinToString(" or ") { "$it ${if (it == 1) "dot" else "dots"}" }
+
 fun BookEntry.ratingsText(): String {
+    fun dots(value: Int) = "●".repeat(value.coerceIn(0, 10))
     if (ratings.isEmpty()) return ""
-    if (ratings.size == 1) return dotsText(ratings.first())
-    return if (ratings == (ratings.first()..ratings.last()).toList()) "${dotsText(ratings.first())}–${dotsText(ratings.last())}"
-    else ratings.joinToString(" or ", transform = ::dotsText)
+    if (ratings.size == 1) return dots(ratings.first())
+    return if (ratings == (ratings.first()..ratings.last()).toList()) "${dots(ratings.first())} to ${dots(ratings.last())}"
+    else ratings.joinToString(" or ", transform = ::dots)
 }

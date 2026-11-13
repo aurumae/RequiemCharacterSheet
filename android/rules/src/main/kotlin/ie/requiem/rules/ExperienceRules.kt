@@ -63,7 +63,7 @@ private fun CharacterSave.experienceCost(key: String, catalog: Catalog): Int {
             val entry = discipline?.let { catalog.entry(CatalogKind.disciplines, it.source) }
             if (entry != null && !entry.isRitualDiscipline && entry.id in inClanDisciplines(catalog)) 3 else 4
         }
-        "coil" -> if (coils.any { it.id.swiftKey() == id && isMysteryCoil(it) }) 3 else 4
+        "coil" -> if (coils.any { it.id.swiftKey() == id && isMysteryCoil(it, catalog) }) 3 else 4
         "ritual" -> {
             val ritual = rituals.firstOrNull { it.id.swiftKey() == id } ?: return 2
             val discipline = ritual.discipline(catalog)

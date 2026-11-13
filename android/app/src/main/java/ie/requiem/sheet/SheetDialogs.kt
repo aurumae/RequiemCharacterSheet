@@ -47,7 +47,7 @@ internal fun SheetDialogs(route: String?, c: CharacterSave, catalog: Catalog, ed
                     "detail" -> catalog.entry(kind.catalogKind, row.source)?.let { entry -> EntryDetailSheet(c.bookDetail(entry, catalog, row.rating ?: 0, row.qualifier), ::close) }
                     "delete" -> ConfirmRemoval(row.name.ifBlank { kind.title }, { edit(SheetEdit.RemoveEntry(kind, id)); close() }, ::close)
                     else -> CustomEntryDialog(kind, row, c, catalog, onCommit = { name, discipline, dots, cost ->
-                        if (kind == EntryKind.Coil && c.coils.any { it.id == id && c.isMysteryCoil(it) }) edit(SheetEdit.Mystery(catalog.source(CatalogKind.mysteries, name), rename = true))
+                        if (kind == EntryKind.Coil && c.coils.any { it.id == id && it.mystery == c.mystery }) edit(SheetEdit.Mystery(catalog.source(CatalogKind.mysteries, name), rename = true))
                         else edit(SheetEdit.RenameEntry(kind, id, name))
                         if (kind == EntryKind.Ritual) edit(SheetEdit.CustomRitual(id, catalog.source(CatalogKind.disciplines, discipline), dots))
                         if (kind == EntryKind.Devotion) edit(SheetEdit.CustomDevotionCost(id, cost))
@@ -61,14 +61,14 @@ internal fun SheetDialogs(route: String?, c: CharacterSave, catalog: Catalog, ed
                     val (source, qualifier) = if (kind == EntryKind.Merit) catalog.parseMerit(name) else catalog.source(kind.catalogKind, name) to null
                     val entry = catalog.entry(kind.catalogKind, source)
                     if (kind == EntryKind.Merit && entry?.qualifierPrompt != null &&
-                        (qualifier == null || (c.qualifierChoices(entry)?.let { qualifier !in it } == true))) navigate("qualifierAdd|${entry.id}")
+                        !c.validQualifier(entry, qualifier, catalog)) navigate("qualifierAdd|${entry.id}")
                     else { edit(SheetEdit.AddEntry(kind, source, qualifier, catalog.source(CatalogKind.disciplines, discipline), dots, cost, UUID.fromString(newId))); close() }
                 }, dismiss = ::close)
             }
             "qualifierAdd", "qualifierEdit" -> {
                 val merit = if (type == "qualifierEdit") c.merits.firstOrNull { it.id.toString() == parts[1] } else null
                 val entry = catalog.entry(CatalogKind.merits, if (merit != null) merit.source.catalog else parts[1])
-                if (entry != null) QualifierDialog(entry, c, merit?.qualifier.orEmpty(), if (merit == null) "Add" else "Done", { text ->
+                if (entry != null) QualifierDialog(entry, c, catalog, merit?.qualifier.orEmpty(), if (merit == null) "Add" else "Done", { text ->
                     if (merit == null) edit(SheetEdit.AddEntry(EntryKind.Merit, entry.source(), text.ifBlank { null }, id = UUID.fromString(newId)))
                     else edit(SheetEdit.MeritQualifier(merit.id, text))
                     close()
@@ -131,9 +131,9 @@ private fun NumberPrompt(title: String, initial: Int, legal: IntRange, commit: (
 }
 
 @Composable
-private fun QualifierDialog(entry: BookEntry, c: CharacterSave, initial: String, action: String, commit: (String) -> Unit, dismiss: () -> Unit) {
+private fun QualifierDialog(entry: BookEntry, c: CharacterSave, catalog: Catalog, initial: String, action: String, commit: (String) -> Unit, dismiss: () -> Unit) {
     var draft by rememberSaveable { mutableStateOf(initial) }
-    val options = c.qualifierChoices(entry)
+    val options = c.qualifierChoices(entry, catalog)
     AlertDialog(onDismissRequest = dismiss, title = { SheetText(entry.name) }, text = {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             SheetText(entry.qualifierPrompt.orEmpty())
@@ -144,7 +144,7 @@ private fun QualifierDialog(entry: BookEntry, c: CharacterSave, initial: String,
             } else OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { SheetText(entry.qualifierPrompt ?: "Qualifier") }, singleLine = true,
                 modifier = Modifier.fillMaxWidth().testTag("qualifier-input"))
         }
-    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = options == null || draft in options) { SheetText(action) } },
+    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = c.validQualifier(entry, draft, catalog)) { SheetText(action) } },
         dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }
 

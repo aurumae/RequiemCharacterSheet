@@ -26,11 +26,9 @@ class Beta2RulesTest {
     }
     @Test fun catalogFlagsAndSourcebookCountsMatchIOS() {
         val entries = catalog.bookEntries(CatalogKind.conditions)
-        assertEquals(58, entries.size)
-        assertEquals(mapOf("vtr2e-core" to 44, "cofd-core" to 11, "secrets-of-the-covenants" to 3), entries.groupingBy { it.bookId }.eachCount())
-        assertEquals(listOf("distracted", "stumbled"), entries.filter { !CharacterCondition(it.source()).info(catalog).beatOnResolve }.map { it.id }.sorted())
-        assertEquals(60, catalog.bookEntries(CatalogKind.merits).count { it.bookId == "secrets-of-the-covenants" })
-        assertEquals(28, catalog.bookEntries(CatalogKind.rituals).count { it.bookId == "secrets-of-the-covenants" })
+        assertEquals(sourceEntries(CatalogKind.conditions), catalog.entries(CatalogKind.conditions))
+        for (id in listOf("distracted", "stumbled")) assertFalse(CharacterCondition(source(id)).info(catalog).beatOnResolve)
+        assertTrue(entries.any { it.id == "primeval-truths" && it.bookId == "secrets-of-the-covenants" })
     }
     @Test fun duplicateRulesAndRecentChoicesSurviveRemoval() {
         var c = CharacterSave().add("charmed")
@@ -94,7 +92,7 @@ class Beta2RulesTest {
     @Test fun specialtyMeritsRequireChoicesAndFollowRenameAndPaidRemoval() {
         val entry = catalog.entry(CatalogKind.merits, "area-of-expertise")!!
         var c = CharacterSave(xpMode = true, experiences = 20)
-        assertTrue(c.qualifierChoices(entry)!!.isEmpty())
+        assertTrue(c.qualifierChoices(entry, catalog)!!.isEmpty())
         assertEquals(c, c.edit(SheetEdit.AddEntry(EntryKind.Merit, entry.source(), "Rifles"), catalog))
         c = c.edit(SheetEdit.AddSpecialty("firearms", " Rifles "), catalog)
         assertEquals("Rifles (Firearms)", c.specialtyChoices.single().label)
@@ -155,6 +153,6 @@ class Beta2RulesTest {
             .edit(SheetEdit.ConditionText(custom, ConditionField.Effect, "Shadows whisper"), catalog)
             .edit(SheetEdit.ConditionPersistent(custom, true), catalog)
         assertEquals(1, c.beats); assertEquals(1, c.experiences)
-        System.getProperty("exchangeDir")?.let { File(it, "kotlin-beta2-play.json").writeText(codec.encode(c)) }
+        ContractFixtures.exchange("beta2-play")?.let { File(it, "kotlin-beta2-play.json").writeText(codec.encode(c)) }
     }
 }

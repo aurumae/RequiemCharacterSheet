@@ -81,7 +81,7 @@ data class CreationState(
 internal val attributeIds = attributeDefinitions.map { it.id }
 internal val coreSkillIds = skillDefinitions.map { it.id }
 
-internal const val CURRENT_SCHEMA = 11
+internal const val CURRENT_SCHEMA = 12
 
 // Seconds since 2001-01-01 UTC. Retain the Double read from disk, including its fraction.
 internal fun foundationNow(): Double = (System.currentTimeMillis() - 978_307_200_000L) / 1000.0
@@ -110,6 +110,7 @@ data class CharacterSave(
     val willpowerTrack: List<WillpowerMark> = emptyList(),
     val humanity: Int = 7,
     val clanBaneActive: Boolean = false,
+    val elderBaneActive: Boolean = false,
     val touchstones: List<Touchstone> = (1..10).map { Touchstone(it) },
     val disciplines: List<Discipline> = emptyList(),
     val merits: List<Merit> = emptyList(),
@@ -131,6 +132,6 @@ data class CharacterSave(
     val conditions: List<CharacterCondition> = emptyList(),
 ) {
     init { require(paidDots.keys.all(::validTraitKey)) { "Invalid paid-dot trait" } }
-    val savedSchemaVersion: Int get() = if (conditions.isNotEmpty() || changeLog.any { it.trait.startsWith("condition:") }) 11 else 10
+    val savedSchemaVersion: Int get() = if (elderBaneActive) 12 else if (conditions.isNotEmpty() || changeLog.any { it.trait.startsWith("condition:") }) 11 else 10
     val experiencesAvailable: Int get() = experiences - changeLog.sumOf { it.experiences }
 }

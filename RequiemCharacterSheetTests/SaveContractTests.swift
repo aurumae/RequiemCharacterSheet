@@ -8,6 +8,35 @@ import Testing
 private final class FixtureBundleMarker: NSObject {}
 
 enum SaveFixtures {
+    struct Contract: Decodable {
+        struct Platform: Decodable {
+            let readSchema: Int
+            let catalogKinds, capabilities: [String]
+            let writers: [String: Int]
+        }
+        struct Scenario: Decodable { let schema: Int?; let requires, roles: [String] }
+        let platforms: [String: Platform]
+        let scenarios: [String: Scenario]
+    }
+    struct Plan: Decodable { let scenarios, catalogKinds: [String] }
+    // Missing or malformed metadata is a hard test failure, never an empty selection.
+    static let contract = try! JSONDecoder().decode(Contract.self, from: resource("contracts"))
+    static let plan: Plan? = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_PLAN"].map {
+        try! JSONDecoder().decode(Plan.self, from: Data(contentsOf: URL(fileURLWithPath: $0)))
+    }
+    static func supported(_ scenario: Contract.Scenario, by platform: Contract.Platform) -> Bool {
+        (scenario.schema ?? 1) <= platform.readSchema && Set(scenario.requires).isSubset(of: Set(platform.capabilities))
+    }
+    static func names(_ role: String) -> [String] {
+        contract.scenarios.filter { $0.value.roles.contains(role) && supported($0.value, by: contract.platforms["ios"]!) }
+            .keys.sorted().map { $0.replacingOccurrences(of: "characters/", with: "").replacingOccurrences(of: ".json", with: "") }
+    }
+    static func selected(_ scenario: String) -> Bool {
+        plan?.scenarios.contains(scenario) ?? contract.platforms.values.allSatisfy { supported(contract.scenarios[scenario]!, by: $0) }
+    }
+    static func exchange(_ scenario: String) -> String? {
+        selected(scenario) ? ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] : nil
+    }
     static func data(_ name: String) throws -> Data { try resource("characters/" + name) }
 
     static func resource(_ name: String) throws -> Data {
@@ -24,8 +53,8 @@ enum SaveFixtures {
 
 @MainActor
 struct SaveContractTests {
-    private static let current = ["v10-advanced", "v10-guided", "v10-morbus", "v11-conditions", "v12-elder-bane"]
-    private static let historical = ["v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided", "v9-advanced", "v9-guided"]
+    private static var current: [String] { SaveFixtures.names("current") }
+    private static var historical: [String] { SaveFixtures.names("historical") }
     private static let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"]
     private let encoder = JSONEncoder()
 
@@ -157,13 +186,13 @@ struct SaveContractTests {
         }
         #expect(character.experiencesAvailable == -31)
         #expect(character.healthBoxes.allSatisfy { $0 == .none })
-        if let path = Self.exchange {
+        if let path = SaveFixtures.exchange("ordinary-play.json") {
             try encoder.encode(character).write(to: URL(fileURLWithPath: path).appendingPathComponent("swift-ordinary-play.json"))
         }
     }
 
     @Test func readsKotlinOrdinaryPlay() throws {
-        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let path = Self.exchange else { return }
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let path = SaveFixtures.exchange("ordinary-play.json") else { return }
         let data = try Data(contentsOf: URL(fileURLWithPath: path).appendingPathComponent("kotlin-ordinary-play.json"))
         let c = try JSONDecoder().decode(Character.self, from: data)
         #expect(c.experiencesAvailable == -31)
@@ -176,7 +205,7 @@ struct SaveContractTests {
     }
 
     @Test func readsKotlinBeta2Conditions() throws {
-        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let path = Self.exchange else { return }
+        guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1", let path = SaveFixtures.exchange("beta2-play") else { return }
         let data = try Data(contentsOf: URL(fileURLWithPath: path).appendingPathComponent("kotlin-beta2-play.json"))
         let c = try JSONDecoder().decode(Character.self, from: data)
         #expect(c.beats == 1 && c.experiences == 1)
@@ -197,7 +226,8 @@ struct SaveContractTests {
                        "covenants": c.covenants.all.map(\.id), "banes": c.banes.all.map(\.id),
                        "rituals": c.rituals.all.map(\.id), "devotions": c.devotions.all.map(\.id),
                        "mysteries": c.mysteries.all.map(\.id), "scales": c.scales.all.map(\.id),
-                       "archetypes": c.archetypes.all.map(\.id), "bloodlines": c.bloodlines.all.map(\.id), "conditions": c.conditions.all.map(\.id)]
+                       "archetypes": c.archetypes.all.map(\.id), "bloodlines": c.bloodlines.all.map(\.id), "conditions": c.conditions.all.map(\.id),
+                       "elderBanes": c.elderBanes.all.map(\.id)]
             let url = URL(fileURLWithPath: path).appendingPathComponent("catalog-ids.json")
             try encoder.encode(ids).write(to: url)
         }
@@ -206,7 +236,7 @@ struct SaveContractTests {
             let character = try JSONDecoder().decode(Character.self, from: data)
             let written = try encoder.encode(character)
             #expect(try object(written) == object(data))
-            if let path = Self.exchange {
+            if let path = SaveFixtures.exchange("characters/\(name).json") {
                 let url = URL(fileURLWithPath: path).appendingPathComponent("swift-" + name + ".json")
                 try written.write(to: url)
             }
@@ -252,12 +282,11 @@ struct SaveContractTests {
                 #expect(character.creation?.favoredAttribute == nil)
             }
         }
-        // Version 12 (elder banes) is current on iOS; v11-future and v12-future stay for apps that don't read them yet
-        let future = try SaveFixtures.data("v13-future")
+        let future = try JSONSerialization.data(withJSONObject: ["schemaVersion": Character.currentSchemaVersion + 1, "name": "Future save"])
         let id = UUID()
         let url = directory.appendingPathComponent(id.uuidString + ".json")
         try future.write(to: url)
-        #expect(throws: CharacterStoreError.newerFormat(version: 13)) { try store.load(id) }
+        #expect(throws: CharacterStoreError.newerFormat(version: Character.currentSchemaVersion + 1)) { try store.load(id) }
         #expect(try Data(contentsOf: url) == future)
     }
 
@@ -290,6 +319,7 @@ struct SaveContractTests {
         }
         #expect(try defaults(blankFile) == defaults(encoder.encode(Character())))
         for name in Self.current + Self.historical {
+            guard SaveFixtures.selected("characters/\(name).json") else { continue }
             let url = URL(fileURLWithPath: path).appendingPathComponent("kotlin-" + name + ".json")
             let file = try Data(contentsOf: url)
             let actual = try JSONDecoder().decode(Character.self, from: file)
@@ -310,7 +340,7 @@ struct SaveContractTests {
 @MainActor
 struct GuidedCreationContractTests {
     private let encoder = JSONEncoder()
-    private var exchange: String? { ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] }
+    private var exchange: String? { SaveFixtures.exchange("guided-creation.json") }
     private func id(_ row: Int) -> UUID { UUID(uuidString: String(format: "30000000-0000-0000-0000-%012d", row))! }
     private struct Step: Decodable {
         let action: String
@@ -474,13 +504,13 @@ struct BloodlineContractTests {
             #expect(c.experiencesAvailable == step.available)
             #expect(c.changeLog.count == step.logCount)
         }
-        if let path = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] {
+        if let path = SaveFixtures.exchange("bloodline-advancement.json") {
             try encoder.encode(c).write(to: URL(fileURLWithPath: path).appendingPathComponent("swift-bloodline.json"))
         }
     }
     @Test func readsKotlinBloodline() throws {
         guard ProcessInfo.processInfo.environment["REQUIEM_CHECK_KOTLIN"] == "1",
-              let path = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] else { return }
+              let path = SaveFixtures.exchange("bloodline-advancement.json") else { return }
         let file = try Data(contentsOf: URL(fileURLWithPath: path).appendingPathComponent("kotlin-bloodline.json"))
         let c = try JSONDecoder().decode(Character.self, from: file)
         #expect(c.bloodlineSource == .catalog("morbus"))
@@ -494,7 +524,48 @@ struct BloodlineContractTests {
 /// Exercises the public transfer API, as well as the decoder, against Android's exported files.
 @MainActor
 struct CharacterTransferContractTests {
-    private let names = ["v10-advanced", "v10-guided", "v10-morbus", "v8-paid", "v11-conditions"]
+    private var names: [String] { SaveFixtures.names("transfer") }
+
+    @Test func declarationsMatchActualReaderAndConditionalWriters() throws {
+        let p = SaveFixtures.contract.platforms["ios"]!
+        #expect(p.readSchema == Character.currentSchemaVersion)
+        let plain = Character()
+        let conditions = try JSONDecoder().decode(Character.self, from: SaveFixtures.data("v11-conditions"))
+        let history = try JSONDecoder().decode(Character.self, from: SaveFixtures.data("v11-conditions"))
+        history.conditions.removeAll()
+        let elder = Character(); elder.elderBaneActive = true
+        let both = try JSONDecoder().decode(Character.self, from: SaveFixtures.data("v12-elder-bane"))
+        let off = Character(); off.elderBaneActive = true; off.elderBaneActive = false
+        let cases = ["plain": plain, "conditions": conditions, "history": history, "elder": elder, "elder-and-conditions": both, "elder-off": off]
+        #expect(Set(cases.keys) == Set(p.writers.keys))
+        for (name, c) in cases {
+            let fields = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(c)) as? [String: Any])
+            #expect(fields["schemaVersion"] as? Int == p.writers[name])
+            #expect((fields["elderBaneActive"] != nil) == c.elderBaneActive)
+        }
+    }
+
+    @Test func everyNewerScenarioIsRejectedWithoutChangingStorage() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("Reject-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = CharacterStore(directory: directory)
+        let original = try SaveFixtures.data("v10-advanced")
+        let id = try store.importCharacter(store.prepareImport(of: original))
+        let newer = SaveFixtures.contract.scenarios.filter { $0.key.hasPrefix("characters/") && ($0.value.schema ?? 1) > Character.currentSchemaVersion }
+        var files = try newer.keys.sorted().map { try SaveFixtures.resource($0.replacingOccurrences(of: ".json", with: "")) }
+        files.append(try JSONSerialization.data(withJSONObject: ["name": "Future save", "schemaVersion": Character.currentSchemaVersion + 1, "unknownFutureState": ["retain": true]]))
+        for data in files {
+            let fields = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            let version = try #require(fields["schemaVersion"] as? Int)
+            #expect(throws: CharacterStoreError.newerFormat(version: version)) { try store.prepareImport(of: data) }
+            #expect(try store.exportData(for: id) == original)
+            let futureID = UUID()
+            let url = directory.appendingPathComponent(futureID.uuidString + ".json")
+            try data.write(to: url)
+            #expect(throws: CharacterStoreError.newerFormat(version: version)) { try store.load(futureID) }
+            #expect(try Data(contentsOf: url) == data)
+        }
+    }
 
     @Test func sharedCopyNamesMatchAndroid() throws {
         struct CopyCase: Decodable { let name: String; let taken: [String]; let copy: String }
@@ -514,7 +585,7 @@ struct CharacterTransferContractTests {
             let id = try store.importCharacter(pending)
             let exported = try store.exportData(for: id)
             #expect(exported == bytes)
-            if let exchange = ProcessInfo.processInfo.environment["REQUIEM_EXCHANGE_DIR"] {
+            if let exchange = SaveFixtures.exchange("characters/\(name).json") {
                 try exported.write(to: URL(fileURLWithPath: exchange).appendingPathComponent("swift-transfer-\(name).vtrcharacter"))
             }
         }
@@ -527,6 +598,7 @@ struct CharacterTransferContractTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let store = CharacterStore(directory: directory)
         for name in names {
+            guard SaveFixtures.selected("characters/\(name).json") else { continue }
             let bytes = try Data(contentsOf: URL(fileURLWithPath: exchange).appendingPathComponent("kotlin-transfer-\(name).vtrcharacter"))
             let pending = try store.prepareImport(of: bytes)
             let id = try store.importCharacter(pending)

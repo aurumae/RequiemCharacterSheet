@@ -5,7 +5,7 @@ import java.util.Locale
 import kotlinx.serialization.json.*
 
 enum class CatalogKind {
-    disciplines, merits, banes, clans, bloodlines, covenants, rituals, devotions, mysteries, scales, archetypes, conditions
+    disciplines, merits, banes, clans, bloodlines, covenants, rituals, devotions, mysteries, scales, archetypes, conditions, elderBanes
 }
 
 /** Indexes the original book JSON, keeping the full rule and presentation data on each entry. */

@@ -34,7 +34,7 @@ fun CharacterSave.entryRows(kind: EntryKind, catalog: Catalog): List<SheetEntry>
         EntryKind.Coil -> coils.map { coil ->
             val e = catalog.entry(CatalogKind.mysteries, coil.mystery)
             row(coil.id, coil.mystery, coil.rating, customChoices = (0..5).toList()).copy(notes = buildList {
-                if (isMysteryCoil(coil)) add("Your Mystery")
+                if (isMysteryCoil(coil, catalog)) add("Your Mystery")
                 val learned = e?.raw?.objects("tiers").orEmpty().filter { it.int("dots") <= coil.rating }.mapNotNull { it.str("name") }
                 if (learned.isNotEmpty()) add(learned.joinToString(" · "))
             }, warnings = listOfNotNull(coilWarning(coil, catalog)))
@@ -80,7 +80,7 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
             EntryKind.Merit -> if (needle.isNotEmpty()) "Merits" else if (e.category == "supernatural") "Supernatural (not for Kindred)" else e.category.replaceFirstChar { it.uppercaseChar() }
             EntryKind.Ritual -> catalog.name(CatalogKind.disciplines, TraitSource(catalog = e.discipline))
             EntryKind.Devotion -> if (rank(e) == 0) "You have the Disciplines" else "Other Devotions"
-            EntryKind.Scale -> catalog.name(CatalogKind.mysteries, TraitSource(catalog = e.raw.str("mystery").orEmpty()))
+            EntryKind.Scale -> if (e.raw.int("anyCoil") > 0) "Any Mystery" else catalog.name(CatalogKind.mysteries, TraitSource(catalog = e.raw.str("mystery").orEmpty()))
             EntryKind.Coil -> e.bookName
             else -> kind.title + "s"
         }
@@ -102,8 +102,10 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
     }
 }
 fun BookEntry.source(): TraitSource = TraitSource(catalog = id)
-internal fun BookEntry.scalePrerequisiteText(catalog: Catalog): String = raw.objects("prerequisiteCoils").joinToString(" or ") { p ->
+internal fun BookEntry.scalePrerequisiteText(catalog: Catalog): String = (listOfNotNull(
+    raw.int("anyCoil").takeIf { it > 0 }?.let { "Any Coil ${dotsText(it)}" }
+) + raw.objects("prerequisiteCoils").map { p ->
     val mystery = catalog.entry(CatalogKind.mysteries, p.str("mystery"))
     val tier = mystery?.raw?.objects("tiers")?.firstOrNull { it.int("dots") == p.int("dots") }?.str("name") ?: p.str("tier").orEmpty()
     "$tier (${mystery?.name ?: p.str("mystery")} ${dotsText(p.int("dots"))})"
-}
+}).joinToString(" or ")

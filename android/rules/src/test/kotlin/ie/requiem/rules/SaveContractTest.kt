@@ -57,13 +57,20 @@ class SaveContractTest {
     }
 
     @Test fun readsAllBooksAndResolvesNamesAsSwiftDoes() {
-        assertEquals(setOf("vtr2e-core", "cofd-core", "thousand-years-of-night", "dark-eras-companion", "secrets-of-the-covenants"), catalog.books.keys)
+        val expectedBooks = sourceCatalogs().map { it.getValue("book").jsonObject.getValue("id").jsonPrimitive.content }
+        assertTrue(expectedBooks.isNotEmpty())
+        assertEquals(expectedBooks, catalog.books.keys.toList())
+        CatalogKind.entries.forEach { kind ->
+            val expected = sourceEntries(kind)
+            assertEquals(kind.name, expected, catalog.entries(kind))
+            assertEquals(kind.name, expected.keys.toList(), catalog.entries(kind).keys.toList())
+        }
         assertTrue(CatalogKind.entries.all { catalog.entries(it).isNotEmpty() })
         System.getProperty("exchangeDir")?.let { path ->
             val expected = Json.decodeFromString<Map<String, List<String>>>(File(path, "catalog-ids.json").readText())
             val actual = CatalogKind.entries.associate { it.name to catalog.entries(it).keys.toList() } +
                 ("books" to catalog.books.keys.toList())
-            assertEquals(expected, actual)
+            assertEquals(expected.filterKeys { it == "books" || it in ContractFixtures.catalogKinds() }, actual.filterKeys { it == "books" || it in ContractFixtures.catalogKinds() })
         }
         assertEquals("cruac", catalog.source(CatalogKind.disciplines, "Cruac").catalog)
         assertEquals("ritual", catalog.entries(CatalogKind.disciplines).getValue("cruac")["kind"]?.jsonPrimitive?.content)
@@ -118,12 +125,12 @@ class SaveContractTest {
     }
 
     @Test fun openingAnOldSaveKeepsItsTimestampAndDoesNotRequestAWrite() {
-        for (name in listOf("v6-clan-bane", "v7-sorcery", "v8-paid", "v9-early-guided", "v9-advanced", "v9-guided")) {
+        for (name in ContractFixtures.names("historical")) {
             val text = fixture(name)
             val c = codec.decode(text)
             assertNull(codec.encodeEdit(c, c, at = 800_000_100.0))
             assertEquals(Json.parseToJsonElement(text).jsonObject.getValue("modifiedAt").jsonPrimitive.double, c.modifiedAt, 0.0)
-            System.getProperty("exchangeDir")?.let { directory ->
+            ContractFixtures.exchange("characters/$name.json")?.let { directory ->
                 val edited = c.copy(name = c.name + " (edited on Android)")
                 File(directory, "kotlin-$name.json").writeText(requireNotNull(codec.encodeEdit(c, edited, 800_000_002.875)))
             }
@@ -141,18 +148,27 @@ class SaveContractTest {
 
     @Test fun exchangesCurrentCharactersAndPreservesHiddenState() {
         val exchange = System.getProperty("exchangeDir")?.let(::File)
-        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v11-conditions")) {
-            val text = exchange?.resolve("swift-$name.json")?.readText() ?: fixture(name)
+        for (name in ContractFixtures.names("current")) {
+            val selected = ContractFixtures.selected("characters/$name.json")
+            val text = exchange?.takeIf { selected }?.resolve("swift-$name.json")?.readText() ?: fixture(name)
             val original = codec.decode(text)
-            if (name != "v10-guided") {
+            // A current supported contract must not silently discard newly added fields.
+            fun semantic(value: JsonElement): Any? = when (value) {
+                JsonNull -> null
+                is JsonObject -> value.mapValues { semantic(it.value) }
+                is JsonArray -> value.map(::semantic)
+                is JsonPrimitive -> if (value.isString) value.content else value.booleanOrNull ?: value.content.toBigDecimal().stripTrailingZeros()
+            }
+            assertEquals(name, semantic(Json.parseToJsonElement(text)), semantic(Json.parseToJsonElement(codec.encode(original))))
+            if (name in listOf("v10-advanced", "v10-morbus", "v11-conditions", "v12-elder-bane")) {
                 val merit = original.merits.single { it.source.catalog == "defensive-combat" }
                 val key = "merit:" + merit.id.toString().uppercase()
                 assertEquals(1, original.paidDots[key]?.get(1))
                 assertEquals(key, original.changeLog.last { !it.trait.startsWith("condition:") }.trait)
-                assertEquals(if (name == "v11-conditions") 0 else -1, original.experiencesAvailable)
+                assertEquals(if (original.conditions.isNotEmpty()) 0 else -1, original.experiencesAvailable)
                 assertEquals(2, original.rituals.size)
                 assertEquals("Unpublished power", original.devotions.last().source.custom)
-            } else {
+            } else if (name == "v10-guided") {
                 assertEquals("presence", original.creation?.favoredAttribute)
                 assertEquals(0, original.creation?.attributePriorities?.get("social"))
                 assertEquals(1, original.creation?.skillPriorities?.get("physical"))
@@ -162,7 +178,7 @@ class SaveContractTest {
             val edited = original.copy(name = original.name + " (edited on Android)")
             val written = requireNotNull(codec.encodeEdit(original, edited, at = 800_000_002.875))
             assertEquals(edited.copy(modifiedAt = 800_000_002.875), codec.decode(written))
-            exchange?.resolve("kotlin-$name.json")?.writeText(written)
+            exchange?.takeIf { selected }?.resolve("kotlin-$name.json")?.writeText(written)
         }
     }
 
@@ -180,7 +196,7 @@ class SaveContractTest {
     }
 
     @Test fun futureAndDamagedSavesCannotEnterTheEditPath() {
-        assertEquals(12, assertThrows(UnsupportedSchema::class.java) { codec.decode(fixture("v12-future")) }.version)
+        assertEquals(CharacterSave().schemaVersion + 1, assertThrows(UnsupportedSchema::class.java) { codec.decode(ContractFixtures.future().decodeToString()) }.version)
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"id":"broken"}""") }
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"healthTrack":["lost"]}""") }
         assertThrows(IllegalArgumentException::class.java) { codec.decode("""{"paidDots":{"broken":{"1":3}}}""") }

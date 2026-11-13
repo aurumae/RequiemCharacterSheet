@@ -18,9 +18,9 @@ class OrdinaryPlayUiTest {
     }
     private fun choose(kind: String, id: String, search: String) {
         sheet(hasText("Add $kind")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput(search)
-        ui.onNodeWithTag("catalog-options").performScrollToNode(hasTestTag("catalog-$id"))
-        ui.onNodeWithTag("catalog-$id").performClick()
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput(search)
+        ui.onAllNodesWithTag("catalog-options").onFirst().performScrollToNode(hasTestTag("catalog-$id"))
+        ui.onAllNodesWithTag("catalog-$id").onFirst().performClick()
     }
     private fun rated(name: String, value: Int) {
         sheet(hasContentDescription("Options for $name")).performClick()
@@ -64,6 +64,7 @@ class OrdinaryPlayUiTest {
         jump("Character")
         sheet(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Daeva")
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-daeva"))
         ui.onNodeWithTag("identity-option-daeva").performClick()
         jump("Disciplines"); choose("Discipline", "celerity", "Celerity"); xp(97)
         sheet(hasContentDescription("Celerity")).performClick()
@@ -132,10 +133,11 @@ class OrdinaryPlayUiTest {
         ui.onNodeWithText("Done").performClick(); xp(89)
         jump("Character"); sheet(hasContentDescription("Covenant")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Ordo Dracul")
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-ordo-dracul"))
         ui.onNodeWithTag("identity-option-ordo-dracul").performClick()
         jump("Coils of the Dragon"); sheet(hasText("Choose")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput("Wyrm")
-        ui.onNodeWithTag("catalog-mystery-of-the-wyrm").performClick()
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Wyrm")
+        ui.onAllNodesWithTag("catalog-mystery-of-the-wyrm").onFirst().performClick()
         choose("Scale", "kindred-sense-endowment", "Kindred Sense"); xp(87)
         rated("Coil of the Wyrm", 2); xp(81)
         remove("Kindred Sense Endowment"); xp(83)
