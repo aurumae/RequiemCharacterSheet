@@ -1,9 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-exchange_dir=$(mktemp -d)
-trap 'rm -rf "$exchange_dir"' EXIT
+strict=false
+if [[ "${1:-}" == --strict ]]; then strict=true; shift; fi
+if [[ $# -ne 0 ]]; then echo 'Usage: scripts/check-save-contract [--strict]' >&2; exit 2; fi
+report_dir=${REQUIEM_REPORT_DIR:-"$PWD/.contract-reports"}
+mkdir -p "$report_dir"
+exchange_dir=$(mktemp -d "$report_dir/exchange.XXXXXX")
+policy_args=(--output "$exchange_dir")
+if [[ "$strict" == true ]]; then policy_args+=(--strict); fi
+python3 scripts/contract_policy.py "${policy_args[@]}"
 export REQUIEM_EXCHANGE_DIR="$exchange_dir"
-swift test
-android/gradlew -p android :rules:test "-PexchangeDir=$exchange_dir"
-REQUIEM_CHECK_KOTLIN=1 swift test --skip-build --filter readsKotlin
+export REQUIEM_EXCHANGE_PLAN="$exchange_dir/plan.json"
+swift_command=${REQUIEM_SWIFT:-swift}
+gradle_args=(-p android)
+if [[ -n "${REQUIEM_GRADLE_CACHE:-}" ]]; then gradle_args+=(--project-cache-dir "$REQUIEM_GRADLE_CACHE"); fi
+if [[ -n "${REQUIEM_GRADLE_INIT:-}" ]]; then gradle_args+=(--init-script "$REQUIEM_GRADLE_INIT"); fi
+"$swift_command" test --xunit-output "$exchange_dir/swift-tests.xml"
+python3 scripts/contract_policy.py --evidence ios --reports "$exchange_dir"/swift-tests*.xml
+android/gradlew "${gradle_args[@]}" :core:test :requiem:test :app:testDebugUnitTest "-PexchangeDir=$exchange_dir" "-PcontractPlan=$REQUIEM_EXCHANGE_PLAN"
+jvm_reports=${REQUIEM_JVM_REPORT_ROOT:-android/requiem/build}
+app_reports=${REQUIEM_APP_REPORT_ROOT:-android/app/build}
+python3 scripts/contract_policy.py --evidence android --reports "$jvm_reports"/test-results/test/TEST-*.xml "$app_reports"/test-results/testDebugUnitTest/TEST-*.xml
+REQUIEM_CHECK_KOTLIN=1 "$swift_command" test --skip-build --filter readsKotlin --xunit-output "$exchange_dir/swift-consumer-tests.xml"
+echo "Exchange passed; reports: $exchange_dir"

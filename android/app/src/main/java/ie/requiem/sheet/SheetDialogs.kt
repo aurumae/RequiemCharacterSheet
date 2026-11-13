@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -21,6 +23,9 @@ import java.util.UUID
 @Composable
 internal fun SheetDialogs(route: String?, c: CharacterSave, catalog: Catalog, edit: (SheetEdit) -> Unit, navigate: (String?) -> Unit) {
     if (route == null) return
+    if (route.startsWith("condition")) { key(route) { ConditionDialogs(route, c, catalog, edit, navigate) }; return }
+    if (route.startsWith("identity")) { key(route) { IdentityDialogs(route, c, catalog, edit, navigate) }; return }
+    if (route.startsWith("specialty|")) { key(route) { SpecialtyDialog(route, c, catalog, edit) { navigate(null) } }; return }
     if (route.startsWith("creation|")) { CreationDialogs(route, c, catalog, edit, navigate); return }
     val parts = route.split('|'); val type = parts[0]
     fun close() = navigate(null)
@@ -44,7 +49,7 @@ internal fun SheetDialogs(route: String?, c: CharacterSave, catalog: Catalog, ed
                     "detail" -> catalog.entry(kind.catalogKind, row.source)?.let { entry -> EntryDetailSheet(c.bookDetail(entry, catalog, row.rating ?: 0, row.qualifier), ::close) }
                     "delete" -> ConfirmRemoval(row.name.ifBlank { kind.title }, { edit(SheetEdit.RemoveEntry(kind, id)); close() }, ::close)
                     else -> CustomEntryDialog(kind, row, c, catalog, onCommit = { name, discipline, dots, cost ->
-                        if (kind == EntryKind.Coil && c.coils.any { it.id == id && c.isMysteryCoil(it) }) edit(SheetEdit.Mystery(catalog.source(CatalogKind.mysteries, name), rename = true))
+                        if (kind == EntryKind.Coil && c.coils.any { it.id == id && it.mystery == c.mystery }) edit(SheetEdit.Mystery(catalog.source(CatalogKind.mysteries, name), rename = true))
                         else edit(SheetEdit.RenameEntry(kind, id, name))
                         if (kind == EntryKind.Ritual) edit(SheetEdit.CustomRitual(id, catalog.source(CatalogKind.disciplines, discipline), dots))
                         if (kind == EntryKind.Devotion) edit(SheetEdit.CustomDevotionCost(id, cost))
@@ -58,14 +63,14 @@ internal fun SheetDialogs(route: String?, c: CharacterSave, catalog: Catalog, ed
                     val (source, qualifier) = if (kind == EntryKind.Merit) catalog.parseMerit(name) else catalog.source(kind.catalogKind, name) to null
                     val entry = catalog.entry(kind.catalogKind, source)
                     if (kind == EntryKind.Merit && entry?.qualifierPrompt != null &&
-                        (qualifier == null || (entry.qualifierOptions.isNotEmpty() && qualifier !in entry.qualifierOptions))) navigate("qualifierAdd|${entry.id}")
+                        !c.validQualifier(entry, qualifier, catalog)) navigate("qualifierAdd|${entry.id}")
                     else { edit(SheetEdit.AddEntry(kind, source, qualifier, catalog.source(CatalogKind.disciplines, discipline), dots, cost, UUID.fromString(newId))); close() }
                 }, dismiss = ::close)
             }
             "qualifierAdd", "qualifierEdit" -> {
                 val merit = if (type == "qualifierEdit") c.merits.firstOrNull { it.id.toString() == parts[1] } else null
                 val entry = catalog.entry(CatalogKind.merits, if (merit != null) merit.source.catalog else parts[1])
-                if (entry != null) QualifierDialog(entry, merit?.qualifier.orEmpty(), if (merit == null) "Add" else "Done", { text ->
+                if (entry != null) QualifierDialog(entry, c, catalog, merit?.qualifier.orEmpty(), if (merit == null) "Add" else "Done", { text ->
                     if (merit == null) edit(SheetEdit.AddEntry(EntryKind.Merit, entry.source(), text.ifBlank { null }, id = UUID.fromString(newId)))
                     else edit(SheetEdit.MeritQualifier(merit.id, text))
                     close()
@@ -128,20 +133,20 @@ private fun NumberPrompt(title: String, initial: Int, legal: IntRange, commit: (
 }
 
 @Composable
-private fun QualifierDialog(entry: BookEntry, initial: String, action: String, commit: (String) -> Unit, dismiss: () -> Unit) {
+private fun QualifierDialog(entry: BookEntry, c: CharacterSave, catalog: Catalog, initial: String, action: String, commit: (String) -> Unit, dismiss: () -> Unit) {
     var draft by rememberSaveable { mutableStateOf(initial) }
-    val options = entry.qualifierOptions
+    val options = c.qualifierChoices(entry, catalog)
     AlertDialog(onDismissRequest = dismiss, title = { SheetText(entry.name) }, text = {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             SheetText(entry.qualifierPrompt.orEmpty())
-            if (options.isNotEmpty()) options.forEach { option ->
+            if (options != null) options.forEach { option ->
                 Row(Modifier.fillMaxWidth().clickable { draft = option }, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                    RadioButton(selected = draft == option, onClick = { draft = option }); SheetText(option)
+                    RadioButton(selected = draft == option, onClick = { draft = option }); SheetText(if (entry.qualifierFromSpecialties) c.specialtyChoices.firstOrNull { it.specialty == option }?.label ?: option else option)
                 }
             } else OutlinedTextField(value = draft, onValueChange = { draft = it }, label = { SheetText(entry.qualifierPrompt ?: "Qualifier") }, singleLine = true,
                 modifier = Modifier.fillMaxWidth().testTag("qualifier-input"))
         }
-    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = options.isEmpty() || draft in options) { SheetText(action) } },
+    }, confirmButton = { TextButton(onClick = { commit(draft.trim()) }, enabled = c.validQualifier(entry, draft, catalog)) { SheetText(action) } },
         dismissButton = { TextButton(onClick = dismiss) { SheetText("Cancel") } })
 }
 

@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -8,6 +10,10 @@ import java.util.UUID
 
 class ParityUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun library() {
         ui.onNodeWithTag("dark-pack-splash").performClick()
         ui.waitUntil(8000) { ui.onAllNodesWithTag("character-library").fetchSemanticsNodes().isNotEmpty() }
@@ -17,12 +23,16 @@ class ParityUiTest {
         return ui.onNode(matcher)
     }
     private fun jump(name: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(name).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(name) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun choose(field: String, id: String, search: String) {
+        // At phone width the temporary XP notice can cover the Clan row. Like
+        // CoreSheetUiTest, wait for that notice before testing a physical tap.
+        ui.waitUntil(6_000) { ui.onAllNodesWithText("Your available Experiences are now below zero.").fetchSemanticsNodes().isEmpty() }
         sheet(hasContentDescription(field)).performClick()
         ui.onNodeWithTag("identity-search").performTextInput(search)
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-$id"))
         ui.onNodeWithTag("identity-option-$id").performClick()
     }
@@ -58,8 +68,9 @@ class ParityUiTest {
         ui.onNodeWithContentDescription("Character name").performImeAction()
         jump("Disciplines")
         sheet(hasText("Add Discipline")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput("Cachexy")
-        ui.onNodeWithTag("catalog-cachexy").assertIsNotEnabled()
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Cachexy")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
+        ui.onAllNodesWithTag("catalog-cachexy").onFirst().assertIsNotEnabled()
         ui.onNodeWithText("Only the Morbus bloodline can learn Cachexy").assertExists()
         ui.onNodeWithText("Cancel").performClick()
         jump("Character")
@@ -69,8 +80,9 @@ class ParityUiTest {
         ui.onNodeWithContentDescription("XP Mode").performClick()
         jump("Disciplines")
         sheet(hasText("Add Discipline")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput("Cachexy")
-        ui.onNodeWithTag("catalog-cachexy").assertIsEnabled().performClick()
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Cachexy")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
+        ui.onAllNodesWithTag("catalog-cachexy").onFirst().assertIsEnabled().performClick()
         ui.onNodeWithContentDescription("XP Mode").assert(hasStateDescription("On, -3 Experiences available"))
         jump("Banes")
         sheet(hasText("Morbus Bane: The Unclean Curse")).assertExists()

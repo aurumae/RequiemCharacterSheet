@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
@@ -12,13 +14,17 @@ import org.junit.Test
 
 class GuidedCreationUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun sheet(matcher: SemanticsMatcher): SemanticsNodeInteraction {
         ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
         return ui.onNode(matcher)
     }
     private fun jump(section: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(section) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun rating(name: String, value: Int) {
         sheet(hasContentDescription(name)).performClick()
@@ -35,11 +41,12 @@ class GuidedCreationUiTest {
     }
     private fun picker(kind: String, search: String) {
         sheet(hasText("Add $kind")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput(search)
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput(search)
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
     }
     private fun choose(id: String) {
-        ui.onNodeWithTag("catalog-options").performScrollToNode(hasTestTag("catalog-$id"))
-        ui.onNodeWithTag("catalog-$id").performClick()
+        ui.onAllNodesWithTag("catalog-options").onFirst().performScrollToNode(hasTestTag("catalog-$id"))
+        ui.onAllNodesWithTag("catalog-$id").onFirst().performClick()
     }
     private fun xp(value: Int) { ui.onNodeWithContentDescription("XP Mode").assert(hasStateDescription("On, $value Experiences available")) }
     private fun library() { ui.waitUntil(8_000) { ui.onAllNodesWithTag("character-library").fetchSemanticsNodes().isNotEmpty() } }
@@ -57,6 +64,8 @@ class GuidedCreationUiTest {
     private fun clan(name: String, favored: String) {
         jump("Character"); sheet(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput(name)
+        ui.onNodeWithTag("identity-search").performImeAction()
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-${name.lowercase()}"))
         ui.onNodeWithTag("identity-option-${name.lowercase()}").performClick()
         ui.onNodeWithTag("favored-$favored").performClick()
     }
@@ -120,10 +129,10 @@ class GuidedCreationUiTest {
     @Test fun creationPickersEnforcePrerequisitesRitualSlotsAndLeaveKeepsTheSheet() {
         val name = start(); clan("Daeva", "dexterity")
         jump("Disciplines"); picker("Discipline", "Cruac")
-        ui.onNodeWithTag("catalog-cruac").assertIsNotEnabled()
+        ui.onAllNodesWithTag("catalog-cruac").onFirst().assertIsNotEnabled()
         ui.onNodeWithText("Cancel").performClick()
         jump("Merits"); picker("Merit", "Telepathy")
-        ui.onNodeWithTag("catalog-telepathy").assertIsNotEnabled()
+        ui.onAllNodesWithTag("catalog-telepathy").onFirst().assertIsNotEnabled()
         ui.onNodeWithText("Cancel").performClick()
         picker("Merit", "Covenant Status"); choose("covenant-status")
         ui.onNodeWithText("Circle of the Crone").performClick()
@@ -132,7 +141,7 @@ class GuidedCreationUiTest {
         jump("Disciplines"); picker("Discipline", "Celerity"); choose("celerity"); entryRating("Celerity", 2)
         picker("Discipline", "Cruac"); choose("cruac")
         jump("Rituals"); picker("Ritual", "Rigor Mortis"); choose("rigor-mortis")
-        picker("Ritual", "Pangs"); ui.onNodeWithTag("catalog-pangs-of-proserpina").assertIsNotEnabled()
+        picker("Ritual", "Pangs"); ui.onAllNodesWithTag("catalog-pangs-of-proserpina").onFirst().assertIsNotEnabled()
         ui.onNodeWithText("Cancel").performClick()
         jump("Blood Potency"); rating("Blood Potency", 2)
         sheet(hasContentDescription("Blood Potency")).performClick()
@@ -148,7 +157,7 @@ class GuidedCreationUiTest {
         sheet(hasContentDescription("Add Brawl specialty")).assertIsNotEnabled()
         jump("Merits"); entryRating("Covenant Status (Circle of the Crone)", 0)
         jump("Character Creation"); sheet(hasTestTag("finish-creation")).assertIsNotEnabled()
-        sheet(hasText("Crúac needs Circle of the Crone Status")).assertExists()
+        sheet(hasText("Crúac needs Circle of the Crone or Fir'awn Status 1")).assertExists()
         sheet(hasText("Leave Guided Creation")).performClick()
         ui.onNodeWithText("Cancel").performClick()
         sheet(hasText("Leave Guided Creation")).performClick()

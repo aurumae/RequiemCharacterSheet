@@ -396,6 +396,168 @@ The **Follow-up** items below are the bits that need code.
 - Picker search also matches the book name; searching "Covenants" lists this book's entries.
 - The user wants every option to show its source. Pickers already show "Book, p. N" on each row; keep doing that for new content.
 
+
+## 2026-11-09 21:20 UTC · Astra (Android) · Beta 2 parity plan received and prepared
+
+Fetched `main` through `e8ab6ba` and reviewed both 9 November entries, the Swift
+implementation/tests and the still-unported `ac283ea` backlog. This commit adds
+`docs/android-beta2-plan.md`. The user requested a change inventory and plan only;
+no Android feature, schema, version or release artifact has been changed.
+
+The recommended order is: (1) schema-11 read/write and shared catalog/exchange
+contracts, (2) Conditions rules, history, cards/picker and effect indicators,
+(3) Area of Expertise/Specialty dependencies and new sourcebook rules, including
+Flock → Herd bonuses and standalone Coils, (4) section pill, identity details,
+library export and remaining visual parity, (5) integrated accessibility, upgrade
+and cross-device tests, (6) signed 1.0.0-beta.2 with the next unused version code
+(expected 10, to check before packaging). Android 16 remains the minimum.
+
+The encoder must write 10 without Conditions/history and 11 with either; removing
+the last active Condition must not downgrade a file whose log still contains one.
+The plan covers all 58 Conditions and the new book's 60 Merits, 28 rituals, two
+Coils and four Scales. Advisory prerequisites remain advisory; indicators do not
+invent automated situational penalties. Existing byte-preserving transfer rules
+and paid-dot history must survive the port.
+
+Baseline validation against the new catalog: **44/45 Kotlin rules tests** pass;
+the only failure is `readsAllBooksAndResolvesNamesAsSwiftDoes`, whose expected set
+still names four books. The actual fifth book loads correctly. A separate run of
+**all nine app storage/import tests passes**. These old tests do not establish
+schema-11 or Conditions support. No full exchange, emulator, release build or
+S24 FE checks were run for this planning-only task.
+
+**Follow-up (Android):** begin with the codec/catalog contract milestone when the
+user authorizes implementation. Update both exchange producers/consumers for
+Conditions and use v12 as the active future-rejection fixture. Preserve historical
+fixtures and the iOS UI-test skip. Existing store-assets and Advertising ID PRs
+#5/#6 remain separate; preserve their handoff entries when merging them. The
+outstanding release privacy/backup/Play-update tasks remain tracked separately.
+No clarification or iOS production change is currently required to start.
+
+**Shared:** this commit changes documentation only. No catalog, font/licence,
+save-format implementation, fixture, Swift package, script or CI change. Existing
+untracked IDE/Gradle files are untouched; this plan starts from upstream main.
+
+## 2026-11-09 23:21 UTC · Astra (Android) · Beta 2 save and rules implementation
+
+The user authorized the plan and supplied 24 current iOS screenshots in
+`Astra Screenshots/Astra Screenshots` in the parent workspace. Reviewed all 24,
+including full/custom Condition cards, indicators, specialty selection, Flock,
+source citations, navigation and export. Continuing on the beta-2-plan branch/PR;
+its title/description will be updated around the implementation before review.
+
+This commit implements schema-11 reading and conditional 10/11 writing, Conditions
+and their events/Beats, recent choices and informational effects, and sourcebook
+rules. Area of Expertise follows Specialty renames and last-name removal through
+the existing paid-dot recorder. Flock supplies separate bonus Herd dots. Standalone
+Coils are excluded from Mystery selection; book searches and Coil groups include
+source names. Identity presentation now has archetype Willpower actions/details.
+No situational Condition penalty is silently applied to derived statistics.
+
+**Shared:** expanded `SaveContractTests.swift` to compare Condition catalog IDs,
+include v11 in actual store transfers, and consume a file produced by Kotlin's
+Condition actions. No Swift production model/view, catalog JSON, font/licence,
+fixture contents, Package.swift, script or workflow change. The historical
+v11-future fixture is retained; Android rejection tests now use v12-future. The
+GitHub iOS UI-test skip remains untouched.
+
+Validation: full `scripts/check-save-contract` passed: 255 Swift tests, 57 Kotlin
+rules tests (12 new beta-2 tests), and six Kotlin-to-Swift consumer tests. The nine
+app storage/import tests passed earlier in this implementation. This includes
+conditional schema output, active and history-only Conditions, no-cost events,
+Beat rollover, repeated/unknown IDs, note/counter log names, Specialty dependencies
+and refunds, Flock, new prerequisites, and standalone Coil costs. UI work and
+emulator validation are in progress and will have a separate entry. Android's
+end/resolve actions ignore an already-removed ID to prevent replaying a Beat.
+
+**Commits:** this commit. **Follow-up (Android):** finish screenshot-informed UI,
+UI/accessibility/upgrade verification and signed beta-2 packaging. Physical S24 FE
+acceptance and live iOS/Android beta-2 exchange remain for the user; previous beta-1
+acceptance is not evidence for the new features.
+
+## 2026-11-09 23:28 UTC · Astra (Android) · Screenshot-informed beta 2 screens
+
+Builds on `2012ff6`. This commit adds the native Conditions carousel, full/custom
+cards, note/counter editing, End/Resolve/Beat controls, recent/book picker, effects
+indicators and event-based Change Log. It adds the current-section pill, identity
+label details and richer Mask/Dirge picker, home Export Character chooser,
+Specialty-dependent Merit choices/prompts and Flock bonus dots. Identity/Specialty
+modal state is hoisted outside lazy rows. Five-column dots wrap tightly and stop
+at ten; legal editing menus remain. Version is 1.0.0-beta.2 (10), next after the
+repository's code 9; Console availability has not been independently inspected.
+
+All 24 supplied iOS references were reviewed. The mapping and physical acceptance
+checklist are appended to `docs/android-beta2-plan.md`. Native Android controls,
+text scaling, 48dp indicator targets and the existing five-second/tap-dismiss
+splash remain. Visual checks caught and corrected purple default tonal buttons,
+a large-text pill wrapping inside words, and the indicator glyph outgrowing its
+circle. At enlarged text the pill uses ellipsis plus a separate chevron and exposes
+its complete section name to accessibility. The frame/fonts come from existing
+assets, with no new image or font dependency.
+
+Validation so far: the complete initial emulator suite passed 20/20, including
+new Condition/Specialty/identity/recreation flows. JVM rules/storage checks and
+debug/release lint/builds passed (zero lint errors; seven existing update warnings).
+A final 420dpi phone-width suite is running after the visual refinements. Its
+focused predecessor exposed an ambiguous test matcher (the pill and menu now both
+contain the current section name); selectors now explicitly scope menu entries to
+the popup. Release/upgrade checks and final results follow in another entry.
+
+**Shared:** README/transfer documentation now explain conditional schema 10/11;
+no catalog, font, fixture, Swift source/test, package, script or CI change in this
+commit. **Commits:** this commit plus rules `2012ff6`. **Follow-up (Android):**
+finish the final validation/archive and publish the updated PR. **Follow-up (user):**
+S24 FE and real iOS↔Android beta-2 exchange remain unconfirmed. Play installation,
+privacy/backup policy and 16 KB runtime tasks remain separately tracked; no Play
+release was uploaded or rolled out here.
+
+## 2026-11-09 23:45 UTC · Astra (Android) · Beta 2 signed and validated for device acceptance
+
+Production commits: `2012ff6` (rules/save contract), `53e6e35` (native UI and beta-2
+version). This follow-up changes only the parity UI test's synchronization and
+validation documentation. A captured failure showed the existing negative-XP
+snackbar covering the Clan tap target on a compact phone; the test now waits for
+it as CoreSheetUiTest already does. No production behavior change was needed.
+
+Validation: 255 Swift host tests, 57 Kotlin rules tests, nine Android storage/import
+tests and six Kotlin-to-Swift consumer tests pass. The initial complete UI suite
+passed 20/20. The final compact-phone suite passed 19/20; after the snackbar wait,
+both parity tests passed, completing all 20 cases on the final app. An intervening
+host emulator disconnect and failed software-renderer boot were recovered by
+restarting with Vulkan and virtual cameras disabled; those interrupted runs are
+not counted as app results. Normal/150% text, portrait and landscape layouts were
+visually reviewed. Full TalkBack and physical S24 FE acceptance remain pending.
+
+Signed beta 1 (9) was installed from its archived bundle APKs. Two v10 characters
+(ordinary and unfinished guided) were imported through Android's real picker.
+Installing upload-key-signed beta 2 (10) over it, without uninstalling, preserved
+both. Actual Save to file exports were byte identical to the originals, including
+IDs, dates, trackers, creation state, XP history and paid dots. This is a local
+signed-update check, not a Google Play delivery test.
+
+Final app source `53e6e35` is archived at `AndroidBuilds/53e6e35/` in the parent
+workspace: signed AAB, upload-signed test APK, debug APK, checksums, notes, logs and
+QA screenshots. AAB SHA-256:
+`966751bb98c9a9be871bfced70324395122353918797c2c38b92182b5d34f47c`.
+Bundletool and signatures verify; package `ie.requiem.sheet`, version
+`1.0.0-beta.2 (10)`, min/target 36, non-debuggable. Existing upload certificate is
+unchanged. Only the internal receiver permission is present; no AD_ID or INTERNET.
+APK/64-bit ELF alignment passes static 16 KB checks; runtime here is 4 KB, so the
+16 KB runtime task remains open. Lint: zero errors, seven existing update warnings.
+All GitHub checks and Xcode Cloud passed at `53e6e35`.
+
+**Shared:** no additional schema/catalog/font/fixture/Swift/package/script/CI change
+in this follow-up. The iOS UI-test skip is intact. Handoff history is append-only;
+main is still `e8ab6ba`. PR #7 now contains the implementation rather than only a
+plan. Existing asset/audit PRs #5/#6 remain independent and have not been merged.
+
+**Follow-up (user/Android):** confirm version code 10 is unused in Play Console,
+upload the AAB to internal testing, check the S24 FE and exchange real Conditions
+files in both directions with current iOS. Use the checklist in the beta-2 plan,
+including Area of Expertise, Flock, standalone Coils and indicators. Privacy-link/
+backup policy and Play-delivered update tasks remain separate. No Play upload or
+rollout occurred. **Follow-up (iOS):** after PR #7 merges, pull/read these entries;
+Android now reads 11 and conditionally writes 10/11 with the same raw file format.
 ## 2026-11-10 16:50 UTC · Claude (iOS) · Merit rating dots and Condition carousel counter
 
 Two fixes from the screenshot review (screenshots 14 and 16 were retaken with them):
@@ -693,3 +855,237 @@ No save-format change.
   - The character list's "Edited …" time refreshes every minute, so the text and VoiceOver no longer disagree.
   - **Follow-up:** check both on Android.
 - **User:** the app will always be free.
+
+## 2026-11-13 05:52 UTC · Astra (Android) · Repeated GitHub check failures diagnosed
+
+The user requested diagnosis of `GitHub-failed-job.log`, not an implementation change.
+Inspected `main` at `0bc7a66`, the shared catalogs, tests and workflow, and verified the
+[latest GitHub run](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/43337663446).
+Its 272 Swift host tests and separate iOS job pass. Both `kotlin` and `exchange` fail
+the same two Kotlin rules tests (43 of 45 pass):
+
+- `SaveContractTest.kt:60` expects exactly four books. Android automatically bundles
+  all catalog JSON files; there are now eight. `e8ab6ba` added Secrets of the Covenants
+  as the fifth, followed by Dark Eras (`f48fc33`), Dark Eras 2 (`9ff14da`) and Spilled
+  Blood (`340b690`). The old equality assertion rejects these valid additions.
+- `BloodlineTest.kt:79` calls `.single()` on all bloodline picker options, assuming
+  Morbus is the only bloodline. `9ff14da` added the Bron, and `340b690` added ten more.
+  The test should locate Morbus by ID before checking its incompatible-clan warning.
+
+The workflow runs on every main push and PR; both jobs invoke `:rules:test`, explaining
+the repeated failures and two red jobs. Gradle deprecation/non-null warnings are not
+the cause. The first 9 November Conditions run had a cancelled exchange job; it is
+not evidence of these two test failures. The later Secrets of the Covenants run has
+failed Kotlin/exchange jobs, consistent with the already-recorded four-book mismatch.
+
+PR #7 (`android/beta2-plan`, published through `b5fb3fb`) remains open. Its successful
+9 November checks apply to that branch's older catalog state, not current main. It
+adds Conditions/schema 11 and updates the book assertion to five; it still needs
+updating for today's catalogs. Main's exchange comparison also lacks Kotlin's
+`conditions` category while Swift emits it, so correcting the four-book assertion
+alone exposes a further mismatch. Android schema 12 remains a separate unported
+handoff requirement. No claim is made that these two test edits alone restore full
+cross-platform compatibility.
+
+**Validation:** source/catalog inspection plus the supplied and live GitHub logs;
+no local builds or tests rerun and no app/test implementation changed. Fetched main
+and merged it into the Android working branch as `beca2dd` per startup instructions;
+preserved untracked IDE/Gradle files. This diagnosis is published separately from
+the beta-2 implementation. **Commits:** this documentation commit; no preceding
+implementation commit for this task. **Shared:** no catalog, font, schema, fixture,
+Swift package, script or workflow change; the iOS UI-test skip is intact.
+
+**Follow-up (Android):** refresh the catalog tests without weakening their intended
+checks, reconcile the unmerged Conditions contract and subsequent schema/catalog
+requirements, then run the complete save exchange and Android checks against current
+main. Other pending UI/release/core-extraction follow-ups are outside this diagnostic
+request; no platform extraction or release decision is made here.
+
+## 2026-11-13 06:24 UTC · Astra (Android) · Current parity and iOS-first CI plans
+
+The user requested a current Android parity plan and a proposal for CI that permits
+iOS-first development. Fetched main (`0bc7a66`), verified the Android checkout and
+open PRs, reread all handoffs since the last beta-2 entry and the standing design/
+multi-game decisions, inspected current Swift/Kotlin implementations, and visually
+reviewed all ten local `iOS App Screenshots/1.4 Screenshots/` PNGs individually.
+
+Added [the parity plan](android-current-parity-plan.md). It reuses the unmerged
+beta-2 work (`2012ff6`, `53e6e35`, `b5fb3fb`) and orders the remaining work: integration
+baseline; schema 12/elder banes; new covenant/ritual/Coil/bloodline/Merit/Scale rules;
+all-picker book grouping; screenshot and accessibility acceptance; full exchange,
+upgrade and physical-device acceptance. Screenshots are mapped to concrete checks;
+they do not establish save behavior or runtime Android parity. PR #7's old passing
+checks are explicitly not treated as current integrated-tree validation.
+
+Answer to the 12 November core-extraction **Question:** recommend the same eventual
+`:core`, `:requiem`, `:forsaken` and separate-app structure. Phase 1 follows functional
+parity as an independently verified behavior-preserving change, initially retaining
+the existing Requiem `:app`. Keep JVM core free of Compose/Requiem dependencies and
+defer Forsaken modules, game fields and resource relocation. This is a recommendation
+within the requested plan, not a new implementation or release authorization.
+
+Added [the CI proposal](ios-first-ci-plan.md): remove brittle inventory/cardinality
+assumptions, declare actual platform/schema/rule capabilities with versioned fixture
+metadata, require supported exchange and safe future-save rejection, and report
+declared pending ports separately. Existing regressions, unsupported destructive
+data changes and unclassified gaps still fail. Capability promotion adds required
+coverage; it cannot silently remove old coverage. Path-aware jobs and a validated
+stable required aggregate are a later optimization, not the compatibility solution.
+The plan also covers catalog mechanics that do not change save schema.
+
+Added the requested `docs/design-decisions.md` pointer to `AGENTS.md`. Kept the earlier
+diagnosis intact and expanded its documentation-only PR #8 to include these plans.
+**Commits:** this documentation commit, following diagnostic commit `ceaaa41`; no
+implementation commits in this task. **Validation:** source/catalog inspection,
+ten-image review, live PR state, official GitHub check-status documentation, internal
+document links and append-only/diff checks. No new builds, tests or emulator runs.
+
+**Shared:** no app code, catalog/font content, save format, fixture, `Package.swift`,
+script, workflow, branch protection or release change. Local screenshots and existing
+untracked IDE/Gradle files are preserved. The iOS UI-test skip remains unchanged.
+**Follow-up (Android/iOS):** review the proposed CI contract policy, then implement
+the parity milestones when authorized; keep the handoff and capability declarations
+current as each platform gains support. Outstanding Play/privacy/backup/16 KB and
+physical beta-2 acceptance tasks remain distinct from this planning request.
+
+## 2026-11-13 07:06 UTC · Astra (Android) · Current Requiem parity and iOS-first CI
+
+The user approved both plans and designated the next tester release beta-3. Play's
+latest version code is 10 (user confirmation); Android is now `1.0.0-beta.3` / 11.
+This commit follows integration commits `beca2dd` and `f679dc0`; main remains
+`0bc7a66`. It reuses the beta-2 implementation rather than replacing it.
+
+Implemented schema 12 elder banes and conditional 10/11/12 writing, all eight books'
+new covenant/Status/Merit/ritual/Coil/Scale and Bron creation mechanics, explicit
+required qualifiers, and free-Devotion ledger coverage. Pickers now group by book
+with nested categories and repeated in-clan Disciplines. Added library lineage and
+minute/resume refresh, selected-section emphasis, larger Merit ratings, singular
+Experience speech, and valid Condition pages/hints after removal. Text-only rules
+remain descriptive. Source catalogs, fonts, historical fixture bytes and Swift
+production code are unchanged.
+
+**Shared changes:** new capability/fixture manifest and catalog field/semantic
+contract; dynamic fixture selection in both languages; real store exchange both
+ways; all newer saves refused without modifying their bytes; test-evidence and
+PR-base regression checks. `scripts/check-save-contract` supports staged ports and
+strict parity. The always-triggered workflow routes jobs by changed paths, retains
+reports, and validates the stable `CI result` aggregate. Pending ports must be
+explicit and safe; existing support cannot be silently downgraded. The iOS UI-test
+skip is preserved. No branch protection was changed (main currently has none).
+See `docs/ci-contract-policy.md`. `Package.swift` and catalog/font content unchanged.
+
+**Validation:** strict producer/store/consumer exchange passed: 275 Swift host
+cases, 68 Kotlin rules cases, 11 Android storage cases, and six Swift consumer
+cases (the producer-only Kotlin-reader skip is exercised in the consumer phase).
+All 11 CI-policy regression tests passed. Debug/test APK, unsigned release bundle,
+and debug/release lint passed (zero errors). Five focused Compose parity/capture
+cases passed; all ten reference states were captured and reviewed at normal text,
+150% text and landscape. Images remain local. Full 25-case UI regression is being
+rerun after updating older tests to scroll through book headings and resetting
+an emulator rotation lock; its result will be recorded separately. The Scale
+prerequisite description also retains both any-Coil and explicit alternatives.
+
+**Follow-up:** complete full UI/upgrade/signing checks, then extract the JVM core
+as a separate behavior-preserving commit and revalidate. Physical S24 FE, TalkBack,
+real-device iOS exchange, Play-delivered upgrade and 16 KB runtime acceptance are
+not established by host/emulator checks. No Play upload or rollout performed.
+
+## 2026-11-13 07:16 UTC · Astra (Android) · Shared Kotlin core and beta-3 validation
+
+Following parity/CI commit `0ca595d`, this commit separately extracts JVM `:core`
+and renames `:rules` to `:requiem`. Core owns shared saved models/UUID serialization,
+open log keys, traits, tracks, catalog indexing/book sections, character basics and
+speech formatting. `CharacterSave` implements the shared character interface;
+Requiem retains game rules, codec policy, prerequisite/Condition/purchase engines
+and validation of its supported log kinds. No game field or Forsaken target.
+Shared Compose controls live in `ie.chronicles.ui`, with fonts/artwork/logo identity
+injected by `RequiemIdentity.kt`; the app/package/storage identity is unchanged.
+
+Updated module paths in scripts, workflow, contract test references and release
+instructions. Catalogs/fonts/fixture bytes and `Package.swift` remain unchanged.
+Comparison against the pre-extraction compiled codec found byte-identical encoded
+output for all five canonical v10/v11/v12 fixtures. Untouched transfers retain
+original bytes as before. The full strict exchange passed again, including 275
+Swift producer tests, 68 Requiem rules tests, 11 Android storage tests, three new
+independent core tests, and six Swift consumers. Eleven policy tests and PR-base
+regression protection passed, including against `0ca595d` across the module move.
+
+**UI validation correction:** the initial full run was still in landscape, where
+an open keyboard left no room to scroll picker results. Search Done now explicitly
+clears focus. Tests dismiss the keyboard and request their intended orientation;
+this does not force the production app to portrait. The full 25-case suite then
+passed 24 cases; the remaining assertion expected pre-port Crúac teacher text.
+Updated it to require both Circle of the Crone and Fir'awn; that complete sorcery
+purchase/refund test passed separately. Focused parity and all ten reference states
+passed; final captures add Attributes and Merits. Full-device TalkBack is untested.
+
+**Release validation:** signed code 11 AAB and APK built; debug/release lint have no
+errors. Bundletool validates the AAB, jarsigner verifies its signature (normal
+self-signed upload-certificate trust warnings), and apksigner verifies the existing
+upload certificate SHA-256 `57ec9f740f282fd7536402da8f468fb709dc36182828736b8679b56b7f160a0f`.
+Bundle config requests 16 KB alignment; zipalign and every native PT_LOAD segment
+pass 16 KB static checks. This emulator uses a 4 KB kernel, so this is not a 16 KB
+runtime claim. Installed archived debug code 10, staged four ordinary/guided/
+Conditions/elder files, then installed debug code 11 with `adb install -r` and no
+uninstall. The explicit `Beta3UpgradeTest` passed real-store open, unchanged persist
+and byte-identical export of all four, including dates and paid-dot ledger. It runs
+only with instrumentation argument `upgradeCheck=true` and staged inputs; it is
+not a substitute for a Play-delivered signed update.
+
+**Follow-up:** GitHub must run the new CI workflow on the published commits.
+Physical S24 FE, TalkBack traversal, real-device iOS exchange, Play-delivered update
+and 16 KB runtime acceptance remain outstanding. Signed beta-3 artifacts and local
+screenshots will be archived with this source commit. No upload, tester notification
+or rollout is performed. Main was fetched again and remains `0bc7a66`; append-only
+handoff checks preserve both integration histories.
+
+## 2026-11-13 07:21 UTC · Astra (Android) · Beta-3 artifacts and macOS CI runner fix
+
+Final combined emulator run passed all 26 UI/upgrade cases, with no failures or
+skips. This supersedes the earlier 24/25 plus focused rerun. Signed artifacts from
+`ad6bc35` are archived locally under `AndroidBuilds/ad6bc35/` (outside this checkout),
+with SHA256SUMS, release notes, build metadata, exchange files, test reports and
+normal/150%/landscape screenshots. The AAB is version code 11. No Play upload.
+
+The first live GitHub run passed policy but exposed macOS Bash 3.2 treating empty
+arrays as unset under `set -u`. This commit keeps script argument arrays nonempty
+in supported mode and adds hidden-report inclusion to workflow artifact uploads.
+Both strict (earlier) and normal supported real-store exchange passed locally;
+all 11 policy tests passed again. The live rerun will establish runner validation.
+A trailing blank line in the extracted definitions was cleaned up; app behavior
+and packaged binaries are unchanged from `ad6bc35`.
+
+**Validation note:** checking the whole main handoff as one contiguous string was
+too strict for the existing union-merge history. Entry-by-entry verification finds
+all 21 main entries and all 28 pre-extraction entries intact, with no duplicate
+headings or conflict markers. No historical entry was edited or reordered.
+**Shared:** this commit changes `scripts/check-save-contract` and the workflow's
+report handling, not catalogs/fonts, fixture bytes, save format or `Package.swift`.
+**Follow-up:** physical acceptance and Play/16 KB runtime gates remain as above;
+GitHub results are tracked on PR #7. See `docs/android-beta3-validation.md`.
+
+## 2026-11-13 07:27 UTC · Astra (Android) · Final chooser parity and beta-3 package refresh
+
+A final comparison against the 10 November grouping handoff and Swift pickers found
+two remaining edge cases. Bloodlines with no recognized clan and Devotions with no
+learnable group now show only book headings; Other headings remain when a preferred
+group exists elsewhere. Merit search shows one list per book, ranking name, summary,
+then citation matches. One synthetic catalog regression covers empty/retained groups,
+clan warnings and the three relevance levels. No save/price/ledger change.
+
+**Validation:** all 69 Requiem, three core and 11 storage tests pass; strict real-store
+exchange passes again (275 Swift producers and six consumers); both lints and signed
+AAB/APK builds pass. All 26 UI/upgrade cases pass together again in 161.5 seconds.
+Final 12-state normal/150%/landscape captures were reviewed locally. Refreshed AAB
+and APK pass bundletool/signature/ZIP checks; native libraries are byte-identical to
+the already verified 16 KB-aligned payload. Code 11 remains the intended beta-3 code.
+
+**Commits:** this chooser correction follows `d2766f9`, `ad6bc35` and `0ca595d`.
+The final package will be archived by this source hash, with the stable local path
+`AndroidBuilds/beta-3-11/`; it supersedes the first `ad6bc35` package. AAB SHA-256:
+`e4b4dc11a2cb439bdc453673a9a44fe8204eb713061254c8bad9f08bdc0d1c69`.
+**Shared:** no catalog/font/fixture/save-format/Package.swift change; this commit
+only adjusts Android chooser presentation and its regression test/documentation.
+**Follow-up:** CI runner validation is on PR #7; physical/Play/16 KB runtime gates
+remain open. No upload, notification or rollout. Main was refreshed; historical
+handoff entries remain intact and unreordered.

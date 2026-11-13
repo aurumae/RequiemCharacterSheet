@@ -1,0 +1,616 @@
+{
+  "format": 1,
+  "platforms": {
+    "ios": {
+      "readSchema": 12,
+      "catalogKinds": [
+        "disciplines",
+        "merits",
+        "banes",
+        "clans",
+        "bloodlines",
+        "covenants",
+        "rituals",
+        "devotions",
+        "mysteries",
+        "scales",
+        "archetypes",
+        "conditions",
+        "elderBanes"
+      ],
+      "capabilities": [
+        "catalog.base",
+        "save.base",
+        "rules.core",
+        "rules.creation",
+        "rules.bloodlines",
+        "rules.conditions",
+        "rules.specialties",
+        "rules.elder-banes",
+        "rules.quintessence",
+        "rules.status-aliases",
+        "rules.merit-access",
+        "rules.bloodline-creation",
+        "rules.ritual-teachers",
+        "rules.any-coil",
+        "ui.book-sections"
+      ],
+      "pending": {},
+      "writers": {
+        "plain": 10,
+        "conditions": 11,
+        "history": 11,
+        "elder": 12,
+        "elder-and-conditions": 12,
+        "elder-off": 10
+      }
+    },
+    "android": {
+      "readSchema": 12,
+      "catalogKinds": [
+        "disciplines",
+        "merits",
+        "banes",
+        "clans",
+        "bloodlines",
+        "covenants",
+        "rituals",
+        "devotions",
+        "mysteries",
+        "scales",
+        "archetypes",
+        "conditions",
+        "elderBanes"
+      ],
+      "capabilities": [
+        "catalog.base",
+        "save.base",
+        "rules.core",
+        "rules.creation",
+        "rules.bloodlines",
+        "rules.conditions",
+        "rules.specialties",
+        "rules.elder-banes",
+        "rules.quintessence",
+        "rules.status-aliases",
+        "rules.merit-access",
+        "rules.bloodline-creation",
+        "rules.ritual-teachers",
+        "rules.any-coil",
+        "ui.book-sections"
+      ],
+      "pending": {},
+      "writers": {
+        "plain": 10,
+        "conditions": 11,
+        "history": 11,
+        "elder": 12,
+        "elder-and-conditions": 12,
+        "elder-off": 10
+      }
+    }
+  },
+  "capabilities": {
+    "catalog.base": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CatalogTests.swift",
+          "name": "requiemEntriesTakePrecedenceOverReprints"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/SaveContractTest.kt",
+          "name": "readsAllBooksAndResolvesNamesAsSwiftDoes"
+        }
+      }
+    },
+    "save.base": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/SaveContractTests.swift",
+          "name": "currentFixturesMatchWhatSwiftWrites"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/SaveContractTest.kt",
+          "name": "exchangesCurrentCharactersAndPreservesHiddenState"
+        }
+      }
+    },
+    "rules.core": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/SaveContractTests.swift",
+          "name": "ordinaryPlayMatchesThePhoneEditor"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/OrdinaryPlayTest.kt",
+          "name": "sharedPlaySequenceMatchesSwiftPricesRefundsAndRoundTrips"
+        }
+      }
+    },
+    "rules.creation": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/SaveContractTests.swift",
+          "name": "guidedCreationMatchesTheAndroidEditor"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/GuidedCreationContractTest.kt",
+          "name": "sharedCreationSequenceMatchesSwiftAndExchangesResumableSaves"
+        }
+      }
+    },
+    "rules.bloodlines": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/SaveContractTests.swift",
+          "name": "bloodlineAdvancementMatchesAndroid"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/BloodlineTest.kt",
+          "name": "sharedAdvancementPreservesHistoricalPricesAndRestriction"
+        }
+      }
+    },
+    "rules.conditions": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/ConditionTests.swift",
+          "name": "aLoggedConditionKeepsVersion11AfterItEnds"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta2RulesTest.kt",
+          "name": "writesTenUntilConditionsOrTheirHistoryNeedEleven"
+        }
+      }
+    },
+    "rules.specialties": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/SpecialtyTests.swift",
+          "name": "otherQualifiersAreUnchanged"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta2RulesTest.kt",
+          "name": "specialtyMeritsRequireChoicesAndFollowRenameAndPaidRemoval"
+        }
+      }
+    },
+    "rules.elder-banes": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/ClanBaneTests.swift",
+          "name": "fallingToHumanityThreeActivatesTheElderBane"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "elderBanesActivateOnCrossingAndResetOnlyWhenClanChanges"
+        }
+      }
+    },
+    "rules.quintessence": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/ExperienceTests.swift",
+          "name": "coilOfTheQuintessenceCostsAsPartOfTheVoivode"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "quintessenceUsesVoivodePricingAndRefundsHistoricalPrices"
+        }
+      }
+    },
+    "rules.status-aliases": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CatalogTests.swift",
+          "name": "historicalCovenantStatusCountsAsAModernOne"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "statusChoicesAliasesAndMeritOverridesAreScopedToTheirEntries"
+        }
+      }
+    },
+    "rules.merit-access": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CatalogTests.swift",
+          "name": "gallowsPostTakesCarthianLawsWithItsOwnStatus"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "clanAndBloodlineMeritAccessDoesNotWaiveUnrelatedRequirements"
+        }
+      }
+    },
+    "rules.bloodline-creation": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CreationTests.swift",
+          "name": "aBloodlineChosenAtCreationReplacesTheClansFavoredAttributes"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "bronCreationReplacesChoicesAndOnlyMovesInvalidFreeDots"
+        }
+      }
+    },
+    "rules.ritual-teachers": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CatalogTests.swift",
+          "name": "goldenAgeCovenantsTeachSorceryAndShareMerits"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "ritualTeachersAliasesMembershipAndHumanityMatchTheSourceRules"
+        }
+      }
+    },
+    "rules.any-coil": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CatalogTests.swift",
+          "name": "spilledBloodBloodlinesAndCovenants"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "anyCoilScalesAndZeroCostDevotionsPreservePurchaseHistory"
+        }
+      }
+    },
+    "ui.book-sections": {
+      "tests": {
+        "ios": {
+          "file": "RequiemCharacterSheetTests/CatalogTests.swift",
+          "name": "pickersGroupEntriesByBook"
+        },
+        "android": {
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "name": "requiredQualifiersAndBookSectionsRemainValidUnderSearch"
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "bloodline-advancement.json": {
+      "schema": null,
+      "requires": [
+        "rules.bloodlines"
+      ],
+      "roles": [
+        "action"
+      ]
+    },
+    "character-transfer.json": {
+      "schema": null,
+      "requires": [
+        "rules.core"
+      ],
+      "roles": []
+    },
+    "characters/v1-unversioned.json": {
+      "schema": 1,
+      "requires": [
+        "save.base"
+      ],
+      "roles": []
+    },
+    "characters/v10-advanced.json": {
+      "schema": 10,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "current",
+        "transfer"
+      ]
+    },
+    "characters/v10-guided.json": {
+      "schema": 10,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "current",
+        "transfer"
+      ]
+    },
+    "characters/v10-morbus.json": {
+      "schema": 10,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "current",
+        "transfer"
+      ]
+    },
+    "characters/v11-conditions.json": {
+      "schema": 11,
+      "requires": [
+        "save.base",
+        "rules.conditions"
+      ],
+      "roles": [
+        "current",
+        "transfer"
+      ]
+    },
+    "characters/v11-future.json": {
+      "schema": 11,
+      "requires": [
+        "save.base"
+      ],
+      "roles": []
+    },
+    "characters/v12-elder-bane.json": {
+      "schema": 12,
+      "requires": [
+        "save.base",
+        "rules.conditions",
+        "rules.elder-banes"
+      ],
+      "roles": [
+        "current",
+        "transfer"
+      ]
+    },
+    "characters/v12-future.json": {
+      "schema": 12,
+      "requires": [
+        "save.base"
+      ],
+      "roles": []
+    },
+    "characters/v13-future.json": {
+      "schema": 13,
+      "requires": [
+        "save.base"
+      ],
+      "roles": []
+    },
+    "characters/v6-clan-bane.json": {
+      "schema": 6,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "historical"
+      ]
+    },
+    "characters/v7-sorcery.json": {
+      "schema": 7,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "historical"
+      ]
+    },
+    "characters/v8-paid.json": {
+      "schema": 8,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "historical",
+        "transfer"
+      ]
+    },
+    "characters/v9-advanced.json": {
+      "schema": 9,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "historical"
+      ]
+    },
+    "characters/v9-early-guided.json": {
+      "schema": 9,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "historical"
+      ]
+    },
+    "characters/v9-guided.json": {
+      "schema": 9,
+      "requires": [
+        "save.base"
+      ],
+      "roles": [
+        "historical"
+      ]
+    },
+    "core-advancement.json": {
+      "schema": null,
+      "requires": [
+        "rules.core"
+      ],
+      "roles": []
+    },
+    "expected-values.json": {
+      "schema": null,
+      "requires": [
+        "rules.core"
+      ],
+      "roles": []
+    },
+    "guided-creation.json": {
+      "schema": null,
+      "requires": [
+        "rules.creation"
+      ],
+      "roles": [
+        "action"
+      ]
+    },
+    "ordinary-play.json": {
+      "schema": null,
+      "requires": [
+        "rules.core"
+      ],
+      "roles": [
+        "action"
+      ]
+    },
+    "stamina-advancement.json": {
+      "schema": null,
+      "requires": [
+        "rules.core"
+      ],
+      "roles": []
+    },
+    "beta2-play": {
+      "schema": 11,
+      "requires": [
+        "rules.conditions"
+      ],
+      "roles": [
+        "generated"
+      ]
+    }
+  },
+  "saveFields": {
+    "armor": "save.base",
+    "aspirations": "save.base",
+    "aspirations.[]": "save.base",
+    "aspirations.[].id": "save.base",
+    "aspirations.[].text": "save.base",
+    "attributes": "save.base",
+    "attributes.[]": "save.base",
+    "attributes.[].attribute": "save.base",
+    "attributes.[].rating": "save.base",
+    "banes": "save.base",
+    "banes.[]": "save.base",
+    "banes.[].id": "save.base",
+    "banes.[].source": "save.base",
+    "banes.[].source.custom": "save.base",
+    "beats": "save.base",
+    "bloodPotency": "save.base",
+    "bloodline": "save.base",
+    "bloodline.catalog": "save.base",
+    "bloodline.custom": "save.base",
+    "changeLog": "save.base",
+    "changeLog.[]": "save.base",
+    "changeLog.[].beats": "rules.conditions",
+    "changeLog.[].date": "save.base",
+    "changeLog.[].duringCreation": "save.base",
+    "changeLog.[].event": "rules.conditions",
+    "changeLog.[].experiences": "save.base",
+    "changeLog.[].from": "save.base",
+    "changeLog.[].id": "save.base",
+    "changeLog.[].name": "save.base",
+    "changeLog.[].to": "save.base",
+    "changeLog.[].trait": "save.base",
+    "changeLog.[].xpMode": "save.base",
+    "chronicle": "save.base",
+    "clan": "save.base",
+    "clan.catalog": "save.base",
+    "clanBaneActive": "save.base",
+    "coils": "save.base",
+    "coils.[]": "save.base",
+    "coils.[].id": "save.base",
+    "coils.[].mystery": "save.base",
+    "coils.[].mystery.catalog": "save.base",
+    "coils.[].rating": "save.base",
+    "concept": "save.base",
+    "conditions": "rules.conditions",
+    "conditions.[]": "rules.conditions",
+    "conditions.[].addedAt": "rules.conditions",
+    "conditions.[].counter": "rules.conditions",
+    "conditions.[].customBeat": "rules.conditions",
+    "conditions.[].customEffect": "rules.conditions",
+    "conditions.[].customPersistent": "rules.conditions",
+    "conditions.[].customResolution": "rules.conditions",
+    "conditions.[].id": "rules.conditions",
+    "conditions.[].note": "rules.conditions",
+    "conditions.[].source": "rules.conditions",
+    "conditions.[].source.catalog": "rules.conditions",
+    "conditions.[].source.custom": "rules.conditions",
+    "covenant": "save.base",
+    "covenant.catalog": "save.base",
+    "covenant.custom": "save.base",
+    "createdAt": "save.base",
+    "creation": "save.base",
+    "creation.attributePriorities": "save.base",
+    "creation.attributePriorities.*": "save.base",
+    "creation.bonusExperiences": "save.base",
+    "creation.favoredAttribute": "save.base",
+    "creation.skillPriorities": "save.base",
+    "creation.skillPriorities.*": "save.base",
+    "currentVitae": "save.base",
+    "devotions": "save.base",
+    "devotions.[]": "save.base",
+    "devotions.[].customExperienceCost": "save.base",
+    "devotions.[].id": "save.base",
+    "devotions.[].source": "save.base",
+    "devotions.[].source.catalog": "save.base",
+    "devotions.[].source.custom": "save.base",
+    "dirge": "save.base",
+    "disciplines": "save.base",
+    "disciplines.[]": "save.base",
+    "disciplines.[].id": "save.base",
+    "disciplines.[].rating": "save.base",
+    "disciplines.[].source": "save.base",
+    "disciplines.[].source.catalog": "save.base",
+    "elderBaneActive": "rules.elder-banes",
+    "experiences": "save.base",
+    "healthTrack": "save.base",
+    "healthTrack.[]": "save.base",
+    "humanity": "save.base",
+    "id": "save.base",
+    "mask": "save.base",
+    "merits": "save.base",
+    "merits.[]": "save.base",
+    "merits.[].id": "save.base",
+    "merits.[].qualifier": "save.base",
+    "merits.[].rating": "save.base",
+    "merits.[].source": "save.base",
+    "merits.[].source.catalog": "save.base",
+    "modifiedAt": "save.base",
+    "mystery": "save.base",
+    "mystery.catalog": "save.base",
+    "mystery.custom": "save.base",
+    "name": "save.base",
+    "paidDots": "save.base",
+    "paidDots.*": "save.base",
+    "paidDots.*.*": "save.base",
+    "player": "save.base",
+    "rituals": "save.base",
+    "rituals.[]": "save.base",
+    "rituals.[].customDiscipline": "save.base",
+    "rituals.[].customDiscipline.catalog": "save.base",
+    "rituals.[].customDiscipline.custom": "save.base",
+    "rituals.[].customDots": "save.base",
+    "rituals.[].id": "save.base",
+    "rituals.[].source": "save.base",
+    "rituals.[].source.catalog": "save.base",
+    "rituals.[].source.custom": "save.base",
+    "scales": "save.base",
+    "scales.[]": "save.base",
+    "scales.[].id": "save.base",
+    "scales.[].source": "save.base",
+    "scales.[].source.catalog": "save.base",
+    "schemaVersion": "save.base",
+    "size": "save.base",
+    "skillList": "save.base",
+    "skills": "save.base",
+    "skills.[]": "save.base",
+    "skills.[].rating": "save.base",
+    "skills.[].skill": "save.base",
+    "skills.[].specialties": "save.base",
+    "skills.[].specialties.[]": "save.base",
+    "touchstones": "save.base",
+    "touchstones.[]": "save.base",
+    "touchstones.[].id": "save.base",
+    "touchstones.[].level": "save.base",
+    "touchstones.[].text": "save.base",
+    "willpowerTrack": "save.base",
+    "willpowerTrack.[]": "save.base",
+    "xpMode": "save.base"
+  }
+}

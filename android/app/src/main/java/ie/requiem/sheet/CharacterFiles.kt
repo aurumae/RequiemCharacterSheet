@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import ie.requiem.rules.*
 import java.io.File
 import java.io.FileOutputStream
@@ -29,7 +31,10 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
     fun library(): List<LibraryRow> = files().map { (id, file) ->
         try {
             val c = read(id, file).saved
-            val details = listOf(catalog.name(CatalogKind.clans, c.clan), catalog.name(CatalogKind.covenants, c.covenant))
+            val clan = catalog.name(CatalogKind.clans, c.clan)
+            val bloodline = catalog.name(CatalogKind.bloodlines, c.bloodline)
+            val lineage = listOf(clan, bloodline.takeIf { it.isNotBlank() }?.let { "($it)" }.orEmpty()).filter { it.isNotBlank() }.joinToString(" ")
+            val details = listOf(lineage, catalog.name(CatalogKind.covenants, c.covenant))
                 .filter { it.isNotBlank() }.joinToString(" · ")
             LibraryRow(id, c.name, c.modifiedAt, c.creation != null, details = details)
         } catch (e: UnsupportedSchema) {
