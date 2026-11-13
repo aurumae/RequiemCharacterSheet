@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -9,6 +11,10 @@ import java.util.UUID
 @OptIn(ExperimentalTestApi::class)
 class Beta2UiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun sheet(matcher: SemanticsMatcher): SemanticsNodeInteraction {
         ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
         return ui.onNode(matcher)
@@ -33,6 +39,7 @@ class Beta2UiTest {
         jump("Conditions")
         sheet(hasText("Add Condition")).performClick()
         ui.onNodeWithTag("condition-search").performTextInput(name)
+        ui.onNodeWithTag("condition-search").performImeAction()
         ui.onNodeWithTag("condition-options").performScrollToNode(hasText(name))
         ui.onNode(hasText(name) and hasAnyAncestor(hasTestTag("condition-options"))).performClick()
         ui.onNodeWithTag("condition-full-card").assertExists()
@@ -54,6 +61,7 @@ class Beta2UiTest {
         jump("Conditions")
         sheet(hasText("Add Condition")).performClick()
         ui.onNodeWithTag("condition-search").performTextInput("Not a book entry")
+        ui.onNodeWithTag("condition-search").performImeAction()
         ui.onNodeWithText("Custom Condition").performClick()
         ui.onNodeWithTag("condition-Name").performScrollTo().performTextInput("Haunted")
         ui.onNodeWithTag("condition-Effect").performScrollTo().performTextInput("Shadows whisper")
@@ -72,6 +80,7 @@ class Beta2UiTest {
         begin()
         sheet(hasContentDescription("Mask")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Authoritarian")
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-authoritarian"))
         ui.onNodeWithTag("identity-option-authoritarian").performClick()
         sheet(hasContentDescription("Mask details")).performClick()
@@ -87,6 +96,7 @@ class Beta2UiTest {
         jump("Merits")
         sheet(hasText("Add Merit")).performClick()
         ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Area of Expertise")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
         ui.onNodeWithTag("catalog-options").performScrollToNode(hasTestTag("catalog-area-of-expertise"))
         ui.onAllNodesWithTag("catalog-area-of-expertise").onFirst().performClick()
         ui.onNodeWithText("Rifles (Firearms)").performClick()

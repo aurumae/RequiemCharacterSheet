@@ -98,7 +98,7 @@
           "name": "requiemEntriesTakePrecedenceOverReprints"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/SaveContractTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/SaveContractTest.kt",
           "name": "readsAllBooksAndResolvesNamesAsSwiftDoes"
         }
       }
@@ -110,7 +110,7 @@
           "name": "currentFixturesMatchWhatSwiftWrites"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/SaveContractTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/SaveContractTest.kt",
           "name": "exchangesCurrentCharactersAndPreservesHiddenState"
         }
       }
@@ -122,7 +122,7 @@
           "name": "ordinaryPlayMatchesThePhoneEditor"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/OrdinaryPlayTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/OrdinaryPlayTest.kt",
           "name": "sharedPlaySequenceMatchesSwiftPricesRefundsAndRoundTrips"
         }
       }
@@ -134,7 +134,7 @@
           "name": "guidedCreationMatchesTheAndroidEditor"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/GuidedCreationContractTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/GuidedCreationContractTest.kt",
           "name": "sharedCreationSequenceMatchesSwiftAndExchangesResumableSaves"
         }
       }
@@ -146,7 +146,7 @@
           "name": "bloodlineAdvancementMatchesAndroid"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/BloodlineTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/BloodlineTest.kt",
           "name": "sharedAdvancementPreservesHistoricalPricesAndRestriction"
         }
       }
@@ -158,7 +158,7 @@
           "name": "aLoggedConditionKeepsVersion11AfterItEnds"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta2RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta2RulesTest.kt",
           "name": "writesTenUntilConditionsOrTheirHistoryNeedEleven"
         }
       }
@@ -170,7 +170,7 @@
           "name": "otherQualifiersAreUnchanged"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta2RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta2RulesTest.kt",
           "name": "specialtyMeritsRequireChoicesAndFollowRenameAndPaidRemoval"
         }
       }
@@ -182,7 +182,7 @@
           "name": "fallingToHumanityThreeActivatesTheElderBane"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "elderBanesActivateOnCrossingAndResetOnlyWhenClanChanges"
         }
       }
@@ -194,7 +194,7 @@
           "name": "coilOfTheQuintessenceCostsAsPartOfTheVoivode"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "quintessenceUsesVoivodePricingAndRefundsHistoricalPrices"
         }
       }
@@ -206,7 +206,7 @@
           "name": "historicalCovenantStatusCountsAsAModernOne"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "statusChoicesAliasesAndMeritOverridesAreScopedToTheirEntries"
         }
       }
@@ -218,7 +218,7 @@
           "name": "gallowsPostTakesCarthianLawsWithItsOwnStatus"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "clanAndBloodlineMeritAccessDoesNotWaiveUnrelatedRequirements"
         }
       }
@@ -230,7 +230,7 @@
           "name": "aBloodlineChosenAtCreationReplacesTheClansFavoredAttributes"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "bronCreationReplacesChoicesAndOnlyMovesInvalidFreeDots"
         }
       }
@@ -242,7 +242,7 @@
           "name": "goldenAgeCovenantsTeachSorceryAndShareMerits"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "ritualTeachersAliasesMembershipAndHumanityMatchTheSourceRules"
         }
       }
@@ -254,7 +254,7 @@
           "name": "spilledBloodBloodlinesAndCovenants"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "anyCoilScalesAndZeroCostDevotionsPreservePurchaseHistory"
         }
       }
@@ -266,7 +266,7 @@
           "name": "pickersGroupEntriesByBook"
         },
         "android": {
-          "file": "android/rules/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
+          "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",
           "name": "requiredQualifiersAndBookSectionsRemainValidUnderSearch"
         }
       }

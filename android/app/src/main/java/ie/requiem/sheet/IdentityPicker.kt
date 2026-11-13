@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -83,7 +85,7 @@ private fun IdentityPicker(field: CharacterDetail, c: CharacterSave, catalog: Ca
         Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).imePadding()) {
             ModalHeading("Choose ${field.label}", "Cancel", dismiss)
             OutlinedTextField(search, onValueChange = { search = it }, singleLine = true, label = { SheetText("Search ${field.label}s") },
-                modifier = Modifier.fillMaxWidth().testTag("identity-search"), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done))
+                modifier = Modifier.fillMaxWidth().testTag("identity-search"), keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done))
             LazyColumn(Modifier.weight(1f, fill = false).testTag("identity-options"), contentPadding = PaddingValues(bottom = 24.dp)) {
                 item { TextButton(onClick = { finish(onCustom) }, enabled = !closing) { SheetText("Custom ${field.label}") } }
                 if (field in listOf(CharacterDetail.Bloodline, CharacterDetail.Covenant)) item {

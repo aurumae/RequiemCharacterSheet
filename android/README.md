@@ -50,7 +50,7 @@ Priority changes, clan changes and existing saves can leave broken rules. The ch
 Run the local tests or the Compose interaction tests (with an emulator or authorized device attached):
 
 ```sh
-android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintDebug
+android/gradlew -p android :requiem:test :app:testDebugUnitTest :app:lintDebug
 android/gradlew -p android :app:connectedDebugAndroidTest
 ```
 
@@ -69,3 +69,21 @@ The examples in [shared/fixtures/characters](../shared/fixtures/characters) are 
 ## Beta 2 parity
 
 The beta 2 implementation adds Conditions, Secrets of the Covenants rules, Specialty-linked Merits, richer identity details, a current-section pill and library Export Character. See [the beta 2 plan and validation record](../docs/android-beta2-plan.md). Conditions or their history require schema 11; sheets without either still write schema 10. Beta 1 cannot read schema-11 files. Opening an unchanged older save does not rewrite it.
+
+## Shared Kotlin boundary (beta 3)
+
+`:core` is a standalone JVM library in `ie.chronicles.core`: stored shared traits,
+Conditions, log records, UUID serialization, catalog indexing/book sections, shared
+trait definitions, ratings, Willpower, Specialty choices, tracks and Beat conversion.
+It has no Android, Compose or Requiem dependency. `:requiem` owns the Requiem codec,
+catalog resources and game rules; type aliases preserve its existing public API.
+`:app` is the same Requiem app and storage/package identity.
+
+Reusable Compose text, theme, background, dots, health boxes and editing layout live
+in `ie.chronicles.ui` inside the app for now. `RequiemIdentity.kt` supplies font and
+artwork resources and the logo description. Game-aware screens and adapters remain
+in `ie.requiem.sheet`. No Forsaken target or game field has been introduced.
+
+`android/gradlew -p android :core:test` verifies the compiled JVM boundary independently.
+Run `scripts/check-save-contract --strict` for full declared parity, or omit strict
+for staged ports described in `docs/ci-contract-policy.md`.

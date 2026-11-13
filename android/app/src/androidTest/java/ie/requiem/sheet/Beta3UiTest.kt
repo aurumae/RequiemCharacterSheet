@@ -17,6 +17,7 @@ class Beta3UiTest {
         var chosen: String? = null
         ui.setContent { SheetTheme { EntryPicker(EntryKind.Discipline, c, catalog, false, { chosen = it.id }, {}, {}, {}) } }
         ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Crochan")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
         ui.onNodeWithText("In-clan for Bron").assertExists()
         ui.onAllNodesWithTag("catalog-crochan").assertCountEquals(2)
         ui.onAllNodesWithTag("catalog-crochan")[0].performClick()

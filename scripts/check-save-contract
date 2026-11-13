@@ -16,8 +16,8 @@ if [[ -n "${REQUIEM_GRADLE_CACHE:-}" ]]; then gradle_args+=(--project-cache-dir 
 if [[ -n "${REQUIEM_GRADLE_INIT:-}" ]]; then gradle_args+=(--init-script "$REQUIEM_GRADLE_INIT"); fi
 "$swift_command" test --xunit-output "$exchange_dir/swift-tests.xml"
 python3 scripts/contract_policy.py --evidence ios --reports "$exchange_dir"/swift-tests*.xml
-android/gradlew -p android "${gradle_args[@]}" :rules:test :app:testDebugUnitTest "-PexchangeDir=$exchange_dir" "-PcontractPlan=$REQUIEM_EXCHANGE_PLAN"
-jvm_reports=${REQUIEM_JVM_REPORT_ROOT:-android/rules/build}
+android/gradlew -p android "${gradle_args[@]}" :core:test :requiem:test :app:testDebugUnitTest "-PexchangeDir=$exchange_dir" "-PcontractPlan=$REQUIEM_EXCHANGE_PLAN"
+jvm_reports=${REQUIEM_JVM_REPORT_ROOT:-android/requiem/build}
 app_reports=${REQUIEM_APP_REPORT_ROOT:-android/app/build}
 python3 scripts/contract_policy.py --evidence android --reports "$jvm_reports"/test-results/test/TEST-*.xml "$app_reports"/test-results/testDebugUnitTest/TEST-*.xml
 REQUIEM_CHECK_KOTLIN=1 "$swift_command" test --skip-build --filter readsKotlin --xunit-output "$exchange_dir/swift-consumer-tests.xml"

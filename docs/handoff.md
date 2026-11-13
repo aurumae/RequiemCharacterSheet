@@ -989,3 +989,52 @@ prerequisite description also retains both any-Coil and explicit alternatives.
 as a separate behavior-preserving commit and revalidate. Physical S24 FE, TalkBack,
 real-device iOS exchange, Play-delivered upgrade and 16 KB runtime acceptance are
 not established by host/emulator checks. No Play upload or rollout performed.
+
+## 2026-11-13 07:16 UTC · Astra (Android) · Shared Kotlin core and beta-3 validation
+
+Following parity/CI commit `0ca595d`, this commit separately extracts JVM `:core`
+and renames `:rules` to `:requiem`. Core owns shared saved models/UUID serialization,
+open log keys, traits, tracks, catalog indexing/book sections, character basics and
+speech formatting. `CharacterSave` implements the shared character interface;
+Requiem retains game rules, codec policy, prerequisite/Condition/purchase engines
+and validation of its supported log kinds. No game field or Forsaken target.
+Shared Compose controls live in `ie.chronicles.ui`, with fonts/artwork/logo identity
+injected by `RequiemIdentity.kt`; the app/package/storage identity is unchanged.
+
+Updated module paths in scripts, workflow, contract test references and release
+instructions. Catalogs/fonts/fixture bytes and `Package.swift` remain unchanged.
+Comparison against the pre-extraction compiled codec found byte-identical encoded
+output for all five canonical v10/v11/v12 fixtures. Untouched transfers retain
+original bytes as before. The full strict exchange passed again, including 275
+Swift producer tests, 68 Requiem rules tests, 11 Android storage tests, three new
+independent core tests, and six Swift consumers. Eleven policy tests and PR-base
+regression protection passed, including against `0ca595d` across the module move.
+
+**UI validation correction:** the initial full run was still in landscape, where
+an open keyboard left no room to scroll picker results. Search Done now explicitly
+clears focus. Tests dismiss the keyboard and request their intended orientation;
+this does not force the production app to portrait. The full 25-case suite then
+passed 24 cases; the remaining assertion expected pre-port Crúac teacher text.
+Updated it to require both Circle of the Crone and Fir'awn; that complete sorcery
+purchase/refund test passed separately. Focused parity and all ten reference states
+passed; final captures add Attributes and Merits. Full-device TalkBack is untested.
+
+**Release validation:** signed code 11 AAB and APK built; debug/release lint have no
+errors. Bundletool validates the AAB, jarsigner verifies its signature (normal
+self-signed upload-certificate trust warnings), and apksigner verifies the existing
+upload certificate SHA-256 `57ec9f740f282fd7536402da8f468fb709dc36182828736b8679b56b7f160a0f`.
+Bundle config requests 16 KB alignment; zipalign and every native PT_LOAD segment
+pass 16 KB static checks. This emulator uses a 4 KB kernel, so this is not a 16 KB
+runtime claim. Installed archived debug code 10, staged four ordinary/guided/
+Conditions/elder files, then installed debug code 11 with `adb install -r` and no
+uninstall. The explicit `Beta3UpgradeTest` passed real-store open, unchanged persist
+and byte-identical export of all four, including dates and paid-dot ledger. It runs
+only with instrumentation argument `upgradeCheck=true` and staged inputs; it is
+not a substitute for a Play-delivered signed update.
+
+**Follow-up:** GitHub must run the new CI workflow on the published commits.
+Physical S24 FE, TalkBack traversal, real-device iOS exchange, Play-delivered update
+and 16 KB runtime acceptance remain outstanding. Signed beta-3 artifacts and local
+screenshots will be archived with this source commit. No upload, tester notification
+or rollout is performed. Main was fetched again and remains `0bc7a66`; append-only
+handoff checks preserve both integration histories.

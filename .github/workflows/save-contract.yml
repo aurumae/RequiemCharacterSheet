@@ -69,9 +69,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - run: android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest
+      - run: android/gradlew -p android :core:test :requiem:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest
       - name: Verify declared Android capabilities were exercised
-        run: python3 scripts/contract_policy.py --evidence android --reports android/rules/build/test-results/test/TEST-*.xml android/app/build/test-results/testDebugUnitTest/TEST-*.xml
+        run: python3 scripts/contract_policy.py --evidence android --reports android/requiem/build/test-results/test/TEST-*.xml android/app/build/test-results/testDebugUnitTest/TEST-*.xml
       - name: Check release packaging without private signing credentials
         run: android/gradlew -p android :app:lintRelease :app:bundleRelease -PrequiemUnsignedRelease=true
       - uses: actions/upload-artifact@v4

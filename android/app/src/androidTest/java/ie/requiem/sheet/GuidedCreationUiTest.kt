@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
@@ -12,6 +14,10 @@ import org.junit.Test
 
 class GuidedCreationUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun sheet(matcher: SemanticsMatcher): SemanticsNodeInteraction {
         ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
         return ui.onNode(matcher)
@@ -36,6 +42,7 @@ class GuidedCreationUiTest {
     private fun picker(kind: String, search: String) {
         sheet(hasText("Add $kind")).performClick()
         ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput(search)
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
     }
     private fun choose(id: String) {
         ui.onAllNodesWithTag("catalog-options").onFirst().performScrollToNode(hasTestTag("catalog-$id"))
@@ -57,6 +64,7 @@ class GuidedCreationUiTest {
     private fun clan(name: String, favored: String) {
         jump("Character"); sheet(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput(name)
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-${name.lowercase()}"))
         ui.onNodeWithTag("identity-option-${name.lowercase()}").performClick()
         ui.onNodeWithTag("favored-$favored").performClick()

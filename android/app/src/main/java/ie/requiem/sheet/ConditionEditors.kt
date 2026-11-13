@@ -1,5 +1,15 @@
 package ie.requiem.sheet
 
+import androidx.compose.ui.platform.LocalFocusManager
+
+import androidx.compose.ui.text.input.ImeAction
+
+import androidx.compose.foundation.text.KeyboardOptions
+
+import androidx.compose.foundation.text.KeyboardActions
+
+import ie.chronicles.ui.*
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -153,13 +163,14 @@ internal fun ConditionDialogs(route: String, c: CharacterSave, catalog: Catalog,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable private fun ConditionPicker(c: CharacterSave, catalog: Catalog, choose: (TraitSource) -> Unit, dismiss: () -> Unit) {
+    val focus = LocalFocusManager.current
     var search by rememberSaveable { mutableStateOf("") }
     val options = catalog.bookEntries(CatalogKind.conditions).filter { (it.name + " " + it.summary + " " + it.bookName).contains(search.trim(), true) }
     val recent = c.recentConditionIDs(catalog).mapNotNull { id -> options.firstOrNull { it.id == id } }
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
         Column(Modifier.padding(horizontal = 16.dp).imePadding()) {
             ModalHeading("Add Condition", "Cancel", dismiss)
-            OutlinedTextField(search, { search = it }, label = { SheetText("Search Conditions") }, singleLine = true, modifier = Modifier.fillMaxWidth().testTag("condition-search"))
+            OutlinedTextField(search, { search = it }, label = { SheetText("Search Conditions") }, singleLine = true, keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }), modifier = Modifier.fillMaxWidth().testTag("condition-search"))
             LazyColumn(Modifier.weight(1f, fill = false).testTag("condition-options"), contentPadding = PaddingValues(bottom = 24.dp)) {
                 val groups = (if (recent.isEmpty()) emptyList() else listOf(CatalogSection("recent", null, "Recently used", recent))) + catalog.bookSections(options.sortedBy { it.name }, { it })
                 groups.forEach { section ->
@@ -184,16 +195,6 @@ internal fun ConditionDialogs(route: String, c: CharacterSave, catalog: Catalog,
                 if (options.isEmpty()) item { SheetText("No matching Conditions", Modifier.padding(12.dp)) }
                 item { AddSheetRow("Custom Condition", true) { choose(TraitSource(custom = "")) } }
             }
-        }
-    }
-}
-
-/** Small visual mark with a full, non-overlapping 48dp target. */
-@Composable internal fun ConditionIndicator(label: String, open: () -> Unit) {
-    Box(Modifier.size(48.dp).clickable(role = Role.Button, onClick = open)
-        .semantics { contentDescription = "Conditions affecting $label" }, contentAlignment = Alignment.Center) {
-        Box(Modifier.size(18.dp * LocalDensity.current.fontScale.coerceAtLeast(1f)).background(SheetColors.accent, CircleShape), contentAlignment = Alignment.Center) {
-            SheetText("c", style = MaterialTheme.typography.labelSmall, color = Color.White)
         }
     }
 }

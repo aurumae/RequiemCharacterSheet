@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import android.graphics.Bitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -41,6 +43,12 @@ class Beta3VisualTest {
         }
     }
     @get:Rule val rules: RuleChain = RuleChain.outerRule(seed).around(ui)
+    @org.junit.Before fun referenceOrientation() {
+        val landscape = InstrumentationRegistry.getArguments().getString("visualProfile") == "landscape"
+        ui.activity.requestedOrientation = if (landscape) android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun capture(name: String) {
         ui.waitForIdle()
         val profile = InstrumentationRegistry.getArguments().getString("visualProfile") ?: "normal"
@@ -77,5 +85,8 @@ class Beta3VisualTest {
         ui.onNode(hasText("SWOONING") and hasClickAction()).performClick(); capture("09-condition-card")
         ui.onNodeWithText("Done").performClick()
         jump("Experience"); sheet("Change Log").performClick(); capture("10-change-log")
+        ui.onNodeWithText("Done").performClick()
+        jump("Attributes"); capture("11-attributes")
+        jump("Merits"); capture("12-merits")
     }
 }

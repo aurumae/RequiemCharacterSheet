@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -8,6 +10,10 @@ import java.util.UUID
 
 class CoreSheetUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
 
     private fun sheetNode(matcher: SemanticsMatcher): SemanticsNodeInteraction {
         ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
@@ -35,11 +41,13 @@ class CoreSheetUiTest {
         ui.onNodeWithContentDescription("Player").performImeAction()
         sheetNode(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Ventrue")
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-ventrue"))
         ui.onNodeWithTag("identity-option-ventrue").performClick()
         ui.onNodeWithContentDescription("Clan").assert(hasStateDescription("Ventrue"))
         sheetNode(hasContentDescription("Mask")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Author")
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithText("Authoritarian").performClick()
         sheetNode(hasContentDescription("Mask")).assertTextContains("Authoritarian")
         sheetNode(hasContentDescription("Covenant")).performClick()

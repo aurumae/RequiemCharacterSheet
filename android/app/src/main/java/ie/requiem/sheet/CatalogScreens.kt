@@ -1,5 +1,11 @@
 package ie.requiem.sheet
 
+import androidx.compose.ui.platform.LocalFocusManager
+
+import androidx.compose.foundation.text.KeyboardActions
+
+import ie.chronicles.ui.*
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +28,7 @@ import ie.requiem.rules.*
 @Composable
 internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, choosingMystery: Boolean,
     choose: (BookEntry) -> Unit, custom: () -> Unit, none: () -> Unit, dismiss: () -> Unit) {
+    val focus = LocalFocusManager.current
     var search by rememberSaveable { mutableStateOf("") }
     val sections = remember(c, kind, catalog, search, choosingMystery) { c.catalogSections(kind, catalog, search, choosingMystery) }
     val title = if (choosingMystery) "Choose Mystery" else "Add ${kind.title}"
@@ -30,7 +37,7 @@ internal fun EntryPicker(kind: EntryKind, c: CharacterSave, catalog: Catalog, ch
             ModalHeading(title, "Cancel", dismiss)
             OutlinedTextField(value = search, onValueChange = { search = it }, singleLine = true,
                 label = { SheetText(if (choosingMystery) "Search Mysteries" else "Search ${kind.title}s") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), modifier = Modifier.fillMaxWidth().testTag("catalog-search"))
+                keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), modifier = Modifier.fillMaxWidth().testTag("catalog-search"))
             LazyColumn(Modifier.weight(1f, fill = false).testTag("catalog-options")) {
                 item { TextButton(onClick = custom, modifier = Modifier.fillMaxWidth()) { SheetText(if (choosingMystery) "Custom Mystery" else "Custom ${kind.title}") } }
                 if (choosingMystery) item { TextButton(onClick = none, modifier = Modifier.fillMaxWidth()) { SheetText("None") } }

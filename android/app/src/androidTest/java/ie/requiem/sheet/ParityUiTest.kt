@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -8,6 +10,10 @@ import java.util.UUID
 
 class ParityUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun library() {
         ui.onNodeWithTag("dark-pack-splash").performClick()
         ui.waitUntil(8000) { ui.onAllNodesWithTag("character-library").fetchSemanticsNodes().isNotEmpty() }
@@ -26,6 +32,7 @@ class ParityUiTest {
         ui.waitUntil(6_000) { ui.onAllNodesWithText("Your available Experiences are now below zero.").fetchSemanticsNodes().isEmpty() }
         sheet(hasContentDescription(field)).performClick()
         ui.onNodeWithTag("identity-search").performTextInput(search)
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-$id"))
         ui.onNodeWithTag("identity-option-$id").performClick()
     }
@@ -62,6 +69,7 @@ class ParityUiTest {
         jump("Disciplines")
         sheet(hasText("Add Discipline")).performClick()
         ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Cachexy")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
         ui.onAllNodesWithTag("catalog-cachexy").onFirst().assertIsNotEnabled()
         ui.onNodeWithText("Only the Morbus bloodline can learn Cachexy").assertExists()
         ui.onNodeWithText("Cancel").performClick()
@@ -73,6 +81,7 @@ class ParityUiTest {
         jump("Disciplines")
         sheet(hasText("Add Discipline")).performClick()
         ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Cachexy")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
         ui.onAllNodesWithTag("catalog-cachexy").onFirst().assertIsEnabled().performClick()
         ui.onNodeWithContentDescription("XP Mode").assert(hasStateDescription("On, -3 Experiences available"))
         jump("Banes")

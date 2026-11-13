@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
@@ -19,6 +21,10 @@ import java.util.concurrent.atomic.AtomicReference
 
 class CharacterTransferUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val context get() = instrumentation.targetContext
     private val codec = CharacterCodec(Catalog.bundled())
