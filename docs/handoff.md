@@ -693,3 +693,48 @@ No save-format change.
   - The character list's "Edited …" time refreshes every minute, so the text and VoiceOver no longer disagree.
   - **Follow-up:** check both on Android.
 - **User:** the app will always be free.
+
+## 2026-11-13 05:52 UTC · Astra (Android) · Repeated GitHub check failures diagnosed
+
+The user requested diagnosis of `GitHub-failed-job.log`, not an implementation change.
+Inspected `main` at `0bc7a66`, the shared catalogs, tests and workflow, and verified the
+[latest GitHub run](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/43337663446).
+Its 272 Swift host tests and separate iOS job pass. Both `kotlin` and `exchange` fail
+the same two Kotlin rules tests (43 of 45 pass):
+
+- `SaveContractTest.kt:60` expects exactly four books. Android automatically bundles
+  all catalog JSON files; there are now eight. `e8ab6ba` added Secrets of the Covenants
+  as the fifth, followed by Dark Eras (`f48fc33`), Dark Eras 2 (`9ff14da`) and Spilled
+  Blood (`340b690`). The old equality assertion rejects these valid additions.
+- `BloodlineTest.kt:79` calls `.single()` on all bloodline picker options, assuming
+  Morbus is the only bloodline. `9ff14da` added the Bron, and `340b690` added ten more.
+  The test should locate Morbus by ID before checking its incompatible-clan warning.
+
+The workflow runs on every main push and PR; both jobs invoke `:rules:test`, explaining
+the repeated failures and two red jobs. Gradle deprecation/non-null warnings are not
+the cause. The first 9 November Conditions run had a cancelled exchange job; it is
+not evidence of these two test failures. The later Secrets of the Covenants run has
+failed Kotlin/exchange jobs, consistent with the already-recorded four-book mismatch.
+
+PR #7 (`android/beta2-plan`, published through `b5fb3fb`) remains open. Its successful
+9 November checks apply to that branch's older catalog state, not current main. It
+adds Conditions/schema 11 and updates the book assertion to five; it still needs
+updating for today's catalogs. Main's exchange comparison also lacks Kotlin's
+`conditions` category while Swift emits it, so correcting the four-book assertion
+alone exposes a further mismatch. Android schema 12 remains a separate unported
+handoff requirement. No claim is made that these two test edits alone restore full
+cross-platform compatibility.
+
+**Validation:** source/catalog inspection plus the supplied and live GitHub logs;
+no local builds or tests rerun and no app/test implementation changed. Fetched main
+and merged it into the Android working branch as `beca2dd` per startup instructions;
+preserved untracked IDE/Gradle files. This diagnosis is published separately from
+the beta-2 implementation. **Commits:** this documentation commit; no preceding
+implementation commit for this task. **Shared:** no catalog, font, schema, fixture,
+Swift package, script or workflow change; the iOS UI-test skip is intact.
+
+**Follow-up (Android):** refresh the catalog tests without weakening their intended
+checks, reconcile the unmerged Conditions contract and subsequent schema/catalog
+requirements, then run the complete save exchange and Android checks against current
+main. Other pending UI/release/core-extraction follow-ups are outside this diagnostic
+request; no platform extraction or release decision is made here.
