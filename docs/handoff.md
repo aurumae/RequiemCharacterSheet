@@ -1063,3 +1063,29 @@ headings or conflict markers. No historical entry was edited or reordered.
 report handling, not catalogs/fonts, fixture bytes, save format or `Package.swift`.
 **Follow-up:** physical acceptance and Play/16 KB runtime gates remain as above;
 GitHub results are tracked on PR #7. See `docs/android-beta3-validation.md`.
+
+## 2026-11-13 07:27 UTC · Astra (Android) · Final chooser parity and beta-3 package refresh
+
+A final comparison against the 10 November grouping handoff and Swift pickers found
+two remaining edge cases. Bloodlines with no recognized clan and Devotions with no
+learnable group now show only book headings; Other headings remain when a preferred
+group exists elsewhere. Merit search shows one list per book, ranking name, summary,
+then citation matches. One synthetic catalog regression covers empty/retained groups,
+clan warnings and the three relevance levels. No save/price/ledger change.
+
+**Validation:** all 69 Requiem, three core and 11 storage tests pass; strict real-store
+exchange passes again (275 Swift producers and six consumers); both lints and signed
+AAB/APK builds pass. All 26 UI/upgrade cases pass together again in 161.5 seconds.
+Final 12-state normal/150%/landscape captures were reviewed locally. Refreshed AAB
+and APK pass bundletool/signature/ZIP checks; native libraries are byte-identical to
+the already verified 16 KB-aligned payload. Code 11 remains the intended beta-3 code.
+
+**Commits:** this chooser correction follows `d2766f9`, `ad6bc35` and `0ca595d`.
+The final package will be archived by this source hash, with the stable local path
+`AndroidBuilds/beta-3-11/`; it supersedes the first `ad6bc35` package. AAB SHA-256:
+`e4b4dc11a2cb439bdc453673a9a44fe8204eb713061254c8bad9f08bdc0d1c69`.
+**Shared:** no catalog/font/fixture/save-format/Package.swift change; this commit
+only adjusts Android chooser presentation and its regression test/documentation.
+**Follow-up:** CI runner validation is on PR #7; physical/Play/16 KB runtime gates
+remain open. No upload, notification or rollout. Main was refreshed; historical
+handoff entries remain intact and unreordered.

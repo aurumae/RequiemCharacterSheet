@@ -64,6 +64,8 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
     val mysteries = catalog.bookEntries(CatalogKind.mysteries).sortedBy { it.id != mystery.catalog }.map { it.id }
     val needle = searchable(query.trim())
     val entries = catalog.bookEntries(kind.catalogKind).filter { (!choosingMystery || !it.coilOnly) && (needle.isEmpty() || searchable(it.name + " " + it.summary + " " + it.coilName + " " + it.bookName + " " + it.citation).contains(needle)) }
+    val hasLearnableDevotions = kind == EntryKind.Devotion && catalog.bookEntries(CatalogKind.devotions)
+        .any { prerequisites(it, catalog).none { check -> check.met == false } }
     fun rank(e: BookEntry): Int = when (kind) {
         EntryKind.Discipline -> if (e.id in ownDisciplines) 0 else 1
         EntryKind.Merit -> if (needle.isNotEmpty()) 0 else meritOrder.indexOf(e.category).coerceAtLeast(0)
@@ -73,13 +75,13 @@ fun CharacterSave.catalogOptions(kind: EntryKind, catalog: Catalog, query: Strin
         EntryKind.Scale -> mysteries.indexOf(e.raw.str("mystery")).coerceAtLeast(0)
         else -> 0
     }
-    return entries.sortedWith(compareBy<BookEntry> { rank(it) }.thenBy { if (needle.isEmpty() || searchable(it.name).contains(needle)) 0 else 1 }
+    return entries.sortedWith(compareBy<BookEntry> { rank(it) }.thenBy { if (needle.isEmpty() || searchable(it.name).contains(needle)) 0 else if (searchable(it.summary).contains(needle)) 1 else 2 }
         .thenBy { if (kind == EntryKind.Ritual) it.dots else 0 }.thenBy { it.name }).map { e ->
         val group = when (kind) {
             EntryKind.Discipline -> if (e.id in ownDisciplines) "In-clan for ${inClanGroupName(catalog)}" else "Other Disciplines"
-            EntryKind.Merit -> if (needle.isNotEmpty()) "Merits" else if (e.category == "supernatural") "Supernatural (not for Kindred)" else e.category.replaceFirstChar { it.uppercaseChar() }
+            EntryKind.Merit -> if (needle.isNotEmpty()) "" else if (e.category == "supernatural") "Supernatural (not for Kindred)" else e.category.replaceFirstChar { it.uppercaseChar() }
             EntryKind.Ritual -> catalog.name(CatalogKind.disciplines, TraitSource(catalog = e.discipline))
-            EntryKind.Devotion -> if (rank(e) == 0) "You have the Disciplines" else "Other Devotions"
+            EntryKind.Devotion -> if (!hasLearnableDevotions) "" else if (rank(e) == 0) "You have the Disciplines" else "Other Devotions"
             EntryKind.Scale -> if (e.raw.int("anyCoil") > 0) "Any Mystery" else catalog.name(CatalogKind.mysteries, TraitSource(catalog = e.raw.str("mystery").orEmpty()))
             EntryKind.Coil -> e.bookName
             else -> kind.title + "s"

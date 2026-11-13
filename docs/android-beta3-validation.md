@@ -1,13 +1,14 @@
 # Android beta 3 validation
 
 Prepared **1.0.0-beta.3 (11)**; the user confirmed Play's latest code is 10.
-Implementation: `0ca595d` (parity/CI), `ad6bc35` (separate shared core).
+Implementation: `0ca595d` (parity/CI), `ad6bc35` (separate shared core), followed
+by the macOS runner fix and final chooser edge-case correction.
 PR: https://github.com/aurumae/RequiemCharacterSheet/pull/7
 
 ## Automated acceptance
 
 - Strict and supported-mode Swift/Kotlin real-store exchange pass: 275 Swift producer
-  cases, 68 Requiem JVM cases, 11 Android storage cases, 3 independent core cases and
+  cases, 69 Requiem JVM cases, 11 Android storage cases, 3 independent core cases and
   6 Swift consumers. One producer-only consumer test is exercised in the later phase.
 - All 11 CI-policy tests pass. Eight books and 15 shared scenarios; no declared pending
   Requiem capabilities. Historical fixtures remain unchanged, and newer saves are
@@ -33,13 +34,14 @@ UI coverage is separate. Main has no branch protection; no setting was changed.
 
 ## Local release artifacts
 
-`/home/oisin/RequiemCharacterSheetApp/AndroidBuilds/ad6bc35/` contains the signed AAB,
+`/home/oisin/RequiemCharacterSheetApp/AndroidBuilds/beta-3-11/` contains the signed AAB,
 upload-signed verification APK, debug APK, SHA256SUMS, build-info.json, release notes
-and validation evidence. Screenshots remain local. The package/application/storage
+and validation evidence. This points to the final source-hash archive; build-info.json
+records that exact commit. The earlier `ad6bc35` package is superseded. Screenshots remain local. The package/application/storage
 identity is unchanged. No Play upload, rollout or tester notification has occurred.
 
 AAB SHA-256:
-`d7488ca1822f2a546922a11b65e27e6c1dfb7f77763e05cc781f598d5ccd6412`
+`e4b4dc11a2cb439bdc453673a9a44fe8204eb713061254c8bad9f08bdc0d1c69`
 
 ## Remaining release acceptance
 

@@ -171,4 +171,26 @@ class Beta3RulesTest {
         assertEquals(sections.first().entries.single().entry.id, sections.last().entries.single().entry.id)
         for (n in listOf(-1, 0, 1, 2)) assertEquals("$n ${if (n == 1) "Experience" else "Experiences"}", experiencesText(n))
     }
+    @Test fun emptyPreferredGroupsAndMeritSearchFollowBookHeadingRules() {
+        val sample = Catalog(mapOf("sample.json" to """{
+          "format":"requiem-catalog","version":1,"book":{"id":"sample","name":"Token Book"},
+          "clans":[{"id":"own","name":"Own"},{"id":"other","name":"Other"}],
+          "bloodlines":[{"id":"lineage","name":"Lineage","parentClans":["other"],"source":{"book":"sample"}}],
+          "devotions":[{"id":"power","name":"Power","prerequisites":[{"kind":"discipline","id":"power","minimum":1}],"source":{"book":"sample"}}],
+          "merits":[
+            {"id":"citation","name":"A citation match","source":{"book":"sample"}},
+            {"id":"summary","name":"Z summary match","summary":"Token in the summary","source":{"book":"sample"}},
+            {"id":"name","name":"Token name match","source":{"book":"sample"}}
+          ]
+        }"""))
+        val blank = CharacterSave()
+        assertTrue(blank.identityOptions(CharacterDetail.Bloodline, sample).all { it.group.isEmpty() && it.warning == null })
+        assertTrue(blank.copy(clan = source("own")).identityOptions(CharacterDetail.Bloodline, sample).all { it.group.isEmpty() })
+        assertEquals("Other Bloodlines", CharacterSave(clan = source("ventrue")).identityOptions(CharacterDetail.Bloodline, catalog).first { it.entry.id == "morbus" }.group)
+        assertTrue(blank.catalogSections(EntryKind.Devotion, sample).all { it.title.isEmpty() })
+        val search = blank.catalogSections(EntryKind.Merit, sample, "Token")
+        assertEquals(listOf("name", "summary", "citation"), search.flatMap { it.entries }.map { it.entry.id })
+        assertTrue(search.all { it.title.isEmpty() })
+    }
+
 }

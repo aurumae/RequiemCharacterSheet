@@ -19,10 +19,16 @@ fun CharacterSave.bloodlineBane(catalog: Catalog): BloodlineBaneInfo? {
 data class IdentityOption(val entry: BookEntry, val group: String, val details: List<String>, val warning: String?)
 fun CharacterSave.identityOptions(field: CharacterDetail, catalog: Catalog, query: String = ""): List<IdentityOption> {
     val kind = field.catalogKind ?: return emptyList()
-    val options = catalog.bookEntries(kind).map { entry ->
+    val clanEntry = catalog.entry(CatalogKind.clans, clan)
+    val entries = catalog.bookEntries(kind)
+    val hasOwnGroup = kind == CatalogKind.bloodlines && clanEntry != null && entries.any {
+        val parents = it.raw.strings("parentClans")
+        parents.isEmpty() || clanEntry.id in parents
+    }
+    val options = entries.map { entry ->
         val parents = entry.raw.strings("parentClans")
-        val matches = parents.isEmpty() || clan.catalog in parents
-        val group = if (kind != CatalogKind.bloodlines) "" else if (matches) "${catalog.name(CatalogKind.clans, clan).ifBlank { "Any clan" }} Bloodlines" else "Other Bloodlines"
+        val matches = clanEntry == null || parents.isEmpty() || clanEntry.id in parents
+        val group = if (!hasOwnGroup) "" else if (matches) "${clanEntry!!.name} Bloodlines" else "Other Bloodlines"
         val requiredCovenant = entry.raw.str("requiredCovenant")
         val details = buildList {
             entry.raw.str("singleWillpower")?.let { add("Single Willpower: $it") }
