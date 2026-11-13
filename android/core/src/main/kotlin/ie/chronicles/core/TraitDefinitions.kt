@@ -18,4 +18,3 @@ val modernSkillDefinitions = listOf(
     "animal-ken", "empathy", "expression", "intimidation", "persuasion", "socialize", "streetwise", "subterfuge",
 ).mapIndexed { index, id -> TraitDefinition(id, id.split('-').joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } },
     TraitCategory.entries[index / 8]) }
-

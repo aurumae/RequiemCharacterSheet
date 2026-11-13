@@ -57,6 +57,7 @@ jobs:
         if: always()
         with:
           name: compatibility-policy
+          include-hidden-files: true
           path: .contract-reports/
 
   android:
@@ -104,6 +105,7 @@ jobs:
         if: always()
         with:
           name: requiem-save-exchange-results
+          include-hidden-files: true
           path: |
             .contract-reports/
             android/*/build/test-results/

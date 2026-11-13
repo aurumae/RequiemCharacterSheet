@@ -1,6 +1,8 @@
 # Android parity with current iOS
 
-Status: proposed, 13 November 2026. This is a plan, not completed implementation.
+Status: implementation delivered in `0ca595d` and `ad6bc35`, 13 November 2026.
+Automated acceptance is recorded in [beta-3 validation](android-beta3-validation.md);
+physical-device acceptance remains outstanding. The original plan and baseline follow.
 The baseline is `origin/main` at `0bc7a66` (iOS 1.5), including iOS 1.4 at
 `340b690`. Visual references are all ten PNGs in the user's local
 `iOS App Screenshots/1.4 Screenshots/` directory. They were inspected individually.

@@ -1038,3 +1038,28 @@ and 16 KB runtime acceptance remain outstanding. Signed beta-3 artifacts and loc
 screenshots will be archived with this source commit. No upload, tester notification
 or rollout is performed. Main was fetched again and remains `0bc7a66`; append-only
 handoff checks preserve both integration histories.
+
+## 2026-11-13 07:21 UTC · Astra (Android) · Beta-3 artifacts and macOS CI runner fix
+
+Final combined emulator run passed all 26 UI/upgrade cases, with no failures or
+skips. This supersedes the earlier 24/25 plus focused rerun. Signed artifacts from
+`ad6bc35` are archived locally under `AndroidBuilds/ad6bc35/` (outside this checkout),
+with SHA256SUMS, release notes, build metadata, exchange files, test reports and
+normal/150%/landscape screenshots. The AAB is version code 11. No Play upload.
+
+The first live GitHub run passed policy but exposed macOS Bash 3.2 treating empty
+arrays as unset under `set -u`. This commit keeps script argument arrays nonempty
+in supported mode and adds hidden-report inclusion to workflow artifact uploads.
+Both strict (earlier) and normal supported real-store exchange passed locally;
+all 11 policy tests passed again. The live rerun will establish runner validation.
+A trailing blank line in the extracted definitions was cleaned up; app behavior
+and packaged binaries are unchanged from `ad6bc35`.
+
+**Validation note:** checking the whole main handoff as one contiguous string was
+too strict for the existing union-merge history. Entry-by-entry verification finds
+all 21 main entries and all 28 pre-extraction entries intact, with no duplicate
+headings or conflict markers. No historical entry was edited or reordered.
+**Shared:** this commit changes `scripts/check-save-contract` and the workflow's
+report handling, not catalogs/fonts, fixture bytes, save format or `Package.swift`.
+**Follow-up:** physical acceptance and Play/16 KB runtime gates remain as above;
+GitHub results are tracked on PR #7. See `docs/android-beta3-validation.md`.
