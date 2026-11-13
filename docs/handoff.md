@@ -738,3 +738,50 @@ checks, reconcile the unmerged Conditions contract and subsequent schema/catalog
 requirements, then run the complete save exchange and Android checks against current
 main. Other pending UI/release/core-extraction follow-ups are outside this diagnostic
 request; no platform extraction or release decision is made here.
+
+## 2026-11-13 06:24 UTC · Astra (Android) · Current parity and iOS-first CI plans
+
+The user requested a current Android parity plan and a proposal for CI that permits
+iOS-first development. Fetched main (`0bc7a66`), verified the Android checkout and
+open PRs, reread all handoffs since the last beta-2 entry and the standing design/
+multi-game decisions, inspected current Swift/Kotlin implementations, and visually
+reviewed all ten local `iOS App Screenshots/1.4 Screenshots/` PNGs individually.
+
+Added [the parity plan](android-current-parity-plan.md). It reuses the unmerged
+beta-2 work (`2012ff6`, `53e6e35`, `b5fb3fb`) and orders the remaining work: integration
+baseline; schema 12/elder banes; new covenant/ritual/Coil/bloodline/Merit/Scale rules;
+all-picker book grouping; screenshot and accessibility acceptance; full exchange,
+upgrade and physical-device acceptance. Screenshots are mapped to concrete checks;
+they do not establish save behavior or runtime Android parity. PR #7's old passing
+checks are explicitly not treated as current integrated-tree validation.
+
+Answer to the 12 November core-extraction **Question:** recommend the same eventual
+`:core`, `:requiem`, `:forsaken` and separate-app structure. Phase 1 follows functional
+parity as an independently verified behavior-preserving change, initially retaining
+the existing Requiem `:app`. Keep JVM core free of Compose/Requiem dependencies and
+defer Forsaken modules, game fields and resource relocation. This is a recommendation
+within the requested plan, not a new implementation or release authorization.
+
+Added [the CI proposal](ios-first-ci-plan.md): remove brittle inventory/cardinality
+assumptions, declare actual platform/schema/rule capabilities with versioned fixture
+metadata, require supported exchange and safe future-save rejection, and report
+declared pending ports separately. Existing regressions, unsupported destructive
+data changes and unclassified gaps still fail. Capability promotion adds required
+coverage; it cannot silently remove old coverage. Path-aware jobs and a validated
+stable required aggregate are a later optimization, not the compatibility solution.
+The plan also covers catalog mechanics that do not change save schema.
+
+Added the requested `docs/design-decisions.md` pointer to `AGENTS.md`. Kept the earlier
+diagnosis intact and expanded its documentation-only PR #8 to include these plans.
+**Commits:** this documentation commit, following diagnostic commit `ceaaa41`; no
+implementation commits in this task. **Validation:** source/catalog inspection,
+ten-image review, live PR state, official GitHub check-status documentation, internal
+document links and append-only/diff checks. No new builds, tests or emulator runs.
+
+**Shared:** no app code, catalog/font content, save format, fixture, `Package.swift`,
+script, workflow, branch protection or release change. Local screenshots and existing
+untracked IDE/Gradle files are preserved. The iOS UI-test skip remains unchanged.
+**Follow-up (Android/iOS):** review the proposed CI contract policy, then implement
+the parity milestones when authorized; keep the handoff and capability declarations
+current as each platform gains support. Outstanding Play/privacy/backup/16 KB and
+physical beta-2 acceptance tasks remain distinct from this planning request.
