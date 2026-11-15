@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F099A5CD3C9FBE00505FBE99 /* ConditionIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9830A195FB0062F53F /* ConditionIndicator.swift */; };
-		F0250FCF46065254380264E3 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9630A195820062F53F /* ConditionsView.swift */; };
+		F0774AA5FE32E34680DBAF2F /* ExperienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4477309ABD4300720F0C /* ExperienceView.swift */; };
 		A1F143D41BC34BF6B184F400 /* SaveContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F401 /* SaveContractTests.swift */; };
 		A1F143D41BC34BF6B184F402 /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F403 /* fixtures */; };
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
@@ -111,6 +110,8 @@
 		BC8BC97530AA17AD0060E9BF /* Prerequisites.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC97330AA17AD0060E9BF /* Prerequisites.swift */; };
 		BC8BC9B530AA1AC80060E9BF /* ConditionRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */; };
 		BC8BC9B630AA1AC80060E9BF /* ConditionRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */; };
+		BC8BC9D830AA1BBF0060E9BF /* ExperienceCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */; };
+		BC8BC9D930AA1BBF0060E9BF /* ExperienceCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
 		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
@@ -149,6 +150,7 @@
 		F01F3104039DB093085C20AA /* CatalogCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98F830A672AC007FDB6D /* CatalogCore.swift */; };
 		F022243D76CFFE6D06EC0E03 /* ChroniclesCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98FE30A673F7007FDB6D /* ChroniclesCharacter.swift */; };
 		F022968F00A990F4A73FD67D /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159152C9874A5003B6A8F /* BackgroundView.swift */; };
+		F0250FCF46065254380264E3 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9630A195820062F53F /* ConditionsView.swift */; };
 		F0308D37C19D7982484D9416 /* SharedRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4433309982B500720F0C /* SharedRows.swift */; };
 		F0408B84D5F43DD09AACA0F3 /* TraitDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442D3099806A00720F0C /* TraitDefinitions.swift */; };
 		F04B20450D0B8ED0ED589FCB /* HealthBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */; };
@@ -165,6 +167,7 @@
 		F093F678570F123A9A68899E /* HealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159132C9873D3003B6A8F /* HealthView.swift */; };
 		F097CC20BF174E892DBC2229 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590F2C9872FD003B6A8F /* DotView.swift */; };
 		F09865DD6424C885A554740B /* CharacterFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */; };
+		F099A5CD3C9FBE00505FBE99 /* ConditionIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D9830A195FB0062F53F /* ConditionIndicator.swift */; };
 		F09BB728A3C45111542F84E0 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
 		F0A5A29F797511DCCD487B59 /* DotsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */; };
 		F0AD40B64C04B0CFB2062C8E /* MeritRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36D42C9DE667008D03F7 /* MeritRowView.swift */; };
@@ -304,6 +307,7 @@
 		BC8BC95330A9AB780060E9BF /* RequiemSheetCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemSheetCharacter.swift; sourceTree = "<group>"; };
 		BC8BC97330AA17AD0060E9BF /* Prerequisites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prerequisites.swift; sourceTree = "<group>"; };
 		BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionRules.swift; sourceTree = "<group>"; };
+		BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceCore.swift; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -421,7 +425,6 @@
 				BC2B446B309AA16400720F0C /* DevotionsView.swift */,
 				BC2B446D309AA18100720F0C /* RitualsView.swift */,
 				BC2B446F309AA1A400720F0C /* CoilsView.swift */,
-				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 				BC2B447D309B564700720F0C /* CreationPanelView.swift */,
 				BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */,
 				BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */,
@@ -486,6 +489,7 @@
 				BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */,
 				BC8BC97330AA17AD0060E9BF /* Prerequisites.swift */,
 				BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */,
+				BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -530,6 +534,7 @@
 				BC2B445B309A4DE600720F0C /* MeritDetailView.swift */,
 				BC460D9830A195FB0062F53F /* ConditionIndicator.swift */,
 				BC460D9630A195820062F53F /* ConditionsView.swift */,
+				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -840,6 +845,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0774AA5FE32E34680DBAF2F /* ExperienceView.swift in Sources */,
 				F099A5CD3C9FBE00505FBE99 /* ConditionIndicator.swift in Sources */,
 				F0250FCF46065254380264E3 /* ConditionsView.swift in Sources */,
 				F0652802A817D28282BC1673 /* MeritsView.swift in Sources */,
@@ -862,6 +868,7 @@
 				F0308D37C19D7982484D9416 /* SharedRows.swift in Sources */,
 				F000FB6358C7C1ADA1448D86 /* AboutView.swift in Sources */,
 				F0B5348DE4C5E676D6281784 /* SplashScreenView.swift in Sources */,
+				BC8BC9D830AA1BBF0060E9BF /* ExperienceCore.swift in Sources */,
 				F0EFB0A0702CCBF21D0099A5 /* Extensions.swift in Sources */,
 				F01E95E129F7A7C6189B7562 /* BoxFillType.swift in Sources */,
 				F0616393E99EADFA08E401BD /* Aspiration.swift in Sources */,
@@ -921,6 +928,7 @@
 				BCB159102C9872FD003B6A8F /* DotView.swift in Sources */,
 				BC6D36CA2C9DD3F9008D03F7 /* HumanityRowView.swift in Sources */,
 				BCB158CE2C986811003B6A8F /* RequiemCharacterSheetApp.swift in Sources */,
+				BC8BC9D930AA1BBF0060E9BF /* ExperienceCore.swift in Sources */,
 				BC2B446E309AA18100720F0C /* RitualsView.swift in Sources */,
 				BC6D36C82C9DD3D6008D03F7 /* Touchstone.swift in Sources */,
 				BC2B4444309A30F600720F0C /* TraitSource.swift in Sources */,

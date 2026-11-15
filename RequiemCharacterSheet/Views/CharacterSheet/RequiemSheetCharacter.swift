@@ -17,6 +17,10 @@ extension Character: SheetCharacter {
         merits.filter { $0.entry?.qualifier?.usesSpecialty == true && $0.qualifier == specialty }.map(\.name)
     }
 
+    func changeText(for change: TraitChange) -> String {
+        change.changeText
+    }
+
     func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool {
         creationAllows(.merit(entry, rating: rating))
     }

@@ -1,14 +1,14 @@
 //
 //  ExperienceView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
 
 /// XP Mode, Beats, and Experiences earned, spent and available, with the change log.
-struct ExperienceView: View {
+struct ExperienceView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
-    @Bindable var character: Character
+    @Bindable var character: C
     @State private var showingLog = false
 
     var body: some View {
@@ -90,10 +90,10 @@ struct ExperienceView: View {
 }
 
 /// Every change to the character's traits, newest first, grouped by day.
-struct ChangeLogView: View {
+struct ChangeLogView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
-    let character: Character
+    let character: C
 
     private var days: [(day: Date, changes: [TraitChange])] {
         let calendar = Calendar.current
@@ -120,7 +120,7 @@ struct ChangeLogView: View {
                 ForEach(days, id: \.day) { day in
                     Section(header: Text(day.day.formatted(date: .complete, time: .omitted)).themedText(.subsectionHeader)) {
                         ForEach(day.changes) { change in
-                            ChangeLogRow(change: change, name: character.displayName(for: change))
+                            ChangeLogRow(change: change, name: character.displayName(for: change), changeText: character.changeText(for: change))
                         }
                     }
                 }
@@ -141,6 +141,8 @@ private struct ChangeLogRow: View {
     @Environment(\.theme) private var theme
     let change: TraitChange
     let name: String
+    /// What changed, e.g. "1 → 3" or "Learned".
+    let changeText: String
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
@@ -148,8 +150,8 @@ private struct ChangeLogRow: View {
                 Text(name)
                     .themedText(.traitName)
                 HStack(spacing: 6) {
-                    Text(change.changeText)
-                        .accessibilityLabel(change.changeText.spokenForVoiceOver)
+                    Text(changeText)
+                        .accessibilityLabel(changeText.spokenForVoiceOver)
                     Text(change.date.formatted(date: .omitted, time: .shortened))
                         .foregroundStyle(theme.muted)
                 }
@@ -173,9 +175,9 @@ private struct ChangeLogRow: View {
 }
 
 /// The toolbar badge: "XP Off", or the Experiences available while XP Mode is on. Tapping it switches XP Mode.
-struct XPModeBadge: View {
+struct XPModeBadge<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
-    @Bindable var character: Character
+    @Bindable var character: C
 
     var body: some View {
         let isNegative = character.experiencesAvailable < 0
@@ -220,4 +222,9 @@ struct NegativeExperienceNotice: View {
             .accessibilityAddTraits(.isButton)
             .accessibilityHint("Double-tap to dismiss")
     }
+}
+
+/// "1 Experience" or "3 Experiences".
+func experiencesText(_ count: Int) -> String {
+    "\(count) \(count == 1 ? "Experience" : "Experiences")"
 }

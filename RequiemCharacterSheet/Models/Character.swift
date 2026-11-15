@@ -692,15 +692,6 @@ final class Character: Codable {
 
     // Methods to handle Beats and Experiences
 
-    func incrementExperiences() {
-        experiences += 1
-    }
-
-    func decrementExperiences() {
-        if experiences > 0 {
-            experiences -= 1
-        }
-    }
 }
 
 /// How health and willpower boxes were saved before version 3.

@@ -44,6 +44,8 @@ final class ForsakenCharacter: Codable {
     var experiences: Int
     var xpMode: Bool
     var changeLog: [TraitChange]
+    /// The Experiences paid for each dot, so lowering a trait in XP Mode refunds them.
+    var paidDots: [TraitKey: [Int: Int]]
 
     init() {
         id = UUID()
@@ -74,6 +76,7 @@ final class ForsakenCharacter: Codable {
         experiences = 0
         xpMode = false
         changeLog = []
+        paidDots = [:]
     }
 
     // MARK: - Saving
@@ -82,7 +85,7 @@ final class ForsakenCharacter: Codable {
         case game, schemaVersion, id, createdAt, modifiedAt,
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge,
              attributes, skills, merits, aspirations, conditions, healthTrack, willpowerTrack,
-             beats, experiences, xpMode, changeLog
+             beats, experiences, xpMode, changeLog, paidDots
     }
 
     func encode(to encoder: Encoder) throws {
@@ -115,6 +118,7 @@ final class ForsakenCharacter: Codable {
         try container.encode(experiences, forKey: .experiences)
         try container.encode(xpMode, forKey: .xpMode)
         try container.encode(changeLog, forKey: .changeLog)
+        try container.encode(paidDots, forKey: .paidDots)
     }
 
     /// Missing fields fall back to a new character's, so a file from an older version opens.
@@ -152,6 +156,7 @@ final class ForsakenCharacter: Codable {
         experiences = try container.decode(.experiences, default: 0)
         xpMode = try container.decode(.xpMode, default: false)
         changeLog = try container.decode(.changeLog, default: [])
+        paidDots = try container.decode(.paidDots, default: [:])
     }
 }
 
@@ -162,6 +167,42 @@ extension ForsakenCharacter: SheetCharacter {
     }
 
     var isInCreation: Bool { false }
+}
+
+/// Experiences for the traits every game has. Renown, Gifts, Rites and the rest join with the Werewolf rules.
+extension ForsakenCharacter: ExperienceCharacter {
+    var meritCatalog: CatalogIndex<MeritEntry> {
+        Catalog.bundled.merits
+    }
+
+    var traitSnapshot: TraitSnapshot {
+        var snapshot = TraitSnapshot()
+        addSharedTraits(to: &snapshot)
+        return snapshot
+    }
+
+    func experienceCost(of key: TraitKey, level: Int) -> Int {
+        sharedExperienceCost(of: key.kind) ?? 0
+    }
+
+    func refundsWhenLowered(_ kind: TraitKind) -> Bool {
+        true
+    }
+
+    var traitKindOrder: [TraitKind] {
+        [.attribute, .skill, .specialty, .merit, .condition]
+    }
+
+    func displayName(of kind: TraitKind) -> String {
+        switch kind {
+        case .attribute: "Attribute"
+        case .skill: "Skill"
+        case .specialty: "Specialty"
+        case .merit: "Merit"
+        case .condition: "Condition"
+        default: kind.rawValue
+        }
+    }
 }
 
 extension ForsakenCharacter: ChroniclesCharacter {

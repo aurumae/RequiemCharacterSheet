@@ -44,14 +44,7 @@ extension TraitKey: Comparable {
 extension TraitChange {
     /// What changed, e.g. "1 → 3", "Learned", or "Cost 1 → 3" for a custom Devotion.
     var changeText: String {
-        if let event {
-            switch event {
-            case .added: return "Added"
-            case .ended: return "Ended"
-            case .resolved: return "Resolved"
-            case .beat: return "Beat"
-            }
-        }
+        guard event == nil else { return sharedChangeText }
         switch trait.kind {
         case .ritual, .scale:
             return to > from ? "Learned" : "Removed"
@@ -60,32 +53,8 @@ extension TraitChange {
             if to == 0 { return "Removed" }
             return "Cost \(from) → \(to)"
         default:
-            return "\(from) → \(to)"
+            return sharedChangeText
         }
-    }
-
-    /// What it cost, e.g. "Spent 8", "Refunded 4", "Creation", "Free" (XP Mode off) or "No cost".
-    var costText: String {
-        if trait.kind == .condition {
-            return beats.map { $0 == 1 ? "+1 Beat" : "+\($0) Beats" } ?? ""
-        }
-        if duringCreation == true { return "Creation" }
-        if experiences > 0 { return "Spent \(experiences)" }
-        if experiences < 0 { return "Refunded \(-experiences)" }
-        return xpMode ? "No cost" : "Free"
-    }
-}
-
-extension Character {
-    /// The name to show for a log entry: the trait's current name if it's still on the sheet (a custom
-    /// trait may have been named after it was added), otherwise its name when it changed.
-    func displayName(for change: TraitChange) -> String {
-        // A Condition is named as it is now, or as it was when it ended, e.g. with the note typed after adding it
-        let current = condition(for: change).map(logName)
-            ?? (change.trait.kind == .condition ? changeLog.last { $0.trait == change.trait }?.name : nil)
-            ?? traitSnapshot.names[change.trait] ?? ""
-        let name = current.isEmpty ? change.name : current
-        return name.isEmpty ? "Unnamed \(change.trait.kind.displayName)" : name
     }
 }
 

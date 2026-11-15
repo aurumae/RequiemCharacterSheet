@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A character the shared sheet sections can show. Each requirement has a default, below, for a game without the
 /// rule; a game with one supplies its own, e.g. Requiem's Blood Potency caps, guided creation and Conditions.
-protocol SheetCharacter: ConditionsCharacter {
+protocol SheetCharacter: ExperienceCharacter, Observable {
     /// The highest rating Attributes and Skills can be bought to, e.g. as Blood Potency allows.
     var baseRatingCap: Int { get }
     var attributeRatingRange: ClosedRange<Int> { get }
@@ -49,6 +49,9 @@ protocol SheetCharacter: ConditionsCharacter {
     func meritCategoryTitle(_ category: MeritEntry.Category) -> String
     /// Why a Merit can't be taken at all by this kind of character, e.g. "Not available to Kindred"; `nil` if it can.
     func meritUnavailableReason(_ entry: MeritEntry) -> String?
+
+    /// What changed in a log entry, e.g. "1 → 3", or "Learned" for a game's own kinds of trait.
+    func changeText(for change: TraitChange) -> String
 
     /// The mark for active Conditions that affect a trait, or `nil` for none.
     func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView?
@@ -157,6 +160,10 @@ extension SheetCharacter {
 
     func meritUnavailableReason(_ entry: MeritEntry) -> String? {
         nil
+    }
+
+    func changeText(for change: TraitChange) -> String {
+        change.sharedChangeText
     }
 
     /// The shared mark: a button listing what each Condition does to the trait.

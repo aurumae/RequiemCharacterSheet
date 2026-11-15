@@ -24,6 +24,7 @@ struct ForsakenSheetView: View {
             SheetSectionBlock(.willpower) {
                 WillpowerView(character: character)
             }
+            ExperienceView(character: character)
             // Last, so swiping through its cards doesn't interrupt scrolling
             ConditionsView(character: character)
         }
@@ -33,7 +34,7 @@ struct ForsakenSheetView: View {
 extension ForsakenCharacter {
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
-        [.character, .attributes, .skills, .merits, .aspirations, .health, .willpower, .conditions]
+        [.character, .attributes, .skills, .merits, .aspirations, .health, .willpower, .experience, .conditions]
     }
 }
 
