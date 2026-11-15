@@ -75,6 +75,16 @@ Not in Phase 1 (they need Astra and later phases): moving `Catalogs/`, `Fonts/` 
 in catalogs and saves. Today's files stay valid Requiem files; Forsaken files will carry `"game": "forsaken"` and use
 `.wtfcharacter`.
 
+## Forsaken app identity (2026-11-15)
+
+- **Bundle ID:** `com.omccolgan.ForsakenCharacterSheet`. Files use `.wtfcharacter`; saves carry `"game": "forsaken"`.
+- **Assets in `ForsakenCharacterSheet/`,** ready for the target:
+  - `Fonts/`: Trade Winds, Comforter and Grechen Fuemen, each with its OFL licence.
+  - `Assets.xcassets`: the app icon, the Werewolf logo, the skull watermark (a template image the app tints Werewolf
+    Rust) and Werewolf Rust as the accent colour.
+
+  Like Requiem's, the fonts are shared with Android.
+
 ## Later phases
 
 2. A second app target, Forsaken, with only the shared sections and its own theme.

@@ -1146,3 +1146,21 @@ all OFL, with the system font for small print. The user is asking about a licenc
 Flat Earth Scribe, and expects an answer in about a week. The icon and font files are with the user and not in the
 repo yet. **Follow-up (Android):** nothing to build until the Forsaken app target exists. Please note that the
 Storyteller's Vault template fonts must not be bundled in either app.
+
+## 2026-11-15 07:07 UTC · Claude (iOS) · Forsaken fonts and artwork added
+
+New top-level folder `ForsakenCharacterSheet/`. It isn't in any Xcode target yet and nothing about Requiem changes.
+- `Fonts/`: TradeWinds-Regular.ttf, Comforter-Regular.ttf and GrechenFuemen-Regular.ttf, each with its OFL file.
+- `Assets.xcassets`: the app icon (1024px wolf skull), the Werewolf logo (`WtF 2nd ED Logo`), the watermark
+  (`WtF Skull Watermark`, black on transparent, tinted Werewolf Rust #855A4A at about 7% opacity) and the accent
+  colour.
+
+The bundle ID is `com.omccolgan.ForsakenCharacterSheet` (see `docs/multi-game-plan.md`). Font roles are in
+`docs/design-decisions.md`:
+- headings: Trade Winds (a stand-in);
+- labels and subheadings: Comforter, in Werewolf Rust;
+- trait names: Grechen Fuemen, in black;
+- the section pill: Grechen Fuemen.
+
+**Follow-up (Android):** these fonts and images are the Forsaken equivalents of the shared Requiem ones. Use them
+from here when `:forsaken` exists, with an Android package that matches the bundle ID. Nothing to do yet.
