@@ -59,7 +59,9 @@ extension Theme {
             .note: ThemeFont(name: nil, size: 13, relativeTo: .footnote),
         ],
         traitNamesInAccent: false,
-        // The pill must be easy to read
-        controlFontName: "GrechenFuemen-Regular"
+        // The pill must be easy to read; Grechen Fuemen's letters are small for their size
+        controlFont: ThemeFont(name: "GrechenFuemen-Regular", size: 21, relativeTo: .subheadline),
+        // The script faces are hard to read in About's lists and licences
+        systemFontInAbout: true
     )
 }

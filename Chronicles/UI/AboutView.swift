@@ -22,7 +22,7 @@ struct BundledFont: Identifiable {
 
 /// The app's version, the Dark Pack notice, and the licenses of the bundled fonts.
 struct AboutView: View {
-    @Environment(\.theme) private var theme
+    @Environment(\.theme) private var appTheme
     @Environment(\.dismiss) private var dismiss
 
     private var appName: String {
@@ -35,6 +35,10 @@ struct AboutView: View {
         let marketing = info?["CFBundleShortVersionString"] as? String ?? "?"
         let build = info?["CFBundleVersion"] as? String ?? "?"
         return "Version \(marketing) (\(build))"
+    }
+
+    private var theme: Theme {
+        appTheme.forAbout
     }
 
     var body: some View {
@@ -84,6 +88,8 @@ struct AboutView: View {
             .doneButton { dismiss() }
         }
         .tint(theme.accent)
+        // Its rows, and the pages it opens, read their fonts from the environment
+        .environment(\.theme, theme)
     }
 }
 

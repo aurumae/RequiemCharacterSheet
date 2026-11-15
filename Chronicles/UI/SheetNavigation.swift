@@ -208,7 +208,7 @@ struct SectionPill: View {
         } label: {
             HStack(spacing: 6) {
                 Text(current?.title ?? "Sections")
-                    .font(theme.controlFont(size: 15, relativeTo: .subheadline))
+                    .font(theme.controlFace)
                     .lineLimit(1)
                 Image(systemName: isOpen ? "chevron.up" : "chevron.down")
                     .font(.caption.weight(.semibold))
@@ -269,7 +269,7 @@ struct SectionMenu: View {
                 } label: {
                     HStack {
                         Text(section.title)
-                            .font(theme.controlFont(size: 15, relativeTo: .subheadline))
+                            .font(theme.controlFace)
                             .foregroundStyle(isCurrent ? Color.white : theme.accent)
                         Spacer()
                         if isCurrent {

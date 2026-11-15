@@ -40,8 +40,11 @@ struct Theme {
     var fonts: [ThemeTextStyle: ThemeFont] = [:]
     /// Whether trait names are drawn in the accent colour, as on the Vampire sheet, or in ink, as on the Werewolf one.
     var traitNamesInAccent = true
-    /// The face for controls such as the section pill, which must be easy to read. `nil` to use the subheading face.
-    var controlFontName: String? = nil
+    /// The face for controls such as the section pill, which must be easy to read. `nil` for the subheading face at
+    /// 15 points.
+    var controlFont: ThemeFont? = nil
+    /// Whether About is set in the system font, for a theme whose faces are hard to read in paragraphs and lists.
+    var systemFontInAbout = false
 
     /// Each style scales with the user's preferred text size, relative to the given system style.
     func font(_ style: ThemeTextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {
@@ -89,9 +92,23 @@ struct Theme {
         return Font(scaled as CTFont)
     }
 
-    /// The face for controls such as the section pill, at the given size.
-    func controlFont(size: CGFloat, relativeTo textStyle: Font.TextStyle) -> Font {
-        .custom(controlFontName ?? subheadingFontName, size: size, relativeTo: textStyle)
+    /// The face for controls such as the section pill.
+    var controlFace: Font {
+        controlFont?.font ?? .custom(subheadingFontName, size: 15, relativeTo: .subheadline)
+    }
+
+    /// The theme for About when `systemFontInAbout`: the system font at about the theme's sizes, in its colours.
+    var forAbout: Theme {
+        guard systemFontInAbout else { return self }
+        var theme = self
+        theme.fonts = [
+            .label: ThemeFont(name: nil, size: 20, relativeTo: .title3),
+            .subsectionHeader: ThemeFont(name: nil, size: 17, relativeTo: .headline),
+            .traitName: ThemeFont(name: nil, size: 17, relativeTo: .body),
+            .note: ThemeFont(name: nil, size: 13, relativeTo: .footnote),
+        ]
+        theme.traitNamesInAccent = true
+        return theme
     }
 
     /// The small capitals for a heading set with `.smallCapitals`: the heading face, a little smaller.
