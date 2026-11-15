@@ -55,16 +55,7 @@ struct CharacterSheetView: View {
                         CharacterInfoView(character: character)
                     
                         // ATTRIBUTES SECTION
-                        SheetSectionBlock(.attributes) {
-                            // MENTAL, PHYSICAL and SOCIAL ATTRIBUTES
-                            ForEach(TraitCategory.allCases, id: \.self) { category in
-                                Section(header: CategoryHeader(title: category.name, character: character, category: category, skills: false)) {
-                                    ForEach(character.attributes.filter { $0.kind.category == category }) { attribute in
-                                        AttributeRowView(character: character, attribute: attribute)
-                                    }
-                                }
-                            }
-                        }
+                        AttributesView(character: character)
                     
                         // SKILLS SECTION
                         SkillsView(character: character)

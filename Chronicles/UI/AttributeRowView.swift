@@ -1,6 +1,6 @@
 //
 //  AttributeRowView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 16/09/2024.
 //
@@ -8,9 +8,9 @@
 // Only Attribute names tappable
 import SwiftUI
 
-struct AttributeRowView: View {
+struct AttributeRowView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
-    let character: Character
+    let character: C
     @Bindable var attribute: Attribute
     @State private var showingPicker = false
 
@@ -36,10 +36,9 @@ struct AttributeRowView: View {
             }) {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(attribute.name)
-                        .themedText(.label)
-                    if character.creation?.favoredAttribute == attribute.kind {
-                        // The clan's free dot, outside the 5/4/3
-                        Text("Includes the \(character.clan) dot")
+                        .themedText(.ratedTrait)
+                    if let note = character.attributeNote(for: attribute.kind) {
+                        Text(note)
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)
                     }
@@ -55,7 +54,7 @@ struct AttributeRowView: View {
                 }
             }
             // A mark if a Condition affects it
-            ConditionIndicator(character: character, target: .attribute(attribute.kind), traitName: attribute.name)
+            character.conditionMark(for: .attribute(attribute.kind), traitName: attribute.name)
             Spacer()
             DotsRatingView(
                 attribute.name,

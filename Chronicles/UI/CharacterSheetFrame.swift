@@ -7,7 +7,7 @@ import SwiftUI
 
 /// What every game's character sheet has round its rows: the logo, the watermark, the scrolling list, the section
 /// pill and its list, and saving (with the Save button, when leaving the app, and when the sheet closes).
-struct CharacterSheetFrame<C: StoredCharacter, Rows: View>: View {
+struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: View {
     let character: C
     let store: CharacterFileStore<C>
     /// The sections the sheet shows, in order.
@@ -18,6 +18,9 @@ struct CharacterSheetFrame<C: StoredCharacter, Rows: View>: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var showsSavedConfirmation = false
     @State private var saveErrorMessage: String?
+    /// The Specialty being added or edited, shown here rather than in its row; see `EditSpecialtyAction`.
+    @State private var specialtyEdit: SpecialtyEdit?
+    @State private var specialtyDraft = ""
     /// The section being read, shown in the pill, and whether its list of sections is open.
     @State private var currentSection: SheetSection? = .character
     @State private var showingSectionMenu = false
@@ -75,6 +78,10 @@ struct CharacterSheetFrame<C: StoredCharacter, Rows: View>: View {
                             proxy.scrollTo(section, anchor: .top)
                         }
                     }
+                    .environment(\.editSpecialty, EditSpecialtyAction { edit in
+                        specialtyDraft = edit.initialText
+                        specialtyEdit = edit
+                    })
                 }
             }
             .padding(.horizontal)
@@ -92,6 +99,7 @@ struct CharacterSheetFrame<C: StoredCharacter, Rows: View>: View {
                 }
             }
         }
+        .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             // Jumps between the sheet's sections

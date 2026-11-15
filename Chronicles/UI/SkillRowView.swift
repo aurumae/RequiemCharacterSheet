@@ -1,6 +1,6 @@
 //
 //  SkillRowView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 20/09/2024.
 //
@@ -41,8 +41,8 @@ extension EnvironmentValues {
 }
 
 /// The prompt for adding, renaming or deleting a Specialty.
-struct SpecialtyPrompt: ViewModifier {
-    let character: Character
+struct SpecialtyPrompt<C: SheetCharacter>: ViewModifier {
+    let character: C
     @Binding var edit: SpecialtyEdit?
     /// Kept apart from `edit`, which is cleared as the prompt closes, so the buttons always see the text.
     @Binding var draft: String
@@ -70,16 +70,16 @@ struct SpecialtyPrompt: ViewModifier {
     private func message(for edit: SpecialtyEdit) -> String {
         guard let index = edit.index, edit.skill.specialties.indices.contains(index) else { return edit.skill.name }
         let specialty = edit.skill.specialties[index]
-        let following = character.merits.filter { $0.entry?.qualifier?.usesSpecialty == true && $0.qualifier == specialty }
+        let following = character.meritsDepending(onSpecialty: specialty)
         guard !following.isEmpty else { return edit.skill.name }
         // Deleting it takes the Merit with it
-        return "\(edit.skill.name). \(following.map(\.name).joined(separator: ", ")) depends on this Specialty."
+        return "\(edit.skill.name). \(following.joined(separator: ", ")) depends on this Specialty."
     }
 }
 
-struct SkillRowView: View {
+struct SkillRowView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
-    let character: Character
+    let character: C
     @Bindable var skill: Skill
     @Environment(\.editSpecialty) private var editSpecialty
     @State private var showingPicker = false
@@ -103,7 +103,7 @@ struct SkillRowView: View {
                         showingPicker = true
                     }) {
                         Text(skill.name)
-                            .themedText(.label)
+                            .themedText(.ratedTrait)
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint("Double-tap to choose a rating")
@@ -114,7 +114,7 @@ struct SkillRowView: View {
                             }
                         }
                     }
-                    ConditionIndicator(character: character, target: .skill(skill.skillID), traitName: skill.name)
+                    character.conditionMark(for: .skill(skill.skillID), traitName: skill.name)
                 }
 
                 // Specialties, each tappable to edit

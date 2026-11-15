@@ -1,51 +1,34 @@
 //
-//  CategoryHeader.swift
+//  RequiemSheetCharacter.swift
 //  RequiemCharacterSheet
+//
+//  Requiem's rules for the shared sheet sections: Blood Potency caps, guided creation and Conditions.
 //
 
 import SwiftUI
 
-/// The header of a Mental, Physical or Social group of Attributes or Skills. During guided creation it
-/// also holds the category's priority, so the player chooses where the 5/4/3 or 11/7/4 dots go.
-struct CategoryHeader: View {
-    let title: String
-    /// e.g. "(-3 unskilled)" for Skills.
-    var subtitle: String?
-    let character: Character
-    let category: TraitCategory
-    let skills: Bool
+extension Character: SheetCharacter {
+    func attributeNote(for kind: AttributeKind) -> String? {
+        // The clan's free dot, outside the 5/4/3
+        creation?.favoredAttribute == kind ? "Includes the \(clan) dot" : nil
+    }
 
-    var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .themedText(.subsectionHeader)
-                    // A mark if a Condition affects the whole group, e.g. Broken's Social rolls. An overlay, just
-                    // after the title, so the heading's spacing is the same with or without it.
-                    .overlay(alignment: .trailing) {
-                        ConditionIndicator(
-                            character: character,
-                            target: skills ? .skillCategory(category) : .attributeCategory(category),
-                            traitName: "\(category.name) \(skills ? "Skills" : "Attributes")"
-                        )
-                        .alignmentGuide(.trailing) { $0[.leading] - 4 }
-                    }
-                if let subtitle {
-                    Text(subtitle)
-                        .themedText(.note)
-                }
-            }
-            Spacer()
-            if character.isInCreation {
-                CreationPriorityMenu(character: character, category: category, skills: skills)
-            }
-        }
-        .padding(.vertical, 4)
+    func meritsDepending(onSpecialty specialty: String) -> [String] {
+        merits.filter { $0.entry?.qualifier?.usesSpecialty == true && $0.qualifier == specialty }.map(\.name)
+    }
+
+    func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView? {
+        AnyView(ConditionIndicator(character: self, target: target, traitName: traitName))
+    }
+
+    func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView? {
+        // During guided creation, the player chooses where the 5/4/3 or 11/7/4 dots go
+        isInCreation ? AnyView(CreationPriorityMenu(character: self, category: category, skills: skills)) : nil
     }
 }
 
 /// Chooses a category's priority, showing the dots left to spend in it.
-private struct CreationPriorityMenu: View {
+struct CreationPriorityMenu: View {
     @Environment(\.theme) private var theme
     let character: Character
     let category: TraitCategory

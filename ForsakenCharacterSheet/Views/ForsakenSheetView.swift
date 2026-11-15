@@ -14,6 +14,8 @@ struct ForsakenSheetView: View {
     var body: some View {
         CharacterSheetFrame(character: character, store: store, sections: character.sheetSections) {
             ForsakenCharacterInfoView(character: character)
+            AttributesView(character: character)
+            SkillsView(character: character)
             AspirationsView(character: character)
             SheetSectionBlock(.health) {
                 HealthView(character: character)
@@ -28,7 +30,7 @@ struct ForsakenSheetView: View {
 extension ForsakenCharacter {
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
-        [.character, .aspirations, .health, .willpower]
+        [.character, .attributes, .skills, .aspirations, .health, .willpower]
     }
 }
 

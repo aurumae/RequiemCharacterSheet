@@ -150,6 +150,9 @@ final class ForsakenCharacter: Codable {
     }
 }
 
+/// Uses the shared defaults: ratings up to 5, no guided creation yet.
+extension ForsakenCharacter: SheetCharacter {}
+
 extension ForsakenCharacter: ChroniclesCharacter {
     /// Stamina + Size, in Hishu (human) form. The other forms' bonuses come with the forms.
     var health: Int {

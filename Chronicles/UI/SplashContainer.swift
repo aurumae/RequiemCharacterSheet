@@ -20,6 +20,8 @@ struct SplashContainer<Content: View>: View {
                 .opacity(mainOpacity)
                 // Keep VoiceOver on the splash screen until the app fades in
                 .accessibilityHidden(mainOpacity == 0)
+                // Nor can a tap that skips the splash screen reach the list behind it
+                .allowsHitTesting(!showsSplash)
 
             // Removed once it has faded out, so VoiceOver doesn't read it
             if showsSplash {
