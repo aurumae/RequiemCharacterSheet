@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -8,19 +10,24 @@ import java.util.UUID
 
 class OrdinaryPlayUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private fun sheet(matcher: SemanticsMatcher): SemanticsNodeInteraction {
         ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
         return ui.onNode(matcher)
     }
     private fun jump(section: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(section) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun choose(kind: String, id: String, search: String) {
         sheet(hasText("Add $kind")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput(search)
-        ui.onNodeWithTag("catalog-options").performScrollToNode(hasTestTag("catalog-$id"))
-        ui.onNodeWithTag("catalog-$id").performClick()
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput(search)
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
+        ui.onAllNodesWithTag("catalog-options").onFirst().performScrollToNode(hasTestTag("catalog-$id"))
+        ui.onAllNodesWithTag("catalog-$id").onFirst().performClick()
     }
     private fun rated(name: String, value: Int) {
         sheet(hasContentDescription("Options for $name")).performClick()
@@ -64,6 +71,8 @@ class OrdinaryPlayUiTest {
         jump("Character")
         sheet(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Daeva")
+        ui.onNodeWithTag("identity-search").performImeAction()
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-daeva"))
         ui.onNodeWithTag("identity-option-daeva").performClick()
         jump("Disciplines"); choose("Discipline", "celerity", "Celerity"); xp(97)
         sheet(hasContentDescription("Celerity")).performClick()
@@ -116,7 +125,7 @@ class OrdinaryPlayUiTest {
     @Test fun sorceryDiscountsRefundsAndNonrefundableLosses() {
         val name = begin()
         jump("Disciplines"); choose("Discipline", "cruac", "Cruac"); xp(96)
-        sheet(hasText("Learning rituals requires Circle of the Crone Status 1")).assertExists()
+        sheet(hasText("Learning rituals requires Circle of the Crone or Fir'awn Status 1")).assertExists()
         jump("Rituals"); choose("Ritual", "rigor-mortis", "Rigor Mortis"); xp(96)
         choose("Ritual", "pangs-of-proserpina", "Pangs"); xp(94)
         sheet(hasText("Rigor Mortis")).performClick()
@@ -132,10 +141,13 @@ class OrdinaryPlayUiTest {
         ui.onNodeWithText("Done").performClick(); xp(89)
         jump("Character"); sheet(hasContentDescription("Covenant")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Ordo Dracul")
+        ui.onNodeWithTag("identity-search").performImeAction()
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-ordo-dracul"))
         ui.onNodeWithTag("identity-option-ordo-dracul").performClick()
         jump("Coils of the Dragon"); sheet(hasText("Choose")).performClick()
-        ui.onNodeWithTag("catalog-search").performTextInput("Wyrm")
-        ui.onNodeWithTag("catalog-mystery-of-the-wyrm").performClick()
+        ui.onAllNodesWithTag("catalog-search").onFirst().performTextInput("Wyrm")
+        ui.onAllNodesWithTag("catalog-search").onFirst().performImeAction()
+        ui.onAllNodesWithTag("catalog-mystery-of-the-wyrm").onFirst().performClick()
         choose("Scale", "kindred-sense-endowment", "Kindred Sense"); xp(87)
         rated("Coil of the Wyrm", 2); xp(81)
         remove("Kindred Sense Endowment"); xp(83)

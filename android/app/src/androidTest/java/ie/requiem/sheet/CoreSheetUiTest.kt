@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -8,14 +10,18 @@ import java.util.UUID
 
 class CoreSheetUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
 
     private fun sheetNode(matcher: SemanticsMatcher): SemanticsNodeInteraction {
         ui.onNodeWithTag("character-sheet").performScrollToNode(matcher)
         return ui.onNode(matcher)
     }
     private fun jump(section: String) {
-        ui.onNodeWithText("Sections").performClick()
-        ui.onNodeWithText(section).performScrollTo().performClick()
+        ui.onNodeWithContentDescription("Sections").performClick()
+        ui.onNode(hasText(section) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
     }
     private fun rating(name: String, value: Int) {
         sheetNode(hasContentDescription(name)).performClick()
@@ -35,16 +41,19 @@ class CoreSheetUiTest {
         ui.onNodeWithContentDescription("Player").performImeAction()
         sheetNode(hasContentDescription("Clan")).performClick()
         ui.onNodeWithTag("identity-search").performTextInput("Ventrue")
+        ui.onNodeWithTag("identity-search").performImeAction()
+        ui.onNodeWithTag("identity-options").performScrollToNode(hasTestTag("identity-option-ventrue"))
         ui.onNodeWithTag("identity-option-ventrue").performClick()
         ui.onNodeWithContentDescription("Clan").assert(hasStateDescription("Ventrue"))
-        sheetNode(hasContentDescription("Choose Mask")).performClick()
-        ui.onNodeWithText("Search Mask").performTextInput("Author")
+        sheetNode(hasContentDescription("Mask")).performClick()
+        ui.onNodeWithTag("identity-search").performTextInput("Author")
+        ui.onNodeWithTag("identity-search").performImeAction()
         ui.onNodeWithText("Authoritarian").performClick()
         sheetNode(hasContentDescription("Mask")).assertTextContains("Authoritarian")
         sheetNode(hasContentDescription("Covenant")).performClick()
         ui.onNodeWithText("Custom Covenant").performClick()
-        ui.onNodeWithTag("custom-Covenant").performTextInput("Our custom covenant")
-        ui.onNodeWithTag("custom-Covenant").performImeAction()
+        ui.onNodeWithTag("text-prompt").performTextInput("Our custom covenant")
+        ui.onNodeWithTag("text-prompt").performImeAction()
         jump("Attributes")
         rating("Wits", 3)
         rating("Composure", 2)

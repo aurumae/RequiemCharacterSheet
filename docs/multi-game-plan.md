@@ -90,3 +90,13 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 5. Werewolf sourcebooks, grouped by book (see `design-decisions.md`).
 
 Android follows each phase: `:core`, `:requiem` and `:forsaken` modules, and two app modules.
+
+### Android Phase 1 as built (13 November 2026)
+
+Android now mirrors this boundary with JVM `:core`, game-specific `:requiem` and
+the existing `:app`. The core owns shared saved models, catalog indexing and book
+sections, trait definitions, track helpers and game-neutral character calculations.
+Requiem retains its schema policy, migration, purchase ledger, prerequisites and
+Condition edit engine. `ie.chronicles.ui` contains reusable Compose controls with
+app-injected fonts/artwork. Catalogs, fonts, package/storage paths and JSON remain
+unchanged; no Forsaken module exists yet. See `android/README.md` for verification.

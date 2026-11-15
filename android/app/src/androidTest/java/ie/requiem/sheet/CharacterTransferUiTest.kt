@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
@@ -19,6 +21,10 @@ import java.util.concurrent.atomic.AtomicReference
 
 class CharacterTransferUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val context get() = instrumentation.targetContext
     private val codec = CharacterCodec(Catalog.bundled())
@@ -156,7 +162,7 @@ class CharacterTransferUiTest {
         library()
         val before = File(context.filesDir, "Characters").listFiles()?.map { it.name }?.toSet().orEmpty()
         for ((text, error) in listOf("{}" to "The file isn't a character file, or it's damaged.",
-            "{\"schemaVersion\":11}" to "This character was saved by a newer version of the app. Update the app to open it.")) {
+            "{\"schemaVersion\":${ie.requiem.rules.CharacterSave().schemaVersion + 1}}" to "This character was saved by a newer version of the app. Update the app to open it.")) {
             receive(text.toByteArray())
             ui.waitUntil(10_000) { ui.onAllNodesWithText(error).fetchSemanticsNodes().isNotEmpty() }
             ui.onNodeWithText("OK").performClick()

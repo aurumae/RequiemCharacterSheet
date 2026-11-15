@@ -8,7 +8,7 @@ Alpha 7 added schema 10, Morbus/Cachexy, searchable identity pickers, IM Fell En
 
 **Move or back up a character.** Return to the library, then long-press a character or tap its three-dot menu. **Export** opens the Android share sheet; **Save to file** lets you choose a folder such as Downloads. Both write the stored character unchanged as `<Name>.vtrcharacter`. In the library, **Import Character** opens the system picker; you can also share a character file into Requiem from another app. The app validates the contents, including files with a `.json` extension or an unspecified MIME type.
 
-A new character opens immediately. An identical character opens the existing copy without rewriting it. If the same identity has different contents, choose **Replace**, **Keep Both**, or **Cancel**. Keep Both assigns a new identity and the first available numbered name, preserving the other fields and edited date. Any open sheet is saved and closed before an incoming file is processed. A pending duplicate choice survives rotation and process restart. Files newer than schema 10 and damaged files show an explanation without changing the library. Imports are limited to 32 MB. Exported files contain the full sheet and history as readable JSON; choose where and with whom to share them.
+A new character opens immediately. An identical character opens the existing copy without rewriting it. If the same identity has different contents, choose **Replace**, **Keep Both**, or **Cancel**. Keep Both assigns a new identity and the first available numbered name, preserving the other fields and edited date. Any open sheet is saved and closed before an incoming file is processed. A pending duplicate choice survives rotation and process restart. Files newer than schema 11 and damaged files show an explanation without changing the library. Imports are limited to 32 MB. Exported files contain the full sheet and history as readable JSON; choose where and with whom to share them.
 
 Use **Save to file** for a durable backup outside the app before changing from debug signing to Play signing. Share-sheet snapshots are temporary. Export/import is manual; it does not synchronise devices. See the [transfer implementation and device checklist](../docs/android-character-transfer.md).
 
@@ -50,7 +50,7 @@ Priority changes, clan changes and existing saves can leave broken rules. The ch
 Run the local tests or the Compose interaction tests (with an emulator or authorized device attached):
 
 ```sh
-android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintDebug
+android/gradlew -p android :requiem:test :app:testDebugUnitTest :app:lintDebug
 android/gradlew -p android :app:connectedDebugAndroidTest
 ```
 
@@ -65,3 +65,25 @@ The script has the production Swift encoder write three current characters into 
 The JVM jar packages all four JSON book files directly from the iOS catalog directory. `CharacterCodec` reads save versions 1–10 and writes v10. Keep the initially decoded character and pass it to `encodeEdit` with the edited copy. A null result means no file write or timestamp change is needed.
 
 The examples in [shared/fixtures/characters](../shared/fixtures/characters) are synthetic characters with no player data. The unversioned example comes from the existing iOS decoder test. The complete v6, v7 and v8 fixtures use the Swift writers at `a51e9af`, `3d7f2c7` and `334f516`. The v9 fixtures retain the writers at `3a8630a` (before priorities) and `506ea78`. The three current v10 fixtures cover advanced, guided and Morbus characters. The v11 example is intentionally unsupported.
+
+## Beta 2 parity
+
+The beta 2 implementation adds Conditions, Secrets of the Covenants rules, Specialty-linked Merits, richer identity details, a current-section pill and library Export Character. See [the beta 2 plan and validation record](../docs/android-beta2-plan.md). Conditions or their history require schema 11; sheets without either still write schema 10. Beta 1 cannot read schema-11 files. Opening an unchanged older save does not rewrite it.
+
+## Shared Kotlin boundary (beta 3)
+
+`:core` is a standalone JVM library in `ie.chronicles.core`: stored shared traits,
+Conditions, log records, UUID serialization, catalog indexing/book sections, shared
+trait definitions, ratings, Willpower, Specialty choices, tracks and Beat conversion.
+It has no Android, Compose or Requiem dependency. `:requiem` owns the Requiem codec,
+catalog resources and game rules; type aliases preserve its existing public API.
+`:app` is the same Requiem app and storage/package identity.
+
+Reusable Compose text, theme, background, dots, health boxes and editing layout live
+in `ie.chronicles.ui` inside the app for now. `RequiemIdentity.kt` supplies font and
+artwork resources and the logo description. Game-aware screens and adapters remain
+in `ie.requiem.sheet`. No Forsaken target or game field has been introduced.
+
+`android/gradlew -p android :core:test` verifies the compiled JVM boundary independently.
+Run `scripts/check-save-contract --strict` for full declared parity, or omit strict
+for staged ports described in `docs/ci-contract-policy.md`.

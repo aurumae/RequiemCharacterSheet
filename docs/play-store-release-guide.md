@@ -147,7 +147,7 @@ Our release check should cover:
 Run the existing checks with the configured JDK and SDK:
 
 ```sh
-android/gradlew -p android :rules:test :app:testDebugUnitTest :app:lintRelease :app:bundleRelease
+android/gradlew -p android :requiem:test :app:testDebugUnitTest :app:lintRelease :app:bundleRelease
 android/gradlew -p android :app:connectedDebugAndroidTest
 scripts/check-save-contract
 ```

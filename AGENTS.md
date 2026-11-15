@@ -4,6 +4,9 @@ Codex (Astra in the handoff) works on the native Kotlin/Compose Android app in `
 Claude works on the Swift/SwiftUI iOS app in Xcode. iOS is the reference implementation;
 both apps share this repository and release independently.
 
+Read `docs/design-decisions.md` for standing product decisions that apply to both
+platforms, including book-grouped options and separate apps on a shared core.
+
 ## Before every new piece of work
 
 These steps apply to every user request and each new feature, fix, review, documentation

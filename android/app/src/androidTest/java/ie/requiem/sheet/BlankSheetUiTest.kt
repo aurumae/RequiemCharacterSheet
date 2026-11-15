@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
@@ -14,6 +16,10 @@ import android.os.SystemClock
 @RunWith(AndroidJUnit4::class)
 class BlankSheetUiTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
+    @org.junit.Before fun portraitForRegression() {
+        ui.activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ui.waitForIdle()
+    }
 
     @Test fun splashExpiresAfterFiveSecondsAndDoesNotRestartOnRotation() {
         ui.onNodeWithTag("dark-pack-splash").assertExists()

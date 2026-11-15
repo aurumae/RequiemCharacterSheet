@@ -13,8 +13,38 @@ class CharacterTransferTest {
     private fun repo() = CharacterFiles(temp.root, catalog)
     private fun fixture(name: String = "v10-advanced") = javaClass.getResource("/characters/$name.json")!!.readBytes()
 
+    @Test fun exchangesActualStoredFilesAndCopiesWithSwift() {
+        for (name in ContractFixtures.names("transfer")) {
+            val exchange = ContractFixtures.exchange("characters/$name.json")?.let(::File)
+            val bytes = exchange?.resolve("swift-transfer-$name.vtrcharacter")?.readBytes() ?: fixture(name)
+            val store = CharacterFiles(File(temp.root, name), catalog)
+            val opened = store.importCharacter(store.prepareImport(bytes))
+            val exported = store.export(opened.saved.id).bytes
+            assertArrayEquals(bytes, exported)
+            val copy = store.importCharacter(store.keepBoth(store.prepareImport(bytes)))
+            assertEquals(opened.saved.copy(id = copy.saved.id, name = copy.saved.name), copy.saved)
+            exchange?.resolve("kotlin-transfer-$name.vtrcharacter")?.writeBytes(exported)
+            exchange?.resolve("kotlin-transfer-copy-$name.vtrcharacter")?.writeBytes(store.export(copy.saved.id).bytes)
+        }
+    }
+
+    @Test fun everyNewerScenarioIsRejectedWithoutChangingStorage() {
+        val store = repo()
+        val original = store.importCharacter(store.prepareImport(fixture()))
+        for (bytes in ContractFixtures.rejectedFiles()) {
+            assertThrows(CharacterDocumentError::class.java) { store.prepareImport(bytes) }
+            assertArrayEquals(fixture(), store.export(original.saved.id).bytes)
+            val file = File(temp.root, "${java.util.UUID.randomUUID()}.json").apply { writeBytes(bytes) }
+            val id = java.util.UUID.fromString(file.nameWithoutExtension)
+            assertNotNull(store.library().single { it.id == id }.problem)
+            assertThrows(UnsupportedSchema::class.java) { store.open(id) }
+            assertArrayEquals(bytes, file.readBytes())
+            assertTrue(file.delete())
+        }
+    }
+
     @Test fun swiftFilesImportAndExportByteForByteIncludingLegacyAndLowercaseIdentity() {
-        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v9-guided", "v8-paid")) {
+        for (name in listOf("v10-advanced", "v10-guided", "v10-morbus", "v9-guided", "v8-paid", "v11-conditions", "v12-elder-bane")) {
             val bytes = fixture(name)
             val pending = repo().prepareImport(bytes)
             assertNull(pending.existing)
@@ -65,7 +95,7 @@ class CharacterTransferTest {
     @Test fun invalidFilesDoNotChangeLibraryAndLegacyWithoutIdentityGetsOnePersistedIdentity() {
         val repo = repo()
         val original = repo.importCharacter(repo.prepareImport(fixture()))
-        for (bytes in listOf("{}".toByteArray(), fixture("v11-future"), "{\"name\":null}".toByteArray())) {
+        for (bytes in listOf("{}".toByteArray(), ContractFixtures.future(), "{\"name\":null}".toByteArray())) {
             assertThrows(CharacterDocumentError::class.java) { repo.prepareImport(bytes) }
             assertArrayEquals(fixture(), original.file.readBytes())
             assertEquals(1, repo.library().size)

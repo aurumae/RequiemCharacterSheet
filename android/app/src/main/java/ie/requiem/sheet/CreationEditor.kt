@@ -1,5 +1,7 @@
 package ie.requiem.sheet
 
+import ie.chronicles.ui.*
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,8 +53,8 @@ internal fun CreationPanel(c: CharacterSave, catalog: Catalog, editable: Boolean
     }
     if (c.favoredAttributes(catalog).isNotEmpty()) Row(Modifier.fillMaxWidth().background(Color.White)
         .clickable(enabled = editable) { navigate("creation|favored") }.padding(8.dp).heightIn(min = 48.dp)
-        .semantics { contentDescription = "Choose the clan's favoured Attribute" }, verticalAlignment = Alignment.CenterVertically) {
-        SheetText("${catalog.name(CatalogKind.clans, c.clan)} dot", Modifier.weight(1f), style = LocalSheetType.current.trait)
+        .semantics { contentDescription = "Choose the ${c.favoredAttributeGiver(catalog)?.name.orEmpty()}'s favoured Attribute" }, verticalAlignment = Alignment.CenterVertically) {
+        SheetText("${c.favoredAttributeGiver(catalog)?.name.orEmpty()} dot", Modifier.weight(1f), style = LocalSheetType.current.trait)
         SheetText(c.creation?.favoredAttribute?.let(::traitName) ?: "Choose", color = SheetColors.accent)
         SheetIcon(SheetSymbol.Chevron)
     }
@@ -124,7 +126,7 @@ internal fun CreationDialogs(route: String, c: CharacterSave, catalog: Catalog, 
     val state = c.creation ?: return
     val parts = route.split('|')
     when (parts[1]) {
-        "favored" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { SheetText("${catalog.name(CatalogKind.clans, c.clan)} Favoured Attribute") }, text = {
+        "favored" -> AlertDialog(onDismissRequest = { navigate(null) }, title = { SheetText("${c.favoredAttributeGiver(catalog)?.name.orEmpty()} Favoured Attribute") }, text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 SheetText("The clan gives one free dot to one of these. It doesn't count against your 5, 4 and 3 Attribute dots.")
                 c.favoredAttributes(catalog).forEach { id ->

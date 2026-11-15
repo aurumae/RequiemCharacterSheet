@@ -1,5 +1,7 @@
 /.build/
 /.swiftpm/
+/.contract-reports/
+__pycache__/
 
 # Android signing credentials and private keys must never be committed.
 *.jks
