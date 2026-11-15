@@ -35,9 +35,10 @@ struct CatalogPickerSection: Identifiable {
     /// within each book one per group, in the order given. Empty sections are left out.
     static func byBook<Entry: CatalogEntry>(
         _ groups: [CatalogPickerGroup<Entry>],
+        books: [Book],
         item: (Entry) -> CatalogPickerItem
     ) -> [CatalogPickerSection] {
-        CatalogBookSection.sections(groups).map { section in
+        CatalogBookSection.sections(groups, books: books).map { section in
             CatalogPickerSection(title: section.title, book: section.book.name, items: section.entries.map(item))
         }
     }

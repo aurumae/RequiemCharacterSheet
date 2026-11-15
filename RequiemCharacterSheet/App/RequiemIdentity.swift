@@ -12,7 +12,11 @@ extension AppIdentity {
     static let current = AppIdentity(
         theme: .requiem,
         characterFileType: .requiemCharacter,
-        characterFileExtension: "vtrcharacter"
+        characterFileExtension: "vtrcharacter",
+        bundledFonts: [
+            BundledFont(name: "IM Fell English", author: "Igino Marini", licenseFile: "IMFellEnglish-OFL"),
+            BundledFont(name: "Cinzel", author: "Natanael Gama and The Cinzel Project Authors", licenseFile: "Cinzel-OFL"),
+        ]
     )
 }
 

@@ -98,6 +98,10 @@
 		BC8BC89630A9A06D0060E9BF /* CharacterFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */; };
 		BC8BC89830A9A19B0060E9BF /* RequiemSheetSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */; };
 		BC8BC89A30A9A19C0060E9BF /* BrushLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89930A9A19C0060E9BF /* BrushLine.swift */; };
+		BC8BC8F130A9A3900060E9BF /* SplashContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC8F030A9A3900060E9BF /* SplashContainer.swift */; };
+		BC8BC8F230A9A3900060E9BF /* SplashContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC8F030A9A3900060E9BF /* SplashContainer.swift */; };
+		BC8BC8F430A9A3900060E9BF /* CharacterSheetFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC8F330A9A3900060E9BF /* CharacterSheetFrame.swift */; };
+		BC8BC8F530A9A3900060E9BF /* CharacterSheetFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC8F330A9A3900060E9BF /* CharacterSheetFrame.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
 		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
@@ -126,6 +130,37 @@
 		BCB159122C9873A6003B6A8F /* CharacterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */; };
 		BCB159142C9873D3003B6A8F /* HealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159132C9873D3003B6A8F /* HealthView.swift */; };
 		BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159152C9874A5003B6A8F /* BackgroundView.swift */; };
+		F000FB6358C7C1ADA1448D86 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4497309CDF5D00720F0C /* AboutView.swift */; };
+		F00131EC0E05D042A730C155 /* DotsRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590B2C9872AC003B6A8F /* DotsRatingView.swift */; };
+		F002ED98A1A51233F515ABC4 /* CharacterFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */; };
+		F019A03FF22F6F364887D935 /* TraitSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4443309A30F600720F0C /* TraitSource.swift */; };
+		F01E95E129F7A7C6189B7562 /* BoxFillType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36A72C9A600C008D03F7 /* BoxFillType.swift */; };
+		F01F3104039DB093085C20AA /* CatalogCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98F830A672AC007FDB6D /* CatalogCore.swift */; };
+		F022243D76CFFE6D06EC0E03 /* ChroniclesCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98FE30A673F7007FDB6D /* ChroniclesCharacter.swift */; };
+		F022968F00A990F4A73FD67D /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159152C9874A5003B6A8F /* BackgroundView.swift */; };
+		F0308D37C19D7982484D9416 /* SharedRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4433309982B500720F0C /* SharedRows.swift */; };
+		F0408B84D5F43DD09AACA0F3 /* TraitDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442D3099806A00720F0C /* TraitDefinitions.swift */; };
+		F0588DA7903B9C63C3DC4B7E /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD990130A674C1007FDB6D /* AppIdentity.swift */; };
+		F05D25789FB0EFE04A5039AB /* Merit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98FA30A673A6007FDB6D /* Merit.swift */; };
+		F05DE064DEBEFD635B81BAF6 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159042C987143003B6A8F /* Attribute.swift */; };
+		F0616393E99EADFA08E401BD /* Aspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E02C9E002A008D03F7 /* Aspiration.swift */; };
+		F07830F12BD75E4E2E649D77 /* HealthBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369F2C9A3182008D03F7 /* HealthBoxView.swift */; };
+		F07F2A5813BF0C529812C2CC /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B32C9CF418008D03F7 /* Skill.swift */; };
+		F091C70BACB5259C98BD8642 /* CharacterCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98FC30A673D0007FDB6D /* CharacterCondition.swift */; };
+		F097CC20BF174E892DBC2229 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590F2C9872FD003B6A8F /* DotView.swift */; };
+		F09865DD6424C885A554740B /* CharacterFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */; };
+		F0A5A29F797511DCCD487B59 /* DotsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB1590D2C9872D6003B6A8F /* DotsRowView.swift */; };
+		F0B4C3084EA2FE861077A161 /* CharacterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4429309662A300720F0C /* CharacterListView.swift */; };
+		F0B5348DE4C5E676D6281784 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */; };
+		F0C833F5B3440506F9F493A6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4431309982A300720F0C /* Theme.swift */; };
+		F0CAE0CFA0B03B1EA98D2D33 /* HostedSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCDD309EBFAB00A5D9F1 /* HostedSheet.swift */; };
+		F0D64E4577E601C301309169 /* BrushLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89930A9A19C0060E9BF /* BrushLine.swift */; };
+		F0E334FA4B8E1A6C6E886E26 /* SheetNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D8E30A189860062F53F /* SheetNavigation.swift */; };
+		F0E397B9D02EB5F1231961E8 /* CharacterInfoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */; };
+		F0EC760A0B2043D8BDDE3321 /* CatalogPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4469309AA14400720F0C /* CatalogPickerView.swift */; };
+		F0EFB0A0702CCBF21D0099A5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36DE2C9DF3F7008D03F7 /* Extensions.swift */; };
+		F0F55E9B5B8850FB610E4FAC /* WillpowerBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36AD2C9B46F5008D03F7 /* WillpowerBoxView.swift */; };
+		F0F735D313F318236EF9C539 /* TraitLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAD98F630A6722B007FDB6D /* TraitLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,6 +273,9 @@
 		BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFileStore.swift; sourceTree = "<group>"; };
 		BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemSheetSections.swift; sourceTree = "<group>"; };
 		BC8BC89930A9A19C0060E9BF /* BrushLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushLine.swift; sourceTree = "<group>"; };
+		BC8BC89F30A9A2580060E9BF /* ForsakenCharacterSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForsakenCharacterSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC8BC8F030A9A3900060E9BF /* SplashContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashContainer.swift; sourceTree = "<group>"; };
+		BC8BC8F330A9A3900060E9BF /* CharacterSheetFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSheetFrame.swift; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -272,11 +310,29 @@
 		BCB159152C9874A5003B6A8F /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F0DFCA74A7FFC63E60854ABA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = BC8BC89E30A9A2580060E9BF /* ForsakenCharacterSheet */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		BC2B4435309A09BA00720F0C /* Persistence */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Persistence; sourceTree = "<group>"; };
+		BC8BC8A030A9A2580060E9BF /* ForsakenCharacterSheet */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F0DFCA74A7FFC63E60854ABA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ForsakenCharacterSheet; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BC8BC89C30A9A2580060E9BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BCB158C72C986811003B6A8F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -305,8 +361,6 @@
 			isa = PBXGroup;
 			children = (
 				BCB158CD2C986811003B6A8F /* RequiemCharacterSheetApp.swift */,
-				BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */,
-				BC2B4497309CDF5D00720F0C /* AboutView.swift */,
 				BCAD990330A674C6007FDB6D /* RequiemIdentity.swift */,
 			);
 			path = App;
@@ -329,7 +383,6 @@
 				BC6D36E62C9E0074008D03F7 /* BaneRowView.swift */,
 				BC6D36EA2C9E0087008D03F7 /* BanesView.swift */,
 				BC6D369B2C9A1142008D03F7 /* BloodPotencyView.swift */,
-				BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */,
 				BC6D36BD2C9D07A8008D03F7 /* CharacterInfoView.swift */,
 				BC6D36DA2C9DE940008D03F7 /* DerivedAttributesView.swift */,
 				BC6D36D22C9DE65C008D03F7 /* DisciplineRowView.swift */,
@@ -367,7 +420,6 @@
 		BC2B443A309A09D100720F0C /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				BC2B4433309982B500720F0C /* SharedRows.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -440,6 +492,12 @@
 				BC2B4429309662A300720F0C /* CharacterListView.swift */,
 				BC460D8E30A189860062F53F /* SheetNavigation.swift */,
 				BC8BC89930A9A19C0060E9BF /* BrushLine.swift */,
+				BC2B4433309982B500720F0C /* SharedRows.swift */,
+				BC2B4497309CDF5D00720F0C /* AboutView.swift */,
+				BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */,
+				BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */,
+				BC8BC8F030A9A3900060E9BF /* SplashContainer.swift */,
+				BC8BC8F330A9A3900060E9BF /* CharacterSheetFrame.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -450,6 +508,7 @@
 				BCB158CC2C986811003B6A8F /* RequiemCharacterSheet */,
 				BCB158DD2C986812003B6A8F /* RequiemCharacterSheetTests */,
 				BCB158E72C986812003B6A8F /* RequiemCharacterSheetUITests */,
+				BC8BC8A030A9A2580060E9BF /* ForsakenCharacterSheet */,
 				BCB158CB2C986811003B6A8F /* Products */,
 				BCAD98F430A6710E007FDB6D /* Chronicles */,
 			);
@@ -461,6 +520,7 @@
 				BCB158CA2C986811003B6A8F /* RequiemCharacterSheet.app */,
 				BCB158DA2C986812003B6A8F /* RequiemCharacterSheetTests.xctest */,
 				BCB158E42C986812003B6A8F /* RequiemCharacterSheetUITests.xctest */,
+				BC8BC89F30A9A2580060E9BF /* ForsakenCharacterSheet.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -571,6 +631,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BC8BC89E30A9A2580060E9BF /* ForsakenCharacterSheet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC8BC8A730A9A25A0060E9BF /* Build configuration list for PBXNativeTarget "ForsakenCharacterSheet" */;
+			buildPhases = (
+				BC8BC89B30A9A2580060E9BF /* Sources */,
+				BC8BC89C30A9A2580060E9BF /* Frameworks */,
+				BC8BC89D30A9A2580060E9BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BC8BC8A030A9A2580060E9BF /* ForsakenCharacterSheet */,
+			);
+			name = ForsakenCharacterSheet;
+			packageProductDependencies = (
+			);
+			productName = ForsakenCharacterSheet;
+			productReference = BC8BC89F30A9A2580060E9BF /* ForsakenCharacterSheet.app */;
+			productType = "com.apple.product-type.application";
+		};
 		BCB158C92C986811003B6A8F /* RequiemCharacterSheet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BCB158EE2C986812003B6A8F /* Build configuration list for PBXNativeTarget "RequiemCharacterSheet" */;
@@ -634,9 +716,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 2720;
 				LastUpgradeCheck = 2720;
 				TargetAttributes = {
+					BC8BC89E30A9A2580060E9BF = {
+						CreatedOnToolsVersion = 27.2;
+					};
 					BCB158C92C986811003B6A8F = {
 						CreatedOnToolsVersion = 15.4;
 					};
@@ -666,11 +751,19 @@
 				BCB158C92C986811003B6A8F /* RequiemCharacterSheet */,
 				BCB158D92C986812003B6A8F /* RequiemCharacterSheetTests */,
 				BCB158E32C986812003B6A8F /* RequiemCharacterSheetUITests */,
+				BC8BC89E30A9A2580060E9BF /* ForsakenCharacterSheet */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BC8BC89D30A9A2580060E9BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BCB158C82C986811003B6A8F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -710,6 +803,46 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BC8BC89B30A9A2580060E9BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0E397B9D02EB5F1231961E8 /* CharacterInfoRowView.swift in Sources */,
+				F0308D37C19D7982484D9416 /* SharedRows.swift in Sources */,
+				F000FB6358C7C1ADA1448D86 /* AboutView.swift in Sources */,
+				F0B5348DE4C5E676D6281784 /* SplashScreenView.swift in Sources */,
+				F0EFB0A0702CCBF21D0099A5 /* Extensions.swift in Sources */,
+				F01E95E129F7A7C6189B7562 /* BoxFillType.swift in Sources */,
+				F0616393E99EADFA08E401BD /* Aspiration.swift in Sources */,
+				F05DE064DEBEFD635B81BAF6 /* Attribute.swift in Sources */,
+				F0408B84D5F43DD09AACA0F3 /* TraitDefinitions.swift in Sources */,
+				F07F2A5813BF0C529812C2CC /* Skill.swift in Sources */,
+				F0F735D313F318236EF9C539 /* TraitLog.swift in Sources */,
+				F019A03FF22F6F364887D935 /* TraitSource.swift in Sources */,
+				F01F3104039DB093085C20AA /* CatalogCore.swift in Sources */,
+				F05D25789FB0EFE04A5039AB /* Merit.swift in Sources */,
+				BC8BC8F530A9A3900060E9BF /* CharacterSheetFrame.swift in Sources */,
+				F091C70BACB5259C98BD8642 /* CharacterCondition.swift in Sources */,
+				F022243D76CFFE6D06EC0E03 /* ChroniclesCharacter.swift in Sources */,
+				F09865DD6424C885A554740B /* CharacterFileStore.swift in Sources */,
+				F022968F00A990F4A73FD67D /* BackgroundView.swift in Sources */,
+				F0EC760A0B2043D8BDDE3321 /* CatalogPickerView.swift in Sources */,
+				F097CC20BF174E892DBC2229 /* DotView.swift in Sources */,
+				F00131EC0E05D042A730C155 /* DotsRatingView.swift in Sources */,
+				BC8BC8F230A9A3900060E9BF /* SplashContainer.swift in Sources */,
+				F0A5A29F797511DCCD487B59 /* DotsRowView.swift in Sources */,
+				F07830F12BD75E4E2E649D77 /* HealthBoxView.swift in Sources */,
+				F0CAE0CFA0B03B1EA98D2D33 /* HostedSheet.swift in Sources */,
+				F0F55E9B5B8850FB610E4FAC /* WillpowerBoxView.swift in Sources */,
+				F0C833F5B3440506F9F493A6 /* Theme.swift in Sources */,
+				F0588DA7903B9C63C3DC4B7E /* AppIdentity.swift in Sources */,
+				F002ED98A1A51233F515ABC4 /* CharacterFile.swift in Sources */,
+				F0B4C3084EA2FE861077A161 /* CharacterListView.swift in Sources */,
+				F0E334FA4B8E1A6C6E886E26 /* SheetNavigation.swift in Sources */,
+				F0D64E4577E601C301309169 /* BrushLine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BCB158C62C986811003B6A8F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -752,9 +885,11 @@
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
 				BC2B4454309A454C00720F0C /* DisciplinePickerView.swift in Sources */,
 				BC2B4446309A310200720F0C /* Catalog.swift in Sources */,
+				BC8BC8F130A9A3900060E9BF /* SplashContainer.swift in Sources */,
 				BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */,
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,
 				BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */,
+				BC8BC8F430A9A3900060E9BF /* CharacterSheetFrame.swift in Sources */,
 				BCAD98FF30A673F7007FDB6D /* ChroniclesCharacter.swift in Sources */,
 				BCAD98FB30A673A6007FDB6D /* Merit.swift in Sources */,
 				BCB159072C987161003B6A8F /* Character.swift in Sources */,
@@ -851,6 +986,80 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		BC8BC8A830A9A25A0060E9BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ForsakenCharacterSheet/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "W:tF 2e Character Sheet";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.ForsakenCharacterSheet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_PACKAGE_NAME = ChroniclesSheets;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		BC8BC8A930A9A25A0060E9BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ForsakenCharacterSheet/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "W:tF 2e Character Sheet";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.ForsakenCharacterSheet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_PACKAGE_NAME = ChroniclesSheets;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		BCB158EC2C986812003B6A8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1123,6 +1332,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BC8BC8A730A9A25A0060E9BF /* Build configuration list for PBXNativeTarget "ForsakenCharacterSheet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC8BC8A830A9A25A0060E9BF /* Debug */,
+				BC8BC8A930A9A25A0060E9BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BCB158C52C986811003B6A8F /* Build configuration list for PBXProject "RequiemCharacterSheet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

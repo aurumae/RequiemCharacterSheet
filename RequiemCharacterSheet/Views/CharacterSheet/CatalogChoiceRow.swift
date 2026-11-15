@@ -272,3 +272,13 @@ extension Character {
         ], item: item)
     }
 }
+
+extension CatalogPickerSection {
+    /// One section per book of Requiem's catalog; see `byBook(_:books:item:)`.
+    static func byBook<Entry: CatalogEntry>(
+        _ groups: [CatalogPickerGroup<Entry>],
+        item: (Entry) -> CatalogPickerItem
+    ) -> [CatalogPickerSection] {
+        byBook(groups, books: Catalog.bundled.books, item: item)
+    }
+}

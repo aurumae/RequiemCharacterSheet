@@ -104,3 +104,14 @@ private struct ConditionEffectsPopover: View {
         .frame(width: 300, alignment: .leading)
     }
 }
+
+extension LabeledValueRow {
+    /// A row for a trait active Conditions may affect, e.g. Defense, with their mark after the label.
+    init(_ label: String, value: Int, condition: (character: Character, target: ConditionTarget)) {
+        let isAffected = !condition.character.conditionEffects(on: condition.target).isEmpty
+        let mark = ConditionIndicator(character: condition.character, target: condition.target,
+                                      traitName: label.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
+        // The mark is its own button, so the row can't be one element when it's there
+        self.init(label, value: value, mark: isAffected ? AnyView(mark) : nil)
+    }
+}

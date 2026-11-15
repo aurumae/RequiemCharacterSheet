@@ -40,7 +40,7 @@ struct CharacterListView<C: ListedCharacter, Sheet: View>: View {
                     Spacer(minLength: 20)
 
                     List {
-                        Section(header: Text("CHARACTERS").themedText(.sectionHeader)) {
+                        Section(header: SectionHeading("Characters")) {
                             if store.summaries.isEmpty {
                                 Text("No characters yet")
                                     .themedText(.body)
@@ -115,6 +115,7 @@ struct CharacterListView<C: ListedCharacter, Sheet: View>: View {
                         }
                     }
                     .listStyle(.grouped)
+                    .themedListBackground(theme)
                     .pageBorderEdge()
 
                     // The Dark Pack notice and the bundled fonts' licences

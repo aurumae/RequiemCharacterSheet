@@ -104,7 +104,8 @@ struct SheetSectionBlock<Content: View>: View {
                 // Without a row's usual top and bottom insets, so it's the height the header was
                 .listRowInsets(.vertical, 0)
                 .listRowBackground(theme.sectionHeaderStyle == .row ? Color(uiColor: .systemGroupedBackground) : nil)
-                .listRowSeparator(.hidden, edges: .top)
+                // The brush line is the divider, so it has no list line under it
+                .listRowSeparator(.hidden, edges: theme.sectionHeaderStyle == .brushLine ? .all : .top)
                 .id(section)
             content
         }
@@ -114,8 +115,6 @@ struct SheetSectionBlock<Content: View>: View {
 /// A section's heading, which reports where it is on screen.
 struct SheetSectionHeader: View {
     @Environment(\.reportSectionHeading) private var reportSectionHeading
-    @Environment(\.theme) private var theme
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let section: SheetSection
 
     init(_ section: SheetSection) {
@@ -123,7 +122,7 @@ struct SheetSectionHeader: View {
     }
 
     var body: some View {
-        heading
+        SectionHeading(section.heading)
             // A row now, so it needs telling VoiceOver it's a heading, as list headers do by themselves
             .accessibilityAddTraits(.isHeader)
             .onGeometryChange(for: CGFloat.self) { geometry in
@@ -137,28 +136,38 @@ struct SheetSectionHeader: View {
     }
 }
 
-extension SheetSectionHeader {
-    @ViewBuilder
-    private var heading: some View {
+/// A section heading in the game's style: a grey row's capitals, or small capitals between brush strokes.
+struct SectionHeading: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// In mixed case, e.g. "Coils of the Dragon".
+    let text: String
+
+    init(_ text: String) {
+        self.text = text
+    }
+
+    var body: some View {
         switch theme.sectionHeaderStyle {
         case .row:
-            Text(section.heading.uppercased())
+            Text(text.uppercased())
                 .themedText(.sectionHeader)
                 // The colour list headers have
                 .foregroundStyle(.secondary)
         case .brushLine:
             HStack(spacing: 8) {
-                BrushLine(seed: section.id + "-leading", solidEnd: .trailing)
+                BrushLine(seed: text + "-leading", solidEnd: .trailing)
                     .frame(minWidth: 16)
-                smallCapitals(section.heading)
+                smallCapitals(text)
                     .foregroundStyle(theme.accent)
                     .multilineTextAlignment(.center)
                     .layoutPriority(1)
-                BrushLine(seed: section.id + "-trailing", solidEnd: .leading)
+                BrushLine(seed: text + "-trailing", solidEnd: .leading)
                     .frame(minWidth: 16)
             }
+            .textCase(nil)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(section.heading)
+            .accessibilityLabel(text)
         }
     }
 
@@ -172,6 +181,18 @@ extension SheetSectionHeader {
             result += run
         }
         return Text(result)
+    }
+}
+
+extension View {
+    /// The list's background: the grouped grey within a page border, or none on a plain page, so the page shows.
+    @ViewBuilder
+    func themedListBackground(_ theme: Theme) -> some View {
+        if theme.borderImageName == nil {
+            self.scrollContentBackground(.hidden)
+        } else {
+            self
+        }
     }
 }
 

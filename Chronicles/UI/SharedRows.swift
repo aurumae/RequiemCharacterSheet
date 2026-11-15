@@ -1,6 +1,6 @@
 //
 //  SharedRows.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
@@ -9,22 +9,21 @@ import SwiftUI
 struct LabeledValueRow: View {
     let label: String
     let value: String
-    /// A trait active Conditions may affect, e.g. Defense, marked after the label.
-    var condition: (character: Character, target: ConditionTarget)?
+    /// Shown after the label, e.g. a mark for active Conditions that affect the trait. `nil` for none.
+    var mark: AnyView?
 
-    init(_ label: String, value: Int, condition: (character: Character, target: ConditionTarget)? = nil) {
+    init(_ label: String, value: Int, mark: AnyView? = nil) {
         self.label = label
         self.value = "\(value)"
-        self.condition = condition
+        self.mark = mark
     }
 
     var body: some View {
         HStack {
             Text(label)
                 .themedText(.label)
-            if let condition {
-                ConditionIndicator(character: condition.character, target: condition.target,
-                                   traitName: label.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
+            if let mark {
+                mark
             }
             Spacer()
             Text(value)
@@ -32,11 +31,7 @@ struct LabeledValueRow: View {
         }
         .padding(.vertical, 4)
         // The mark is its own button, so the row can't be one element when it's there
-        .accessibilityElement(children: hasMark ? .contain : .combine)
-    }
-
-    private var hasMark: Bool {
-        condition.map { !$0.character.conditionEffects(on: $0.target).isEmpty } ?? false
+        .accessibilityElement(children: mark != nil ? .contain : .combine)
     }
 }
 

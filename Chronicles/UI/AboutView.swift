@@ -1,6 +1,6 @@
 //
 //  AboutView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
@@ -12,18 +12,12 @@ enum LegalNotice {
 }
 
 /// A font bundled with the app, and the licence file beside it in Fonts/.
-private struct BundledFont: Identifiable {
+struct BundledFont: Identifiable {
     let name: String
     let author: String
     let licenseFile: String
 
     var id: String { name }
-
-    /// Every font the app bundles. Each is under the SIL Open Font License, which asks that its licence ship with it.
-    static let all = [
-        BundledFont(name: "IM Fell English", author: "Igino Marini", licenseFile: "IMFellEnglish-OFL"),
-        BundledFont(name: "Cinzel", author: "Natanael Gama and The Cinzel Project Authors", licenseFile: "Cinzel-OFL"),
-    ]
 }
 
 /// The app's version, the Dark Pack notice, and the licenses of the bundled fonts.
@@ -69,7 +63,7 @@ struct AboutView: View {
                 }
 
                 Section(header: Text("Fonts").themedText(.subsectionHeader)) {
-                    ForEach(BundledFont.all) { font in
+                    ForEach(AppIdentity.current.bundledFonts) { font in
                         NavigationLink {
                             FontLicenseView(font: font)
                                 .doneButton { dismiss() }

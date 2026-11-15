@@ -13,6 +13,9 @@ struct AppIdentity {
     let characterFileType: UTType
     /// The extension shared character files are saved with, e.g. "vtrcharacter".
     let characterFileExtension: String
+    /// Every font the app bundles, credited in About. Each is under the SIL Open Font License, which asks that its
+    /// licence ship with it.
+    let bundledFonts: [BundledFont]
 }
 
 extension UTType {

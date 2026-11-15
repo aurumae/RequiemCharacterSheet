@@ -22,11 +22,15 @@ struct BackgroundView<Content: View>: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 GeometryReader { geometry in
-                    Image(theme.borderImageName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .clipped()
+                    if let border = theme.borderImageName {
+                        Image(border)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    } else {
+                        Color.white
+                    }
                 }
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
