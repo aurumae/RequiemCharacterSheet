@@ -1,16 +1,16 @@
 //
 //  MeritPickerView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
 
 /// Chooses a Merit to add, grouped by book and then category, asking for a qualifier when the Merit needs one.
 /// Unmet prerequisites are shown as warnings; they don't stop the Merit being taken.
-struct MeritPickerView: View {
+struct MeritPickerView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
-    let character: Character
+    let character: C
     /// Called with the chosen catalog entry and qualifier, or `nil` for a custom Merit.
     let onChoose: (MeritEntry?, String?) -> Void
 
@@ -34,7 +34,6 @@ struct MeritPickerView: View {
         return nameMatches + summaryMatches + bookMatches
     }
 
-    private static let categoryOrder: [MeritEntry.Category] = [.vampire, .covenant, .mental, .physical, .social, .fighting, .other, .supernatural]
 
     var body: some View {
         NavigationStack {
@@ -42,16 +41,18 @@ struct MeritPickerView: View {
                 let entries = matchingEntries
                 // By book; within each, grouped by category, or while searching one list in relevance order
                 let groups = searchText.isEmpty
-                    ? Self.categoryOrder.map { category in CatalogPickerGroup(category.title, entries.filter { $0.category == category }) }
+                    ? character.meritCategoryOrder.map { category in
+                        CatalogPickerGroup(character.meritCategoryTitle(category), entries.filter { $0.category == category })
+                    }
                     : [CatalogPickerGroup("", entries)]
-                ForEach(CatalogBookSection.sections(groups)) { section in
+                ForEach(CatalogBookSection.sections(groups, books: Catalog.bundled.books)) { section in
                     Section(header: section.header) {
                         ForEach(section.entries) { row(for: $0) }
                     }
                 }
 
                 Section {
-                    let customFits = character.creationAllows(.merit(nil, rating: 1))
+                    let customFits = character.creationAllowsMerit(nil, rating: 1)
                     Button {
                         onChoose(nil, nil)
                         dismiss()
@@ -130,7 +131,7 @@ struct MeritPickerView: View {
         let isOwned = !entry.repeatable && character.merits.contains { $0.source == .catalog(entry.id) }
         let unmet = character.unmetPrerequisites(for: entry)
         // During guided creation, only Merits that fit the ten starting dots, and none Kindred can't take
-        let fits = character.creationAllows(.merit(entry, rating: entry.ratings.min() ?? 1))
+        let fits = character.creationAllowsMerit(entry, rating: entry.ratings.min() ?? 1)
         // e.g. Area of Expertise, which is for one of the character's Specialties
         let needsSpecialty = entry.qualifier?.usesSpecialty == true && character.specialtyChoices.isEmpty
         Button {
@@ -163,8 +164,8 @@ struct MeritPickerView: View {
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)
                     } else if !fits {
-                        Label(entry.unavailableToKindred ? PrerequisiteCheck.notForKindred
-                              : unmet.isEmpty ? "Doesn't fit the starting Merit dots" : unmet.warningText,
+                        Label(character.meritUnavailableReason(entry)
+                              ?? (unmet.isEmpty ? "Doesn't fit the starting Merit dots" : unmet.warningText),
                               systemImage: "nosign")
                             .themedText(.detail)
                             .foregroundStyle(theme.muted)
@@ -202,21 +203,5 @@ struct MeritPickerView: View {
         pendingEntry = nil
         onChoose(entry, qualifier)
         dismiss()
-    }
-}
-
-extension MeritEntry.Category {
-    var title: String {
-        switch self {
-        case .mental: return "Mental"
-        case .physical: return "Physical"
-        case .social: return "Social"
-        case .fighting: return "Fighting"
-        case .vampire: return "Vampire"
-        case .covenant: return "Covenant"
-        case .supernatural: return "Supernatural (not for Kindred)"
-        case .other: return "Other"
-        default: return rawValue.capitalized
-        }
     }
 }

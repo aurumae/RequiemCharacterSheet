@@ -1,18 +1,18 @@
 //
 //  MeritDetailView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
 
 /// A catalog Merit's details: ratings, qualifier, prerequisites (met or not), effects on the sheet,
 /// and Fighting Style maneuvers.
-struct MeritDetailView: View {
+struct MeritDetailView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
     let merit: Merit
     let entry: MeritEntry
-    let character: Character
+    let character: C
 
     var body: some View {
         NavigationStack {
@@ -54,7 +54,7 @@ struct MeritDetailView: View {
                 if !entry.effects.isEmpty {
                     Section(header: Text("On your sheet").themedText(.subsectionHeader)) {
                         ForEach(Array(entry.effects.enumerated()), id: \.offset) { _, effect in
-                            Text(effect.description(rating: merit.rating, qualifier: merit.qualifier))
+                            Text(effect.description(rating: merit.rating, qualifier: merit.qualifier, merits: Catalog.bundled.merits))
                                 .themedText(.body)
                         }
                     }

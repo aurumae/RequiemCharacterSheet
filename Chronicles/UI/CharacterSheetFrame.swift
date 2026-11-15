@@ -21,6 +21,9 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
     /// The Specialty being added or edited, shown here rather than in its row; see `EditSpecialtyAction`.
     @State private var specialtyEdit: SpecialtyEdit?
     @State private var specialtyDraft = ""
+    /// Pickers and details opened from rows in the list, presented here; see `PresentSheetAction`.
+    @State private var hostedSheet: HostedSheet?
+    @State private var lastHostedSheet: HostedSheet?
     /// The section being read, shown in the pill, and whether its list of sections is open.
     @State private var currentSection: SheetSection? = .character
     @State private var showingSectionMenu = false
@@ -78,6 +81,10 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
                             proxy.scrollTo(section, anchor: .top)
                         }
                     }
+                    .environment(\.presentSheet, PresentSheetAction { sheet in
+                        lastHostedSheet = sheet
+                        hostedSheet = sheet
+                    })
                     .environment(\.editSpecialty, EditSpecialtyAction { edit in
                         specialtyDraft = edit.initialText
                         specialtyEdit = edit
@@ -100,6 +107,7 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
             }
         }
         .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
+        .sheetHost($hostedSheet, lastPresented: $lastHostedSheet)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             // Jumps between the sheet's sections

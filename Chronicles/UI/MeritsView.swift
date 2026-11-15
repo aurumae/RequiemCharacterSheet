@@ -1,6 +1,6 @@
 //
 //  MeritsView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 20/09/2024.
 //
@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct MeritsView: View {
-    let character: Character
+struct MeritsView<C: SheetCharacter>: View {
+    let character: C
     @State private var showingPicker = false
     /// A custom Merit that was just added, whose name opens for editing.
     @State private var newCustomMeritID: UUID?

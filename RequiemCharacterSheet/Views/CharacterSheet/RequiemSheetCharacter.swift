@@ -17,6 +17,32 @@ extension Character: SheetCharacter {
         merits.filter { $0.entry?.qualifier?.usesSpecialty == true && $0.qualifier == specialty }.map(\.name)
     }
 
+    func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool {
+        creationAllows(.merit(entry, rating: rating))
+    }
+
+    var meritCategoryOrder: [MeritEntry.Category] {
+        [.vampire, .covenant, .mental, .physical, .social, .fighting, .other, .supernatural]
+    }
+
+    func meritCategoryTitle(_ category: MeritEntry.Category) -> String {
+        switch category {
+        case .mental: "Mental"
+        case .physical: "Physical"
+        case .social: "Social"
+        case .fighting: "Fighting"
+        case .vampire: "Vampire"
+        case .covenant: "Covenant"
+        case .supernatural: "Supernatural (not for Kindred)"
+        case .other: "Other"
+        default: category.rawValue.capitalized
+        }
+    }
+
+    func meritUnavailableReason(_ entry: MeritEntry) -> String? {
+        entry.unavailableToKindred ? PrerequisiteCheck.notForKindred : nil
+    }
+
     func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView? {
         AnyView(ConditionIndicator(character: self, target: target, traitName: traitName))
     }

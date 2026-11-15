@@ -34,6 +34,22 @@ protocol SheetCharacter: ChroniclesCharacter {
     /// The names of Merits that depend on a Specialty, e.g. Area of Expertise, which go if it's deleted.
     func meritsDepending(onSpecialty specialty: String) -> [String]
 
+    /// Dots a Merit gets from the character's other Merits, e.g. Flock's on Herd.
+    func meritBonus(for id: CatalogEntryID) -> Int
+    /// Every requirement of a Merit, met or not.
+    func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck]
+    /// Whether a Merit can be added at `rating` now, e.g. within the starting dots during guided creation. `nil` for a
+    /// custom Merit.
+    func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool
+    /// The choices for a Merit's qualifier, or `nil` when the player types it.
+    func qualifierOptions(for entry: MeritEntry) -> [String]?
+    /// Merit categories in the order the picker lists them.
+    var meritCategoryOrder: [MeritEntry.Category] { get }
+    /// A Merit category's heading in the picker.
+    func meritCategoryTitle(_ category: MeritEntry.Category) -> String
+    /// Why a Merit can't be taken at all by this kind of character, e.g. "Not available to Kindred"; `nil` if it can.
+    func meritUnavailableReason(_ entry: MeritEntry) -> String?
+
     /// The mark for active Conditions that affect a trait, or `nil` for none.
     func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView?
     /// Controls beside a Mental, Physical or Social heading, e.g. guided creation's priority menu. `nil` for none.
@@ -95,6 +111,52 @@ extension SheetCharacter {
 
     func meritsDepending(onSpecialty specialty: String) -> [String] {
         []
+    }
+
+    func meritBonus(for id: CatalogEntryID) -> Int {
+        0
+    }
+
+    /// The prerequisites every game can check; any other kind is shown as written.
+    func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck] {
+        prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf) { prerequisite in
+            commonCheck(prerequisite, merits: Catalog.bundled.merits) ?? unknownCheck(prerequisite)
+        }
+    }
+
+    /// The requirements the character is known not to meet. Merits can still be taken; these are warnings.
+    func unmetPrerequisites(for entry: MeritEntry) -> [PrerequisiteCheck] {
+        prerequisiteChecks(for: entry).filter { $0.isMet == false }
+    }
+
+    func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool {
+        true
+    }
+
+    func qualifierOptions(for entry: MeritEntry) -> [String]? {
+        guard let rule = entry.qualifier else { return nil }
+        if rule.usesSpecialty { return specialtyChoices.map(\.specialty) }
+        return rule.options
+    }
+
+    var meritCategoryOrder: [MeritEntry.Category] {
+        [.mental, .physical, .social, .fighting, .other, .supernatural]
+    }
+
+    func meritCategoryTitle(_ category: MeritEntry.Category) -> String {
+        switch category {
+        case .mental: "Mental"
+        case .physical: "Physical"
+        case .social: "Social"
+        case .fighting: "Fighting"
+        case .supernatural: "Supernatural"
+        case .other: "Other"
+        default: category.rawValue.capitalized
+        }
+    }
+
+    func meritUnavailableReason(_ entry: MeritEntry) -> String? {
+        nil
     }
 
     func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView? {

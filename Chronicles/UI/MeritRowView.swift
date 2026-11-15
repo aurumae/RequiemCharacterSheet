@@ -1,6 +1,6 @@
 //
 //  MeritRowView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 20/09/2024.
 //
@@ -8,10 +8,10 @@
 
 import SwiftUI
 
-struct MeritRowView: View {
+struct MeritRowView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Bindable var merit: Merit
-    let character: Character
+    let character: C
     /// Opens the name for editing, for a custom Merit that was just added.
     var beginsEditing = false
     @State private var showingDetail = false

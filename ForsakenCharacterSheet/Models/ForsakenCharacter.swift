@@ -137,7 +137,10 @@ final class ForsakenCharacter: Codable {
 
         attributes = try container.decode(.attributes, default: blank.attributes)
         skills = try container.decode(.skills, default: blank.skills)
-        merits = try container.decode(.merits, default: [])
+        let savedMerits: [Merit] = try container.decode(.merits, default: [])
+        // A custom Merit whose name has since joined the catalog links to it
+        savedMerits.forEach { $0.relink(in: Catalog.bundled.merits) }
+        merits = savedMerits
         aspirations = try container.decode(.aspirations, default: blank.aspirations)
         conditions = try container.decode(.conditions, default: [])
         healthTrack = try container.decode(.healthTrack, default: [])
