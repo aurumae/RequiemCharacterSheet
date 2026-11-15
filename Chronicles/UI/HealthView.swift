@@ -1,6 +1,6 @@
 //
 //  HealthView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 16/09/2024.
 //
@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct HealthView: View {
-    let character: Character
+struct HealthView<C: ChroniclesCharacter>: View {
+    let character: C
 
     var body: some View {
         VStack(alignment: .leading) {

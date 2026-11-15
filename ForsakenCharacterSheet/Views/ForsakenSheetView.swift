@@ -5,7 +5,8 @@
 
 import SwiftUI
 
-/// A Forsaken character's sheet. For now it has the Character section; the shared sections follow.
+/// A Forsaken character's sheet, in the official sheet's order. The rest of the shared sections, and the Werewolf ones,
+/// follow.
 struct ForsakenSheetView: View {
     let character: ForsakenCharacter
     let store: CharacterFileStore<ForsakenCharacter>
@@ -13,6 +14,13 @@ struct ForsakenSheetView: View {
     var body: some View {
         CharacterSheetFrame(character: character, store: store, sections: character.sheetSections) {
             ForsakenCharacterInfoView(character: character)
+            AspirationsView(character: character)
+            SheetSectionBlock(.health) {
+                HealthView(character: character)
+            }
+            SheetSectionBlock(.willpower) {
+                WillpowerView(character: character)
+            }
         }
     }
 }
@@ -20,7 +28,7 @@ struct ForsakenSheetView: View {
 extension ForsakenCharacter {
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
-        [.character]
+        [.character, .aspirations, .health, .willpower]
     }
 }
 

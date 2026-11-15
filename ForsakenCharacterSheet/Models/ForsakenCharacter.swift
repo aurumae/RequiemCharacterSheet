@@ -150,7 +150,12 @@ final class ForsakenCharacter: Codable {
     }
 }
 
-extension ForsakenCharacter: ChroniclesCharacter {}
+extension ForsakenCharacter: ChroniclesCharacter {
+    /// Stamina + Size, in Hishu (human) form. The other forms' bonuses come with the forms.
+    var health: Int {
+        rating(of: .stamina) + 5
+    }
+}
 
 // MARK: - Store and list
 

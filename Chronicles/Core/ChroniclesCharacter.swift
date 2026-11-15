@@ -23,6 +23,8 @@ package protocol ChroniclesCharacter: AnyObject {
     var conditions: [CharacterCondition] { get set }
 
     var healthTrack: [HealthBoxFillType] { get set }
+    /// Health dots, worked out by each game, e.g. Stamina + Size and any bonuses.
+    var health: Int { get }
     var willpowerTrack: [WillpowerBoxFillType] { get set }
 
     var beats: Int { get set }
@@ -72,6 +74,30 @@ extension ChroniclesCharacter {
     /// Willpower dots: Resolve + Composure.
     package var willpower: Int {
         rating(of: .resolve) + rating(of: .composure)
+    }
+
+    /// The health boxes on the sheet, one per point of Health.
+    package var healthBoxes: [HealthBoxFillType] {
+        (0..<max(health, 0)).map { healthTrack.indices.contains($0) ? healthTrack[$0] : .none }
+    }
+
+    /// The willpower boxes on the sheet, one per point of Willpower.
+    package var willpowerBoxes: [WillpowerBoxFillType] {
+        (0..<max(willpower, 0)).map { willpowerTrack.indices.contains($0) ? willpowerTrack[$0] : .none }
+    }
+
+    package func setHealthBox(at index: Int, to damage: HealthBoxFillType) {
+        if healthTrack.count <= index {
+            healthTrack += Array(repeating: .none, count: index - healthTrack.count + 1)
+        }
+        healthTrack[index] = damage
+    }
+
+    package func setWillpowerBox(at index: Int, to state: WillpowerBoxFillType) {
+        if willpowerTrack.count <= index {
+            willpowerTrack += Array(repeating: .none, count: index - willpowerTrack.count + 1)
+        }
+        willpowerTrack[index] = state
     }
 
     /// Five Beats make an Experience.

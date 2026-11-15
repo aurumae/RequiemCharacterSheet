@@ -1,6 +1,6 @@
 //
 //  WillpowerView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 17/09/2024.
 //
@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct WillpowerView: View {
-    let character: Character
+struct WillpowerView<C: ChroniclesCharacter>: View {
+    let character: C
 
     var body: some View {
         VStack(alignment: .leading) {

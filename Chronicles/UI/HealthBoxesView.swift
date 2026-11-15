@@ -1,6 +1,6 @@
 //
 //  HealthBoxesView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 //  Created by Oisín McColgan on 17/09/2024.
 //
@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct HealthBoxesView: View {
-    let character: Character
+struct HealthBoxesView<C: ChroniclesCharacter>: View {
+    let character: C
     var boxesPerRow: Int = 10
 
     var body: some View {

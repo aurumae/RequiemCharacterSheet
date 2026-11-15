@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F093F678570F123A9A68899E /* HealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB159132C9873D3003B6A8F /* HealthView.swift */; };
+		F04B20450D0B8ED0ED589FCB /* HealthBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */; };
+		F0E12C15F6FFE6AE1110E285 /* WillpowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36992C9A0929008D03F7 /* WillpowerView.swift */; };
+		F09BB728A3C45111542F84E0 /* WillpowerBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */; };
 		A1F143D41BC34BF6B184F400 /* SaveContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F401 /* SaveContractTests.swift */; };
 		A1F143D41BC34BF6B184F402 /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F403 /* fixtures */; };
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
@@ -154,7 +158,9 @@
 		F0B5348DE4C5E676D6281784 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36C52C9D1866008D03F7 /* SplashScreenView.swift */; };
 		F0C833F5B3440506F9F493A6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4431309982A300720F0C /* Theme.swift */; };
 		F0CAE0CFA0B03B1EA98D2D33 /* HostedSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAFCCDD309EBFAB00A5D9F1 /* HostedSheet.swift */; };
+		F0D04C6EC58299FF9D4AB51F /* AspirationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E42C9E006A008D03F7 /* AspirationRowView.swift */; };
 		F0D64E4577E601C301309169 /* BrushLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89930A9A19C0060E9BF /* BrushLine.swift */; };
+		F0DBBDC5638A9C2EB35534A3 /* AspirationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */; };
 		F0E334FA4B8E1A6C6E886E26 /* SheetNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC460D8E30A189860062F53F /* SheetNavigation.swift */; };
 		F0E397B9D02EB5F1231961E8 /* CharacterInfoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */; };
 		F0EC760A0B2043D8BDDE3321 /* CatalogPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4469309AA14400720F0C /* CatalogPickerView.swift */; };
@@ -377,8 +383,6 @@
 			isa = PBXGroup;
 			children = (
 				BCB159112C9873A6003B6A8F /* CharacterSheetView.swift */,
-				BC6D36E42C9E006A008D03F7 /* AspirationRowView.swift */,
-				BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */,
 				BCB159092C987230003B6A8F /* AttributeRowView.swift */,
 				BC6D36E62C9E0074008D03F7 /* BaneRowView.swift */,
 				BC6D36EA2C9E0087008D03F7 /* BanesView.swift */,
@@ -387,8 +391,6 @@
 				BC6D36DA2C9DE940008D03F7 /* DerivedAttributesView.swift */,
 				BC6D36D22C9DE65C008D03F7 /* DisciplineRowView.swift */,
 				BC6D36D62C9DE680008D03F7 /* DisciplinesView.swift */,
-				BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */,
-				BCB159132C9873D3003B6A8F /* HealthView.swift */,
 				BC6D36C92C9DD3F9008D03F7 /* HumanityRowView.swift */,
 				BC6D36CC2C9DD41C008D03F7 /* HumanityView.swift */,
 				BC6D36D42C9DE667008D03F7 /* MeritRowView.swift */,
@@ -397,8 +399,6 @@
 				BC6D36B92C9CF543008D03F7 /* CategoryHeader.swift */,
 				BC6D36B72C9CF52B008D03F7 /* SkillsView.swift */,
 				BC6D36C32C9D0ECB008D03F7 /* VitaeView.swift */,
-				BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */,
-				BC6D36992C9A0929008D03F7 /* WillpowerView.swift */,
 				BC2B4451309A454200720F0C /* DisciplineDetailView.swift */,
 				BC2B4453309A454C00720F0C /* DisciplinePickerView.swift */,
 				BC2B4459309A4DDC00720F0C /* MeritPickerView.swift */,
@@ -498,6 +498,12 @@
 				BC6D36BB2C9D0792008D03F7 /* CharacterInfoRowView.swift */,
 				BC8BC8F030A9A3900060E9BF /* SplashContainer.swift */,
 				BC8BC8F330A9A3900060E9BF /* CharacterSheetFrame.swift */,
+				BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */,
+				BC6D36E42C9E006A008D03F7 /* AspirationRowView.swift */,
+				BCB159132C9873D3003B6A8F /* HealthView.swift */,
+				BC6D36A12C9A3261008D03F7 /* HealthBoxesView.swift */,
+				BC6D36992C9A0929008D03F7 /* WillpowerView.swift */,
+				BC6D369D2C9A3040008D03F7 /* WillpowerBoxesView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -807,6 +813,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F093F678570F123A9A68899E /* HealthView.swift in Sources */,
+				F04B20450D0B8ED0ED589FCB /* HealthBoxesView.swift in Sources */,
+				F0E12C15F6FFE6AE1110E285 /* WillpowerView.swift in Sources */,
+				F09BB728A3C45111542F84E0 /* WillpowerBoxesView.swift in Sources */,
+				F0DBBDC5638A9C2EB35534A3 /* AspirationsView.swift in Sources */,
+				F0D04C6EC58299FF9D4AB51F /* AspirationRowView.swift in Sources */,
 				F0E397B9D02EB5F1231961E8 /* CharacterInfoRowView.swift in Sources */,
 				F0308D37C19D7982484D9416 /* SharedRows.swift in Sources */,
 				F000FB6358C7C1ADA1448D86 /* AboutView.swift in Sources */,

@@ -70,6 +70,10 @@ The section pill is filled in Werewolf Rust with its text in Grechen Fuemen, bec
 pill font happens to be readable already. The wolf skull from the app icon sits behind the sheet as a faint Werewolf
 Rust watermark, as it does on the official sheet. There is no page border.
 
+Forsaken's About page uses the system font, in Werewolf Rust at the same sizes, so the licences and notices are easy
+to read. The About button on the list keeps Comforter. The pill's Grechen Fuemen is set larger (21pt) than Requiem's
+pill face, as its letters are small for their size.
+
 BushToad is not used. It's an unlicensed 1999 imitation of Treefrog ("BushToad by Three Mile Island"), and its owner
 is unknown.
 

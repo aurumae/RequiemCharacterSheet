@@ -398,32 +398,6 @@ final class Character: Codable {
             + saved.filter { !defaultKeys.contains($0[keyPath: key]) }
     }
 
-    // MARK: - Health and Willpower boxes
-
-    /// The health boxes on the sheet, one per point of Health.
-    var healthBoxes: [HealthBoxFillType] {
-        (0..<max(health, 0)).map { healthTrack.indices.contains($0) ? healthTrack[$0] : .none }
-    }
-
-    /// The willpower boxes on the sheet, one per point of Willpower.
-    var willpowerBoxes: [WillpowerBoxFillType] {
-        (0..<max(willpower, 0)).map { willpowerTrack.indices.contains($0) ? willpowerTrack[$0] : .none }
-    }
-
-    func setHealthBox(at index: Int, to damage: HealthBoxFillType) {
-        if healthTrack.count <= index {
-            healthTrack += Array(repeating: .none, count: index - healthTrack.count + 1)
-        }
-        healthTrack[index] = damage
-    }
-
-    func setWillpowerBox(at index: Int, to state: WillpowerBoxFillType) {
-        if willpowerTrack.count <= index {
-            willpowerTrack += Array(repeating: .none, count: index - willpowerTrack.count + 1)
-        }
-        willpowerTrack[index] = state
-    }
-
     // MARK: - Clan and covenant
 
     /// The clan's name as shown on the sheet. Setting it links to the catalog clan with that name, if there is one.
