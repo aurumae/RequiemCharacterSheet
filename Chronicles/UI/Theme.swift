@@ -32,11 +32,20 @@ struct Theme {
     /// The skull drawn faintly behind the sheet, as on the official sheet: a template image tinted with `accent`.
     /// `nil` for none.
     var watermarkImageName: String? = nil
+    /// How section headings are drawn, following the game's official sheet.
+    var sectionHeaderStyle: SectionHeaderStyle = .row
+    /// The face for section headings. `nil` to use the display face.
+    var headingFontName: String? = nil
+    /// The face for controls such as the section pill, which must be easy to read. `nil` to use the subheading face.
+    var controlFontName: String? = nil
 
     /// Each style scales with the user's preferred text size, relative to the given system style.
     func font(_ style: ThemeTextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {
         switch style {
         case .sectionHeader:
+            if let headingFontName {
+                return .custom(headingFontName, size: 24, relativeTo: .title2)
+            }
             return displayFont(size: 24, relativeTo: .title2, dynamicTypeSize: dynamicTypeSize)
         case .subsectionHeader:
             return .custom(subheadingFontName, size: 20, relativeTo: .headline)
@@ -76,6 +85,16 @@ struct Theme {
         return Font(scaled as CTFont)
     }
 
+    /// The face for controls such as the section pill, at the given size.
+    func controlFont(size: CGFloat, relativeTo textStyle: Font.TextStyle) -> Font {
+        .custom(controlFontName ?? subheadingFontName, size: size, relativeTo: textStyle)
+    }
+
+    /// The small capitals for a heading set with `.smallCapitals`: the heading face, a little smaller.
+    var smallCapitalHeadingFont: Font {
+        .custom(headingFontName ?? displayFontName, size: 24 * 0.78, relativeTo: .title2)
+    }
+
     /// The colour a text style is drawn in, or `nil` to keep the surrounding colour.
     func color(_ style: ThemeTextStyle) -> Color? {
         switch style {
@@ -87,6 +106,14 @@ struct Theme {
             return nil
         }
     }
+}
+
+/// How a game's sheet draws its section headings.
+enum SectionHeaderStyle {
+    /// A grey row with the heading in capitals, adapted from the Vampire sheet's dark bars.
+    case row
+    /// The heading in small capitals between two brush strokes, as on the Werewolf sheet.
+    case brushLine
 }
 
 enum ThemeTextStyle {

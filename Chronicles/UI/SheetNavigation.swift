@@ -1,64 +1,36 @@
 //
 //  SheetNavigation.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
 
-/// A section of the character sheet, for the section pill in the navigation bar.
-enum SheetSection: String, CaseIterable, Identifiable {
-    case creation, character, attributes, skills, disciplines, devotions, rituals, coils, merits, aspirations,
-         banes, health, willpower, bloodPotency, vitae, humanity, advantages, experience, conditions
-
-    var id: Self { self }
-
+/// A section of the character sheet, for the section pill in the navigation bar. Each game lists its own;
+/// the ones every game has are below.
+struct SheetSection: Hashable, Identifiable {
+    let id: String
     /// The name in the pill and its list.
-    var title: String {
-        switch self {
-        case .creation: "Creation"
-        case .character: "Character"
-        case .attributes: "Attributes"
-        case .skills: "Skills"
-        case .disciplines: "Disciplines"
-        case .devotions: "Devotions"
-        case .rituals: "Rituals"
-        case .coils: "Coils"
-        case .merits: "Merits"
-        case .aspirations: "Aspirations"
-        case .banes: "Banes"
-        case .health: "Health"
-        case .willpower: "Willpower"
-        case .bloodPotency: "Blood Potency"
-        case .vitae: "Vitae"
-        case .humanity: "Humanity"
-        case .advantages: "Advantages"
-        case .experience: "Experience"
-        case .conditions: "Conditions"
-        }
+    let title: String
+    /// The section's heading on the sheet, in mixed case, e.g. "Coils of the Dragon". Each game's header style
+    /// sets it in capitals or small capitals.
+    let heading: String
+
+    init(_ id: String, title: String, heading: String? = nil) {
+        self.id = id
+        self.title = title
+        self.heading = heading ?? title
     }
 
-    /// The section's heading on the sheet.
-    var header: String {
-        switch self {
-        case .creation: "CHARACTER CREATION"
-        case .coils: "COILS OF THE DRAGON"
-        default: title.uppercased()
-        }
-    }
-}
-
-extension Character {
-    /// The sections this character's sheet shows, in order.
-    var sheetSections: [SheetSection] {
-        SheetSection.allCases.filter { section in
-            switch section {
-            case .creation: isInCreation
-            case .rituals: showsRituals
-            case .coils: showsCoils
-            default: true
-            }
-        }
-    }
+    static let character = SheetSection("character", title: "Character")
+    static let attributes = SheetSection("attributes", title: "Attributes")
+    static let skills = SheetSection("skills", title: "Skills")
+    static let merits = SheetSection("merits", title: "Merits")
+    static let aspirations = SheetSection("aspirations", title: "Aspirations")
+    static let health = SheetSection("health", title: "Health")
+    static let willpower = SheetSection("willpower", title: "Willpower")
+    static let advantages = SheetSection("advantages", title: "Advantages")
+    static let experience = SheetSection("experience", title: "Experience")
+    static let conditions = SheetSection("conditions", title: "Conditions")
 }
 
 /// Where each section heading is, so the pill can name the section being read. A plain class rather than
@@ -113,6 +85,7 @@ extension EnvironmentValues {
 
 /// A section of the sheet that the section pill can jump to and follows while scrolling.
 struct SheetSectionBlock<Content: View>: View {
+    @Environment(\.theme) private var theme
     let section: SheetSection
     @ViewBuilder let content: Content
 
@@ -130,7 +103,7 @@ struct SheetSectionBlock<Content: View>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 // Without a row's usual top and bottom insets, so it's the height the header was
                 .listRowInsets(.vertical, 0)
-                .listRowBackground(Color(uiColor: .systemGroupedBackground))
+                .listRowBackground(theme.sectionHeaderStyle == .row ? Color(uiColor: .systemGroupedBackground) : nil)
                 .listRowSeparator(.hidden, edges: .top)
                 .id(section)
             content
@@ -141,6 +114,8 @@ struct SheetSectionBlock<Content: View>: View {
 /// A section's heading, which reports where it is on screen.
 struct SheetSectionHeader: View {
     @Environment(\.reportSectionHeading) private var reportSectionHeading
+    @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let section: SheetSection
 
     init(_ section: SheetSection) {
@@ -148,10 +123,7 @@ struct SheetSectionHeader: View {
     }
 
     var body: some View {
-        Text(section.header)
-            .themedText(.sectionHeader)
-            // The colour list headers have
-            .foregroundStyle(.secondary)
+        heading
             // A row now, so it needs telling VoiceOver it's a heading, as list headers do by themselves
             .accessibilityAddTraits(.isHeader)
             .onGeometryChange(for: CGFloat.self) { geometry in
@@ -162,6 +134,44 @@ struct SheetSectionHeader: View {
             .onDisappear {
                 reportSectionHeading(section, top: nil)
             }
+    }
+}
+
+extension SheetSectionHeader {
+    @ViewBuilder
+    private var heading: some View {
+        switch theme.sectionHeaderStyle {
+        case .row:
+            Text(section.heading.uppercased())
+                .themedText(.sectionHeader)
+                // The colour list headers have
+                .foregroundStyle(.secondary)
+        case .brushLine:
+            HStack(spacing: 8) {
+                BrushLine(seed: section.id + "-leading", solidEnd: .trailing)
+                    .frame(minWidth: 16)
+                smallCapitals(section.heading)
+                    .foregroundStyle(theme.accent)
+                    .multilineTextAlignment(.center)
+                    .layoutPriority(1)
+                BrushLine(seed: section.id + "-trailing", solidEnd: .leading)
+                    .frame(minWidth: 16)
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(section.heading)
+        }
+    }
+
+    /// Capitals stay full size and lower-case letters become small capitals, as the Werewolf sheet sets its
+    /// headings. Drawn with two sizes of the face, as the heading faces have no small capitals of their own.
+    private func smallCapitals(_ text: String) -> Text {
+        var result = AttributedString()
+        for character in text {
+            var run = AttributedString(String(character).uppercased())
+            run.font = character.isLowercase ? theme.smallCapitalHeadingFont : theme.font(.sectionHeader, dynamicTypeSize: dynamicTypeSize)
+            result += run
+        }
+        return Text(result)
     }
 }
 
@@ -177,7 +187,7 @@ struct SectionPill: View {
         } label: {
             HStack(spacing: 6) {
                 Text(current?.title ?? "Sections")
-                    .font(.custom(theme.subheadingFontName, size: 15, relativeTo: .subheadline))
+                    .font(theme.controlFont(size: 15, relativeTo: .subheadline))
                     .lineLimit(1)
                 Image(systemName: isOpen ? "chevron.up" : "chevron.down")
                     .font(.caption.weight(.semibold))
@@ -238,7 +248,7 @@ struct SectionMenu: View {
                 } label: {
                     HStack {
                         Text(section.title)
-                            .font(.custom(theme.subheadingFontName, size: 15, relativeTo: .subheadline))
+                            .font(theme.controlFont(size: 15, relativeTo: .subheadline))
                             .foregroundStyle(isCurrent ? Color.white : theme.accent)
                         Spacer()
                         if isCurrent {

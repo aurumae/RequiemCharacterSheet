@@ -96,6 +96,8 @@
 		BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */; };
 		BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36EA2C9E0087008D03F7 /* BanesView.swift */; };
 		BC8BC89630A9A06D0060E9BF /* CharacterFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */; };
+		BC8BC89830A9A19B0060E9BF /* RequiemSheetSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */; };
+		BC8BC89A30A9A19C0060E9BF /* BrushLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89930A9A19C0060E9BF /* BrushLine.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
 		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
@@ -234,6 +236,8 @@
 		BC6D36EA2C9E0087008D03F7 /* BanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanesView.swift; sourceTree = "<group>"; };
 		BC6D36EC2C9E457F008D03F7 /* RequiemCharacterSheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RequiemCharacterSheet.entitlements; sourceTree = "<group>"; };
 		BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFileStore.swift; sourceTree = "<group>"; };
+		BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemSheetSections.swift; sourceTree = "<group>"; };
+		BC8BC89930A9A19C0060E9BF /* BrushLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushLine.swift; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -353,9 +357,9 @@
 				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 				BC2B447D309B564700720F0C /* CreationPanelView.swift */,
 				BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */,
-				BC460D8E30A189860062F53F /* SheetNavigation.swift */,
 				BC460D9630A195820062F53F /* ConditionsView.swift */,
 				BC460D9830A195FB0062F53F /* ConditionIndicator.swift */,
+				BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */,
 			);
 			path = CharacterSheet;
 			sourceTree = "<group>";
@@ -434,6 +438,8 @@
 				BCAD990130A674C1007FDB6D /* AppIdentity.swift */,
 				BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */,
 				BC2B4429309662A300720F0C /* CharacterListView.swift */,
+				BC460D8E30A189860062F53F /* SheetNavigation.swift */,
+				BC8BC89930A9A19C0060E9BF /* BrushLine.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -767,6 +773,7 @@
 				BC6D36C42C9D0ECB008D03F7 /* VitaeView.swift in Sources */,
 				BCAD98F730A6722B007FDB6D /* TraitLog.swift in Sources */,
 				BC2B4458309A4DC400720F0C /* MeritRules.swift in Sources */,
+				BC8BC89830A9A19B0060E9BF /* RequiemSheetSections.swift in Sources */,
 				BC6D36DB2C9DE940008D03F7 /* DerivedAttributesView.swift in Sources */,
 				BC6D36B62C9CF4F6008D03F7 /* SkillRowView.swift in Sources */,
 				BC2B4442309A30EC00720F0C /* CatalogEntries.swift in Sources */,
@@ -782,6 +789,7 @@
 				BC2B446A309AA14400720F0C /* CatalogPickerView.swift in Sources */,
 				BC2B447A309AC90400720F0C /* CreationRules.swift in Sources */,
 				BC2B445C309A4DE600720F0C /* MeritDetailView.swift in Sources */,
+				BC8BC89A30A9A19C0060E9BF /* BrushLine.swift in Sources */,
 				BC6D36A82C9A600C008D03F7 /* BoxFillType.swift in Sources */,
 				BC2B442E3099806A00720F0C /* TraitDefinitions.swift in Sources */,
 				BC6D36A22C9A3261008D03F7 /* HealthBoxesView.swift in Sources */,
