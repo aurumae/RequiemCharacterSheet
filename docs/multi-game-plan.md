@@ -103,8 +103,30 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
     the Character section so far: Name, Player, Chronicle, Blood, Bone, Concept, Auspice, Tribe and Lodge.
 - **Also shared now:** the splash (`SplashContainer`), About (each app lists its own fonts) and the row components.
 
-Next: make the shared sheet sections (Attributes, Skills, Merits, Aspirations, Health, Willpower, Conditions,
-Experience) work for any game and add them to Forsaken, then move Requiem's sheet onto `CharacterSheetFrame`.
+- **Every shared section is shared (step 4).** Attributes, Skills with Specialties, Merits with the picker and
+  details, Aspirations, Health, Willpower, Conditions and Experience are generic views in `Chronicles/UI`. Forsaken's
+  sheet has all of them, and Requiem's sheet uses `CharacterSheetFrame` too.
+  - **Rules in the core.** The game-neutral rules moved into `Chronicles/Core`, so `swift test` still covers them:
+    - Merit prerequisites for Attributes, Skills, Merits and Willpower, the "one of" logic, and rating and effect
+      wording (`Prerequisites.swift`);
+    - Conditions (`ConditionRules.swift`, for any `ConditionsCharacter`);
+    - Experience totals, change logging, XP charges and refunds (`ExperienceCore.swift`, for any
+      `ExperienceCharacter`). Each game supplies its trait snapshot, its costs, its refund rule and the order of its
+      kinds of trait.
+  - **Hooks in `SheetCharacter`.** The views ask the character for game rules through `SheetCharacter`
+    (`Chronicles/UI`): rating caps, guided-creation limits, Merit category order and titles, Merits a kind of character
+    can't take, Condition marks and creation priority menus. Each hook defaults to a game without the rule; Requiem
+    supplies its own in `RequiemSheetCharacter.swift`.
+  - **Catalog convention.** The shared views refer to `Catalog.bundled` (its `books`, `merits` and `conditions`),
+    `merit.entry`/`merit.name`, the `CharacterCondition` conveniences (`entry`, `name`, `effectText` and so on) and
+    `SourceReference.citation()`. Each app defines these for its own catalog: Requiem in `Models/`, Forsaken in
+    `ForsakenCatalog.swift`. Forsaken bundles `cofd-core.json` for now.
+- **Forsaken tests.** The `ForsakenCharacterSheetTests` target is hosted in the Forsaken app, and the Forsaken scheme
+  runs it. It covers the save format, refusing Requiem and newer files, the catalog, Health, XP charges and refunds,
+  and Condition Beats.
+
+Next: Phase 3, the Werewolf core catalog and the Werewolf sections (Auspice, Tribe, Lodge, Renown, Gifts, Rites,
+forms, Primal Urge, Essence, Harmony, Touchstones, Kuruth).
 
 ## Later phases
 

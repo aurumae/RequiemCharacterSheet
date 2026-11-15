@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F0774AA5FE32E34680DBAF2F /* ExperienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4477309ABD4300720F0C /* ExperienceView.swift */; };
 		A1F143D41BC34BF6B184F400 /* SaveContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F401 /* SaveContractTests.swift */; };
 		A1F143D41BC34BF6B184F402 /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = A1F143D41BC34BF6B184F403 /* fixtures */; };
 		BC2B442430965FB100720F0C /* CharacterDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B442330965FB100720F0C /* CharacterDecodingTests.swift */; };
@@ -160,6 +159,7 @@
 		F0616393E99EADFA08E401BD /* Aspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E02C9E002A008D03F7 /* Aspiration.swift */; };
 		F0618EC607E9B2E5D08E3CEA /* SkillRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B52C9CF4F6008D03F7 /* SkillRowView.swift */; };
 		F0652802A817D28282BC1673 /* MeritsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36D82C9DE68F008D03F7 /* MeritsView.swift */; };
+		F0774AA5FE32E34680DBAF2F /* ExperienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4477309ABD4300720F0C /* ExperienceView.swift */; };
 		F07830F12BD75E4E2E649D77 /* HealthBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D369F2C9A3182008D03F7 /* HealthBoxView.swift */; };
 		F07F2A5813BF0C529812C2CC /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36B32C9CF418008D03F7 /* Skill.swift */; };
 		F0808645DF8FB16858C0A0D2 /* MeritDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B445B309A4DE600720F0C /* MeritDetailView.swift */; };
@@ -204,6 +204,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = BCB158C92C986811003B6A8F;
 			remoteInfo = RequiemCharacterSheet;
+		};
+		F275500789D5199DE7FF3A19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCB158C22C986811003B6A8F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC8BC89E30A9A2580060E9BF;
+			remoteInfo = ForsakenCharacterSheet;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -308,6 +315,7 @@
 		BC8BC97330AA17AD0060E9BF /* Prerequisites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prerequisites.swift; sourceTree = "<group>"; };
 		BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionRules.swift; sourceTree = "<group>"; };
 		BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceCore.swift; sourceTree = "<group>"; };
+		BC8BC9FE30AA1E880060E9BF /* ForsakenCharacterSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForsakenCharacterSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -355,10 +363,18 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		BC2B4435309A09BA00720F0C /* Persistence */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Persistence; sourceTree = "<group>"; };
 		BC8BC8A030A9A2580060E9BF /* ForsakenCharacterSheet */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (F0DFCA74A7FFC63E60854ABA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ForsakenCharacterSheet; sourceTree = "<group>"; };
+		BC8BC9FF30AA1E880060E9BF /* ForsakenCharacterSheetTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ForsakenCharacterSheetTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		BC8BC89C30A9A2580060E9BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC8BC9FB30AA1E880060E9BF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -546,6 +562,7 @@
 				BCB158DD2C986812003B6A8F /* RequiemCharacterSheetTests */,
 				BCB158E72C986812003B6A8F /* RequiemCharacterSheetUITests */,
 				BC8BC8A030A9A2580060E9BF /* ForsakenCharacterSheet */,
+				BC8BC9FF30AA1E880060E9BF /* ForsakenCharacterSheetTests */,
 				BCB158CB2C986811003B6A8F /* Products */,
 				BCAD98F430A6710E007FDB6D /* Chronicles */,
 			);
@@ -558,6 +575,7 @@
 				BCB158DA2C986812003B6A8F /* RequiemCharacterSheetTests.xctest */,
 				BCB158E42C986812003B6A8F /* RequiemCharacterSheetUITests.xctest */,
 				BC8BC89F30A9A2580060E9BF /* ForsakenCharacterSheet.app */,
+				BC8BC9FE30AA1E880060E9BF /* ForsakenCharacterSheetTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -690,6 +708,29 @@
 			productReference = BC8BC89F30A9A2580060E9BF /* ForsakenCharacterSheet.app */;
 			productType = "com.apple.product-type.application";
 		};
+		BC8BC9FD30AA1E880060E9BF /* ForsakenCharacterSheetTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC8BCA0430AA1E880060E9BF /* Build configuration list for PBXNativeTarget "ForsakenCharacterSheetTests" */;
+			buildPhases = (
+				BC8BC9FA30AA1E880060E9BF /* Sources */,
+				BC8BC9FB30AA1E880060E9BF /* Frameworks */,
+				BC8BC9FC30AA1E880060E9BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F23EB28F1AF0EFE0C2B85E23 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BC8BC9FF30AA1E880060E9BF /* ForsakenCharacterSheetTests */,
+			);
+			name = ForsakenCharacterSheetTests;
+			packageProductDependencies = (
+			);
+			productName = ForsakenCharacterSheetTests;
+			productReference = BC8BC9FE30AA1E880060E9BF /* ForsakenCharacterSheetTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		BCB158C92C986811003B6A8F /* RequiemCharacterSheet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BCB158EE2C986812003B6A8F /* Build configuration list for PBXNativeTarget "RequiemCharacterSheet" */;
@@ -759,6 +800,9 @@
 					BC8BC89E30A9A2580060E9BF = {
 						CreatedOnToolsVersion = 27.2;
 					};
+					BC8BC9FD30AA1E880060E9BF = {
+						CreatedOnToolsVersion = 27.2;
+					};
 					BCB158C92C986811003B6A8F = {
 						CreatedOnToolsVersion = 15.4;
 					};
@@ -789,6 +833,7 @@
 				BCB158D92C986812003B6A8F /* RequiemCharacterSheetTests */,
 				BCB158E32C986812003B6A8F /* RequiemCharacterSheetUITests */,
 				BC8BC89E30A9A2580060E9BF /* ForsakenCharacterSheet */,
+				BC8BC9FD30AA1E880060E9BF /* ForsakenCharacterSheetTests */,
 			);
 		};
 /* End PBXProject section */
@@ -799,6 +844,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				F14A54345D7400E4533299E4 /* cofd-core.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC8BC9FC30AA1E880060E9BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -899,6 +951,13 @@
 				F0B4C3084EA2FE861077A161 /* CharacterListView.swift in Sources */,
 				F0E334FA4B8E1A6C6E886E26 /* SheetNavigation.swift in Sources */,
 				F0D64E4577E601C301309169 /* BrushLine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC8BC9FA30AA1E880060E9BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1047,6 +1106,11 @@
 			target = BCB158C92C986811003B6A8F /* RequiemCharacterSheet */;
 			targetProxy = BCB158E52C986812003B6A8F /* PBXContainerItemProxy */;
 		};
+		F23EB28F1AF0EFE0C2B85E23 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC8BC89E30A9A2580060E9BF /* ForsakenCharacterSheet */;
+			targetProxy = F275500789D5199DE7FF3A19 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -1121,6 +1185,46 @@
 				SWIFT_PACKAGE_NAME = ChroniclesSheets;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		BC8BCA0230AA1E880060E9BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.ForsakenCharacterSheetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_PACKAGE_NAME = ChroniclesSheets;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForsakenCharacterSheet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ForsakenCharacterSheet";
+			};
+			name = Debug;
+		};
+		BC8BCA0330AA1E880060E9BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omccolgan.ForsakenCharacterSheetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_PACKAGE_NAME = ChroniclesSheets;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForsakenCharacterSheet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ForsakenCharacterSheet";
 			};
 			name = Release;
 		};
@@ -1401,6 +1505,15 @@
 			buildConfigurations = (
 				BC8BC8A830A9A25A0060E9BF /* Debug */,
 				BC8BC8A930A9A25A0060E9BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC8BCA0430AA1E880060E9BF /* Build configuration list for PBXNativeTarget "ForsakenCharacterSheetTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC8BCA0230AA1E880060E9BF /* Debug */,
+				BC8BCA0330AA1E880060E9BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

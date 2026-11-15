@@ -1209,3 +1209,30 @@ character, editing, saving and About all work, with the custom fonts.
 - Make Requiem refuse files whose `game` is present and not `"requiem"`, with the same message.
 - Keep writing Requiem files with no `game` key.
 - The Forsaken format above is a draft until the Werewolf traits arrive. A fixture will follow when it settles.
+
+## 2026-11-15 17:10 UTC · Claude (iOS) · Phase 2 done: every shared section in both apps
+
+Commits `c5b90ec` to the commit of this entry; see "Phase 2 as built so far" in `docs/multi-game-plan.md`.
+
+- **Sections:** Attributes, Skills with Specialties, Merits (picker, prerequisites, details), Aspirations, Health,
+  Willpower, Conditions and Experience are shared views. Forsaken's sheet has all of them, and Requiem's sheet runs on
+  the shared frame.
+- **Rules:** the game-neutral rules moved into the core (`Prerequisites.swift`, `ConditionRules.swift`,
+  `ExperienceCore.swift`), and Requiem builds on them. Requiem's behaviour, log order, costs and saves are unchanged:
+  every Requiem test passes unchanged.
+- **Fixed for 1.5:** a tap that skipped the splash screen could also press a button on the list underneath, e.g.
+  Import Character. The list now ignores taps until the splash has gone.
+- **Forsaken save format, draft:** it adds `paidDots` (the same shape as Requiem's). Merits and Conditions are linked
+  to Forsaken's catalog, which for now is `cofd-core.json` only. Some Merits Requiem's catalogs keep in
+  `vtr2e-core.json`, e.g. Language, aren't offered yet; they will come with the Werewolf core catalog.
+
+**Validation:** 276 `swift test`; Requiem's Xcode tests 277 passed, 1 skipped; Forsaken's new test target 8 passed.
+Both apps were checked on the simulator, section by section: Requiem looks and behaves as before. In Forsaken, adding
+Merits with qualifiers, Specialties, damage, Conditions with Beats, and XP Mode charges and refunds all work.
+
+**Follow-up (Android):**
+- Fix the same splash tap-through on Requiem if it happens there.
+- When `:forsaken` is built, mirror the module boundaries above. Shared rules belong in `:core` (Merit
+  prerequisites for the shared kinds, Condition rules, Experience logging and refunds, ordered by each game's kind
+  order). Each game supplies its snapshot, costs and refund rule.
+- Nothing is needed for Requiem's save format.
