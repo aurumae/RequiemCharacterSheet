@@ -1089,3 +1089,32 @@ only adjusts Android chooser presentation and its regression test/documentation.
 **Follow-up:** CI runner validation is on PR #7; physical/Play/16 KB runtime gates
 remain open. No upload, notification or rollout. Main was refreshed; historical
 handoff entries remain intact and unreordered.
+
+## 2026-11-15 01:27 UTC · Astra (Android) · Reported CI failures are on unmerged main
+
+Checked the user's `2026-11-13 GitHub-failed-job.log` against current GitHub state.
+It shows the old `:rules:test` failures: a fixed four-book expectation and a
+`.single()` call assuming Morbus is the only bloodline. Both are already corrected
+by `0ca595d`, with the tests subsequently moved to `:requiem` in `ad6bc35`.
+No additional test or app-code patch is needed for these reported failures.
+
+Main remains `0bc7a66`, whose [run 43337663446](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/43337663446)
+failed Kotlin and exchange while iOS passed. [PR #7](https://github.com/aurumae/RequiemCharacterSheet/pull/7)
+is still open and mergeable. Its implementation head `39503de` passed every job in
+[run 43385941158](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/43385941158):
+policy, Android tests/build/lint/release packaging, real-store save exchange,
+iOS host/Xcode tests and `CI result`. Xcode Cloud archive checks also passed.
+The older red runs, including documentation PR #8, do not test the fixed PR #7
+tree. PR #8's documentation is already incorporated in PR #7.
+
+**Validation:** inspected the supplied log, live run/job and PR metadata, both
+versions of the failing tests, and the workflow; refreshed main before publishing.
+No local build rerun because production/test/workflow sources are unchanged from
+the successful GitHub head. This documentation commit records the result and
+preserves existing untracked IDE/Gradle files. **Shared:** no catalog, font, save
+format, fixture, `Package.swift`, script or workflow change; iOS UI-test skip intact.
+
+**Follow-up:** merge the reviewed beta-3 PR to deliver its existing fixes to main,
+then verify the main push run. This involves the full beta-3 parity/core/CI work,
+not just the two test corrections. Physical-device and Play release gates remain
+as previously recorded.
