@@ -62,7 +62,58 @@ struct ForsakenRulesTests {
     @Test func catalogHasTheChroniclesCoreMeritsAndConditions() {
         #expect(Catalog.bundled.merits.entry("fast-reflexes") != nil)
         #expect(!Catalog.bundled.conditions.all.isEmpty)
-        #expect(Catalog.bundled.books.first?.id == "cofd-core")
+        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core"])
+    }
+
+    @Test func werewolfCoreBookIsLoaded() {
+        let catalog = Catalog.bundled
+        #expect(catalog.auspices.all.count == 5)
+        #expect(catalog.tribes.all.count == 9)
+        #expect(catalog.tribes.all.filter { $0.kind == .pure }.count == 3)
+        #expect(catalog.lodges.all.count == 8)
+        #expect(catalog.archetypes.all.filter { $0.kind == .blood }.count == 6)
+        #expect(catalog.archetypes.all.filter { $0.kind == .bone }.count == 6)
+        #expect(catalog.gifts.all.count == 23)
+        #expect(catalog.gifts.all.flatMap(\.facets).count == 115)
+        #expect(catalog.rites.all.count == 23)
+        #expect(catalog.fetishes.all.count == 18)
+        // The human Merits the Werewolf book reprints, e.g. Language, are offered
+        #expect(catalog.merits.entry("language")?.source.book == "wtf2e-core")
+        #expect(catalog.merits.all.filter { $0.category == .werewolf }.count == 24)
+    }
+
+    @Test func catalogReferencesResolve() {
+        let catalog = Catalog.bundled
+        for auspice in catalog.auspices.all {
+            #expect(catalog.gifts.entry(auspice.moonGift)?.kind == .moon)
+            #expect(auspice.giftAffinities.allSatisfy { catalog.gifts.entry($0)?.kind == .shadow })
+            #expect(catalog.conditions.entry(auspice.huntersAspect.condition) != nil)
+        }
+        for tribe in catalog.tribes.all {
+            #expect(tribe.giftAffinities.allSatisfy { catalog.gifts.entry($0)?.kind == .shadow })
+            #expect((tribe.renown == nil) == (tribe.kind != .forsaken))
+        }
+        for gift in catalog.gifts.all {
+            // Moon Gifts go by dots; Shadow and Wolf Gifts have one Facet per Renown
+            if gift.kind == .moon {
+                #expect(gift.facets.compactMap(\.dots) == [1, 2, 3, 4, 5])
+            } else {
+                #expect(Set(gift.facets.compactMap(\.renown)) == Set(Renown.allCases))
+            }
+        }
+        let knownKinds: Set<Prerequisite.Kind> = [.attribute, .skill, .merit, .willpower, .other, .renown, .primalUrge,
+                                                  .harmony, .tribe, .notTribe, .auspice]
+        for merit in catalog.merits.all {
+            for prerequisite in merit.prerequisites + merit.prerequisitesAnyOf.flatMap({ $0 }) {
+                #expect(knownKinds.contains(prerequisite.kind), "\(merit.id): \(prerequisite.kind.rawValue)")
+                if prerequisite.kind == .merit {
+                    #expect(catalog.merits.entry(prerequisite.id ?? "") != nil)
+                }
+                if prerequisite.kind == .tribe || prerequisite.kind == .notTribe {
+                    #expect(catalog.tribes.entry(prerequisite.id ?? "") != nil)
+                }
+            }
+        }
     }
 
     @Test func healthIsStaminaPlusSize() {
