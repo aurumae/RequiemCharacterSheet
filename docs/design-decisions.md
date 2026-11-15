@@ -88,3 +88,15 @@ is unknown.
 Both apps show their game's skull faintly behind the character sheet, in the signature colour at about 7% strength.
 It stays fixed while the sheet scrolls, centred in the list area below the logo. It appears only on the sheet, not on
 the character list. Requiem uses its app-icon skull and Forsaken uses the wolf skull.
+
+## Forsaken: what the app covers (2026-11-15)
+
+- **Character kinds.** Forsaken werewolves (five tribes, five auspices), Ghost Wolves (no tribe; 2 Renown at
+  creation; no 2-dot Moon Gift at the start, p. 50) and the Pure (Fire-Touched, Ivory Claws, Predator Kings: no auspice
+  or Moon Gifts, an extra Shadow Gift, a bonus Totem dot, pp. 197–198). Wolf-Blooded characters aren't covered.
+- **Essence.** A new character starts with 7 Essence (p. 84); the Primal Urge table (p. 93) sets the maximum.
+- **Lodges** work like Requiem's Bloodlines: chosen from a list grouped by book, or typed as a custom lodge. The core
+  book's lodges are story only (pp. 51–53); later books' lodges, with their rules, join the list when we add them.
+- **Fetishes and talens** have their own section: the core book's samples (pp. 147–149) or the player's own, with
+  rating and Essence notes.
+- **Wolf Gift Facets cost 1 Experience** (decided 2026-11-12; see above).

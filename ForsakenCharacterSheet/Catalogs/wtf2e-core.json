@@ -1,0 +1,4867 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "wtf2e-core",
+    "name": "Werewolf: The Forsaken Second Edition"
+  },
+  "auspices": [
+    {
+      "id": "cahalith",
+      "name": "Cahalith",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 16
+      },
+      "summary": "Gibbous-moon visionaries and storytellers who keep the pack's legends and drive its hunts with prophecy and song. Their benefit is prophetic dreams the Storyteller can send.",
+      "moon": "gibbous",
+      "renown": "glory",
+      "skills": [
+        "crafts",
+        "expression",
+        "persuasion"
+      ],
+      "huntersAspect": {
+        "name": "Monstrous",
+        "condition": "resigned"
+      },
+      "moonGift": "gibbous-moon",
+      "giftAffinities": [
+        "inspiration",
+        "knowledge"
+      ]
+    },
+    {
+      "id": "elodoth",
+      "name": "Elodoth",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 20
+      },
+      "summary": "Half-moon judges and mediators who weigh both sides, know the Oath's exceptions and keep the pack's bargains. Once per chapter they can pull a werewolf out of Death Rage.",
+      "moon": "half",
+      "renown": "honor",
+      "skills": [
+        "empathy",
+        "investigation",
+        "politics"
+      ],
+      "huntersAspect": {
+        "name": "Isolating",
+        "condition": "isolated"
+      },
+      "moonGift": "half-moon",
+      "giftAffinities": [
+        "insight",
+        "warding"
+      ]
+    },
+    {
+      "id": "irraka",
+      "name": "Irraka",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 24
+      },
+      "summary": "New-moon stalkers and scouts who strike from hiding and solve problems by any means. Once per chapter they can suddenly be much closer to a target than it thought.",
+      "moon": "new",
+      "renown": "cunning",
+      "skills": [
+        "larceny",
+        "stealth",
+        "subterfuge"
+      ],
+      "huntersAspect": {
+        "name": "Blissful",
+        "condition": "unaware"
+      },
+      "moonGift": "new-moon",
+      "giftAffinities": [
+        "evasion",
+        "stealth"
+      ]
+    },
+    {
+      "id": "ithaeur",
+      "name": "Ithaeur",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 27
+      },
+      "summary": "Crescent-moon shamans who deal with spirits, craft fetishes and lead the pack's rites. Once per chapter their howl through the Shadow drives off weaker spirits.",
+      "moon": "crescent",
+      "renown": "wisdom",
+      "skills": [
+        "animal-ken",
+        "medicine",
+        "occult"
+      ],
+      "huntersAspect": {
+        "name": "Mystical",
+        "condition": "mystified"
+      },
+      "moonGift": "crescent-moon",
+      "giftAffinities": [
+        "elemental",
+        "shaping"
+      ]
+    },
+    {
+      "id": "rahu",
+      "name": "Rahu",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 30
+      },
+      "summary": "Full-moon warriors who plan the kill and lead the fight, living by the Oath. Once per chapter they can shrug off hindering Conditions and Tilts for two turns of combat.",
+      "moon": "full",
+      "renown": "purity",
+      "skills": [
+        "brawl",
+        "intimidation",
+        "survival"
+      ],
+      "huntersAspect": {
+        "name": "Dominant",
+        "condition": "swaggering"
+      },
+      "moonGift": "full-moon",
+      "giftAffinities": [
+        "dominance",
+        "strength"
+      ]
+    }
+  ],
+  "tribes": [
+    {
+      "id": "blood-talons",
+      "name": "Blood Talons",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 34
+      },
+      "kind": "forsaken",
+      "summary": "Children of Fenris-Ur, the Destroyer, who hunt other werewolves and treat every conflict as a battle to be won.",
+      "renown": "glory",
+      "giftAffinities": [
+        "inspiration",
+        "rage",
+        "strength"
+      ],
+      "oath": {
+        "name": "Offer no surrender you would not accept",
+        "summary": "Never ask a foe to yield on terms you would refuse yourself; compromise is close to surrender."
+      },
+      "firstTongueName": "Suthar Anzuth"
+    },
+    {
+      "id": "bone-shadows",
+      "name": "Bone Shadows",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 37
+      },
+      "kind": "forsaken",
+      "summary": "Children of Death Wolf, Kamduis-Ur: shamans and seekers who hunt troublesome spirits and the secrets of the Shadow.",
+      "renown": "wisdom",
+      "giftAffinities": [
+        "death",
+        "elemental",
+        "insight"
+      ],
+      "oath": {
+        "name": "Pay each spirit in kind",
+        "summary": "Every dealing with a spirit must be fairly repaid, favour for favour and harm for harm."
+      },
+      "firstTongueName": "Hirfathra Hissu"
+    },
+    {
+      "id": "hunters-in-darkness",
+      "name": "Hunters in Darkness",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 40
+      },
+      "kind": "forsaken",
+      "summary": "Children of Black Wolf, Hikaon-Ur, who guard their territory's sacred places and hunt the shartha, or Hosts.",
+      "renown": "purity",
+      "giftAffinities": [
+        "nature",
+        "stealth",
+        "warding"
+      ],
+      "oath": {
+        "name": "Let no sacred place in your territory be violated",
+        "summary": "Defend the holy and spiritually important sites in your territory, and kill those who defile them."
+      },
+      "firstTongueName": "Meninna"
+    },
+    {
+      "id": "iron-masters",
+      "name": "Iron Masters",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 43
+      },
+      "kind": "forsaken",
+      "summary": "Children of Red Wolf, Sagrim-Ur, who adapt to the modern world, live among people and hunt the Created and spirits born of human change.",
+      "renown": "cunning",
+      "giftAffinities": [
+        "knowledge",
+        "shaping",
+        "technology"
+      ],
+      "oath": {
+        "name": "Honor your territory in all things",
+        "summary": "Respect and look after your territory and the people and spirits in it, not just its borders."
+      },
+      "firstTongueName": "Farsil Luhal"
+    },
+    {
+      "id": "storm-lords",
+      "name": "Storm Lords",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 46
+      },
+      "kind": "forsaken",
+      "summary": "Children of Winter Wolf, Skolis-Ur, who prize self-reliance and strength and hunt the Claimed, people taken over by spirits.",
+      "renown": "honor",
+      "giftAffinities": [
+        "evasion",
+        "dominance",
+        "weather"
+      ],
+      "oath": {
+        "name": "Allow no one to witness or tend your weakness",
+        "summary": "Never let others see you weak or care for you when you are; hide your failings and overcome them alone."
+      },
+      "firstTongueName": "Iminir"
+    },
+    {
+      "id": "ghost-wolves",
+      "name": "Ghost Wolves",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 49
+      },
+      "kind": "ghost-wolf",
+      "summary": "Werewolves with no tribe or Firstborn patron, each hunting a prey of her own choosing. At creation they get only two Renown dots in all, one Shadow Gift, and no two-dot Moon Gift (p.50).",
+      "giftAffinities": [],
+      "oath": {
+        "name": "No tribal oath",
+        "summary": "Ghost Wolves have sworn no tribal vow and have no tribal Renown or Gift affinities, though they may still follow the Oath of the Moon."
+      }
+    },
+    {
+      "id": "fire-touched",
+      "name": "Fire-Touched",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 197
+      },
+      "kind": "pure",
+      "summary": "Zealous Pure who follow Rabid Wolf and preach the Shadow's faith, hunting those who dishonour it. The Pure have no auspice or Moon Gifts, gain an extra Shadow Gift instead, and get a bonus dot of Totem.",
+      "giftAffinities": [],
+      "oath": {
+        "name": "Never knowingly lie",
+        "summary": "A Fire-Touched may not say what they know to be false, though they can still be fooled by false information."
+      },
+      "firstTongueName": "Izidakh"
+    },
+    {
+      "id": "ivory-claws",
+      "name": "Ivory Claws",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 197
+      },
+      "kind": "pure",
+      "summary": "Pure devoted to Silver Wolf who obsess over pure bloodlines and hunt those who dishonour their lineage. The Pure have no auspice or Moon Gifts, gain an extra Shadow Gift instead, and get a bonus dot of Totem.",
+      "giftAffinities": [],
+      "oath": {
+        "name": "No brotherhood with the impure",
+        "summary": "An Ivory Claw may not call an 'impure' werewolf their brother."
+      },
+      "firstTongueName": "Tzuumfin"
+    },
+    {
+      "id": "predator-kings",
+      "name": "Predator Kings",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 198
+      },
+      "kind": "pure",
+      "summary": "Savage Pure who worship Dire Wolf, care only for the hunt and see human civilisation as an affront. The Pure have no auspice or Moon Gifts, gain an extra Shadow Gift instead, and get a bonus dot of Totem.",
+      "giftAffinities": [],
+      "oath": {
+        "name": "Shun the works of humans",
+        "summary": "A Predator King may not use the fruits of human labour, which leaves them at a disadvantage in human places."
+      },
+      "firstTongueName": "Ninna Farakh"
+    }
+  ],
+  "lodges": [
+    {
+      "id": "einherjar",
+      "name": "Lodge of the Einherjar",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 51
+      },
+      "summary": "A Blood Talon-founded lodge in Colorado that uncovers and spreads the stories of packs wiped out with no witnesses, glorious or shameful."
+    },
+    {
+      "id": "hundred-days",
+      "name": "Lodge of the Hundred Days",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 51
+      },
+      "summary": "Werewolves working to heal the Shadow after the Rwandan Genocide, destroying spirits of atrocity, laying ghosts to rest and reuniting families."
+    },
+    {
+      "id": "hook-hand",
+      "name": "Lodge of the Hook Hand",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 51
+      },
+      "summary": "Hunters in Darkness in the American South who seed local horror legends with false details that steer prey into their traps."
+    },
+    {
+      "id": "shield",
+      "name": "Lodge of the Shield",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 51
+      },
+      "summary": "A support network, mostly Iron Masters and many Wolf-Blooded, for werewolves in law enforcement who cover for each other's hunts."
+    },
+    {
+      "id": "roman-ritual",
+      "name": "Lodge of the Roman Ritual",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 52
+      },
+      "summary": "Storm Lord Catholic priests who hunt the Claimed by performing exorcisms, with Wolf-Blooded lay brethren running hospices for the possessed."
+    },
+    {
+      "id": "eaters-of-the-dead",
+      "name": "The Eaters of the Dead",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 52
+      },
+      "summary": "Ghost Wolves seeking a forgotten Firstborn, Ravening Wolf, to become a sixth tribe; they hunt vampires and other hungry dead and swear to make use of every kill."
+    },
+    {
+      "id": "chronicle",
+      "name": "Lodge of the Chronicle",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 53
+      },
+      "summary": "An ancient Cahalith lodge, under the spirit Crying Owl, that preserves the history and lore of the Uratha, though its members get lost in good stories.",
+      "auspices": [
+        "cahalith"
+      ]
+    },
+    {
+      "id": "gargoyles",
+      "name": "Lodge of Gargoyles",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 53
+      },
+      "summary": "A small New England lodge of Irraka snipers and free-runners, patroned by Black Rat, who strike their prey from high places.",
+      "auspices": [
+        "irraka"
+      ]
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "alpha",
+      "name": "Alpha",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "blood",
+      "summary": "Needs control and a strict pecking order, and rages at disorder. Regains one Willpower for putting order before reason, and all of it for forcing subordinates into line with the wolf's power."
+    },
+    {
+      "id": "challenger",
+      "name": "Challenger",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "blood",
+      "summary": "Refuses to come second and pushes harder when things look bad. Regains one Willpower for risking safety and sense to look superior, and all of it for using Kuruth or the hunt to dominate a rival."
+    },
+    {
+      "id": "destroyer",
+      "name": "Destroyer",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "blood",
+      "summary": "A force of devastation who does everything with overwhelming force. Regains one Willpower for causing serious lasting damage to succeed, and all of it for giving in to Kuruth without trying anything else."
+    },
+    {
+      "id": "fox",
+      "name": "Fox",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "blood",
+      "summary": "A clever survivor who would rather flee or wait than fight. Regains one Willpower for dropping everything and fleeing, and all of it for falling into Kuruth while escaping violence."
+    },
+    {
+      "id": "monster",
+      "name": "Monster",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "blood",
+      "summary": "Breaks victims with fear and shock rather than force. Regains one Willpower for frightening or disgusting someone into submission, and all of it for using the hunt or Kuruth to terrify."
+    },
+    {
+      "id": "soldier",
+      "name": "Soldier",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "blood",
+      "summary": "A loyal weapon who follows the alpha's orders above his own safety. Regains one Willpower for risking himself on a leader's command, and all of it for hunting or entering Kuruth on orders against his better judgment."
+    },
+    {
+      "id": "community-organizer",
+      "name": "Community Organizer",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "bone",
+      "summary": "Gets things done through groups, networks and bureaucracy. Regains one Willpower for getting a group to fix its own problems first, and all of it for talking the pack into a social or political answer instead of a hunt."
+    },
+    {
+      "id": "cub",
+      "name": "Cub",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "bone",
+      "summary": "Not quite grown up, and leans on others' guidance. Regains one Willpower for following someone else's advice over her own impulse, and all of it for putting herself entirely in another's hands instead of using the wolf."
+    },
+    {
+      "id": "guru",
+      "name": "Guru",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "bone",
+      "summary": "Shares practical wisdom and guides others. Regains one Willpower when someone succeeds by her advice, and all of it when her advice gives the pack an alternative to the hunt."
+    },
+    {
+      "id": "hedonist",
+      "name": "Hedonist",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 86
+      },
+      "kind": "bone",
+      "summary": "Lives for indulgence and enjoying a werewolf's gifts. Regains one Willpower for choosing pleasure over greater success, and all of it for abandoning the hunt for her own pursuits."
+    },
+    {
+      "id": "lone-wolf",
+      "name": "Lone Wolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 87
+      },
+      "kind": "bone",
+      "summary": "Willing to handle things alone when that seems best. Regains one Willpower for solving a pack problem on her own, and all of it for going around the pack's hunt plans and solving the problem herself."
+    },
+    {
+      "id": "wallflower",
+      "name": "Wallflower",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 87
+      },
+      "kind": "bone",
+      "summary": "Works quietly and carefully, away from the spotlight. Regains one Willpower for acting unseen outside the pack's attention, and all of it for working alone in a way that supports the pack's hunt."
+    }
+  ],
+  "gifts": [
+    {
+      "id": "crescent-moon",
+      "name": "Crescent Moon's Gift",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 115
+      },
+      "summary": "The Ithaeur's Moon Gift, for reading, questioning, hunting and impersonating spirits.",
+      "kind": "moon",
+      "auspice": "ithaeur",
+      "facets": [
+        {
+          "id": "crescent-moon-shadow-gaze",
+          "name": "Shadow Gaze",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 115
+          },
+          "summary": "Adds Wisdom to Empathy rolls with spirits and the Ridden for the scene; can also be rolled against a perceived spirit to learn its ban or bane (both on an exceptional success). Further uses that scene cost 1 Essence each.",
+          "dots": 1,
+          "cost": "1 Essence",
+          "action": "instant, may be contested",
+          "dicePool": "Wits + Occult + Wisdom vs Resistance",
+          "duration": "1 scene"
+        },
+        {
+          "id": "crescent-moon-spirit-whispers",
+          "name": "Spirit Whispers",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 115
+          },
+          "summary": "Wakes a dormant spirit or object she can perceive to answer a one-sentence question about its immediate surroundings or influence.",
+          "dots": 2,
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Persuasion + Wisdom"
+        },
+        {
+          "id": "crescent-moon-shadow-hunter",
+          "name": "Shadow Hunter",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 116
+          },
+          "summary": "Activated on gaining Siskur-Dah; while in the Shadow chasing the prey she adds Wisdom to Perception, resisting Numina and Dread Powers, and travelling or chasing through the Shadow.",
+          "dots": 3,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "Siskur-Dah"
+        },
+        {
+          "id": "crescent-moon-shadow-masquerade",
+          "name": "Shadow Masquerade",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 116
+          },
+          "summary": "Mimics a perceived spirit, copying one Influence dot per success plus its ban or bane, and passing as that kind of spirit to others unless she acts suspiciously.",
+          "dots": 4,
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Occult + Wisdom vs Resistance",
+          "duration": "1 hour per success"
+        },
+        {
+          "id": "crescent-moon-panopticon",
+          "name": "Panopticon",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 117
+          },
+          "summary": "Senses every spirit up to a chosen Rank within Wisdom × 100 yards, with a rough idea of what each perceives, and can dive fully into one spirit's senses; her own Perception takes −3 meanwhile.",
+          "dots": 5,
+          "cost": "Essence equal to the highest spirit Rank affected",
+          "action": "extended (10 successes, 1 minute per roll)",
+          "dicePool": "Intelligence + Occult + Wisdom",
+          "duration": "1 scene (+1 Essence per extra scene)"
+        }
+      ]
+    },
+    {
+      "id": "full-moon",
+      "name": "Full Moon's Gift",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 117
+      },
+      "summary": "The Rahu's Moon Gift, making him a tougher and deadlier warrior.",
+      "kind": "moon",
+      "auspice": "rahu",
+      "facets": [
+        {
+          "id": "full-moon-killer-instinct",
+          "name": "Killer Instinct",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 117
+          },
+          "summary": "Brawl and Weaponry rolls gain 8-again for the scene.",
+          "dots": 1,
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 scene"
+        },
+        {
+          "id": "full-moon-warriors-hide",
+          "name": "Warrior's Hide",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 117
+          },
+          "summary": "Permanently adds Purity to Health, growing as Purity rises.",
+          "dots": 2,
+          "duration": "Permanent"
+        },
+        {
+          "id": "full-moon-bloody-handed-hunter",
+          "name": "Bloody-Handed Hunter",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 117
+          },
+          "summary": "Activated on gaining Siskur-Dah; adds Purity to attacks against anyone standing in the way of the hunt, but not against the prey itself.",
+          "dots": 3,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "Siskur-Dah"
+        },
+        {
+          "id": "full-moon-butchery",
+          "name": "Butchery",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 117
+          },
+          "summary": "While fighting several enemies, each unarmed hit he lands or takes lets him inflict Arm Wrack, Blinded, Deafened, Knocked Down or Leg Wrack; each foe he takes out adds a turn.",
+          "dots": 4,
+          "cost": "2 Essence",
+          "action": "reflexive",
+          "dicePool": "Wits + Brawl + Purity",
+          "duration": "1 turn per success"
+        },
+        {
+          "id": "full-moon-crimson-spasm",
+          "name": "Crimson Spasm",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 117
+          },
+          "summary": "Each success adds two dots of Strength or Stamina, 1 general armor, or +1 lethal damage to natural weapons, stacking with forms, for as long as he keeps paying Essence.",
+          "dots": 5,
+          "cost": "1 Essence per turn",
+          "action": "instant",
+          "dicePool": "Stamina + Survival + Purity",
+          "duration": "While Essence is paid each turn"
+        }
+      ]
+    },
+    {
+      "id": "gibbous-moon",
+      "name": "Gibbous Moon's Gift",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 118
+      },
+      "summary": "The Cahalith's Moon Gift of howls, stories and dreams that rouse the pack and doom the prey.",
+      "kind": "moon",
+      "auspice": "cahalith",
+      "facets": [
+        {
+          "id": "gibbous-moon-war-howl",
+          "name": "War Howl",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 118
+          },
+          "summary": "Packmates who hear the howl deal +1 lethal damage with Brawl and Weaponry attacks.",
+          "dots": 1,
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Expression + Glory",
+          "duration": "1 turn per success"
+        },
+        {
+          "id": "gibbous-moon-voice-of-glory",
+          "name": "Voice of Glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 118
+          },
+          "summary": "Adds Glory to Expression and Persuasion and improves first impressions by a step, or two when stirring up violence.",
+          "dots": 2,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "gibbous-moon-dream-hunter",
+          "name": "Dream Hunter",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 118
+          },
+          "summary": "Activated on gaining Siskur-Dah; when the prey sleeps she can stalk its dreams to inflict Exhausted, Paranoid or Open, or learn something about it.",
+          "dots": 3,
+          "cost": "1 Essence",
+          "action": "contested",
+          "dicePool": "Manipulation + Empathy + Glory vs Composure + Primal Urge",
+          "duration": "Siskur-Dah"
+        },
+        {
+          "id": "gibbous-moon-thousand-throat-howl",
+          "name": "Thousand-Throat Howl",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 118
+          },
+          "summary": "A howl of a thousand voices gives the Demoralized Condition to prey who hear it and roll fewer successes.",
+          "dots": 4,
+          "cost": "2 Essence",
+          "action": "contested",
+          "dicePool": "Presence + Intimidate + Glory vs Resolve + Primal Urge"
+        },
+        {
+          "id": "gibbous-moon-end-of-story",
+          "name": "End of Story",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 119
+          },
+          "summary": "Dooms a named prey: Glory becomes a penalty to its flight, hiding, Initiative and Defense against her, and reduces the first damage it deals to her pack each scene.",
+          "dots": 5,
+          "cost": "3 Essence",
+          "action": "contested",
+          "dicePool": "Presence + Persuasion + Glory vs Composure + Primal Urge",
+          "duration": "1 day"
+        }
+      ]
+    },
+    {
+      "id": "half-moon",
+      "name": "Half Moon's Gift",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 119
+      },
+      "summary": "The Elodoth's Moon Gift of truth, oaths and the web of ties that binds people and packs.",
+      "kind": "moon",
+      "auspice": "elodoth",
+      "facets": [
+        {
+          "id": "half-moon-scent-beneath-the-surface",
+          "name": "Scent Beneath the Surface",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 119
+          },
+          "summary": "After a turn of watching or talking to someone, he can tell whether their words and actions are honest or deceptive.",
+          "dots": 1,
+          "cost": "1 Essence",
+          "action": "contested",
+          "dicePool": "Wits + Empathy + Honor vs Composure + Primal Urge",
+          "duration": "1 scene"
+        },
+        {
+          "id": "half-moon-binding-oath",
+          "name": "Binding Oath",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 119
+          },
+          "summary": "Seals an agreement so anything that would break it, even unknowingly, takes a penalty equal to his Honor.",
+          "dots": 2,
+          "cost": "1 Essence",
+          "action": "contested",
+          "dicePool": "Resolve + Persuasion + Honor vs Resolve + Primal Urge",
+          "duration": "1 month"
+        },
+        {
+          "id": "half-moon-sly-hunter",
+          "name": "Sly Hunter",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 119
+          },
+          "summary": "Activated on gaining Siskur-Dah; adds Honor to using Allies and Contacts against the prey and to Social rolls that undermine the prey's own social Merits.",
+          "dots": 3,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "Siskur-Dah"
+        },
+        {
+          "id": "half-moon-ties-of-word-and-promise",
+          "name": "Ties of Word and Promise",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 120
+          },
+          "summary": "Temporarily gains dots of Allies, Alternate Identity, Contacts, Resources or Status with a group he has a friendly link to.",
+          "dots": 4,
+          "cost": "1 Essence per Merit dot",
+          "action": "extended (10 successes, 1 minute per roll)",
+          "dicePool": "Manipulation + Persuasion + Honor",
+          "duration": "1 day"
+        },
+        {
+          "id": "half-moon-ties-of-blood-and-bone",
+          "name": "Ties of Blood and Bone",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 120
+          },
+          "summary": "Swaps places with a packmate within his Honor in miles, each keeping their own gear.",
+          "dots": 5,
+          "cost": "3 Essence",
+          "action": "instant, may be contested",
+          "dicePool": "Stamina + Empathy + Honor vs Resolve + Primal Urge"
+        }
+      ]
+    },
+    {
+      "id": "new-moon",
+      "name": "New Moon's Gift",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 120
+      },
+      "summary": "The Irraka's Moon Gift of ambush, stealth and slipping past every defense.",
+      "kind": "moon",
+      "auspice": "irraka",
+      "facets": [
+        {
+          "id": "new-moon-eviscerate",
+          "name": "Eviscerate",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 120
+          },
+          "summary": "Makes a Brawl or Weaponry attack on an unaware or surprised foe a rote action.",
+          "dots": 1,
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "new-moon-slip-away",
+          "name": "Slip Away",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 120
+          },
+          "summary": "People who meet her forget her unless she did something memorable, and even then take her Cunning as a penalty to recall her.",
+          "dots": 2,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "new-moon-relentless-hunter",
+          "name": "Relentless Hunter",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 120
+          },
+          "summary": "Activated on gaining Siskur-Dah; adds Cunning to Stealth against the prey and to getting past its security or finding a way into its hiding place.",
+          "dots": 3,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "Siskur-Dah"
+        },
+        {
+          "id": "new-moon-divide-and-conquer",
+          "name": "Divide and Conquer",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 121
+          },
+          "summary": "A small distraction lures one member of a group away on their own, giving them the Lured Condition.",
+          "dots": 4,
+          "cost": "1 Essence",
+          "action": "contested",
+          "dicePool": "Manipulation + Subterfuge + Cunning vs Composure + Primal Urge"
+        },
+        {
+          "id": "new-moon-breach",
+          "name": "Breach",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 121
+          },
+          "summary": "Crosses the Gauntlet between Flesh and Shadow anywhere, with no locus needed.",
+          "dots": 5,
+          "cost": "3 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Stealth + Cunning"
+        }
+      ]
+    },
+    {
+      "id": "change",
+      "name": "Gift of Change",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 136
+      },
+      "summary": "A Wolf Gift that pushes the werewolf's shapeshifting beyond its usual forms.",
+      "kind": "wolf",
+      "facets": [
+        {
+          "id": "change-skin-thief",
+          "name": "Skin Thief",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 136
+          },
+          "summary": "Wearing the skin of a slain human or wolf-sized predator, she becomes a perfect copy of that human, or makes her Urhan form that animal; only her eyes stay her own.",
+          "renown": "cunning",
+          "cost": "5 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "change-gaze-of-the-moon",
+          "name": "Gaze of the Moon",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 136
+          },
+          "summary": "One human who sees her eyes suffers full Gauru-strength Lunacy, with her choosing which Condition it inflicts.",
+          "renown": "glory",
+          "cost": "1 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "change-lunas-embrace",
+          "name": "Luna's Embrace",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 136
+          },
+          "summary": "Fully changes her sex until she uses the Facet again, looking like a twin of her former self.",
+          "renown": "honor",
+          "cost": "1 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "change-the-fathers-form",
+          "name": "The Father's Form",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "Lets her take Gauru outside combat without Kuruth, at the cost of some of the form's benefits; attacking or taking too much lethal damage ends it.",
+          "renown": "purity",
+          "cost": "None"
+        },
+        {
+          "id": "change-quicksilver-flesh",
+          "name": "Quicksilver Flesh",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "Borrows one feature of another form into her current one, such as hands in wolf form, claws in Hishu or human speech.",
+          "renown": "wisdom",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        }
+      ]
+    },
+    {
+      "id": "hunting",
+      "name": "Gift of Hunting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 137
+      },
+      "summary": "A Wolf Gift that sharpens the werewolf's senses and stamina as a hunter.",
+      "kind": "wolf",
+      "facets": [
+        {
+          "id": "hunting-honed-senses",
+          "name": "Honed Senses",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "Perception rolls become exceptional successes on three successes instead of five.",
+          "renown": "cunning",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "hunting-cow-the-prey",
+          "name": "Cow the Prey",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "Spent when using her hunter's aspect to make its Condition Persistent.",
+          "renown": "glory",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "hunting-beast-talker",
+          "name": "Beast Talker",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "Can talk with any animal and use Social maneuvers on it.",
+          "renown": "honor",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "hunting-tireless-hunter",
+          "name": "Tireless Hunter",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "During Siskur-Dah, ignores up to her Purity in fatigue and morale penalties, can spend Willpower despite Conditions when it furthers the hunt, and needs no food or drink for up to Purity days.",
+          "renown": "purity",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 day"
+        },
+        {
+          "id": "hunting-impossible-spoor",
+          "name": "Impossible Spoor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 137
+          },
+          "summary": "Successful tracking rolls gain two extra successes, and Essence can cancel penalties for an old or weathered trail.",
+          "renown": "wisdom",
+          "cost": "None or 1 Essence",
+          "action": "reflexive",
+          "duration": "1 scene"
+        }
+      ]
+    },
+    {
+      "id": "pack",
+      "name": "Gift of Pack",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 138
+      },
+      "summary": "A Wolf Gift that binds the werewolf's powers and senses to her pack and totem.",
+      "kind": "wolf",
+      "facets": [
+        {
+          "id": "pack-reflected-facets",
+          "name": "Reflected Facets",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 138
+          },
+          "summary": "For 1 extra Essence, she can target prey that a packmate senses, or put a self-enhancing Facet on a packmate instead, within her Cunning in miles.",
+          "renown": "cunning",
+          "cost": "+1 Essence",
+          "duration": "Special"
+        },
+        {
+          "id": "pack-down-the-prey",
+          "name": "Down the Prey",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 138
+          },
+          "summary": "When she hits a foe a packmate hurt since her last turn, she imposes −2 on its next roll, gains +2 Defense against it, or knocks it down if its Defense was 0.",
+          "renown": "glory",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "pack-totems-wrath",
+          "name": "Totem's Wrath",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 138
+          },
+          "summary": "Forces the pack totem into a raging Gauru-like body that attacks everything outside the pack until its Essence runs out, after which the pack loses its totem's help for a time.",
+          "renown": "honor",
+          "cost": "5 Essence",
+          "action": "contested",
+          "dicePool": "Presence + Occult + Honor vs Power + Finesse + Resistance"
+        },
+        {
+          "id": "pack-maw-of-madness",
+          "name": "Maw of Madness",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 138
+          },
+          "summary": "A damaging bite on a living non-Uratha gives the victim the Moon Taint Condition.",
+          "renown": "purity",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "pack-pack-awareness",
+          "name": "Pack Awareness",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 138
+          },
+          "summary": "Always knows where her packmates are and how they fare within her Wisdom in miles, can't be surprised by foes they've noticed, and can pay Essence to talk mind-to-mind.",
+          "renown": "wisdom",
+          "cost": "None or 1 Essence"
+        }
+      ]
+    },
+    {
+      "id": "death",
+      "name": "Gift of Death",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 121
+      },
+      "summary": "Powers over the grave: feigning death, harming ghosts, sharing wounds and reading the dead.",
+      "facets": [
+        {
+          "id": "death-cold-embrace",
+          "name": "Cold Embrace",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 121
+          },
+          "summary": "The werewolf stills her heartbeat and appears freshly dead, with no pulse and no healing; she can still act, at a penalty of 5 minus Cunning.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Stamina + Medicine + Cunning",
+          "duration": "1 hour per success"
+        },
+        {
+          "id": "death-barghest",
+          "name": "Barghest",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 121
+          },
+          "summary": "Lets the werewolf see beings in Twilight tied to death and, in her war-like forms, pay Essence to strike them; adds Glory against the undead and can drain Willpower from corporeal undead she wounds.",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "death-memento-mori",
+          "name": "Memento Mori",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 121
+          },
+          "summary": "For a scene she knows her packmates' wounds and can pull their damage onto her own body each turn, up to Honor in bashing or lethal, or one aggravated.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 scene"
+        },
+        {
+          "id": "death-bone-gnaw",
+          "name": "Bone Gnaw",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 121
+          },
+          "summary": "Chewing an intact human or werewolf bone yields facts about the dead, a secret they held, or a borrowed Skill or Renown dot for a scene.",
+          "cost": "1 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "death-eyes-of-the-dead",
+          "name": "Eyes of the Dead",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 122
+          },
+          "summary": "Looking into a corpse's eyes shows what the victim last saw and felt, plus the names of people in the vision.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Occult + Wisdom"
+        }
+      ]
+    },
+    {
+      "id": "dominance",
+      "name": "Gift of Dominance",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 122
+      },
+      "summary": "The predator's command over others: charm, awe, intimidation and pack leadership.",
+      "facets": [
+        {
+          "id": "dominance-primal-allure",
+          "name": "Primal Allure",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 122
+          },
+          "summary": "After a turn of conversation, the werewolf gains a perfect impression with the target for the scene, for requests she would act on right away.",
+          "cost": "1 Essence",
+          "action": "contested",
+          "dicePool": "Manipulation + Subterfuge + Cunning versus Resolve + Primal Urge",
+          "duration": "1 scene"
+        },
+        {
+          "id": "dominance-glorious-lunacy",
+          "name": "Glorious Lunacy",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 122
+          },
+          "summary": "When shifting into a Lunacy-causing form, the werewolf can make onlookers Awestruck instead of the usual Lunacy Condition.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 scene"
+        },
+        {
+          "id": "dominance-lay-low-the-challenger",
+          "name": "Lay Low the Challenger",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 122
+          },
+          "summary": "After landing a Brawl or Weaponry hit, the werewolf can leave the foe Cowed and add Honor to her next Presence roll that scene.",
+          "cost": "1 Essence",
+          "action": "reflexive and contested",
+          "dicePool": "Presence + Intimidation + Honor versus Composure + Primal Urge"
+        },
+        {
+          "id": "dominance-snarl-of-the-predator",
+          "name": "Snarl of the Predator",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "While forcing Doors in a Social maneuver, the werewolf cuts the penalty for remaining Doors by her Purity.",
+          "cost": "1 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "dominance-lead-the-lesser-pack",
+          "name": "Lead the Lesser Pack",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "Makes a willing outsider a full packmate for a day, with a bonus to resist outside influence; she can hold up to Wisdom such members at once.",
+          "cost": "1 Essence per character",
+          "action": "instant",
+          "duration": "1 day"
+        }
+      ]
+    },
+    {
+      "id": "elemental",
+      "name": "Gift of the Elementals",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 123
+      },
+      "summary": "Spirit-like command over air, earth, fire and water, up to catastrophic scale.",
+      "facets": [
+        {
+          "id": "elemental-breath-of-air",
+          "name": "Breath of Air",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "The werewolf gains Influence (Air) at her Cunning rating and uses it like a spirit.",
+          "cost": "Varies",
+          "dicePool": "Wits + Athletics + Cunning"
+        },
+        {
+          "id": "elemental-catastrophe",
+          "name": "Catastrophe",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "Amplifies another Elemental Influence into a disaster covering miles, and protects the werewolf from others' Catastrophes.",
+          "cost": "5 Essence per level of Influence used",
+          "action": "extended",
+          "dicePool": "Presence + Survival + Glory"
+        },
+        {
+          "id": "elemental-flesh-of-earth",
+          "name": "Flesh of Earth",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "The werewolf gains Influence (Earth) at her Honor rating and uses it like a spirit.",
+          "cost": "Varies",
+          "dicePool": "Strength + Survival + Honor"
+        },
+        {
+          "id": "elemental-tongue-of-flame",
+          "name": "Tongue of Flame",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "The werewolf gains Influence (Fire) at her Purity rating and uses it like a spirit.",
+          "cost": "Varies",
+          "dicePool": "Presence + Empathy + Purity"
+        },
+        {
+          "id": "elemental-heart-of-water",
+          "name": "Heart of Water",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "The werewolf gains Influence (Water) at her Wisdom rating and uses it like a spirit.",
+          "cost": "Varies",
+          "dicePool": "Manipulation + Occult + Wisdom"
+        }
+      ]
+    },
+    {
+      "id": "evasion",
+      "name": "Gift of Evasion",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 123
+      },
+      "summary": "Slipping away from pursuit, attacks and interrogation.",
+      "facets": [
+        {
+          "id": "evasion-feet-of-mist",
+          "name": "Feet of Mist",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 123
+          },
+          "summary": "For an hour nothing can track or locate the werewolf, mundane or supernatural (rote in Clashes of Wills), though she can still be seen.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 hour"
+        },
+        {
+          "id": "evasion-fog-of-war",
+          "name": "Fog of War",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 124
+          },
+          "summary": "In a chaotic setting, a bullet, message or delivery goes to the wrong target, nearby or of her choosing if she spends Essence.",
+          "cost": "1 Essence",
+          "action": "reflexive and contested",
+          "dicePool": "Wits + Subterfuge + Glory versus Composure + Primal Urge"
+        },
+        {
+          "id": "evasion-deny-everything",
+          "name": "Deny Everything",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 124
+          },
+          "summary": "Adds Honor to one roll to resist a Social maneuver or Manipulation-based action.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "evasion-hit-and-run",
+          "name": "Hit and Run",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 124
+          },
+          "summary": "Interrupts an attack to move away at full Speed; breaking line of sight can leave pursuers with Shadow Paranoia.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "dicePool": "Dexterity + Stealth + Purity versus Composure + Primal Urge"
+        },
+        {
+          "id": "evasion-exit-strategy",
+          "name": "Exit Strategy",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 124
+          },
+          "summary": "Instantly reveals every escape route nearby, or with a roll finds a safe bolthole, hidden route, useful gear or a way past an obstacle.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Streetwise + Wisdom"
+        }
+      ]
+    },
+    {
+      "id": "insight",
+      "name": "Gift of Insight",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 125
+      },
+      "summary": "Reading people, places and events for hidden truths.",
+      "facets": [
+        {
+          "id": "insight-prey-on-weakness",
+          "name": "Prey on Weakness",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 125
+          },
+          "summary": "Reveals a watched target's Blood and Bone, injuries, Conditions and state of mind, giving +3 to Social rolls that exploit it.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Empathy + Cunning versus Composure + Primal Urge"
+        },
+        {
+          "id": "insight-read-the-worlds-loom",
+          "name": "Read the World's Loom",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 125
+          },
+          "summary": "Omens in the surroundings warn of a relevant current or imminent event within Glory miles on a chosen topic; cheaper in pack territory.",
+          "cost": "5 Essence (3 in pack territory)",
+          "action": "instant",
+          "dicePool": "Wits + Streetwise + Glory"
+        },
+        {
+          "id": "insight-echo-dream",
+          "name": "Echo Dream",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 125
+          },
+          "summary": "Touching an object or room shows a symbolic vision of a spiritually significant event in its past.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Investigation + Honor"
+        },
+        {
+          "id": "insight-scent-the-unnatural",
+          "name": "Scent the Unnatural",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 126
+          },
+          "summary": "Smells out supernatural beings and active powers within 10 yards per Purity, except Uratha, Gifts and spirits in the Shadow.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Occult + Purity"
+        },
+        {
+          "id": "insight-one-step-ahead",
+          "name": "One Step Ahead",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 126
+          },
+          "summary": "Watching the prey, its building or a map of its position tells the werewolf where it will likely go next.",
+          "cost": "1 Essence",
+          "action": "instant"
+        }
+      ]
+    },
+    {
+      "id": "inspiration",
+      "name": "Gift of Inspiration",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 127
+      },
+      "summary": "Lifting up the pack and stirring others to creativity or calm.",
+      "facets": [
+        {
+          "id": "inspiration-lunatic-inspiration",
+          "name": "Lunatic Inspiration",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 127
+          },
+          "summary": "A touched human or wolf-blood becomes Inspired and Mad until the next full moon, driven to make an art work that may carry Luna's message.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Empathy + Cunning versus Composure",
+          "duration": "Until the next full moon"
+        },
+        {
+          "id": "inspiration-fearless-hunter",
+          "name": "Fearless Hunter",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 127
+          },
+          "summary": "Adds Glory against fear and mind control; when she resists, packmates who see her resist the same effect too.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "inspiration-pack-triumphs-together",
+          "name": "Pack Triumphs Together",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 127
+          },
+          "summary": "Lets chosen packmates raise their Initiative to the pack's best, or outside combat grants them 8-again on teamwork rolls for the scene.",
+          "cost": "1 Essence per packmate (minimum 1)",
+          "action": "reflexive",
+          "duration": "1 scene"
+        },
+        {
+          "id": "inspiration-unity",
+          "name": "Unity",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 127
+          },
+          "summary": "Backing a packmate against a Social maneuver adds the werewolf's Purity to the Doors it must open.",
+          "cost": "1 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "inspiration-still-small-voice",
+          "name": "Still Small Voice",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 127
+          },
+          "summary": "Calming words pull any number of listening Uratha out of Wasu-Im.",
+          "cost": "1 Essence per Uratha targeted",
+          "action": "instant",
+          "dicePool": "Presence + Persuasion + Wisdom versus Resolve + Primal Urge"
+        }
+      ]
+    },
+    {
+      "id": "knowledge",
+      "name": "Gift of Knowledge",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 127
+      },
+      "summary": "Uncovering, hiding and sharing information.",
+      "facets": [
+        {
+          "id": "knowledge-needle",
+          "name": "Needle",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 127
+          },
+          "summary": "Hides a chosen piece of information from the prey for a month: she loses her copies and suffers a Cunning penalty and doubled time to find it.",
+          "cost": "1 Essence",
+          "action": "contested",
+          "dicePool": "Manipulation + Subterfuge + Cunning versus Composure + Primal Urge",
+          "duration": "One month"
+        },
+        {
+          "id": "knowledge-this-story-is-true",
+          "name": "This Story Is True",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 128
+          },
+          "summary": "A fitting tale grants the werewolf or one packmate dots equal to successes in a Skill they have at 2 or fewer.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Academics + Glory",
+          "duration": "1 hour per success"
+        },
+        {
+          "id": "knowledge-know-thy-prey",
+          "name": "Know Thy Prey",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 128
+          },
+          "summary": "Reveals every name others know a perceived target by, plus their identity, fame and social Merits up to the successes rolled.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Socialize + Honor"
+        },
+        {
+          "id": "knowledge-lore-of-the-land",
+          "name": "Lore of the Land",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 128
+          },
+          "summary": "Reveals rites, resonances and other widespread supernatural effects on the territory; in the pack's own land it also senses nearby creatures and hazards.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Intelligence + Survival + Purity",
+          "duration": "1 scene"
+        },
+        {
+          "id": "knowledge-sift-the-sands",
+          "name": "Sift the Sands",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 128
+          },
+          "summary": "Spirits search a library or data store in minutes and hand over the sought information despite locks or encryption.",
+          "cost": "1 Essence",
+          "action": "extended",
+          "dicePool": "Intelligence + Academics + Wisdom"
+        }
+      ]
+    },
+    {
+      "id": "nature",
+      "name": "Nature's Gift",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 129
+      },
+      "summary": "Power over the wild places and the beasts within them.",
+      "facets": [
+        {
+          "id": "nature-natures-lure",
+          "name": "Nature's Lure",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 129
+          },
+          "summary": "Draws a lone person or small group at the edge of a wild area into it, Lured and penalized on Initiative while there.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Survival + Cunning versus Composure + Primal Urge",
+          "duration": "One scene"
+        },
+        {
+          "id": "nature-black-earth-red-hunger",
+          "name": "Black Earth, Red Hunger",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 129
+          },
+          "summary": "Spilled blood makes a guided burst of plant growth that consumes corpses; until sunrise she senses living things there and heals free when blood is spilled.",
+          "cost": "1 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "nature-knotted-paths",
+          "name": "Knotted Paths",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 129
+          },
+          "summary": "Prey in a wild area cannot find their way out of it for a day.",
+          "cost": "1 Essence per prey targeted",
+          "action": "contested",
+          "dicePool": "Wits + Survival + Honor versus Composure + Primal Urge",
+          "duration": "1 day"
+        },
+        {
+          "id": "nature-pack-kin",
+          "name": "Pack Kin",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 129
+          },
+          "summary": "Permanently binds a tolerant predatory animal into the pack as a loyal packmate that understands commands; up to Purity animals at once.",
+          "cost": "1 Essence",
+          "action": "extended",
+          "dicePool": "Presence + Animal Ken + Purity"
+        },
+        {
+          "id": "nature-beast-ride",
+          "name": "Beast Ride",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 130
+          },
+          "summary": "The werewolf's mind rides a perceived animal, sharing or taking over its senses while her body sleeps.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Animal Ken + Wisdom - animal's Resolve"
+        }
+      ]
+    },
+    {
+      "id": "rage",
+      "name": "Gift of Rage",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 130
+      },
+      "summary": "Feeding, honing and spreading the werewolf's fury.",
+      "facets": [
+        {
+          "id": "rage-incite-fury",
+          "name": "Incite Fury",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 130
+          },
+          "summary": "A goading snarl sends an Uratha into Wasu-Im or makes anyone else Berserk.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Subterfuge + Cunning versus Composure + Primal Urge"
+        },
+        {
+          "id": "rage-berserkers-might",
+          "name": "Berserker's Might",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 130
+          },
+          "summary": "In Dalu, Gauru or Urshul, once a turn cuts damage from one source by Glory or heals a physical injury Tilt; free and automatic in Basu-Im.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "rage-perfected-rage",
+          "name": "Perfected Rage",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 130
+          },
+          "summary": "On entering Gauru, adds Honor to the turns the werewolf can hold the form.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "rage-slaughterer",
+          "name": "Slaughterer",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 130
+          },
+          "summary": "A Brawl hit in Gauru deals extra damage equal to Purity; free and automatic in Basu-Im.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "rage-raging-lunacy",
+          "name": "Raging Lunacy",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "When shifting into a Lunacy-causing form, the werewolf can make onlookers Berserk instead of the usual Lunacy Condition.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 scene"
+        }
+      ]
+    },
+    {
+      "id": "shaping",
+      "name": "Gift of Shaping",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 131
+      },
+      "summary": "Reshaping, breaking and perfecting matter and tools.",
+      "facets": [
+        {
+          "id": "shaping-moldywarp",
+          "name": "Moldywarp",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "In Dalu, the werewolf grows digging claws and tunnels through earth, rock and concrete at Strength + Cunning Speed.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "shaping-shield-breaker",
+          "name": "Shield-Breaker",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "Gives a Brawl or Weaponry strike armor piercing equal to Glory.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "shaping-entropys-toll",
+          "name": "Entropy's Toll",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "A howl decays a visible object or structure, dealing two Structure damage per success and ignoring Durability.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Expression + Honor"
+        },
+        {
+          "id": "shaping-perfection-of-form",
+          "name": "Perfection of Form",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "Adds successes to a held item's equipment bonus for its next use, or repairs that much Structure.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Crafts + Purity",
+          "duration": "1 day or until used"
+        },
+        {
+          "id": "shaping-sculpt",
+          "name": "Sculpt",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "Turns a touched object of Size up to Wisdom soft as clay for half an hour, extendable with more Essence.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Intelligence + Crafts + Wisdom",
+          "duration": "30 minutes"
+        }
+      ]
+    },
+    {
+      "id": "stealth",
+      "name": "Gift of Stealth",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 131
+      },
+      "summary": "Hiding, ambushing and moving unseen, alone or as a pack.",
+      "facets": [
+        {
+          "id": "stealth-shadow-pelt",
+          "name": "Shadow Pelt",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 131
+          },
+          "summary": "Makes a number of Stealth rolls equal to Cunning rote actions for the scene.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "stealth-predators-shadow",
+          "name": "Predator's Shadow",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "Any number of perceived prey who are out-rolled gain Shadow Paranoia.",
+          "cost": "1 Essence per prey",
+          "action": "instant",
+          "dicePool": "Presence + Intimidation + Glory versus Composure + Primal Urge"
+        },
+        {
+          "id": "stealth-pack-stalks-the-prey",
+          "name": "Pack Stalks the Prey",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "When the werewolf passes a Stealth roll a packmate failed, the packmate succeeds instead.",
+          "cost": "1 Essence per packmate",
+          "action": "reflexive"
+        },
+        {
+          "id": "stealth-the-hunter-waits",
+          "name": "The Hunter Waits",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "While staying still, the werewolf imposes Purity as a penalty on attempts to spot her, and adds it to Initiative if she ambushes.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "stealth-running-silent",
+          "name": "Running Silent",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "Cuts falling damage and terrain penalties by Wisdom and allows Stealth rolls at full speed.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "name": "Gift of Strength",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 132
+      },
+      "summary": "Raw physical might in breaking free, pursuit and combat.",
+      "facets": [
+        {
+          "id": "strength-unchained",
+          "name": "Unchained",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "Breaks any binding, even magical ones (rote in Clashes of Wills), or adds Cunning to grappling; free in Basu-Im.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "strength-predators-unmatched-pursuit",
+          "name": "Predator's Unmatched Pursuit",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "For a scene multiplies jump distance and adds Glory to Speed in Urhan and Urshul, with an option to double Speed for a turn; free in Basu-Im.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "strength-crushing-blow",
+          "name": "Crushing Blow",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "A Brawl hit lowers the target's Defense by Honor against the next attack from the werewolf or a packmate; in Hishu her punches deal lethal.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "strength-primal-strength",
+          "name": "Primal Strength",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 132
+          },
+          "summary": "Adds Purity to Strength for the scene; triggers free in Basu-Im.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 scene"
+        },
+        {
+          "id": "strength-rending-claws",
+          "name": "Rending Claws",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 133
+          },
+          "summary": "In Gauru or Urshul, her attacks ignore Durability up to Wisdom and deal Wisdom extra Structure damage.",
+          "duration": "Permanent"
+        }
+      ]
+    },
+    {
+      "id": "technology",
+      "name": "Gift of Technology",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 133
+      },
+      "summary": "Commanding, sabotaging and riding human machines.",
+      "facets": [
+        {
+          "id": "technology-garble",
+          "name": "Garble",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 133
+          },
+          "summary": "For a scene the target's devices mislead and betray him.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Intelligence + Science + Cunning - Composure",
+          "duration": "1 scene"
+        },
+        {
+          "id": "technology-unmake",
+          "name": "Unmake",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 133
+          },
+          "summary": "A perceived machine with moving parts falls apart into its components.",
+          "cost": "1 Essence",
+          "action": "instant (contested if the item is in use)",
+          "dicePool": "Wits + Crafts + Glory versus Resolve + Primal Urge"
+        },
+        {
+          "id": "technology-command-artifice",
+          "name": "Command Artifice",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 134
+          },
+          "summary": "A device obeys a one-sentence command, even if slightly broken.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Intelligence + Science + Honor"
+        },
+        {
+          "id": "technology-shutdown",
+          "name": "Shutdown",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 134
+          },
+          "summary": "Kills lights, cameras, security systems and phones across a building or Purity x 100 yards.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Intimidation + Purity",
+          "duration": "1 scene"
+        },
+        {
+          "id": "technology-iron-slave",
+          "name": "Iron Slave",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 134
+          },
+          "summary": "The werewolf's senses ride a vehicle or large machine, letting her perceive through it or drive it.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Crafts + Wisdom",
+          "duration": "1 scene"
+        }
+      ]
+    },
+    {
+      "id": "warding",
+      "name": "Gift of Warding",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 134
+      },
+      "summary": "Protecting dens and territory and controlling who may enter.",
+      "facets": [
+        {
+          "id": "warding-maze-ward",
+          "name": "Maze Ward",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 134
+          },
+          "summary": "For a month, intruders in the warded area take a Cunning penalty to navigate, chase or track, and failures put them back at its edge.",
+          "cost": "5 Essence",
+          "action": "instant",
+          "duration": "1 month"
+        },
+        {
+          "id": "warding-ward-the-wolfs-den",
+          "name": "Ward the Wolf's Den",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 134
+          },
+          "summary": "For a month, crossing the Gauntlet or opening portals in the area is penalized, she senses any opening and can try to close it, and a locus can be sealed.",
+          "cost": "5 Essence",
+          "action": "instant",
+          "duration": "1 month"
+        },
+        {
+          "id": "warding-all-doors-locked",
+          "name": "All Doors Locked",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 135
+          },
+          "summary": "The werewolf senses every entrance of a building or vehicle she is in or touching and can open, close or lock them at will.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "warding-predators-claim",
+          "name": "Predator's Claim",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 135
+          },
+          "summary": "For a month her Spirit Rank counts as 2 higher when attacking spirits within the area.",
+          "cost": "5 Essence",
+          "action": "instant",
+          "duration": "1 month"
+        },
+        {
+          "id": "warding-boundary-ward",
+          "name": "Boundary Ward",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 135
+          },
+          "summary": "For a month the werewolf senses when a chosen type of being enters the warded area, which can be much larger in pack territory.",
+          "cost": "5 Essence",
+          "action": "instant",
+          "duration": "1 month"
+        }
+      ]
+    },
+    {
+      "id": "weather",
+      "name": "Gift of Weather",
+      "kind": "shadow",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 135
+      },
+      "summary": "Calling mist, storms, winds and extremes of heat and cold.",
+      "facets": [
+        {
+          "id": "weather-cloak-of-mist-and-haze",
+          "name": "Cloak of Mist and Haze",
+          "renown": "cunning",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 135
+          },
+          "summary": "Calls a haze that penalizes sight, hearing and ranged attacks by Cunning.",
+          "cost": "1 Essence",
+          "action": "extended",
+          "dicePool": "Dexterity + Stealth + Cunning",
+          "duration": "1 hour per success"
+        },
+        {
+          "id": "weather-heavens-unleashed",
+          "name": "Heavens Unleashed",
+          "renown": "glory",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 135
+          },
+          "summary": "Summons a thunderstorm that cuts the Speed and Initiative of those caught in it by Glory.",
+          "cost": "5 Essence",
+          "action": "extended",
+          "dicePool": "Presence + Survival + Glory",
+          "duration": "1 hour per success"
+        },
+        {
+          "id": "weather-hunt-under-iron-skies",
+          "name": "Hunt Under Iron Skies",
+          "renown": "honor",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 136
+          },
+          "summary": "Cuts weather and environmental penalties by Honor and ignores her own Weather Facets; packmates can share this for Essence.",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "weather-grasp-of-howling-winds",
+          "name": "Grasp of Howling Winds",
+          "renown": "purity",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 136
+          },
+          "summary": "A howling blast penalizes one target's Speed and Physical pools by Purity until it ends or he escapes her sight.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Survival + Purity - Stamina",
+          "duration": "1 turn per success"
+        },
+        {
+          "id": "weather-hunt-of-fire-and-ice",
+          "name": "Hunt of Fire and Ice",
+          "renown": "wisdom",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 136
+          },
+          "summary": "Brings Extreme Heat or Extreme Cold across an area of Wisdom miles.",
+          "cost": "5 Essence",
+          "action": "extended",
+          "dicePool": "Intelligence + Occult + Wisdom",
+          "duration": "1 hour per success"
+        }
+      ]
+    }
+  ],
+  "rites": [
+    {
+      "id": "chain-rage",
+      "name": "Chain Rage",
+      "kind": "wolf",
+      "rating": 1,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 139
+      },
+      "summary": "Ties each participant to a focus object that lets them cut a Death Rage short after five turns of lucidity. When the month is up, or if the focus is lost or broken, the werewolf falls straight into Death Rage.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "duration": "1 month"
+    },
+    {
+      "id": "messenger",
+      "name": "Messenger",
+      "kind": "wolf",
+      "rating": 1,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 140
+      },
+      "summary": "Lunes carry a short spoken message, a few breaths long, to a named werewolf anywhere in the world almost at once. The message can't be detected or intercepted.",
+      "action": "extended",
+      "targetSuccesses": 10
+    },
+    {
+      "id": "bottle-spirit",
+      "name": "Bottle Spirit",
+      "kind": "wolf",
+      "rating": 2,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 140
+      },
+      "summary": "Bone Shadows only. Prepares a bottle that pulls in the nearest spirit when opened, up to a Rank set by the rite's successes (5 per Rank); the spirit has a turn per Rank to flee or break the bottle before it's trapped, and can slip free after a day.",
+      "action": "extended"
+    },
+    {
+      "id": "sacred-hunt",
+      "name": "Sacred Hunt",
+      "kind": "wolf",
+      "rating": 2,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 140
+      },
+      "summary": "Begins the Siskur-Dah against a named prey, giving every participating werewolf the Siskur-Dah Condition. Hunters who bring down spirit prey can split its Essence, or learn a Gift or rite it knows instead.",
+      "action": "extended",
+      "targetSuccesses": 10
+    },
+    {
+      "id": "kindle-fury",
+      "name": "Kindle Fury",
+      "kind": "wolf",
+      "rating": 3,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 140
+      },
+      "summary": "Blood Talons only. Everyone present gains the Destroyer Blood archetype on top of their own, or doubles its Willpower if they already have it.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "duration": "1 month"
+    },
+    {
+      "id": "shadowbind",
+      "name": "Shadowbind",
+      "kind": "wolf",
+      "rating": 3,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 141
+      },
+      "summary": "Traps one spirit inside a marked space so it can't leave, cross the Gauntlet or use Numina beyond it; the spirit may contest with Resistance. It stays bound until released, the border is broken or a stated condition is met, and at least two others must be told how to free it.",
+      "action": "extended",
+      "targetSuccesses": 10
+    },
+    {
+      "id": "fetish",
+      "name": "Fetish",
+      "kind": "wolf",
+      "rating": 4,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 141
+      },
+      "summary": "Binds a spirit into an object to create a fetish, costing 1 Essence per dot of the fetish.",
+      "action": "extended",
+      "targetSuccesses": 20
+    },
+    {
+      "id": "twilight-purge",
+      "name": "Twilight Purge",
+      "kind": "wolf",
+      "rating": 4,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 141
+      },
+      "summary": "For 3 Essence, rips every being in Twilight within about 100 yards (or a chosen target) into physical form, Stunned and unable to return to Twilight for an hour.",
+      "action": "extended",
+      "targetSuccesses": 5
+    },
+    {
+      "id": "forge-alliance",
+      "name": "Forge Alliance",
+      "kind": "wolf",
+      "rating": 5,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 142
+      },
+      "summary": "Joins every pack with a member present into one alliance that counts as a single pack for Gifts, Death Rage and similar effects, though not rites or totem benefits; costs 1 Essence per pack. If a prey is named, the alliance ends when it falls and all members gain an Aspiration to hunt it.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "duration": "1 month"
+    },
+    {
+      "id": "urfarahs-bane",
+      "name": "Urfarah's Bane",
+      "kind": "wolf",
+      "rating": 5,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 142
+      },
+      "summary": "For 5 Essence, lets one werewolf's claws and bite deal aggravated damage to other werewolves. Afterwards she takes a point of aggravated damage and the Guilty Condition, and she counts as cut off from her pack while it lasts.",
+      "action": "extended",
+      "targetSuccesses": 15,
+      "duration": "Until sunrise"
+    },
+    {
+      "id": "veil",
+      "name": "Veil",
+      "kind": "wolf",
+      "rating": 5,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 142
+      },
+      "summary": "Iron Masters only. For 5 Essence, technology and information spirits wipe out every recording of one supernatural event from the past lunar month lasting up to 30 minutes; people's memories are untouched.",
+      "action": "extended",
+      "targetSuccesses": 20
+    },
+    {
+      "id": "banish",
+      "name": "Banish",
+      "kind": "pack",
+      "rating": 1,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 142
+      },
+      "summary": "Drives a spirit out of the physical world into the Shadow, or a non-spirit, non-werewolf creature out of the Shadow into the physical world. Spirits may contest with Resistance; others can't resist.",
+      "action": "extended",
+      "targetSuccesses": 5
+    },
+    {
+      "id": "harness-the-cycle",
+      "name": "Harness the Cycle",
+      "kind": "pack",
+      "rating": 1,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 143
+      },
+      "summary": "Performed at a change of season, it gives participating werewolves Essence (half their maximum, or all of it in the tropics). Humans and Wolf-Blooded regain all Willpower and heal twice as fast for a month, plus a temporary Allies, Contacts or Resources dot in the tropics.",
+      "action": "extended",
+      "targetSuccesses": 10
+    },
+    {
+      "id": "totemic-empowerment",
+      "name": "Totemic Empowerment",
+      "kind": "pack",
+      "rating": 1,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 143
+      },
+      "summary": "The totem temporarily rides one pack member, granting physical bonuses, better perception, extra Essence and the totem's Influences and Numina, along with its ban and bane. A werewolf in Death Rage is controlled by the totem, and it's a breaking point for the subject.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "duration": "Until the next sunrise"
+    },
+    {
+      "id": "hunting-ground",
+      "name": "Hunting Ground",
+      "kind": "pack",
+      "rating": 2,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 143
+      },
+      "summary": "Consecrates an area as the pack's territory, giving members +2 to chases and tracking there and +2 to Animal Ken, Empathy and Politics with its inhabitants. It ends if the pack goes a month without a hunt.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "duration": "1 season"
+    },
+    {
+      "id": "moons-mad-love",
+      "name": "Moon's Mad Love",
+      "kind": "pack",
+      "rating": 2,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 144
+      },
+      "summary": "Night only. Human participants are shielded from Lunacy caused by their werewolf packmates, remember events despite other Lunacy, and become Inspired on first seeing the full moon. At the end each must roll Resolve + Composure or gain the Madness Condition.",
+      "action": "extended",
+      "targetSuccesses": 15,
+      "duration": "1 month"
+    },
+    {
+      "id": "wellspring",
+      "name": "Wellspring",
+      "kind": "pack",
+      "rating": 2,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 144
+      },
+      "summary": "Amplifies a locus so that spirits and werewolves nearby add its rating to matching Influences, and pack members inside it can wield its Resonance as an Influence. The area takes on that Resonance, and the pack gains a matching ban; breaking it ends the rite.",
+      "action": "extended",
+      "targetSuccesses": 20,
+      "duration": "1 month"
+    },
+    {
+      "id": "raiment-of-the-storm",
+      "name": "Raiment of the Storm",
+      "kind": "pack",
+      "rating": 3,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 145
+      },
+      "summary": "Storm Lords only, during a thunderstorm. Participants out in the rain get +2 to resist supernatural effects, 2 general armor and immunity to electricity, but can't rest until the storm ends.",
+      "action": "extended",
+      "targetSuccesses": 15,
+      "duration": "Until the storm ceases"
+    },
+    {
+      "id": "shadowcall",
+      "name": "Shadowcall",
+      "kind": "pack",
+      "rating": 3,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 145
+      },
+      "summary": "Summons a spirit, named or the nearest of a chosen type, into a prepared spot; it may resist with Resistance or come willingly. Gauntlet strength applies if it starts across the Gauntlet, and in the physical world the spot becomes Open.",
+      "action": "extended",
+      "targetSuccesses": 20
+    },
+    {
+      "id": "supplication",
+      "name": "Supplication",
+      "kind": "pack",
+      "rating": 3,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 145
+      },
+      "summary": "Offerings placed around the territory improve the attitude of one type of spirit toward the pack by one impression level, while the ritemaster takes on a related ban. It ends early if half the offerings are disturbed.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "duration": "1 season"
+    },
+    {
+      "id": "hidden-path",
+      "name": "Hidden Path",
+      "kind": "pack",
+      "rating": 4,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 145
+      },
+      "summary": "Hunters in Darkness only. Opens a concealed route between Flesh and Shadow to a chosen destination reachable over land, so the pack travels on foot in a tenth of the time and avoids ordinary obstacles while it stays on the path.",
+      "action": "extended",
+      "targetSuccesses": 15
+    },
+    {
+      "id": "expel",
+      "name": "Expel",
+      "kind": "pack",
+      "rating": 4,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 146
+      },
+      "summary": "Forces a spirit out of a person or object it is possessing, contested by its Resistance; a freed living host counts as a pack member for an hour. It doesn't work on the Claimed.",
+      "action": "extended",
+      "targetSuccesses": 10
+    },
+    {
+      "id": "great-hunt",
+      "name": "Great Hunt",
+      "kind": "pack",
+      "rating": 5,
+      "source": {
+        "book": "wtf2e-core",
+        "page": 146
+      },
+      "summary": "Turns the pack's human and Wolf-Blooded members into Urhan wolves with werewolf senses and regeneration, compelled to hunt the pack's prey until dawn. It's a breaking point for humans.",
+      "action": "extended",
+      "targetSuccesses": 20,
+      "duration": "Until the next sunrise"
+    }
+  ],
+  "merits": [
+    {
+      "id": "anchored",
+      "name": "Anchored",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 105
+      },
+      "ratings": [
+        1,
+        2
+      ],
+      "qualifier": {
+        "prompt": "Touchstone",
+        "options": [
+          "Flesh",
+          "Spirit"
+        ]
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Harmony (the book gives no rating)"
+        }
+      ],
+      "summary": "One Touchstone is favoured: +3 dice (+4 at two dots) when it helps resist a breaking point, but the other Touchstone helps less or not at all."
+    },
+    {
+      "id": "blood-or-bone-affinity",
+      "name": "Blood or Bone Affinity",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 105
+      },
+      "ratings": [
+        2,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Trait",
+        "options": [
+          "Blood",
+          "Bone"
+        ]
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "harmony",
+          "minimum": 3
+        },
+        {
+          "kind": "other",
+          "text": "Harmony 8 or lower"
+        }
+      ],
+      "summary": "Once per chapter, a roll that would refill Willpower through Blood or Bone (both at five dots) is rote; must spend Willpower to pass up a chance to act on it."
+    },
+    {
+      "id": "code-of-honor",
+      "name": "Code of Honor",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 105
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Virtue",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "harmony",
+          "minimum": 8
+        }
+      ],
+      "summary": "Holds to a personal code tied to a chosen Virtue, gaining +3 dice on Stamina, Resolve or Composure rolls to keep it; challenges to it demand Willpower or a defence."
+    },
+    {
+      "id": "controlled-burn",
+      "name": "Controlled Burn",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 105
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        }
+      ],
+      "summary": "Wasu-Im shifts her to Hishu or Urhan instead of Dalu or Urshul, and a lucid turn plus a Willpower point ends the Rage."
+    },
+    {
+      "id": "creative-tactician",
+      "name": "Creative Tactician",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 105
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "purity",
+          "minimum": 2
+        }
+      ],
+      "summary": "When leading teamwork, helpers ignore situational penalties up to her Purity, and once per chapter the primary actor earns a Beat for following her plan."
+    },
+    {
+      "id": "dedicated-locus",
+      "name": "Dedicated Locus",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "safe-place",
+          "minimum": 1
+        },
+        {
+          "kind": "other",
+          "text": "Tied to a Safe Place of at least equal rating; dots can be shared by the pack"
+        }
+      ],
+      "summary": "The pack's locus is attuned to its totem, rated at the Merit's dots, and contributors can collectively spend extra Essence beyond per-turn limits once a day; it draws hungry spirits."
+    },
+    {
+      "id": "embodiment-of-the-firstborn",
+      "name": "Embodiment of the Firstborn",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        5
+      ],
+      "qualifier": {
+        "prompt": "Attribute",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "notTribe",
+          "id": "ghost-wolves",
+          "text": "Not a Ghost Wolf"
+        }
+      ],
+      "summary": "Resembles one of the Firstborn: +1 to a chosen Attribute (which may exceed its usual cap), and Willpower makes attackers Shaken that turn; vengeful old spirits take notice."
+    },
+    {
+      "id": "fading",
+      "name": "Fading",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "cunning",
+          "minimum": 2
+        }
+      ],
+      "summary": "Each person who misses her makes later attempts to spot her that scene harder, and once per scene Cunning adds to a roll to go unnoticed."
+    },
+    {
+      "id": "favored-form",
+      "name": "Favored Form",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Form",
+        "options": [
+          "Dalu",
+          "Gauru",
+          "Urshul",
+          "Urhan"
+        ]
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Primal Urge equal to the Merit's dots + 1"
+        }
+      ],
+      "summary": "One non-Hishu form is stronger, with a new edge per dot (easier exceptional successes, extra Attribute dots, an advanced Skill); other forms lose an Attribute dot per Merit dot."
+    },
+    {
+      "id": "fortified-form",
+      "name": "Fortified Form",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Form",
+        "options": [
+          "Dalu",
+          "Gauru",
+          "Urshul",
+          "Urhan"
+        ]
+      },
+      "repeatable": true,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "survival",
+          "minimum": 2
+        }
+      ],
+      "summary": "One non-Hishu form gains natural armor: 1/0, 1/1 or 2/2 by rating."
+    },
+    {
+      "id": "hearing-whispers",
+      "name": "Hearing Whispers",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "bone-shadows"
+        }
+      ],
+      "summary": "A turn of study reveals a target's Persistent Conditions, and Wits + Skill rolls can confirm other weaknesses she suspects (not spirit bans)."
+    },
+    {
+      "id": "impartial-mediator",
+      "name": "Impartial Mediator",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 106
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "honor",
+          "minimum": 2
+        }
+      ],
+      "summary": "After hearing both sides of a dispute, Presence + Persuasion + Honor against each side's Resolve + Honor makes them accept her version of the truth."
+    },
+    {
+      "id": "living-weapon",
+      "name": "Living Weapon",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Form",
+        "options": [
+          "Dalu",
+          "Gauru",
+          "Urshul",
+          "Urhan"
+        ]
+      },
+      "repeatable": true,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "survival",
+          "minimum": 2
+        }
+      ],
+      "summary": "Bite or claws in one form improve: armor piercing 2, then +1 damage, then ignoring mundane armor."
+    },
+    {
+      "id": "moon-kissed",
+      "name": "Moon-Kissed",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Auspice Skill",
+        "options": null
+      },
+      "repeatable": true,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "An auspice Skill at 2 or more"
+        }
+      ],
+      "summary": "One auspice Skill gains 9-again (8-again if it already had 9-again) and +4 from Willpower under her moon, but a chosen non-auspice Skill loses 10-again."
+    },
+    {
+      "id": "nowhere-to-run",
+      "name": "Nowhere to Run",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "hunters-in-darkness"
+        }
+      ],
+      "summary": "Studying her prey's traces reveals its Safe Places, and Wits + Investigation finds other hideouts; she must leave a mark the prey could notice."
+    },
+    {
+      "id": "pack-dynamics",
+      "name": "Pack Dynamics",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Adds +1 to +3 dice to teamwork rolls and Resistance rolls made to protect the pack, but becomes a penalty while a packmate is unaccounted for."
+    },
+    {
+      "id": "residential-area",
+      "name": "Residential Area",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Once per session, draw on that many dots of Allies, Contacts or Retainers from a secured neighbourhood in the pack's territory, who expect small favours back."
+    },
+    {
+      "id": "resonance-shaper",
+      "name": "Resonance Shaper",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "wisdom",
+          "minimum": 2
+        }
+      ],
+      "summary": "Extended Manipulation + Occult rolls let her change the resonance of Essence or, with more work, of a whole locus."
+    },
+    {
+      "id": "self-control",
+      "name": "Self-Control",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 4
+        }
+      ],
+      "summary": "Spend Willpower to resist a stress-induced shift from low Harmony for the scene, at the cost of a breaking point toward Flesh."
+    },
+    {
+      "id": "song-in-your-heart",
+      "name": "Song in Your Heart",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "glory",
+          "minimum": 2
+        }
+      ],
+      "summary": "Works as Inspiring through song, howl or story; listeners can keep Inspired as a Persistent Condition and earn Beats acting on the tale."
+    },
+    {
+      "id": "sounds-of-the-city",
+      "name": "Sounds of the City",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 107
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "iron-masters"
+        }
+      ],
+      "summary": "Wits + Politics identifies a target's Social Merit, and a scene's work can cut off human-world Social Merit dots up to her Cunning, while her own drop by one."
+    },
+    {
+      "id": "strings-of-the-heart",
+      "name": "Strings of the Heart",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 108
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "storm-lords"
+        }
+      ],
+      "summary": "A turn of study tells her what the target wants most, improving impression and removing a Door; the target in turn faces one fewer Door against her."
+    },
+    {
+      "id": "totem",
+      "name": "Totem",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 108
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Each dot gives a totem point toward a personal or pack totem and a die on Social rolls with it; angering the totem loses the points."
+    },
+    {
+      "id": "weakest-link",
+      "name": "Weakest Link",
+      "category": "werewolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 108
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "blood-talons"
+        }
+      ],
+      "summary": "A turn watching a group reveals which member is weakest by the criteria that matter most in context, without a roll."
+    },
+    {
+      "id": "call-out",
+      "name": "Call Out",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 108
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "honor",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "intimidation",
+          "minimum": 2
+        },
+        {
+          "kind": "attribute",
+          "id": "composure",
+          "minimum": 3
+        }
+      ],
+      "summary": "An instant-action challenge makes the foe take her Honor as a penalty to attack anyone else, or face that bonus against it; outside interference flips the bonus to the foe."
+    },
+    {
+      "id": "efficient-killer",
+      "name": "Efficient Killer",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 108
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "purity",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "medicine",
+          "minimum": 2
+        },
+        {
+          "kind": "attribute",
+          "id": "strength",
+          "minimum": 3
+        },
+        {
+          "kind": "other",
+          "text": "Usable only in Gauru form"
+        }
+      ],
+      "summary": "In Gauru, against a foe with no Defense, give up her own Defense to make a Killing Blow on a living target; this is a common kuruth trigger."
+    },
+    {
+      "id": "flanking",
+      "name": "Flanking",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 108
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "cunning",
+          "minimum": 2
+        },
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "stealth",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        }
+      ],
+      "summary": "A successful attack can deal no damage and instead cut the victim's Initiative and Defense by the successes for the turn."
+    },
+    {
+      "id": "instinctive-defense",
+      "name": "Instinctive Defense",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 109
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "primalUrge",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        }
+      ],
+      "summary": "In Urhan and Urshul, Defense uses the higher of Wits and Dexterity."
+    },
+    {
+      "id": "relentless-assault",
+      "name": "Relentless Assault",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 109
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "strength",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "stamina",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Drop of a Hat",
+          "summary": "+3 Initiative on the first turn of a fight if she makes an all-out attack."
+        },
+        {
+          "dots": 2,
+          "name": "Eye of the Tiger",
+          "summary": "Keeps her Defense when all-out attacking one chosen target."
+        },
+        {
+          "dots": 3,
+          "name": "Dig Deep",
+          "summary": "Drop a die from the attack pool to add +1 to bite or claw damage."
+        },
+        {
+          "dots": 4,
+          "name": "Grin and Bear It",
+          "summary": "1/1 armor on any turn she makes an all-out attack."
+        },
+        {
+          "dots": 5,
+          "name": "The Warpath",
+          "summary": "Killing a foe with lethal or aggravated damage grants a free attack on another; if it hurts, she enters Basu-Im."
+        }
+      ],
+      "summary": "Reckless Brawl style that favours all-out attacks and works even in Kuruth."
+    },
+    {
+      "id": "spiritual-blockage",
+      "name": "Spiritual Blockage",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 109
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "wisdom",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 1
+        },
+        {
+          "kind": "skill",
+          "id": "occult",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        }
+      ],
+      "summary": "A Brawl or Weaponry attack at -2 against an Essence user drains a point of its Essence on damage (two on exceptional success), counting as spent."
+    },
+    {
+      "id": "tactical-shifting",
+      "name": "Tactical Shifting",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "wits",
+          "minimum": 3
+        },
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Springloading",
+          "summary": "Shift down at the start of the turn for +2 Initiative and +5 Speed."
+        },
+        {
+          "dots": 2,
+          "name": "Broaden",
+          "summary": "Shifting up deals bashing equal to the Size gain to nearby foes who fail to Dodge; those hit risk Knocked Down."
+        },
+        {
+          "dots": 3,
+          "name": "Fluid Movement",
+          "summary": "Shift down when attacked; foes take -1 to hit per Size lost."
+        },
+        {
+          "dots": 4,
+          "name": "Suck It Up",
+          "summary": "Shift up when struck to ignore one bashing or lethal damage."
+        },
+        {
+          "dots": 5,
+          "name": "Crush",
+          "summary": "Shift up while grappling to deal automatic lethal damage equal to the Size gain."
+        }
+      ],
+      "summary": "Combat style of reflexive shape changes up or down in Size mid-fight; several maneuvers can combine in one shift."
+    },
+    {
+      "id": "warcry",
+      "name": "Warcry",
+      "category": "fighting",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 110
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "renown",
+          "id": "glory",
+          "minimum": 2
+        },
+        {
+          "kind": "attribute",
+          "id": "presence",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "expression",
+          "minimum": 2
+        },
+        {
+          "kind": "skill",
+          "id": "intimidation",
+          "minimum": 2
+        },
+        {
+          "kind": "other",
+          "text": "Usable only in Gauru, Urshul or Urhan form"
+        }
+      ],
+      "summary": "Presence + Expression howl leaves a chosen listener per success at -1 Defense and attacks and -2 Initiative for the scene; it draws spirits within three turns."
+    },
+    {
+      "id": "allies",
+      "name": "Allies",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Group",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "A group that does favours for you, up to its rating each chapter; can also block a rival's social Merits."
+    },
+    {
+      "id": "alternate-identity",
+      "name": "Alternate Identity",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 110
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Identity",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "A false identity that survives more scrutiny at higher dots and helps Subterfuge to maintain it."
+    },
+    {
+      "id": "anonymity",
+      "name": "Anonymity",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot have the Fame Merit"
+        }
+      ],
+      "summary": "Lives off the books; anyone tracing her paper trail takes -1 per dot."
+    },
+    {
+      "id": "area-of-expertise",
+      "name": "Area of Expertise",
+      "category": "mental",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Specialty",
+        "options": null,
+        "fromSpecialties": true
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 2
+        },
+        {
+          "kind": "other",
+          "text": "At least one Skill Specialty"
+        }
+      ],
+      "summary": "One chosen Specialty gives +2 dice instead of +1."
+    },
+    {
+      "id": "barfly",
+      "name": "Barfly",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "socialize",
+          "minimum": 2
+        }
+      ],
+      "summary": "Gets into any bar or club scene without a roll; spotting her as an outsider is penalized by her Socialize."
+    },
+    {
+      "id": "contacts",
+      "name": "Contacts",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Sphere",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "One sphere of information sources per dot; they give information, not services."
+    },
+    {
+      "id": "fame",
+      "name": "Fame",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Known for",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Cannot have the Anonymity Merit"
+        }
+      ],
+      "summary": "Recognised for something, adding dice with admirers but making her easier to find."
+    },
+    {
+      "id": "fleet-of-foot",
+      "name": "Fleet of Foot",
+      "category": "physical",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        }
+      ],
+      "summary": "+1 Speed per dot, and pursuers take -1 per dot in foot chases.",
+      "effects": [
+        {
+          "type": "speed",
+          "amount": "rating"
+        }
+      ]
+    },
+    {
+      "id": "indomitable",
+      "name": "Indomitable",
+      "category": "mental",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 3
+        }
+      ],
+      "summary": "+2 to resist supernatural mental or emotional influence, or -2 to the power's pool."
+    },
+    {
+      "id": "inspiring",
+      "name": "Inspiring",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "presence",
+          "minimum": 3
+        }
+      ],
+      "summary": "A Presence + Expression speech gives listeners the Inspired Condition."
+    },
+    {
+      "id": "iron-will",
+      "name": "Iron Will",
+      "category": "mental",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "resolve",
+          "minimum": 4
+        }
+      ],
+      "summary": "Willpower spent resisting Social pressure can add Resolve instead, with 8-again on contested rolls."
+    },
+    {
+      "id": "language",
+      "name": "Language",
+      "category": "mental",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Language",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "Speaks, reads and writes one more language."
+    },
+    {
+      "id": "mentor",
+      "name": "Mentor",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 111
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Mentor",
+        "options": null
+      },
+      "repeatable": false,
+      "summary": "A teacher with three Skills (or Resources) who grants a favour each session, at a price."
+    },
+    {
+      "id": "parkour",
+      "name": "Parkour",
+      "category": "physical",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "athletics",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Flow",
+          "summary": "Fewer successes needed in foot chases; ignores some Athletics penalties."
+        },
+        {
+          "dots": 2,
+          "name": "Cat Leap",
+          "summary": "Better fall-damage reduction, which works even on lethal falls."
+        },
+        {
+          "dots": 3,
+          "name": "Wall Run",
+          "summary": "Climbs 10 feet plus 5 per Athletics dot as an instant action, no roll."
+        },
+        {
+          "dots": 4,
+          "name": "Expert Traceur",
+          "summary": "Spend Willpower to make a run, jump or climb roll rote, losing Defense that turn."
+        },
+        {
+          "dots": 5,
+          "name": "Freeflow",
+          "summary": "After a minute of running, one reflexive Athletics action per turn; Willpower gives 3 successes in chases."
+        }
+      ],
+      "summary": "Free-running style for chases, falls and climbing."
+    },
+    {
+      "id": "resources",
+      "name": "Resources",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "Spare money for buying things up to her rating's Availability."
+    },
+    {
+      "id": "retainer",
+      "name": "Retainer",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Retainer",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "A loyal individual follower whose competence rises with dots."
+    },
+    {
+      "id": "safe-place",
+      "name": "Safe Place",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 112
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "A secure location, optionally trapped, giving Initiative when attacked there; dots can be pooled."
+    },
+    {
+      "id": "sleight-of-hand",
+      "name": "Sleight of Hand",
+      "category": "physical",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 113
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "larceny",
+          "minimum": 3
+        }
+      ],
+      "summary": "One Larceny instant action per turn becomes reflexive and goes unnoticed unless watched for."
+    },
+    {
+      "id": "staff",
+      "name": "Staff",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "summary": "A crew of helpers, one type and Skill per dot, who automatically score one success on routine tasks."
+    },
+    {
+      "id": "status",
+      "name": "Status",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Group",
+        "options": null
+      },
+      "repeatable": true,
+      "summary": "Standing in a group: add it to Social rolls there, use its resources, and block others' Merits."
+    },
+    {
+      "id": "striking-looks",
+      "name": "Striking Looks",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 113
+      },
+      "ratings": [
+        1,
+        2
+      ],
+      "repeatable": false,
+      "summary": "Memorable looks add to fitting Social rolls but also to rolls to notice or recall her."
+    },
+    {
+      "id": "sympathetic",
+      "name": "Sympathetic",
+      "category": "social",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 113
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "summary": "Accept a Condition at the start of Social maneuvering to remove two Doors."
+    },
+    {
+      "id": "unseen-sense",
+      "name": "Unseen Sense",
+      "category": "mental",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 113
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Creature type",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Human character only (not a werewolf or Wolf-Blooded)"
+        }
+      ],
+      "summary": "Senses when one kind of supernatural creature is close; accepting Spooked pinpoints it."
+    }
+  ],
+  "conditions": [
+    {
+      "id": "atavism",
+      "name": "Atavism",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "Ancestral memories fill you with rage against their source. Facing it, you make all-out attacks every turn unless you spend Willpower; under threat or stress you lash out, and need Willpower to respond without violence.",
+      "resolution": "Get an exceptional success against the source of your rage or suffer one from it, or take a breaking point for hurting an innocent.",
+      "beat": null,
+      "possibleSources": "Succumbing to Lunacy",
+      "notePrompt": "Source"
+    },
+    {
+      "id": "awestruck",
+      "name": "Awestruck",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 306
+      },
+      "persistent": true,
+      "summary": "A glorious, terrible figure makes you want to grovel. −2 to attack it, and −3 to contested rolls against its Social actions and to your Composure and Resolve against its powers.",
+      "resolution": "The source leaves your presence or stops inflicting Lunacy.",
+      "beat": "You act to serve the source's wishes.",
+      "possibleSources": "Supernatural compulsion",
+      "notePrompt": "By"
+    },
+    {
+      "id": "ban",
+      "name": "Ban",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "A spiritual compulsion forces a set behaviour on you, and breaking it feels deeply wrong: −3 to rolls made as part of breaking it, or −2 to all rolls until you make amends if no roll is involved. Breaking a pack totem's ban alerts the totem and costs it Essence. Some bans are persistent.",
+      "resolution": "A temporary ban ends when keeping it sets you back badly; a persistent one ends as the ban itself dictates.",
+      "beat": "Keeping the ban costs you a significant setback.",
+      "possibleSources": "Low Harmony, breaking a totem's ban, some Gifts and rites",
+      "notePrompt": "Ban"
+    },
+    {
+      "id": "berserk",
+      "name": "Berserk",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 306
+      },
+      "persistent": false,
+      "summary": "A spark of Uratha fury makes it hard to tell friend from foe. Each turn, roll Resolve + Composure or attack the nearest target with whatever you have; even on a success, actions other than attacking the nearest target are at −3.",
+      "resolution": "You fall unconscious, run out of targets, or the source of the Lunacy leaves or stops inflicting it.",
+      "beat": null,
+      "possibleSources": "Gifts and powers that stir werewolf rage in others"
+    },
+    {
+      "id": "confused",
+      "name": "Confused",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "Your thoughts are scrambled. −2 to Intelligence and Wits rolls.",
+      "resolution": "Spend half an hour clearing your head, or take any lethal damage.",
+      "beat": null,
+      "possibleSources": "Sensory overload, some Gifts",
+      "affects": [
+        {
+          "targets": [
+            "attribute:intelligence",
+            "attribute:wits"
+          ],
+          "text": "Confused: −2 to Intelligence and Wits rolls"
+        }
+      ]
+    },
+    {
+      "id": "cowed",
+      "name": "Cowed",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "Someone has put you in your place by force and dominance. Unless you spend Willpower, you take −2 on Physical and Social rolls against them.",
+      "resolution": "Hurt or intimidate the one who cowed you, or regain Willpower through your Blood Archetype.",
+      "beat": null,
+      "possibleSources": "Another character proving they're your better, some supernatural powers",
+      "notePrompt": "By"
+    },
+    {
+      "id": "cunning",
+      "name": "Cunning",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "Your brand marks you as sly and slippery, so people watch you closely. Anyone trying to catch your lies or spot you sneaking gets +2 to the roll, which you can turn into a distraction.",
+      "resolution": "Once someone has taken the +2 against you, you can drop this to add your Cunning as automatic successes on one Larceny, Stealth or Subterfuge action, even if that roll gets no successes.",
+      "beat": null,
+      "possibleSources": "Burning Essence through your Cunning brand"
+    },
+    {
+      "id": "delusion",
+      "name": "Delusion",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "The world no longer makes sense, so you avoid anything that would force you to question it. You flee the supernatural or whatever caused this, shut down if you can't, and need Willpower for any action besides fleeing.",
+      "resolution": "Spend Willpower and uncover a deep secret about the source, anchoring yourself in reality again.",
+      "beat": null,
+      "possibleSources": "Succumbing to Lunacy"
+    },
+    {
+      "id": "demoralized",
+      "name": "Demoralized",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "You falter before the enemy. Willpower adds only one die to attacks instead of three, Initiative is at −4, and Resolve and Composure are at −2 when resisting or contesting.",
+      "resolution": "Get an exceptional success on an attack, win a fight or come through one unhurt, or wait a week.",
+      "beat": null,
+      "possibleSources": "Failing at the last step of something momentous, some Gifts"
+    },
+    {
+      "id": "easy-prey",
+      "name": "Easy Prey",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "You've left an obvious trail. Anyone searching for or tracking you gets +2.",
+      "resolution": "A hunter finds you and hurts you physically, mentally or socially, teaching you to be more careful.",
+      "beat": null,
+      "possibleSources": "Dramatic failure on a contested tracking roll"
+    },
+    {
+      "id": "essence-overload",
+      "name": "Essence Overload",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "You've lost control of Essence too powerful to channel, and cold sparks crackle over you. Each Essence you spend needs a Stamina roll or deals 1 lethal to you, and each injury from an attack makes you lose 1 Essence.",
+      "resolution": "Spend your Essence pool down to nothing, or ground the excess through a strong spiritual conduit.",
+      "beat": null,
+      "possibleSources": "Some Gifts"
+    },
+    {
+      "id": "exhausted",
+      "name": "Exhausted",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 307
+      },
+      "persistent": false,
+      "summary": "You're worn out and need real rest. −2 to Physical actions and to rolls to stay conscious.",
+      "resolution": "Get a good night's sleep.",
+      "beat": null,
+      "possibleSources": "Lack of sleep, recurring nightmares, some Gifts",
+      "affects": [
+        {
+          "targets": [
+            "attributeCategory:physical",
+            "skillCategory:physical"
+          ],
+          "text": "Exhausted: −2 to Physical actions"
+        }
+      ]
+    },
+    {
+      "id": "glorious",
+      "name": "Glorious",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "Your brand shows off the deeds and courage that have made you famous, and draws challengers to you first. Arguments and attacks against you get +2, and weathering them can win over onlookers.",
+      "resolution": "Once someone has taken the +2 against you, you can drop this to add your Glory as automatic successes on one Expression, Intimidation or Persuasion action, even if that roll gets no successes.",
+      "beat": null,
+      "possibleSources": "Burning Essence through your Glory brand"
+    },
+    {
+      "id": "guilty",
+      "name": "Guilty",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "Remorse weighs on you, often after a breaking point. −2 to Resolve or Composure when defending against Subterfuge, Empathy or Intimidation.",
+      "resolution": "Confess what you did and make amends for it.",
+      "beat": null,
+      "possibleSources": "A breaking point"
+    },
+    {
+      "id": "honorable",
+      "name": "Honorable",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "Your brand speaks of fair fights, fair prey and honest dealing, which makes you a tempting mark. Anyone trying to trick or exploit you gets +2, and bearing it with dignity earns you respect.",
+      "resolution": "Once someone has taken the +2 against you, you can drop this to add your Honor as automatic successes on one Empathy, Politics or Socialize action, even if that roll gets no successes.",
+      "beat": null,
+      "possibleSources": "Burning Essence through your Honor brand"
+    },
+    {
+      "id": "inspired",
+      "name": "Inspired",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "You're full of inspiration. On an action tied to it, you can resolve this to make that roll an exceptional success on three successes instead of five, and regain 1 Willpower.",
+      "resolution": "Use the inspiration as described.",
+      "beat": null,
+      "possibleSources": "Exceptional success on Crafts or Expression, the Inspiring Merit"
+    },
+    {
+      "id": "invisible-predator",
+      "name": "Invisible Predator",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "You've slipped into your prey's territory so well that he has no idea you're there: he takes −2 to notice you or prepare for your arrival.",
+      "resolution": "Hurt your prey, whether by attacking, manipulating or robbing him.",
+      "beat": null,
+      "possibleSources": "Exceptional success on a tracking roll",
+      "notePrompt": "Prey"
+    },
+    {
+      "id": "isolated",
+      "name": "Isolated",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "You've been cut off from your pack and your friends hold back. You can't give or get teamwork, and foes keep their full Defense against you however many times they've been attacked that turn.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or take lethal damage into your last Health box.",
+      "beat": null,
+      "possibleSources": "An Elodoth's hunter aspect"
+    },
+    {
+      "id": "lost-tracker",
+      "name": "Lost Tracker",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 308
+      },
+      "persistent": false,
+      "summary": "Losing your quarry has shaken your confidence. −2 to tracking rolls.",
+      "resolution": "Track your quarry successfully despite the penalty.",
+      "beat": null,
+      "possibleSources": "Dramatic failure on a tracking roll"
+    },
+    {
+      "id": "lured",
+      "name": "Lured",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 309
+      },
+      "persistent": true,
+      "summary": "Something you saw or heard has hooked your attention and you must investigate it, wandering off from allies who aren't also Lured without telling them. You argue to be let go (−5 to talk you out of it), and treat anyone who tries to hold you back as blind or mad; finding nothing doesn't stop you falling for the next similar lure.",
+      "resolution": "Investigate the lure and run into a threat, or an hour passes.",
+      "beat": "Your behaviour sows chaos and confusion among your allies.",
+      "possibleSources": "Some Gifts"
+    },
+    {
+      "id": "moon-taint",
+      "name": "Moon Taint",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 309
+      },
+      "persistent": false,
+      "summary": "Luna's curse is in you, making your skin crawl, and you suffer the Poisoned Tilt. At your first full moon, roll Resolve + Composure as an extended action (5 successes, one roll a minute); fail any roll and you take Dalu and enter Wasu-Im with Primal Urge 1 regeneration until sunrise.",
+      "resolution": "Fight off the change, see the sunrise after changing, or poison yourself with wolfsbane.",
+      "beat": null,
+      "possibleSources": "The bite of a werewolf using certain Gifts"
+    },
+    {
+      "id": "mystified",
+      "name": "Mystified",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 309
+      },
+      "persistent": false,
+      "summary": "Facing an Ithaeur left you haunted by the spirit wilds, at ease only near a strong Gauntlet. Mental actions take a penalty of 6 minus the local Gauntlet rating; if that exceeds your Composure, you also lose 10-again. Spirits suffer this in reverse.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or take lethal damage into your last Health box.",
+      "beat": null,
+      "possibleSources": "An Ithaeur's hunter aspect"
+    },
+    {
+      "id": "paranoid",
+      "name": "Paranoid",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 309
+      },
+      "persistent": false,
+      "summary": "You see threats everywhere and can't trust anyone. −2 to Perception, Social actions and rolls to call on Allies, Contacts, Mentor, Retainer, Staff or Status.",
+      "resolution": "A week passes with no real threat, or a friend convinces you with an exceptional success on a Social action.",
+      "beat": null,
+      "possibleSources": "Some Gifts"
+    },
+    {
+      "id": "pure",
+      "name": "Pure",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 309
+      },
+      "persistent": false,
+      "summary": "Your brand shows you keep the Oath of the Moon above all else, which some see as a weakness to exploit. Rolls to tempt you into disgrace get +2, and resisting them wraps you in your ancestors' fearsome mantle.",
+      "resolution": "Once someone has taken the +2 against you, you can drop this to add your Purity as automatic successes on one Athletics, Brawl or Survival action, even if that roll gets no successes.",
+      "beat": null,
+      "possibleSources": "Burning Essence through your Purity brand"
+    },
+    {
+      "id": "reception",
+      "name": "Reception",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": false,
+      "summary": "Lunacy has opened you to the Shadow. You can't resist possession and leak Essence equal to your Resolve each day, which spirits can take by touch and werewolves by eating you. On a dramatic failure you can slip into the Hisil instead of the usual result.",
+      "resolution": "Face grave danger as a result of your time in the Hisil.",
+      "beat": null,
+      "possibleSources": "Succumbing to Lunacy"
+    },
+    {
+      "id": "resigned",
+      "name": "Resigned",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": false,
+      "summary": "Your hunter has shown you your doom, and part of you welcomes death. You can still fight, flee and use Gifts, but you can't spend Willpower for dice or resistance to protect yourself from a deadly threat.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or take lethal damage into your last Health box.",
+      "beat": null,
+      "possibleSources": "A Cahalith's hunter aspect"
+    },
+    {
+      "id": "shadow-paranoia",
+      "name": "Shadow Paranoia",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": false,
+      "summary": "Unnatural dread puts you on edge, sure death waits in every shadow. −2 to Perception rolls, any failed Perception roll becomes a dramatic failure as you react in panic to imagined threats, and −2 to Intelligence and Wits pools.",
+      "resolution": "Get somewhere safe, or score an exceptional success on a Perception roll.",
+      "beat": null,
+      "possibleSources": "Some Gifts",
+      "affects": [
+        {
+          "targets": [
+            "attribute:intelligence",
+            "attribute:wits"
+          ],
+          "text": "Shadow Paranoia: −2 to Intelligence and Wits rolls"
+        }
+      ]
+    },
+    {
+      "id": "shaken",
+      "name": "Shaken",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": false,
+      "summary": "Something has badly scared you. When that fear could get in your way, you can choose to fail the roll and resolve this.",
+      "resolution": "Let your fear make you fail a roll as described.",
+      "beat": null,
+      "possibleSources": "A breaking point"
+    },
+    {
+      "id": "shadowlashed",
+      "name": "Shadowlashed",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": false,
+      "summary": "You overreached with the Shadow's laws and pay for it. −2 to all rolls that deal with the Shadow or its spirits.",
+      "resolution": "Succeed at a rite, connect meaningfully with a spiritual Touchstone, or meditate in the Shadow.",
+      "beat": null,
+      "possibleSources": "Dramatic failure on a rite"
+    },
+    {
+      "id": "siskur-dah",
+      "name": "Siskur-Dah",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": true,
+      "summary": "You're on the Sacred Hunt and gain a benefit from the ritemaster's tribe: Blood Talons read the prey's Renown brands, Bone Shadows can strike ephemeral prey, Hunters in Darkness sense the Gauntlet and the prey's breaches in it, Iron Masters choose which Lunacy Condition they inflict, and Storm Lords see the prey's possession, Urging or Claiming.",
+      "resolution": "The prey is brought down (it needn't die), or the pack turns its efforts away from the hunt.",
+      "beat": "You get an exceptional success on an action involving the prey.",
+      "possibleSources": "The Sacred Hunt rite, a Firstborn's personal blessing",
+      "notePrompt": "Ritemaster's tribe"
+    },
+    {
+      "id": "spooked",
+      "name": "Spooked",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 310
+      },
+      "persistent": false,
+      "summary": "You've glimpsed something subtly but undeniably supernatural, and it has seized your attention, though how you react is up to you.",
+      "resolution": "Your fear or fascination leads you to make trouble for the group, such as wandering off alone, staying up researching or fleeing.",
+      "beat": null,
+      "possibleSources": "A breaking point, an encounter with the supernatural"
+    },
+    {
+      "id": "steadfast",
+      "name": "Steadfast",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "You're sure of yourself. When you fail a roll, you can resolve this to count it as one success; on a chance die, resolve it to roll a normal die instead.",
+      "resolution": "Use it as described.",
+      "beat": null,
+      "possibleSources": "A breaking point"
+    },
+    {
+      "id": "stumbled",
+      "name": "Stumbled",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "You've hit a snag in an extended action: each later roll in it is at −3. Resolving this gives no Beat.",
+      "resolution": "The extended action ends.",
+      "beat": null,
+      "possibleSources": "Failure on a rite or a Facet",
+      "beatOnResolve": false
+    },
+    {
+      "id": "swaggering",
+      "name": "Swaggering",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "A Rahu's might has convinced you that you can beat her. To prepare against her or her pack in any way, you must spend Willpower and make a reflexive extended Resolve + Composure roll, one roll per turn at a Willpower each, needing successes equal to her Purity.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or take lethal damage into your last Health box.",
+      "beat": null,
+      "possibleSources": "A Rahu's hunter aspect"
+    },
+    {
+      "id": "swooning",
+      "name": "Swooning",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "You're smitten with someone. −2 to rolls that would harm them, they get +2 on Social rolls against you, and their Social maneuvering starts one impression better.",
+      "resolution": "Put yourself in danger for them, or choose to fail a roll to resist their Social action.",
+      "beat": null,
+      "possibleSources": "An exceptional success on Persuasion or Subterfuge against you, help with your Vice (humans)",
+      "repeatable": true,
+      "notePrompt": "Who"
+    },
+    {
+      "id": "symbolic-focus",
+      "name": "Symbolic Focus",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "The rite's power flows through you. Dealings with spirits are exceptional successes on three successes instead of five, and you count as one Rank higher.",
+      "resolution": "Get an exceptional success dealing with a spirit, fall into Wasu-Im, or break one of your bans.",
+      "beat": null,
+      "possibleSources": "Exceptional success on a rite"
+    },
+    {
+      "id": "unaware",
+      "name": "Unaware",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "You're so dazed and turned inward you can't see the wolf at the door. Your Composure drops by the Irraka's Cunning minus 1, by at least 1.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or take lethal damage into your last Health box.",
+      "beat": null,
+      "possibleSources": "An Irraka's hunter aspect"
+    },
+    {
+      "id": "untraceable",
+      "name": "Untraceable",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "You've covered your tracks carefully. Rolls to track you are at −2.",
+      "resolution": "It ends after hindering as many tracking attempts as your Survival or Streetwise, whichever is higher.",
+      "beat": null,
+      "possibleSources": "Exceptional success on a tracking roll"
+    },
+    {
+      "id": "wise",
+      "name": "Wise",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 311
+      },
+      "persistent": false,
+      "summary": "Your brand marks you as someone who weighs past lessons before acting, which invites others to test you. Rolls to defy or question your advice get +2, and proving yourself right deepens your understanding.",
+      "resolution": "Once someone has taken the +2 against you, you can drop this to add your Wisdom as automatic successes on one Investigation, Medicine or Occult action, even if that roll gets no successes.",
+      "beat": null,
+      "possibleSources": "Burning Essence through your Wisdom brand"
+    },
+    {
+      "id": "resonant",
+      "name": "Resonant",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 188
+      },
+      "persistent": false,
+      "summary": "You fit a spirit's purview, so it can use its Influences on you; the Condition is tied to that spirit.",
+      "resolution": "The thing that matches the spirit's purview ends, e.g. you let go of the grief a grief spirit feeds on. Banishing rites can hold it off for a while.",
+      "beat": null,
+      "possibleSources": "Naturally matching a spirit's purview, summoning rites, a powerful spirit's Influence",
+      "notePrompt": "Spirit"
+    },
+    {
+      "id": "open",
+      "name": "Open",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 189
+      },
+      "persistent": false,
+      "summary": "Building on Resonant, you're now primed for that spirit, which can try to Fetter itself to you or possess you.",
+      "resolution": "Resonant ends, or an exorcism drops it back to Resonant.",
+      "beat": null,
+      "possibleSources": "Time spent working with the spirit, a Strengthen Influence, Lunacy, some wolf-blooded Tells",
+      "notePrompt": "Spirit"
+    },
+    {
+      "id": "controlled",
+      "name": "Controlled",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 189
+      },
+      "persistent": false,
+      "summary": "A spirit has possessed you so many times that it can now try to Claim you for good. Needs Open for the same spirit.",
+      "resolution": "Throw off this Condition or a resulting Claim against the spirit's will, returning to Open.",
+      "beat": null,
+      "possibleSources": "Repeated possession by the spirit",
+      "notePrompt": "Spirit"
+    },
+    {
+      "id": "urged",
+      "name": "Urged",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 190
+      },
+      "persistent": false,
+      "summary": "A spirit is Fettered to you. It can roll to read your surface thoughts and to plant urges to do things.",
+      "resolution": "The spirit's Fetter to you ends.",
+      "beat": "You act on an urge the spirit planted.",
+      "possibleSources": "A spirit's Fetter Manifestation",
+      "notePrompt": "Spirit"
+    },
+    {
+      "id": "possessed",
+      "name": "Possessed",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 190
+      },
+      "persistent": false,
+      "summary": "A spirit has taken over your body for a while, leaving you in a coma-like state that you remember only as lost time and fragments in dreams. Touching its bane or being hurt by it wounds the spirit.",
+      "resolution": "After a scene, or sooner if the spirit leaves or you die; abjuration, exorcism, banes and bans can drive it out.",
+      "beat": null,
+      "possibleSources": "A spirit's Possess Manifestation on someone Open to it",
+      "notePrompt": "Spirit"
+    },
+    {
+      "id": "claimed",
+      "name": "Claimed",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 191
+      },
+      "persistent": true,
+      "summary": "A spirit has permanently fused with you. While the merger takes hold you're Urged, gain a dot of the spirit's Attributes each day and your body mutates; afterwards you're a material hybrid with its Essence, ban, bane and Influences.",
+      "resolution": "The spirit chooses to tear itself free with a contested roll, leaving you scarred as the changes slowly fade.",
+      "beat": null,
+      "possibleSources": "A spirit's Claim Manifestation",
+      "notePrompt": "Spirit"
+    }
+  ],
+  "fetishes": [
+    {
+      "id": "witch-poppet",
+      "name": "Witch-Poppet",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 147
+      },
+      "kind": "talen",
+      "rating": 1,
+      "summary": "A small charm or doll hung from a tree to snare intruders until the pack arrives.",
+      "activation": "Hang it from a tree or bush",
+      "effect": "The first person to touch it is hit by the Knotted Paths Nature Facet."
+    },
+    {
+      "id": "dawn-shard",
+      "name": "Dawn Shard",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 147
+      },
+      "kind": "fetish",
+      "rating": 1,
+      "summary": "A carved shard of mirror that eases dealings with spirits of the sun.",
+      "effect": "Helions who can see it start with an impression one step better."
+    },
+    {
+      "id": "stalkers-lament",
+      "name": "Stalker's Lament",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 147
+      },
+      "kind": "fetish",
+      "rating": 1,
+      "summary": "A necklace or choker, popular with Irraka, used as an emergency signal to the pack.",
+      "activation": "Howl while wearing it",
+      "effect": "Every packmate hears the howl at any distance and knows its direction and distance."
+    },
+    {
+      "id": "trackers-lantern",
+      "name": "Tracker's Lantern",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 147
+      },
+      "kind": "fetish",
+      "rating": 1,
+      "summary": "A small lamp that gives off a strange violet light.",
+      "effect": "Hand and foot prints from the last hour glow where its light falls."
+    },
+    {
+      "id": "charred-death-rattle",
+      "name": "Charred Death-Rattle",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 147
+      },
+      "kind": "fetish",
+      "rating": 2,
+      "summary": "A rattling charm of scorched bone, common among Bone Shadows.",
+      "effect": "Adds +3 to Influence (Fire) when using the Tongue of Flame Elemental Facet."
+    },
+    {
+      "id": "devourers-fang",
+      "name": "Devourer's Fang",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "fetish",
+      "rating": 2,
+      "summary": "A twisted tooth that replaces one of the werewolf's own pulled teeth.",
+      "effect": "In hybrid forms he can chew through anything, even metal or stone, and is fed by whatever he eats."
+    },
+    {
+      "id": "rust-talon-bindings",
+      "name": "Rust-Talon Bindings",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "fetish",
+      "rating": 2,
+      "summary": "Heavy corroded manacles for holding supernatural prisoners.",
+      "effect": "The bound person takes 1 lethal for each supernatural power used and must win a Clash of Wills against 5 dice (Unchained Strength is unaffected); tools that try to break or pick them take 1 Structure damage, ignoring Durability."
+    },
+    {
+      "id": "dragons-egg-bezoar",
+      "name": "Dragon's Egg Bezoar",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "talen",
+      "rating": 2,
+      "summary": "A rough lump that gives off invigorating heat once swallowed.",
+      "activation": "Swallow it",
+      "effect": "Activates the Primal Strength Facet of the Gift of Strength."
+    },
+    {
+      "id": "brine-bottle",
+      "name": "Brine Bottle",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A fetish used by coastal werewolves.",
+      "effect": "With the Heart of Water Facet, he can leap into seawater and spend 1 Essence to breathe underwater for the scene instead of using Influence (Water)."
+    },
+    {
+      "id": "gridlock-puzzle",
+      "name": "Gridlock Puzzle",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A puzzle of interlocking metal rings and squares.",
+      "effect": "With the All Doors Locked Facet, he can control traffic lights and signals within 100 yards x Honor instead of doors and windows."
+    },
+    {
+      "id": "steel-wolf",
+      "name": "Steel Wolf",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A sturdy car or van favoured by modern packs, especially Iron Masters.",
+      "effect": "Road Shadows run in total silence; Ironhides gain +3 Durability against attacks."
+    },
+    {
+      "id": "whisper-knife",
+      "name": "Whisper Knife",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A blade that can strike beings in Twilight, though it doesn't let the wielder see them.",
+      "effect": "On a hit against a Twilight being, it tells the wielder what kind of being he wounded."
+    },
+    {
+      "id": "storm-coil",
+      "name": "Storm Coil",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 148
+      },
+      "kind": "talen",
+      "rating": 3,
+      "summary": "A small copper or iron lamp with a metal coil inside.",
+      "effect": "Grants Influence (Electricity) 3, often used to overload or ground a building's power."
+    },
+    {
+      "id": "crimson-falx",
+      "name": "Crimson Falx",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 149
+      },
+      "kind": "fetish",
+      "rating": 4,
+      "summary": "A brutal inward-curved blade such as a sickle or glaive, mostly carried by Blood Talons and Storm Lords.",
+      "effect": "The first enemy it strikes after activation each scene permanently suffers Arm Wrack or Leg Wrack (attacker's choice)."
+    },
+    {
+      "id": "shadow-thunderhead-mask",
+      "name": "Shadow Thunderhead Mask",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 149
+      },
+      "kind": "fetish",
+      "rating": 4,
+      "summary": "A snarling mask that discourages spirits from subtle tricks against its wearer.",
+      "effect": "Adds Presence to all pools to resist Influences, Numina and Dread Powers from spirits and the Claimed, other than physical attacks."
+    },
+    {
+      "id": "sky-caller-trinket",
+      "name": "Sky-Caller Trinket",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 149
+      },
+      "kind": "talen",
+      "rating": 4,
+      "summary": "A bundle of feathers and bird bones tied with bright thread.",
+      "effect": "Grants Influence (Birds) 4, to summon or control birds nearby."
+    },
+    {
+      "id": "cuneiform-cylinder",
+      "name": "Cuneiform Cylinder",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 149
+      },
+      "kind": "talen",
+      "rating": 5,
+      "summary": "A clay cylinder carved with a First Tongue story from Forsaken history.",
+      "activation": "Read its outer surface",
+      "effect": "Activates the This Story Is True Knowledge Facet; ancient ones may do even more."
+    },
+    {
+      "id": "drum-of-the-heavens",
+      "name": "Drum of the Heavens",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 149
+      },
+      "kind": "fetish",
+      "rating": 5,
+      "summary": "A heavy drum whose music spirits love, which also draws pestering spirit admirers.",
+      "effect": "Each minute a non-hostile spirit listens, its impression of the drummer improves by one step."
+    }
+  ]
+}
