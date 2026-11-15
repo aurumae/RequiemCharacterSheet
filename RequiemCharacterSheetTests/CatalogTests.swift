@@ -190,7 +190,7 @@ struct CatalogTests {
         #expect(["Gallows Post", "Weihan Cynn", "Ahl al-Mumit", "Invictus"].allSatisfy(options.contains))
     }
 
-    @Test func gallowsPostTakesCarthianLawsWithItsOwnStatus() throws {
+    @Test func gallowsPostTakesCarthianMeritsWithItsOwnStatus() throws {
         let laws = catalog.merits.all.filter { $0.group == "carthian-law" }.map(\.id)
         #expect(laws.count == 12)
         #expect(laws.contains("stare-decisis") && laws.contains("lex-terrae"))
@@ -204,8 +204,19 @@ struct CatalogTests {
         #expect(character.unmetPrerequisites(for: lexTerrae).map(\.description) == ["Gallows Post Status 2"])
         character.merits[1].rating = 2
         #expect(character.unmetPrerequisites(for: lexTerrae).isEmpty)
-        // Carthian Merits that aren't Laws still need Carthian Status
-        #expect(character.unmetPrerequisites(for: carthianPull).map(\.description) == ["Carthian Movement Status 1"])
+        // Carthian Merits that aren't Laws use Gallows Post Status too
+        #expect(character.unmetPrerequisites(for: carthianPull).isEmpty)
+        let thug = try #require(catalog.merits.entry("jack-booted-thug"))
+        #expect(character.unmetPrerequisites(for: thug).map(\.description) == ["City Status", "Intimidation 3"])
+        // Every Merit that asks for Carthian Status is covered
+        let gallowsPost = try #require(catalog.covenants.entry("gallows-post"))
+        let carthian = catalog.merits.all.filter { merit in
+            merit.prerequisites.contains { $0.kind == .covenant && $0.id == "carthian-movement" }
+        }
+        #expect(carthian.count > 12)
+        #expect(carthian.allSatisfy { merit in
+            gallowsPost.meritGroups.contains { $0.inPlaceOf == "carthian-movement" && $0.covers(merit) }
+        })
         // Others still need Carthian Status for the Laws
         character.covenantSource = .catalog("invictus")
         #expect(character.unmetPrerequisites(for: lexTerrae).map(\.description) == ["Carthian Movement Status 2"])

@@ -1118,3 +1118,21 @@ format, fixture, `Package.swift`, script or workflow change; iOS UI-test skip in
 then verify the main push run. This involves the full beta-3 parity/core/CI work,
 not just the two test corrections. Physical-device and Play release gates remain
 as previously recorded.
+
+## 2026-11-15 02:25 UTC · Claude (iOS) · Gallows Post Status covers every Carthian Merit
+
+The user reported that Gallows Post Status didn't qualify a character for Jack-Booted Thug during guided
+creation. Their ruling is that Gallows Post Status stands in for Carthian Movement Status for all Carthian
+Merits, not only the twelve Carthian Laws. This is a catalog-only change in `dark-eras-companion.json`. The
+Gallows Post keeps its `carthian-law` group and gains a second `meritGroups` entry. That entry lists the other
+thirteen Merits that ask for Carthian Status in `merits`, with `inPlaceOf: "carthian-movement"`. No new field,
+no change in meaning and no save-format change. Casual User (`notCovenant`) is unaffected. The summary text now
+says "Carthian Merits, including the Carthian Laws".
+
+The test now asserts that every Merit with a `carthian-movement` covenant prerequisite is covered. That will
+fail if a future book adds a Carthian Merit without adding it to the list.
+
+**Validation:** 275 `swift test`; Xcode 276 passed, 1 skipped (the UI test). Merged Astra's `a9675dd` first.
+I have read the 13 and 15 November entries. Astra's answer to the core-extraction Question matches the iOS
+plan. **Follow-up (Android):** none should be needed, because the existing `merits` list handling covers it.
+Please confirm that Jack-Booted Thug shows as available for a Gallows Post character with Status 2.
