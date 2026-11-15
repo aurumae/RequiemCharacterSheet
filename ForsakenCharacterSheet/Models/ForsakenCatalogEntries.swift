@@ -55,8 +55,14 @@ struct TribeEntry: CatalogEntry {
     let source: SourceReference
     let summary: String
     let kind: Kind
-    /// `nil` for Ghost Wolves and the Pure.
+    /// `nil` for Ghost Wolves.
     let renown: Renown?
+    /// For the Pure, the Renowns their second starting dot can go to as well as `renown`.
+    let secondaryRenown: [Renown]?
+    /// For the Pure, the tribe Skills, in place of an auspice's.
+    let skills: [SkillID]?
+    /// For the Pure, the two Hunter's Aspects a member chooses between, in place of an auspice's.
+    let huntersAspects: [AuspiceEntry.HuntersAspect]?
     let giftAffinities: [CatalogEntryID]
     let oath: Oath?
     let firstTongueName: String?

@@ -139,10 +139,15 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
   Fetishes, Aspirations, Health, Willpower, Primal Urge with Essence, Harmony with Touchstones, Kuruth triggers,
   Experience and Conditions.
 
-Still to come: guided creation, and the rules for the Pure and Ghost Wolves beyond their entries (no auspice, the extra
-Shadow Gift, the bonus Totem dot). Also Speed, Defense, Initiative and Perception for each form, Werewolf sourcebooks,
-and App Store assets.
+- **The Pure.** Night Horrors: Shunned by the Moon (`nh-shunned-by-the-moon.json`) holds the three Pure tribes, which
+  moved there from the core file, with their secondary Renown, Skills and two Hunter's Aspects. It also has five Shadow
+  Gifts, five Rites, nine Merits and eight Conditions. A Pure character has no auspice: the Auspice row becomes a
+  Hunter's Aspect choice, their Gift affinities are the tribe's alone, no Moon Gift is free, and Renown notes mark the
+  secondary Renowns.
 
+Still to come: guided creation (the core and the Pure quick references, including the Pure's starting Facets and
+Totem 2), the Ghost Wolf rules, Speed, Defense, Initiative and Perception for each form, more Werewolf sourcebooks, and
+App Store assets.
 
 ## Later phases
 

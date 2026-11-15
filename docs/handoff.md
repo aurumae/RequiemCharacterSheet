@@ -1274,3 +1274,25 @@ Darkness".
 
 **Follow-up (Android):** nothing to build until `:forsaken` starts. When it does, read the catalog contract and the
 save keys above.
+
+## 2026-11-15 20:11 UTC · Claude (iOS) · Phase 3: the Pure, from Night Horrors: Shunned by the Moon
+
+**Shared files for Android:**
+- New catalog `ForsakenCharacterSheet/Catalogs/nh-shunned-by-the-moon.json` (book id
+  `night-horrors-shunned-by-the-moon`). It has 3 tribes, 5 Gifts with 25 Facets, 5 Rites, 9 Merits and 8 Conditions.
+  The Pure tribes moved there from `wtf2e-core.json`, which now has 6 tribes. Files after the core two load
+  alphabetically.
+- `docs/forsaken-catalog-format.md` adds optional tribe fields `secondaryRenown`, `skills` and `huntersAspects`
+  (same shape as an auspice's `huntersAspect`).
+
+**Rules:** a tribe of kind `pure` means no auspice. The rules ignore any saved auspice, the sheet shows a Hunter's
+Aspect choice from the tribe's two instead, Gift affinities are the tribe's alone, no Moon Gift is free, and the list
+subtitle leaves the auspice out.
+
+**Forsaken save format (draft, schema 1):** new key `huntersAspect`, the chosen aspect's name, written only when set.
+It's cleared when the tribe changes.
+
+**Validation:** 276 `swift test`; Forsaken 19 passed. On the simulator: the tribe picker is grouped by book, the
+Hunter's Aspect row and menu match the other choice rows, and the tribe details and Renown notes are right.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.

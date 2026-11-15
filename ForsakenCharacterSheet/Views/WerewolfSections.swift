@@ -35,6 +35,7 @@ private func giftName(_ id: CatalogEntryID) -> String {
 
 /// The Character section: the details at the top of the official sheet, in its order.
 struct ForsakenCharacterInfoView: View {
+    @Environment(\.theme) private var theme
     @Bindable var character: ForsakenCharacter
 
     var body: some View {
@@ -45,7 +46,12 @@ struct ForsakenCharacterInfoView: View {
             archetypeRow("Blood:", kind: .blood, source: $character.bloodSource)
             archetypeRow("Bone:", kind: .bone, source: $character.boneSource)
             CharacterInfoRowView(label: "Concept:", text: $character.concept)
-            auspiceRow
+            // The Pure have no auspice, and take a Hunter's Aspect from their tribe instead
+            if character.isPure {
+                pureHuntersAspectRow
+            } else {
+                auspiceRow
+            }
             tribeRow
             lodgeRow
         }
@@ -124,6 +130,16 @@ struct ForsakenCharacterInfoView: View {
                     if let renown = tribe.renown {
                         facts.append(DetailFact(label: "Renown", value: renown.name))
                     }
+                    if let secondary = tribe.secondaryRenown, !secondary.isEmpty {
+                        facts.append(DetailFact(label: "Secondary Renown", value: secondary.map(\.name).joined(separator: ", ")))
+                    }
+                    if let skills = tribe.skills, !skills.isEmpty {
+                        facts.append(DetailFact(label: "Skills", value: skills.compactMap { SkillDefinition.withID($0)?.name }.joined(separator: ", ")))
+                    }
+                    if let aspects = tribe.huntersAspects, !aspects.isEmpty {
+                        let names = aspects.map { "\($0.name), inflicting \(Catalog.bundled.conditions.entry($0.condition)?.name ?? $0.condition)" }
+                        facts.append(DetailFact(label: "Hunter's Aspects", value: names.joined(separator: "; ")))
+                    }
                     if !tribe.giftAffinities.isEmpty {
                         facts.append(DetailFact(label: "Shadow Gifts", value: tribe.giftAffinities.map(giftName).joined(separator: ", ")))
                     }
@@ -133,8 +149,53 @@ struct ForsakenCharacterInfoView: View {
                     return CatalogChoiceDetail(title: tribe.name, summary: tribe.summary, citation: tribe.source.citation(), facts: facts)
                 }
             },
-            choose: { id in character.tribeSource = id.map { .catalog($0) } ?? .custom("") }
+            choose: { id in
+                let source: TraitSource = id.map { .catalog($0) } ?? .custom("")
+                // A Hunter's Aspect belongs to one tribe, so it's chosen again after a change
+                if source != character.tribeSource {
+                    character.pureHuntersAspect = ""
+                }
+                character.tribeSource = source
+            }
         )
+    }
+
+    /// A Pure character's choice between their tribe's two Hunter's Aspects, styled like the other choice rows.
+    private var pureHuntersAspectRow: some View {
+        let aspects = character.tribeEntry?.huntersAspects ?? []
+        let value = character.huntersAspect?.name ?? ""
+        return HStack {
+            Text("Hunter's Aspect:")
+                .themedText(.label)
+                .frame(minWidth: 100, alignment: .leading)
+            Spacer()
+            Menu {
+                ForEach(aspects, id: \.name) { aspect in
+                    Button {
+                        character.pureHuntersAspect = aspect.name
+                    } label: {
+                        let condition = Catalog.bundled.conditions.entry(aspect.condition)?.name ?? aspect.condition
+                        Text(aspect.name)
+                        Text("Inflicts \(condition)")
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(value.isEmpty ? "Choose" : value)
+                        .themedText(.body)
+                        .foregroundStyle(value.isEmpty ? theme.muted : Color.primary)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(theme.accent)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Hunter's Aspect")
+            .accessibilityValue(value.isEmpty ? "Not chosen" : value)
+        }
+        .padding(.vertical, 4)
+        .editingRow("info-Hunter's Aspect")
     }
 
     private var lodgeRow: some View {
@@ -241,9 +302,13 @@ struct RenownView: View {
 
     /// Which of the character's auspice and tribe favour it.
     private func note(for kind: Renown) -> String? {
-        let givers = [character.auspiceEntry?.renown == kind ? "Auspice" : nil,
+        let givers = [character.effectiveAuspice?.renown == kind ? "Auspice" : nil,
                       character.tribeEntry?.renown == kind ? "Tribe" : nil].compactMap { $0 }
-        return givers.isEmpty ? nil : givers.joined(separator: " and ") + " Renown"
+        if givers.isEmpty {
+            // The Pure's second starting dot can go to one of these instead (Shunned by the Moon, p. 14)
+            return character.tribeEntry?.secondaryRenown?.contains(kind) == true ? "Secondary Tribe Renown" : nil
+        }
+        return givers.joined(separator: " and ") + " Renown"
     }
 }
 
@@ -348,11 +413,11 @@ struct GiftsView: View {
     /// the other Shadow Gifts, the Wolf Gifts, and the other Moon Gifts.
     private func pickerSections() -> [CatalogPickerSection] {
         let gifts = Catalog.bundled.gifts.all
-        let ownMoon = gifts.filter { $0.kind == .moon && $0.auspice == character.auspiceSource.catalogID }
+        let ownMoon = gifts.filter { $0.kind == .moon && $0.auspice == character.effectiveAuspice?.id }
         let affinity = gifts.filter { $0.kind == .shadow && character.affinityGifts.contains($0.id) }
         let otherShadow = gifts.filter { $0.kind == .shadow && !character.affinityGifts.contains($0.id) }
         let wolf = gifts.filter { $0.kind == .wolf }
-        let otherMoon = gifts.filter { $0.kind == .moon && $0.auspice != character.auspiceSource.catalogID }
+        let otherMoon = gifts.filter { $0.kind == .moon && $0.auspice != character.effectiveAuspice?.id }
         let owned = Set(character.facets.compactMap(\.source.catalogID))
         let ordered = ownMoon + affinity + otherShadow + wolf + otherMoon
         return ordered.flatMap { gift in
@@ -384,7 +449,7 @@ struct GiftsView: View {
         if let renown = facet.renown, character.renown(renown) == 0 {
             return "Needs \(renown.name) 1"
         }
-        if let dots = facet.dots, let renown = character.auspiceEntry?.renown, character.renown(renown) < dots {
+        if let dots = facet.dots, let renown = character.effectiveAuspice?.renown, character.renown(renown) < dots {
             return "Needs \(renown.name) \(dots)"
         }
         return nil

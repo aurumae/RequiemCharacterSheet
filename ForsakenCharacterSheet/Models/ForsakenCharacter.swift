@@ -29,6 +29,8 @@ final class ForsakenCharacter: Codable {
     var auspiceSource: TraitSource
     var tribeSource: TraitSource
     var lodgeSource: TraitSource
+    /// The Hunter's Aspect a Pure character took from their tribe; Forsaken take their auspice's.
+    var pureHuntersAspect: String
 
     var attributes: [Attribute]
     var skills: [Skill]
@@ -78,6 +80,7 @@ final class ForsakenCharacter: Codable {
         auspiceSource = .custom("")
         tribeSource = .custom("")
         lodgeSource = .custom("")
+        pureHuntersAspect = ""
 
         attributes = AttributeKind.allCases.map { Attribute($0) }
         // The Chronicles of Darkness core Skills, the same as Requiem's
@@ -114,7 +117,7 @@ final class ForsakenCharacter: Codable {
 
     enum CodingKeys: CodingKey {
         case game, schemaVersion, id, createdAt, modifiedAt,
-             name, player, chronicle, concept, blood, bone, auspice, tribe, lodge,
+             name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
              renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggers, form,
              facets, rites, fetishes, size,
@@ -138,6 +141,9 @@ final class ForsakenCharacter: Codable {
         try container.encode(auspiceSource, forKey: .auspice)
         try container.encode(tribeSource, forKey: .tribe)
         try container.encode(lodgeSource, forKey: .lodge)
+        if !pureHuntersAspect.isEmpty {
+            try container.encode(pureHuntersAspect, forKey: .huntersAspect)
+        }
 
         try container.encode(attributes, forKey: .attributes)
         try container.encode(skills, forKey: .skills)
@@ -189,6 +195,7 @@ final class ForsakenCharacter: Codable {
         auspiceSource = try container.decodeTraitSource(.auspice, in: catalog.auspices)
         tribeSource = try container.decodeTraitSource(.tribe, in: catalog.tribes)
         lodgeSource = try container.decodeTraitSource(.lodge, in: catalog.lodges)
+        pureHuntersAspect = try container.decode(.huntersAspect, default: "")
 
         attributes = try container.decode(.attributes, default: blank.attributes)
         skills = try container.decode(.skills, default: blank.skills)
@@ -274,9 +281,25 @@ extension ForsakenCharacter {
         .level(primalUrge)
     }
 
+    /// Whether the character is one of the Pure, who have no auspice (Shunned by the Moon, p. 14).
+    var isPure: Bool {
+        tribeEntry?.kind == .pure
+    }
+
+    /// The auspice that counts for the rules: none for the Pure, who flay away the Moon's brand.
+    var effectiveAuspice: AuspiceEntry? {
+        isPure ? nil : auspiceEntry
+    }
+
+    /// The character's Hunter's Aspect: the auspice's, or for the Pure the one they chose from their tribe's.
+    var huntersAspect: AuspiceEntry.HuntersAspect? {
+        guard isPure else { return auspiceEntry?.huntersAspect }
+        return tribeEntry?.huntersAspects?.first { $0.name == pureHuntersAspect }
+    }
+
     /// The Shadow Gifts the character's tribe and auspice favour, which cost less to learn.
     var affinityGifts: Set<CatalogEntryID> {
-        Set((auspiceEntry?.giftAffinities ?? []) + (tribeEntry?.giftAffinities ?? []))
+        Set((effectiveAuspice?.giftAffinities ?? []) + (tribeEntry?.giftAffinities ?? []))
     }
 
     /// The Gift a known Facet belongs to.
@@ -372,7 +395,7 @@ extension ForsakenCharacter: SheetCharacter {
                 return PrerequisiteCheck(description: prerequisite.text ?? "Not of the \(name)", isMet: tribeSource != .catalog(id))
             case .auspice:
                 let name = catalog.auspices.entry(id)?.name ?? id
-                return PrerequisiteCheck(description: "Auspice: \(name)", isMet: auspiceSource == .catalog(id))
+                return PrerequisiteCheck(description: "Auspice: \(name)", isMet: effectiveAuspice?.id == id)
             default:
                 return unknownCheck(prerequisite)
             }
@@ -436,7 +459,7 @@ extension ForsakenCharacter: ExperienceCharacter {
     private func facetCost(_ facet: OwnedFacet) -> Int {
         guard let gift = gift(of: facet) else { return 2 }
         if gift.kind == .wolf { return 1 }
-        if gift.kind == .moon, gift.auspice == auspiceSource.catalogID { return 0 }
+        if gift.kind == .moon, let auspice = effectiveAuspice, gift.auspice == auspice.id { return 0 }
         let knowsGift = facets.contains { $0.id != facet.id && self.gift(of: $0)?.id == gift.id }
         if knowsGift { return 2 }
         return gift.kind == .shadow && affinityGifts.contains(gift.id) ? 3 : 5
@@ -493,7 +516,7 @@ extension ForsakenCharacter: StoredCharacter {
     static var game: String { "forsaken" }
 
     func summary() -> ForsakenCharacterSummary {
-        ForsakenCharacterSummary(id: id, name: name, auspice: auspice, tribe: tribe, modifiedAt: modifiedAt, isReadable: true)
+        ForsakenCharacterSummary(id: id, name: name, auspice: isPure ? "" : auspice, tribe: tribe, modifiedAt: modifiedAt, isReadable: true)
     }
 
     static func unreadableSummary(id: UUID) -> ForsakenCharacterSummary {

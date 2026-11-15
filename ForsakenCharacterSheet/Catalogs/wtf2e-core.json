@@ -252,54 +252,6 @@
         "name": "No tribal oath",
         "summary": "Ghost Wolves have sworn no tribal vow and have no tribal Renown or Gift affinities, though they may still follow the Oath of the Moon."
       }
-    },
-    {
-      "id": "fire-touched",
-      "name": "Fire-Touched",
-      "source": {
-        "book": "wtf2e-core",
-        "page": 197
-      },
-      "kind": "pure",
-      "summary": "Zealous Pure who follow Rabid Wolf and preach the Shadow's faith, hunting those who dishonour it. The Pure have no auspice or Moon Gifts, gain an extra Shadow Gift instead, and get a bonus dot of Totem.",
-      "giftAffinities": [],
-      "oath": {
-        "name": "Never knowingly lie",
-        "summary": "A Fire-Touched may not say what they know to be false, though they can still be fooled by false information."
-      },
-      "firstTongueName": "Izidakh"
-    },
-    {
-      "id": "ivory-claws",
-      "name": "Ivory Claws",
-      "source": {
-        "book": "wtf2e-core",
-        "page": 197
-      },
-      "kind": "pure",
-      "summary": "Pure devoted to Silver Wolf who obsess over pure bloodlines and hunt those who dishonour their lineage. The Pure have no auspice or Moon Gifts, gain an extra Shadow Gift instead, and get a bonus dot of Totem.",
-      "giftAffinities": [],
-      "oath": {
-        "name": "No brotherhood with the impure",
-        "summary": "An Ivory Claw may not call an 'impure' werewolf their brother."
-      },
-      "firstTongueName": "Tzuumfin"
-    },
-    {
-      "id": "predator-kings",
-      "name": "Predator Kings",
-      "source": {
-        "book": "wtf2e-core",
-        "page": 198
-      },
-      "kind": "pure",
-      "summary": "Savage Pure who worship Dire Wolf, care only for the hunt and see human civilisation as an affront. The Pure have no auspice or Moon Gifts, gain an extra Shadow Gift instead, and get a bonus dot of Totem.",
-      "giftAffinities": [],
-      "oath": {
-        "name": "Shun the works of humans",
-        "summary": "A Predator King may not use the fruits of human labour, which leaves them at a disadvantage in human places."
-      },
-      "firstTongueName": "Ninna Farakh"
     }
   ],
   "lodges": [

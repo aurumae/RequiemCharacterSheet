@@ -22,6 +22,9 @@ Every entry has `id`, `name`, `source: { "book", "page" }` and `summary` (one or
 - **tribes**: `kind` ("forsaken", "ghost-wolf" or "pure"), `renown` (absent for Ghost Wolves and the Pure),
   `giftAffinities` (Shadow Gift ids; empty when the book gives none), `oath` (`{ "name", "summary" }`, the tribal
   vow, or the Pure tribe's restriction), `firstTongueName` (optional).
+  Optional, where the book gives them (e.g. the Pure in Night Horrors: Shunned by the Moon): `secondaryRenown` (the
+  Renowns a second creation dot may go to), `skills` (tribe Skills, ids), `huntersAspects` (`[{ "name", "condition" }]`
+  to choose from, for tribes without an auspice).
 - **lodges**: as tribes' optional extras: `tribes` and `auspices` (ids it's limited to, empty for any), `requirements`
   (free text), `benefit` (free text). The core book's lodges have only `summary`.
 - **archetypes**: `kind` ("blood" or "bone"); `summary` says how it regains Willpower.

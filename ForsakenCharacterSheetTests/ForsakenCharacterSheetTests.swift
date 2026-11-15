@@ -62,24 +62,44 @@ struct ForsakenRulesTests {
     @Test func catalogHasTheChroniclesCoreMeritsAndConditions() {
         #expect(Catalog.bundled.merits.entry("fast-reflexes") != nil)
         #expect(!Catalog.bundled.conditions.all.isEmpty)
-        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core"])
+        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core", "night-horrors-shunned-by-the-moon"])
     }
 
     @Test func werewolfCoreBookIsLoaded() {
         let catalog = Catalog.bundled
+        let fromCore = { (source: SourceReference) in source.book == "wtf2e-core" }
         #expect(catalog.auspices.all.count == 5)
-        #expect(catalog.tribes.all.count == 9)
-        #expect(catalog.tribes.all.filter { $0.kind == .pure }.count == 3)
+        #expect(catalog.tribes.all.filter { fromCore($0.source) }.count == 6)
         #expect(catalog.lodges.all.count == 8)
         #expect(catalog.archetypes.all.filter { $0.kind == .blood }.count == 6)
         #expect(catalog.archetypes.all.filter { $0.kind == .bone }.count == 6)
-        #expect(catalog.gifts.all.count == 23)
-        #expect(catalog.gifts.all.flatMap(\.facets).count == 115)
-        #expect(catalog.rites.all.count == 23)
+        #expect(catalog.gifts.all.filter { fromCore($0.source) }.count == 23)
+        #expect(catalog.gifts.all.filter { fromCore($0.source) }.flatMap(\.facets).count == 115)
+        #expect(catalog.rites.all.filter { fromCore($0.source) }.count == 23)
         #expect(catalog.fetishes.all.count == 18)
         // The human Merits the Werewolf book reprints, e.g. Language, are offered
         #expect(catalog.merits.entry("language")?.source.book == "wtf2e-core")
-        #expect(catalog.merits.all.filter { $0.category == .werewolf }.count == 24)
+        #expect(catalog.merits.all.filter { $0.category == .werewolf && fromCore($0.source) }.count == 24)
+    }
+
+    @Test func shunnedByTheMoonHasThePure() {
+        let catalog = Catalog.bundled
+        let book = "night-horrors-shunned-by-the-moon"
+        let pure = catalog.tribes.all.filter { $0.kind == .pure }
+        #expect(pure.map(\.id) == ["fire-touched", "ivory-claws", "predator-kings"])
+        #expect(pure.allSatisfy { $0.source.book == book })
+        for tribe in pure {
+            #expect(tribe.renown != nil)
+            #expect(tribe.secondaryRenown?.count == 2)
+            #expect(tribe.skills?.count == 3)
+            #expect(tribe.huntersAspects?.count == 2)
+            #expect(tribe.huntersAspects?.allSatisfy { catalog.conditions.entry($0.condition) != nil } == true)
+            #expect(tribe.giftAffinities.count == 4)
+        }
+        #expect(catalog.gifts.all.filter { $0.source.book == book }.count == 5)
+        #expect(catalog.rites.all.filter { $0.source.book == book }.count == 5)
+        #expect(catalog.merits.all.filter { $0.source.book == book }.count == 9)
+        #expect(catalog.conditions.all.filter { $0.source.book == book }.count == 8)
     }
 
     @Test func catalogReferencesResolve() {
@@ -91,7 +111,7 @@ struct ForsakenRulesTests {
         }
         for tribe in catalog.tribes.all {
             #expect(tribe.giftAffinities.allSatisfy { catalog.gifts.entry($0)?.kind == .shadow })
-            #expect((tribe.renown == nil) == (tribe.kind != .forsaken))
+            #expect((tribe.renown == nil) == (tribe.kind == .ghostWolf))
         }
         for gift in catalog.gifts.all {
             // Moon Gifts go by dots; Shadow and Wolf Gifts have one Facet per Renown
@@ -238,6 +258,32 @@ struct WerewolfRulesTests {
         #expect(cost(second) == 2)
         #expect(character.experienceCost(of: TraitKey(.renown, "glory"), level: 1) == 3)
         #expect(character.experienceCost(of: TraitKey(.primalUrge, "primalUrge"), level: 2) == 5)
+    }
+
+    @Test func thePureHaveNoAuspice() {
+        let character = ForsakenCharacter()
+        character.auspice = "Irraka"
+        character.tribe = "Predator Kings"
+        #expect(character.isPure)
+        #expect(character.effectiveAuspice == nil)
+        // Their affinities are the tribe's alone, and no Moon Gift comes free
+        #expect(character.affinityGifts == ["hunger", "nature", "rage", "strength"])
+        let moon = facet("new-moon-eviscerate")
+        character.facets = [moon]
+        #expect(character.experienceCost(of: TraitKey(.facet, moon.id.uuidString), level: 1) == 5)
+        #expect(character.huntersAspect == nil)
+        character.pureHuntersAspect = "Primal"
+        #expect(character.huntersAspect?.condition == "instinctive")
+        #expect(character.summary().listDetails == ["", "Predator Kings"])
+    }
+
+    @Test func pureHuntersAspectLoadsBackAsSaved() throws {
+        let character = ForsakenCharacter()
+        character.tribe = "Fire-Touched"
+        character.pureHuntersAspect = "Frenzied"
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.isPure)
+        #expect(loaded.huntersAspect?.condition == "frantic")
     }
 
     @Test func werewolfMeritPrerequisitesAreChecked() throws {
