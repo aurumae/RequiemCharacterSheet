@@ -38,6 +38,7 @@ extension Theme {
         numeralFontName: "Cinzel-Medium",
         subheadingFontName: "Cinzel-Medium",
         borderImageName: "VtRBorder_NewStyle",
-        logoImageName: "VtR 2nd ED Logo"
+        logoImageName: "VtR 2nd ED Logo",
+        watermarkImageName: "VtR Skull Watermark"
     )
 }

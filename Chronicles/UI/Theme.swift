@@ -29,6 +29,9 @@ struct Theme {
     var subheadingFontName: String
     var borderImageName: String
     var logoImageName: String
+    /// The skull drawn faintly behind the sheet, as on the official sheet: a template image tinted with `accent`.
+    /// `nil` for none.
+    var watermarkImageName: String? = nil
 
     /// Each style scales with the user's preferred text size, relative to the given system style.
     func font(_ style: ThemeTextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {

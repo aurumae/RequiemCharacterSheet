@@ -35,6 +35,36 @@ struct BackgroundView<Content: View>: View {
 }
 
 extension View {
+    /// The theme's skull, faint and fixed behind the sheet as it scrolls. The rows are opaque white, so it's laid
+    /// over them and multiplied: it tints the white like ink showing through paper, and barely changes text and dots.
+    func sheetWatermark() -> some View {
+        modifier(SheetWatermark())
+    }
+}
+
+private struct SheetWatermark: ViewModifier {
+    @Environment(\.theme) private var theme
+
+    func body(content: Content) -> some View {
+        content.overlay {
+            if let name = theme.watermarkImageName {
+                // Decorative, so VoiceOver skips it
+                Image(decorative: name)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(theme.accent.opacity(0.07))
+                    .frame(maxWidth: 330)
+                    .padding(.horizontal, 40)
+                    .blendMode(.multiply)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+        }
+    }
+}
+
+extension View {
     /// For a list that ends at the bottom page border: fades its edges out, so a half-hidden row
     /// doesn't look tappable, and leaves room to scroll the last row clear of the border. Taps near the
     /// bottom of the screen go to the list before the system's home gesture.

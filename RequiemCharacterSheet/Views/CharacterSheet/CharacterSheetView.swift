@@ -129,6 +129,7 @@ struct CharacterSheetView: View {
                     .background(Color.clear)
                     // Scrolling ends text editing
                     .scrollDismissesKeyboard(.immediately)
+                    .sheetWatermark()
                     .pageBorderEdge()
                     // A field opening for editing is scrolled clear of the keyboard
                     // Rows can be shorter than this iOS's tall default, so Humanity's Touchstone rows stay compact.

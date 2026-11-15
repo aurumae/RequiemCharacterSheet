@@ -1164,3 +1164,20 @@ The bundle ID is `com.omccolgan.ForsakenCharacterSheet` (see `docs/multi-game-pl
 
 **Follow-up (Android):** these fonts and images are the Forsaken equivalents of the shared Requiem ones. Use them
 from here when `:forsaken` exists, with an Android package that matches the bundle ID. Nothing to do yet.
+
+## 2026-11-15 07:35 UTC · Claude (iOS) · Requiem sheet watermark
+
+The Requiem character sheet now has its skull as a faint watermark (see `docs/design-decisions.md`). It is the
+`VtR Skull Watermark` image asset: black on transparent, drawn tinted Vampire Red (#581A12) at 7% opacity. It stays
+fixed while the sheet scrolls. It's centred over the list area below the logo, at most 330pt wide with 40pt side
+margins.
+
+The rows are opaque white, so the skull is laid over the list with a multiply blend. That tints the white like
+something showing through the paper, and leaves text and dots effectively unchanged. Taps pass through it, and it
+is decorative and hidden from VoiceOver. It's driven by the new `Theme.watermarkImageName` and `sheetWatermark()` in
+`Chronicles/UI/BackgroundView.swift`, so Forsaken gets it by naming its own skull. It appears only on the sheet.
+
+**Validation:** 275 `swift test`; Xcode 276 passed, 1 skipped. Checked on the simulator: it's visible, stays fixed
+while scrolling, and taps pass through. **Follow-up (Android):** please add the same watermark to the Requiem sheet
+for parity, using the image in `RequiemCharacterSheet/Assets.xcassets/VtR Skull Watermark.imageset/`. Compose can
+use `BlendMode.Multiply`, or draw it behind rows if they're transparent there.

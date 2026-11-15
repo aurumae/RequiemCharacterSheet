@@ -78,3 +78,9 @@ is unknown.
 - **Vampire Red** (Requiem): #581A12.
 - **Werewolf Rust** (Forsaken): #855A4A, taken from the official Werewolf sheet. It has 5.9:1 contrast on white, so it
   is fine for small text.
+
+## Skull watermark behind the sheet (2026-11-15)
+
+Both apps show their game's skull faintly behind the character sheet, in the signature colour at about 7% strength.
+It stays fixed while the sheet scrolls, centred in the list area below the logo. It appears only on the sheet, not on
+the character list. Requiem uses its app-icon skull and Forsaken uses the wolf skull.
