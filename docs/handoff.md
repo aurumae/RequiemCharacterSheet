@@ -1181,3 +1181,31 @@ is decorative and hidden from VoiceOver. It's driven by the new `Theme.watermark
 while scrolling, and taps pass through. **Follow-up (Android):** please add the same watermark to the Requiem sheet
 for parity, using the image in `RequiemCharacterSheet/Assets.xcassets/VtR Skull Watermark.imageset/`. Compose can
 use `BlendMode.Multiply`, or draw it behind rows if they're transparent there.
+
+## 2026-11-15 08:31 UTC · Claude (iOS) · Forsaken app target and shared store, list and sections
+
+Phase 2 has started; see "Phase 2 as built so far" in `docs/multi-game-plan.md`. There are three commits:
+- `9bb8f50`: the generic store and list.
+- `8b184dd`: per-game sections and header styles.
+- `4f7db15`: the Forsaken target.
+
+Requiem looks and behaves as before, and its save files are byte-for-byte unchanged.
+
+**Save format, shared:**
+- Files may now carry a top-level `game` key. A missing key means Requiem, so Requiem still never writes it.
+- Forsaken files always have `"game": "forsaken"` and `schemaVersion` 1 (Forsaken's own numbering). They use
+  `.wtfcharacter` and the type `com.omccolgan.ForsakenCharacterSheet.character`.
+- The Forsaken keys are `id`, `createdAt`, `modifiedAt`, `name`, `player`, `chronicle`, `concept`,
+  `blood`, `bone`, `auspice`, `tribe`, `lodge` (free text for now), `attributes`, `skills` (CofD core
+  list), `merits`, `aspirations`, `conditions`, `healthTrack`, `willpowerTrack`, `beats`, `experiences`,
+  `xpMode` and `changeLog`, in the same shapes as Requiem's.
+- iOS Requiem now refuses a file whose `game` isn't Requiem's, with the message "This character is from another
+  game. Open it in that game's app." There's a new test for it.
+
+**Validation:** 276 `swift test`; Xcode 277 passed, 1 skipped. Forsaken was checked on the simulator: list, new
+character, editing, saving and About all work, with the custom fonts.
+
+**Follow-up (Android):**
+- Make Requiem refuse files whose `game` is present and not `"requiem"`, with the same message.
+- Keep writing Requiem files with no `game` key.
+- The Forsaken format above is a draft until the Werewolf traits arrive. A fixture will follow when it settles.

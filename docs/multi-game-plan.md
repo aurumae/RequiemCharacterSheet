@@ -85,6 +85,27 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 
   Like Requiem's, the fonts are shared with Android.
 
+## Phase 2 as built so far (2026-11-15)
+
+- **Shared store and list.** `CharacterFileStore<C>` (in `Chronicles/Core`) saves any game's characters. It reads the
+  file's `game` key: a missing key means Requiem, and any other game is refused with "This character is from another
+  game". Requiem keeps `CharacterStore` and `CharacterImport` as type aliases, and its saves are unchanged.
+  `CharacterListView` (in `Chronicles/UI`) is generic; each game says how to create a character and which sheet opens.
+- **Per-game sections and headings.** `SheetSection` is an open type, with the sections every game has in
+  `Chronicles/UI` and Requiem's own in `RequiemSheetSections.swift`. `Theme.sectionHeaderStyle` is `.row` for
+  Requiem and `.brushLine` for Forsaken; `BrushLine` draws the stroke from a seed. The theme also gives faces per text
+  style (`fonts`), the pill's face, whether trait names use the accent colour, and an optional border.
+- **The Forsaken target.** The target is `ForsakenCharacterSheet` (`com.omccolgan.ForsakenCharacterSheet`, version
+  1.0, iPhone, iOS 26), with a shared scheme. Its folder is synchronised with the project, so new files there join the
+  target. Shared files in `Chronicles/` are listed in both targets; new ones made through Xcode join both.
+  - `ForsakenCharacter` saves `"game": "forsaken"` with schema 1 and the extension `.wtfcharacter`.
+  - The sheet uses the shared `CharacterSheetFrame`, which has the logo, watermark, list, pill and saving. It has
+    the Character section so far: Name, Player, Chronicle, Blood, Bone, Concept, Auspice, Tribe and Lodge.
+- **Also shared now:** the splash (`SplashContainer`), About (each app lists its own fonts) and the row components.
+
+Next: make the shared sheet sections (Attributes, Skills, Merits, Aspirations, Health, Willpower, Conditions,
+Experience) work for any game and add them to Forsaken, then move Requiem's sheet onto `CharacterSheetFrame`.
+
 ## Later phases
 
 2. A second app target, Forsaken, with only the shared sections and its own theme.
