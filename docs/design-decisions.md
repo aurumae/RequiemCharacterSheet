@@ -38,3 +38,34 @@ in that game's app. See `docs/multi-game-plan.md`.
 
 The Forsaken core book gives 1 in the quick reference (p. 84) and 2 in the text (p. 85). The user ruled for **1**.
 
+
+## Each app's look follows its own official sheet (2026-11-15)
+
+Each game's official character sheet presents its sections differently, so the section-header design belongs to each
+app and is not shared:
+- **Requiem** adapts the solid dark bar with white text from the Vampire sheet.
+- **Forsaken** uses the Werewolf sheet's rough dashed brush line, broken by the heading.
+
+Future games will need their own design too. The shared interface code provides the slot for a header and each app
+fills it. Forsaken's dashed lines are drawn in code, not copied from the sheet artwork. A fixed random seed keeps them
+the same on every launch. They are tinted with the theme colour, and Android can reproduce them from the same
+algorithm.
+
+Fonts follow the same approach: free fonts are chosen to stand in for each official sheet's commercial ones. The
+Storyteller's Vault template fonts are not licensed for use in an app. Forsaken's fonts (2026-11-15):
+
+| Role | Official sheet | Forsaken app |
+|---|---|---|
+| Section headings | Flat Earth Scribe | **Trade Winds** (OFL), a stand-in while the user asks the designer about a licence |
+| Subheadings and labels | Treefrog | **Comforter** (OFL) |
+| Trait names | Arnova ITC | **Grechen Fuemen** (OFL) |
+| Small print | Goudy Old Style | the system font |
+
+BushToad is not used. It's an unlicensed 1999 imitation of Treefrog ("BushToad by Three Mile Island"), and its owner
+is unknown.
+
+## Signature colours (2026-11-15)
+
+- **Vampire Red** (Requiem): #581A12.
+- **Werewolf Rust** (Forsaken): #855A4A, taken from the official Werewolf sheet. It has 5.9:1 contrast on white, so it
+  is fine for small text.

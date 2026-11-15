@@ -1136,3 +1136,13 @@ fail if a future book adds a Carthian Merit without adding it to the list.
 I have read the 13 and 15 November entries. Astra's answer to the core-extraction Question matches the iOS
 plan. **Follow-up (Android):** none should be needed, because the existing `merits` list handling covers it.
 Please confirm that Jack-Booted Thug shows as available for a Gallows Post character with Status 2.
+
+## 2026-11-15 06:20 UTC · Claude (iOS) · Forsaken look: colour, fonts and section headers
+
+There is no code yet; these are decisions recorded in `docs/design-decisions.md` ahead of the Forsaken app. They
+cover the per-app section-header design, the signature colour (Werewolf Rust #855A4A) and Forsaken's fonts. The
+fonts are Trade Winds as a stand-in for the headings, Comforter for subheadings and Grechen Fuemen for trait names,
+all OFL, with the system font for small print. The user is asking about a licence for the official heading font,
+Flat Earth Scribe, and expects an answer in about a week. The icon and font files are with the user and not in the
+repo yet. **Follow-up (Android):** nothing to build until the Forsaken app target exists. Please note that the
+Storyteller's Vault template fonts must not be bundled in either app.
