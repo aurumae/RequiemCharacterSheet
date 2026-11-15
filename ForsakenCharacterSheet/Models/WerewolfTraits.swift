@@ -1,0 +1,259 @@
+//
+//  WerewolfTraits.swift
+//  ForsakenCharacterSheet
+//
+//  The traits only werewolves have: forms, Primal Urge, Kuruth triggers, and the Gift Facets, Rites and fetishes
+//  a character knows or carries.
+//
+
+import Foundation
+import Observation
+
+/// Forsaken's kinds of trait in the change log, alongside the shared Attributes, Skills, Specialties, Merits and
+/// Conditions.
+extension TraitKind {
+    static let renown = TraitKind("renown")
+    static let facet = TraitKind("facet")
+    static let rite = TraitKind("rite")
+    static let primalUrge = TraitKind("primalUrge")
+}
+
+// MARK: - Forms
+
+/// The five forms (pp. 96–98).
+enum Form: String, Codable, CaseIterable, Identifiable {
+    case hishu, dalu, gauru, urshul, urhan
+
+    var id: Self { self }
+
+    var name: String {
+        rawValue.capitalized
+    }
+
+    /// e.g. "Human", "Near-Human".
+    var description: String {
+        switch self {
+        case .hishu: "Human"
+        case .dalu: "Near-Human"
+        case .gauru: "Wolf-Man"
+        case .urshul: "Near-Wolf"
+        case .urhan: "Wolf"
+        }
+    }
+
+    /// Changes to Attributes in this form.
+    var attributeModifiers: [AttributeKind: Int] {
+        switch self {
+        case .hishu: [:]
+        case .dalu: [.strength: 1, .stamina: 1, .manipulation: -1]
+        case .gauru: [.strength: 3, .dexterity: 1, .stamina: 2]
+        case .urshul: [.strength: 2, .dexterity: 2, .stamina: 2, .manipulation: -1]
+        case .urhan: [.dexterity: 2, .stamina: 1, .manipulation: -1]
+        }
+    }
+
+    var sizeModifier: Int {
+        switch self {
+        case .hishu: 0
+        case .dalu: 1
+        case .gauru: 2
+        case .urshul: 1
+        case .urhan: -1
+        }
+    }
+
+    /// The species' Speed factor added to Speed: wolves are faster than people.
+    var speciesSpeedBonus: Int {
+        switch self {
+        case .urshul, .urhan: 3
+        default: 0
+        }
+    }
+
+    /// Dice added to Perception rolls in this form.
+    var perceptionBonus: Int {
+        switch self {
+        case .hishu: 1
+        case .dalu: 2
+        case .gauru, .urshul: 3
+        case .urhan: 4
+        }
+    }
+
+    /// What else the form brings, in brief.
+    var notes: String {
+        switch self {
+        case .hishu: "Perception bonus only with wolf senses. Sheep's Clothing."
+        case .dalu: "Lunacy (witnesses +2). Claws do lethal damage; Defense applies against Firearms."
+        case .gauru: "Lunacy (witnesses −2). Claws and bite +2L; Initiative +3 with teeth or claws; regenerates bashing and lethal damage each turn; Primal Fear. Fails Social rolls except Intimidation and Mental rolls except Perception and resistance. Held for Stamina + Primal Urge turns, once per scene."
+        case .urshul: "Lunacy. Claws +1L, bite +2L; Weaken the Prey."
+        case .urhan: "Bite +1L; Chase Down."
+        }
+    }
+
+    /// The book's page.
+    var page: Int {
+        switch self {
+        case .hishu, .dalu: 96
+        case .gauru, .urshul: 97
+        case .urhan: 97
+        }
+    }
+}
+
+// MARK: - Primal Urge
+
+/// One row of the Primal Urge table (p. 93).
+struct PrimalUrgeLevel {
+    /// The highest an Attribute or Skill can go.
+    let traitMaximum: Int
+    let essenceMaximum: Int
+    let essencePerTurn: Int
+    /// Bashing damage healed per turn.
+    let regeneration: Int
+    let feeding: String
+    let lunacyPenalty: Int
+    let trackingBonus: Int
+
+    static let table: [PrimalUrgeLevel] = [
+        PrimalUrgeLevel(traitMaximum: 5, essenceMaximum: 10, essencePerTurn: 1, regeneration: 1, feeding: "None", lunacyPenalty: 0, trackingBonus: 0),
+        PrimalUrgeLevel(traitMaximum: 5, essenceMaximum: 11, essencePerTurn: 2, regeneration: 1, feeding: "Meat", lunacyPenalty: 0, trackingBonus: 0),
+        PrimalUrgeLevel(traitMaximum: 5, essenceMaximum: 12, essencePerTurn: 3, regeneration: 1, feeding: "Meat", lunacyPenalty: 0, trackingBonus: 0),
+        PrimalUrgeLevel(traitMaximum: 5, essenceMaximum: 13, essencePerTurn: 4, regeneration: 2, feeding: "Raw meat", lunacyPenalty: -2, trackingBonus: 1),
+        PrimalUrgeLevel(traitMaximum: 5, essenceMaximum: 15, essencePerTurn: 5, regeneration: 2, feeding: "Raw meat", lunacyPenalty: -2, trackingBonus: 1),
+        PrimalUrgeLevel(traitMaximum: 6, essenceMaximum: 20, essencePerTurn: 6, regeneration: 3, feeding: "Carnivore", lunacyPenalty: -2, trackingBonus: 2),
+        PrimalUrgeLevel(traitMaximum: 7, essenceMaximum: 25, essencePerTurn: 7, regeneration: 3, feeding: "Carnivore", lunacyPenalty: -2, trackingBonus: 2),
+        PrimalUrgeLevel(traitMaximum: 8, essenceMaximum: 30, essencePerTurn: 8, regeneration: 4, feeding: "Essence", lunacyPenalty: -3, trackingBonus: 3),
+        PrimalUrgeLevel(traitMaximum: 9, essenceMaximum: 50, essencePerTurn: 10, regeneration: 5, feeding: "Essence", lunacyPenalty: -4, trackingBonus: 3),
+        PrimalUrgeLevel(traitMaximum: 10, essenceMaximum: 75, essencePerTurn: 15, regeneration: 6, feeding: "Essence", lunacyPenalty: -5, trackingBonus: 4),
+    ]
+
+    /// The row for a Primal Urge rating, 1–10.
+    static func level(_ primalUrge: Int) -> PrimalUrgeLevel {
+        table[min(max(primalUrge, 1), table.count) - 1]
+    }
+}
+
+// MARK: - Kuruth
+
+/// The things that can drive the character into Death Rage (p. 103): one set's passive, common and specific
+/// triggers, in the player's words or a set from the book.
+struct KuruthTriggers: Codable, Equatable {
+    var passive = ""
+    var common = ""
+    var specific = ""
+}
+
+// MARK: - Gifts, Rites and fetishes
+
+/// A Gift Facet the character knows: a catalog Facet, or the player's own with its Gift's name.
+@Observable
+final class OwnedFacet: Identifiable, Codable {
+    let id: UUID
+    var source: TraitSource
+    /// For a custom Facet, the Gift it belongs to.
+    var customGift: String
+
+    init(id: UUID = UUID(), source: TraitSource, customGift: String = "") {
+        self.id = id
+        self.source = source
+        self.customGift = customGift
+    }
+
+    enum CodingKeys: CodingKey {
+        case id, source, customGift
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(source, forKey: .source)
+        if source.catalogID == nil {
+            try container.encode(customGift, forKey: .customGift)
+        }
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(.id, default: UUID())
+        source = try container.decode(TraitSource.self, forKey: .source)
+        customGift = try container.decode(.customGift, default: "")
+    }
+}
+
+/// A Rite the character knows: a catalog Rite, or the player's own with its rating.
+@Observable
+final class OwnedRite: Identifiable, Codable {
+    let id: UUID
+    var source: TraitSource
+    /// For a custom Rite, its dots.
+    var customRating: Int
+
+    init(id: UUID = UUID(), source: TraitSource, customRating: Int = 1) {
+        self.id = id
+        self.source = source
+        self.customRating = customRating
+    }
+
+    enum CodingKeys: CodingKey {
+        case id, source, customRating
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(source, forKey: .source)
+        if source.catalogID == nil {
+            try container.encode(customRating, forKey: .customRating)
+        }
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(.id, default: UUID())
+        source = try container.decode(TraitSource.self, forKey: .source)
+        customRating = try container.decode(.customRating, default: 1)
+    }
+}
+
+/// A fetish or talen the character carries: a catalog one, or the player's own, with notes.
+@Observable
+final class OwnedFetish: Identifiable, Codable {
+    let id: UUID
+    var source: TraitSource
+    /// For a custom fetish, its rating.
+    var customRating: Int
+    /// e.g. the spirit bound in it, or charges left in a talen.
+    var note: String
+
+    init(id: UUID = UUID(), source: TraitSource, customRating: Int = 1, note: String = "") {
+        self.id = id
+        self.source = source
+        self.customRating = customRating
+        self.note = note
+    }
+
+    enum CodingKeys: CodingKey {
+        case id, source, customRating, note
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(source, forKey: .source)
+        if source.catalogID == nil {
+            try container.encode(customRating, forKey: .customRating)
+        }
+        if !note.isEmpty {
+            try container.encode(note, forKey: .note)
+        }
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(.id, default: UUID())
+        source = try container.decode(TraitSource.self, forKey: .source)
+        customRating = try container.decode(.customRating, default: 1)
+        note = try container.decode(.note, default: "")
+    }
+}

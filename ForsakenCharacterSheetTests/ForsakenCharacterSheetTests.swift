@@ -152,3 +152,103 @@ struct ForsakenRulesTests {
         #expect(character.beats == 1)
     }
 }
+
+@MainActor
+struct WerewolfRulesTests {
+    private func facet(_ id: String) -> OwnedFacet {
+        OwnedFacet(source: .catalog(id))
+    }
+
+    @Test func newCharactersStartAsTheBookSays() {
+        let character = ForsakenCharacter()
+        #expect(character.primalUrge == 1)
+        #expect(character.essence == 7)
+        #expect(character.primalUrgeLevel.essenceMaximum == 10)
+        #expect(character.harmony == 7)
+        #expect(character.form == .hishu)
+    }
+
+    @Test func werewolfTraitsLoadBackAsSaved() throws {
+        let character = ForsakenCharacter()
+        character.auspice = "Irraka"
+        character.tribe = "Hunters in Darkness"
+        character.blood = "Fox"
+        character.lodge = "My Own Lodge"
+        character.setRenown(.cunning, to: 2)
+        character.primalUrge = 3
+        character.essence = 9
+        character.harmony = 6
+        character.form = .gauru
+        character.kuruthTriggers.passive = "Smelling blood"
+        character.facets.append(facet("new-moon-eviscerate"))
+        character.rites.append(OwnedRite(source: .catalog("chain-rage")))
+        character.fetishes.append(OwnedFetish(source: .custom("Grandmother's Knife"), customRating: 2, note: "A blade-spirit"))
+
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.auspiceSource == .catalog("irraka"))
+        #expect(loaded.tribeSource == .catalog("hunters-in-darkness"))
+        #expect(loaded.bloodSource == .catalog("fox"))
+        #expect(loaded.lodgeSource == .custom("My Own Lodge"))
+        #expect(loaded.renown(.cunning) == 2 && loaded.renown(.glory) == 0)
+        #expect(loaded.primalUrge == 3 && loaded.essence == 9 && loaded.harmony == 6)
+        #expect(loaded.form == .gauru)
+        #expect(loaded.kuruthTriggers.passive == "Smelling blood")
+        #expect(loaded.facets.map(loaded.facetName) == ["Eviscerate"])
+        #expect(loaded.rites.map(loaded.riteName) == ["Chain Rage"])
+        #expect(loaded.fetishes.first?.customRating == 2 && loaded.fetishes.first?.note == "A blade-spirit")
+    }
+
+    @Test func formsChangeAttributesSizeAndHealth() {
+        let character = ForsakenCharacter()
+        let strength = character.attributes.first { $0.kind == .strength }!
+        strength.rating = 2
+        character.attributes.first { $0.kind == .stamina }?.rating = 2
+        #expect(character.health == 7)
+        character.form = .gauru
+        #expect(character.totalAttributeRating(for: strength) == 5)
+        #expect(character.attributeNote(for: .strength) == "+3 in Gauru")
+        // Stamina 2 + 2, Size 5 + 2
+        #expect(character.health == 11)
+        character.form = .urhan
+        #expect(character.effectiveSize == 4)
+    }
+
+    @Test func primalUrgeSetsTheTraitMaximum() {
+        let character = ForsakenCharacter()
+        #expect(character.baseRatingCap == 5)
+        character.primalUrge = 7
+        #expect(character.baseRatingCap == 7)
+        #expect(character.primalUrgeLevel.essenceMaximum == 25)
+    }
+
+    @Test func facetsCostAsTheBookSays() {
+        let character = ForsakenCharacter()
+        character.auspice = "Irraka"
+        character.tribe = "Blood Talons"
+        let own = facet("new-moon-eviscerate"), wolf = facet("hunting-honed-senses")
+        let affinity = facet("rage-incite-fury"), other = facet("death-cold-embrace")
+        character.facets = [own, wolf, affinity, other]
+        let cost = { (facet: OwnedFacet) in character.experienceCost(of: TraitKey(.facet, facet.id.uuidString), level: 1) }
+        #expect(cost(own) == 0)
+        #expect(cost(wolf) == 1)
+        #expect(cost(affinity) == 3)
+        #expect(cost(other) == 5)
+        let second = facet("rage-berserkers-might")
+        character.facets.append(second)
+        #expect(cost(second) == 2)
+        #expect(character.experienceCost(of: TraitKey(.renown, "glory"), level: 1) == 3)
+        #expect(character.experienceCost(of: TraitKey(.primalUrge, "primalUrge"), level: 2) == 5)
+    }
+
+    @Test func werewolfMeritPrerequisitesAreChecked() throws {
+        let character = ForsakenCharacter()
+        let fading = try #require(Catalog.bundled.merits.entry("fading"))
+        #expect(character.unmetPrerequisites(for: fading).map(\.description) == ["Cunning 2"])
+        character.setRenown(.cunning, to: 2)
+        #expect(character.unmetPrerequisites(for: fading).isEmpty)
+
+        let embodiment = try #require(Catalog.bundled.merits.entry("embodiment-of-the-firstborn"))
+        character.tribe = "Ghost Wolves"
+        #expect(character.unmetPrerequisites(for: embodiment).count == 1)
+    }
+}
