@@ -41,6 +41,10 @@ The Forsaken core book gives 1 in the quick reference (p. 84) and 2 in the text 
 
 ## Each app's look follows its own official sheet (2026-11-15)
 
+The app began as the official character sheet turned from three columns into one, scrolling on a phone. Matching each
+official sheet closely is a design goal. Some loss of legibility in labels is accepted for it, as on the printed sheets.
+Controls such as the section pill must stay easy to read.
+
 Each game's official character sheet presents its sections differently, so the section-header design belongs to each
 app and is not shared:
 - **Requiem** adapts the solid dark bar with white text from the Vampire sheet.
@@ -60,6 +64,11 @@ Storyteller's Vault template fonts are not licensed for use in an app. Forsaken'
 | Subheadings and labels | Treefrog | **Comforter** (OFL) |
 | Trait names | Arnova ITC | **Grechen Fuemen** (OFL) |
 | Small print | Goudy Old Style | the system font |
+
+On the Forsaken sheet, as on the official one, trait names are black and labels and subheadings are in Werewolf Rust.
+The section pill is filled in Werewolf Rust with its text in Grechen Fuemen, because it must be easy to read; Requiem's
+pill font happens to be readable already. The wolf skull from the app icon sits behind the sheet as a faint Werewolf
+Rust watermark, as it does on the official sheet. There is no page border.
 
 BushToad is not used. It's an unlicensed 1999 imitation of Treefrog ("BushToad by Three Mile Island"), and its owner
 is unknown.
