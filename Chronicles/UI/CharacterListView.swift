@@ -1,23 +1,33 @@
 //
 //  CharacterListView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
 
-/// The first screen: every saved character, with options to open, create, import, export and delete them.
-struct CharacterListView: View {
-    @Environment(\.theme) private var theme
-    let store: CharacterStore
+/// A character the list can create and open.
+protocol ListedCharacter: StoredCharacter {
+    /// Whether "New Character" offers guided creation as well as a blank sheet.
+    static var offersGuidedCreation: Bool { get }
+    /// A new character: set up for guided creation, or a blank sheet.
+    static func newCharacter(guided: Bool) -> Self
+}
 
-    @State private var openCharacter: OpenCharacter?
-    @State private var pendingDeletion: CharacterSummary?
+/// The first screen: every saved character, with options to open, create, import, export and delete them.
+struct CharacterListView<C: ListedCharacter, Sheet: View>: View {
+    @Environment(\.theme) private var theme
+    let store: CharacterFileStore<C>
+    /// The sheet for an open character.
+    @ViewBuilder let sheet: (C) -> Sheet
+
+    @State private var openCharacter: OpenCharacter<C>?
+    @State private var pendingDeletion: C.Summary?
     @State private var errorAlert: ErrorAlert?
     @State private var choosingNewCharacter = false
     @State private var showingAbout = false
     @State private var choosingImportFile = false
     /// An imported character that's already on this device, waiting for Replace or Keep Both.
-    @State private var conflictingImport: CharacterImport?
+    @State private var conflictingImport: PendingImport<C>?
     /// A file opened from outside the app while a character was open; imported once that character is saved.
     @State private var waitingImportURL: URL?
 
@@ -74,7 +84,11 @@ struct CharacterListView: View {
                             }
 
                             AddRowButton("New Character") {
-                                choosingNewCharacter = true
+                                if C.offersGuidedCreation {
+                                    choosingNewCharacter = true
+                                } else {
+                                    createCharacter(guided: false)
+                                }
                             }
                             .confirmationDialog("New Character", isPresented: $choosingNewCharacter, titleVisibility: .visible) {
                                 Button("Guided Character Creation") { createCharacter(guided: true) }
@@ -120,7 +134,7 @@ struct CharacterListView: View {
             .navigationTitle("Characters")
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(item: $openCharacter) { open in
-                CharacterSheetView(character: open.character, store: store)
+                sheet(open.character)
             }
             // Leaving the sheet (back button or swipe) keeps the changes
             .onChange(of: openCharacter) { closed, nowOpen in
@@ -195,7 +209,7 @@ struct CharacterListView: View {
     }
 
     @ViewBuilder
-    private func row(for summary: CharacterSummary) -> some View {
+    private func row(for summary: C.Summary) -> some View {
         if summary.isReadable {
             Button {
                 open(summary)
@@ -203,7 +217,7 @@ struct CharacterListView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(displayName(for: summary))
                         .themedText(.label)
-                    let details = [summary.lineage, summary.covenant].filter { !$0.isEmpty }
+                    let details = summary.listDetails.filter { !$0.isEmpty }
                     if !details.isEmpty {
                         Text(details.joined(separator: " · "))
                             .themedText(.body)
@@ -234,7 +248,7 @@ struct CharacterListView: View {
         }
     }
 
-    private func displayName(for summary: CharacterSummary) -> String {
+    private func displayName(for summary: C.Summary) -> String {
         displayName(for: summary.name)
     }
 
@@ -242,7 +256,7 @@ struct CharacterListView: View {
         name.isEmpty ? "Unnamed Character" : name
     }
 
-    private func conflictMessage(for pending: CharacterImport) -> String {
+    private func conflictMessage(for pending: PendingImport<C>) -> String {
         let imported = "The imported copy was edited \(pending.character.modifiedAt.formatted(date: .abbreviated, time: .shortened))."
         guard let here = pending.existing?.modifiedAt else { return imported }
         return imported + " The one on this device was edited \(here.formatted(date: .abbreviated, time: .shortened))."
@@ -251,7 +265,7 @@ struct CharacterListView: View {
     // MARK: - Actions
 
     private func createCharacter(guided: Bool) {
-        let character = guided ? Character.guided() : Character()
+        let character = C.newCharacter(guided: guided)
         do {
             try store.save(character)
         } catch {
@@ -261,7 +275,7 @@ struct CharacterListView: View {
         openCharacter = OpenCharacter(character: character)
     }
 
-    private func open(_ summary: CharacterSummary) {
+    private func open(_ summary: C.Summary) {
         do {
             openCharacter = OpenCharacter(character: try store.load(summary.id))
         } catch {
@@ -269,7 +283,7 @@ struct CharacterListView: View {
         }
     }
 
-    private func save(_ character: Character) {
+    private func save(_ character: C) {
         do {
             try store.save(character)
         } catch {
@@ -304,7 +318,7 @@ struct CharacterListView: View {
     }
 
     /// Adds the character to the store and opens it.
-    private func finishImport(_ pending: CharacterImport, keepingBoth: Bool) {
+    private func finishImport(_ pending: PendingImport<C>, keepingBoth: Bool) {
         do {
             let id = try store.importCharacter(pending, keepingBoth: keepingBoth)
             openCharacter = OpenCharacter(character: try store.load(id))
@@ -313,7 +327,7 @@ struct CharacterListView: View {
         }
     }
 
-    private func delete(_ summary: CharacterSummary) {
+    private func delete(_ summary: C.Summary) {
         do {
             try store.delete(summary.id)
         } catch {
@@ -322,9 +336,9 @@ struct CharacterListView: View {
     }
 }
 
-/// Lets a `Character` (a class) drive navigation, compared by identity.
-private struct OpenCharacter: Hashable {
-    let character: Character
+/// Lets a character (a class) drive navigation, compared by identity.
+private struct OpenCharacter<C: AnyObject>: Hashable {
+    let character: C
 
     static func == (lhs: OpenCharacter, rhs: OpenCharacter) -> Bool {
         lhs.character === rhs.character

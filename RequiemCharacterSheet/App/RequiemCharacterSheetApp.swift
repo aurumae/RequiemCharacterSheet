@@ -19,10 +19,12 @@ struct RequiemCharacterSheetApp: App {
         WindowGroup {
             ZStack {
                 // Main App View
-                CharacterListView(store: store)
-                    .opacity(mainOpacity)
-                    // Keep VoiceOver on the splash screen until the list fades in
-                    .accessibilityHidden(mainOpacity == 0)
+                CharacterListView(store: store) { character in
+                    CharacterSheetView(character: character, store: store)
+                }
+                .opacity(mainOpacity)
+                // Keep VoiceOver on the splash screen until the list fades in
+                .accessibilityHidden(mainOpacity == 0)
 
                 // Splash Screen View, removed once it has faded out so VoiceOver doesn't read it
                 if showsSplash {

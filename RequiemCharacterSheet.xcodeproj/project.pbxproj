@@ -95,6 +95,7 @@
 		BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E62C9E0074008D03F7 /* BaneRowView.swift */; };
 		BC6D36E92C9E007F008D03F7 /* AspirationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */; };
 		BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36EA2C9E0087008D03F7 /* BanesView.swift */; };
+		BC8BC89630A9A06D0060E9BF /* CharacterFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
 		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
@@ -232,6 +233,7 @@
 		BC6D36E82C9E007F008D03F7 /* AspirationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspirationsView.swift; sourceTree = "<group>"; };
 		BC6D36EA2C9E0087008D03F7 /* BanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanesView.swift; sourceTree = "<group>"; };
 		BC6D36EC2C9E457F008D03F7 /* RequiemCharacterSheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RequiemCharacterSheet.entitlements; sourceTree = "<group>"; };
+		BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFileStore.swift; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -241,7 +243,7 @@
 		BCAD98FC30A673D0007FDB6D /* CharacterCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCondition.swift; sourceTree = "<group>"; };
 		BCAD98FE30A673F7007FDB6D /* ChroniclesCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChroniclesCharacter.swift; sourceTree = "<group>"; };
 		BCAD990130A674C1007FDB6D /* AppIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdentity.swift; sourceTree = "<group>"; };
-		BCAD990330A674C6007FDB6D /* RequiemIdentity.swift */ = {isa = PBXFileReference; path = RequiemIdentity.swift; sourceTree = "<group>"; };
+		BCAD990330A674C6007FDB6D /* RequiemIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemIdentity.swift; sourceTree = "<group>"; };
 		BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFile.swift; sourceTree = "<group>"; };
 		BCAFCCD9309EA8B200A5D9F1 /* SpecialtyRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyRules.swift; sourceTree = "<group>"; };
 		BCAFCCDB309EA90A00A5D9F1 /* SpecialtyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialtyTests.swift; sourceTree = "<group>"; };
@@ -311,14 +313,6 @@
 			children = (
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		BC2B4438309A09D000720F0C /* CharacterList */ = {
-			isa = PBXGroup;
-			children = (
-				BC2B4429309662A300720F0C /* CharacterListView.swift */,
-			);
-			path = CharacterList;
 			sourceTree = "<group>";
 		};
 		BC2B4439309A09D000720F0C /* CharacterSheet */ = {
@@ -420,6 +414,7 @@
 				BCAD98FA30A673A6007FDB6D /* Merit.swift */,
 				BCAD98FC30A673D0007FDB6D /* CharacterCondition.swift */,
 				BCAD98FE30A673F7007FDB6D /* ChroniclesCharacter.swift */,
+				BC8BC89530A9A06D0060E9BF /* CharacterFileStore.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -438,6 +433,7 @@
 				BC2B4431309982A300720F0C /* Theme.swift */,
 				BCAD990130A674C1007FDB6D /* AppIdentity.swift */,
 				BCAFCCD5309D6A5500A5D9F1 /* CharacterFile.swift */,
+				BC2B4429309662A300720F0C /* CharacterListView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -559,7 +555,6 @@
 		BCB159082C987213003B6A8F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				BC2B4438309A09D000720F0C /* CharacterList */,
 				BC2B4439309A09D000720F0C /* CharacterSheet */,
 				BC2B443A309A09D100720F0C /* Components */,
 				BC2B443B309A09D200720F0C /* Theme */,
@@ -713,6 +708,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC8BC89630A9A06D0060E9BF /* CharacterFileStore.swift in Sources */,
 				BC6D36AE2C9B46F5008D03F7 /* WillpowerBoxView.swift in Sources */,
 				BC6D36CD2C9DD41C008D03F7 /* HumanityView.swift in Sources */,
 				BC6D36EB2C9E0087008D03F7 /* BanesView.swift in Sources */,

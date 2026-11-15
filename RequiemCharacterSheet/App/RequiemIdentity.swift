@@ -42,3 +42,11 @@ extension Theme {
         watermarkImageName: "VtR Skull Watermark"
     )
 }
+
+extension Character: ListedCharacter {
+    static var offersGuidedCreation: Bool { true }
+
+    static func newCharacter(guided: Bool) -> Character {
+        guided ? .guided() : Character()
+    }
+}
