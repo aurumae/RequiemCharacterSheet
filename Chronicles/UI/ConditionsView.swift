@@ -1,15 +1,15 @@
 //
 //  ConditionsView.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
 
 /// The last section of the sheet: the character's Conditions as a carousel of cards, and Add Condition.
 /// It's last so swiping sideways through the cards never gets in the way of scrolling the sheet.
-struct ConditionsView: View {
+struct ConditionsView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
-    let character: Character
+    let character: C
 
     @State private var showingPicker = false
     /// The card open full screen: tapped in the carousel, or just added.
@@ -109,10 +109,10 @@ struct ConditionsView: View {
 
 /// A Condition as a card: its name in a red band, the note, what it does, its resolution and Beat.
 /// Compact in the carousel, with its text cut short; in full, with End, Resolve and Beat.
-struct ConditionCard: View {
+struct ConditionCard<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Bindable var condition: CharacterCondition
-    let character: Character
+    let character: C
     var isCompact = false
     var onEnd: (() -> Void)?
     var onResolve: (() -> Void)?
@@ -313,11 +313,11 @@ private struct CustomConditionFields: View {
 }
 
 /// A Condition's full card, with End, Resolve and Beat.
-struct ConditionCardSheet: View {
+struct ConditionCardSheet<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
     let condition: CharacterCondition
-    let character: Character
+    let character: C
     /// Shown briefly after taking a Beat, e.g. "Beat added · 3 of 5".
     @State private var beatMessage: String?
 
@@ -374,8 +374,8 @@ struct ConditionCardSheet: View {
 }
 
 /// Add Condition: recently used ones first, then each book's, Requiem's first, then a custom Condition.
-struct ConditionPickerView: View {
-    let character: Character
+struct ConditionPickerView<C: SheetCharacter>: View {
+    let character: C
     /// Called with the new Condition; the caller adds it.
     let onAdd: (CharacterCondition) -> Void
 
@@ -402,8 +402,9 @@ struct ConditionPickerView: View {
         if !recent.isEmpty {
             result.append(CatalogPickerSection(title: "Recently Used", items: recent.map(item)))
         }
-        // Books in catalog order, which puts the Requiem core book first
-        return result + CatalogPickerSection.byBook([CatalogPickerGroup("", all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending })], item: item)
+        // Books in catalog order, which puts the game's core book first
+        let alphabetical = all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        return result + CatalogPickerSection.byBook([CatalogPickerGroup("", alphabetical)], books: Catalog.bundled.books, item: item)
     }
 
     private func item(_ entry: ConditionEntry) -> CatalogPickerItem {

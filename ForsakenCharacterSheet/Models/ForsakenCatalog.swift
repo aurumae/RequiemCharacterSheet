@@ -4,7 +4,8 @@
 //
 //  Forsaken's catalog: for now the Chronicles of Darkness core Merits and Conditions, shared with Requiem. The
 //  Werewolf books' entries will join them. The shared sheet sections look entries up through `Catalog.bundled`,
-//  `merit.entry` and `merit.name`, and `citation()`, which each app defines for its own catalog.
+//  `merit.entry` and `merit.name`, the Condition conveniences below and `citation()`, which each app defines for its
+//  own catalog.
 //
 
 import Foundation
@@ -95,4 +96,33 @@ extension SourceReference {
         let book = Catalog.bundled.book(book)?.name ?? book
         return page.map { "\(book), p. \($0)" } ?? book
     }
+}
+
+/// A Condition looked up in the bundled catalogs.
+extension CharacterCondition {
+    /// The catalog entry, if this isn't a custom Condition.
+    var entry: ConditionEntry? {
+        entry(in: Catalog.bundled.conditions)
+    }
+
+    var name: String {
+        get { name(in: Catalog.bundled.conditions) }
+        set { source = Catalog.bundled.conditions.source(named: newValue) }
+    }
+
+    var isPersistent: Bool { entry?.persistent ?? customPersistent }
+    var effectText: String { entry?.summary ?? customEffect }
+    var resolutionText: String { entry?.resolution ?? customResolution }
+
+    /// How it earns a Beat while it lasts, or `nil` if it doesn't.
+    var beatText: String? {
+        if let entry { return entry.beat }
+        let beat = customBeat.trimmingCharacters(in: .whitespacesAndNewlines)
+        return beat.isEmpty ? nil : beat
+    }
+
+    var givesBeatOnResolve: Bool { givesBeatOnResolve(in: Catalog.bundled.conditions) }
+    var hasCounter: Bool { hasCounter(in: Catalog.bundled.conditions) }
+    /// e.g. "Tempted −3", or "Swooning".
+    var titleWithCounter: String { titleWithCounter(in: Catalog.bundled.conditions) }
 }

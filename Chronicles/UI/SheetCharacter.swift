@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A character the shared sheet sections can show. Each requirement has a default, below, for a game without the
 /// rule; a game with one supplies its own, e.g. Requiem's Blood Potency caps, guided creation and Conditions.
-protocol SheetCharacter: ChroniclesCharacter {
+protocol SheetCharacter: ConditionsCharacter {
     /// The highest rating Attributes and Skills can be bought to, e.g. as Blood Potency allows.
     var baseRatingCap: Int { get }
     var attributeRatingRange: ClosedRange<Int> { get }
@@ -159,8 +159,9 @@ extension SheetCharacter {
         nil
     }
 
+    /// The shared mark: a button listing what each Condition does to the trait.
     func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView? {
-        nil
+        AnyView(ConditionIndicator(character: self, target: target, traitName: traitName))
     }
 
     func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView? {

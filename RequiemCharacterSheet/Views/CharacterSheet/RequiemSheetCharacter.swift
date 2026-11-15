@@ -43,10 +43,6 @@ extension Character: SheetCharacter {
         entry.unavailableToKindred ? PrerequisiteCheck.notForKindred : nil
     }
 
-    func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView? {
-        AnyView(ConditionIndicator(character: self, target: target, traitName: traitName))
-    }
-
     func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView? {
         // During guided creation, the player chooses where the 5/4/3 or 11/7/4 dots go
         isInCreation ? AnyView(CreationPriorityMenu(character: self, category: category, skills: skills)) : nil
@@ -98,5 +94,16 @@ struct CreationPriorityMenu: View {
         }
         .accessibilityLabel("\(category.name) \(kind) priority")
         .accessibilityValue(budget?.priority.map { "\($0.name), \(budget?.remaining ?? 0) dots left" } ?? "Not chosen")
+    }
+}
+
+extension LabeledValueRow {
+    /// A row for a trait active Conditions may affect, e.g. Defense, with their mark after the label.
+    init(_ label: String, value: Int, condition: (character: Character, target: ConditionTarget)) {
+        let isAffected = !condition.character.conditionEffects(on: condition.target).isEmpty
+        let mark = ConditionIndicator(character: condition.character, target: condition.target,
+                                      traitName: label.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
+        // The mark is its own button, so the row can't be one element when it's there
+        self.init(label, value: value, mark: isAffected ? AnyView(mark) : nil)
     }
 }

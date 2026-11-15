@@ -1,6 +1,6 @@
 //
 //  ConditionIndicator.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
@@ -8,10 +8,10 @@ import SwiftUI
 /// A small dot marked "c", after a trait an active Condition affects. Tapping it says which Condition and
 /// how, and opens the Condition's card. The dot is small, but its tap area is a comfortable size, apart from
 /// the trait's name.
-struct ConditionIndicator: View {
+struct ConditionIndicator<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Environment(\.presentSheet) private var presentSheet
-    let character: Character
+    let character: C
     let target: ConditionTarget
     /// The trait's name, for VoiceOver, e.g. "Stamina".
     let traitName: String
@@ -102,16 +102,5 @@ private struct ConditionEffectsPopover: View {
         }
         .padding()
         .frame(width: 300, alignment: .leading)
-    }
-}
-
-extension LabeledValueRow {
-    /// A row for a trait active Conditions may affect, e.g. Defense, with their mark after the label.
-    init(_ label: String, value: Int, condition: (character: Character, target: ConditionTarget)) {
-        let isAffected = !condition.character.conditionEffects(on: condition.target).isEmpty
-        let mark = ConditionIndicator(character: condition.character, target: condition.target,
-                                      traitName: label.trimmingCharacters(in: CharacterSet(charactersIn: ":")))
-        // The mark is its own button, so the row can't be one element when it's there
-        self.init(label, value: value, mark: isAffected ? AnyView(mark) : nil)
     }
 }

@@ -142,7 +142,9 @@ final class ForsakenCharacter: Codable {
         savedMerits.forEach { $0.relink(in: Catalog.bundled.merits) }
         merits = savedMerits
         aspirations = try container.decode(.aspirations, default: blank.aspirations)
-        conditions = try container.decode(.conditions, default: [])
+        let savedConditions: [CharacterCondition] = try container.decode(.conditions, default: [])
+        savedConditions.forEach { $0.relink(in: Catalog.bundled.conditions) }
+        conditions = savedConditions
         healthTrack = try container.decode(.healthTrack, default: [])
         willpowerTrack = try container.decode(.willpowerTrack, default: [])
 
@@ -154,7 +156,13 @@ final class ForsakenCharacter: Codable {
 }
 
 /// Uses the shared defaults: ratings up to 5, no guided creation yet.
-extension ForsakenCharacter: SheetCharacter {}
+extension ForsakenCharacter: SheetCharacter {
+    var conditionCatalog: CatalogIndex<ConditionEntry> {
+        Catalog.bundled.conditions
+    }
+
+    var isInCreation: Bool { false }
+}
 
 extension ForsakenCharacter: ChroniclesCharacter {
     /// Stamina + Size, in Hishu (human) form. The other forms' bonuses come with the forms.
