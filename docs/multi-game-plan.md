@@ -125,8 +125,24 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
   runs it. It covers the save format, refusing Requiem and newer files, the catalog, Health, XP charges and refunds,
   and Condition Beats.
 
-Next: Phase 3, the Werewolf core catalog and the Werewolf sections (Auspice, Tribe, Lodge, Renown, Gifts, Rites,
-forms, Primal Urge, Essence, Harmony, Touchstones, Kuruth).
+## Phase 3 as built so far (2026-11-15)
+
+- **Catalog.** `ForsakenCharacterSheet/Catalogs/wtf2e-core.json` is in the forsaken-catalog format
+  (`docs/forsaken-catalog-format.md`). It has 5 auspices, 9 tribes, 8 lodges, 12 Blood and Bone archetypes, 23 Gifts
+  with 115 Facets, 23 Rites, 55 Merits, 45 Conditions and 18 fetishes, all with the book's pages. Forsaken lists the
+  Werewolf core book first, then the shared Chronicles of Darkness core.
+- **Character.** Auspice, tribe, lodge, Blood and Bone link to the catalog. Renown, Primal Urge (with its table),
+  Essence (starting at 7), Harmony, Touchstones, Kuruth triggers, form, Gift Facets, Rites and fetishes are saved.
+  Primal Urge caps Attributes and Skills, the form changes Attributes, Size and Health, and Merit prerequisites check
+  Renown, Primal Urge, Harmony, tribe and auspice. Experience costs follow pp. 84–85; a Wolf Gift Facet costs 1.
+- **Sheet.** The sections are Character (with catalog pickers), Form, Attributes, Skills, Merits, Renown, Gifts, Rites,
+  Fetishes, Aspirations, Health, Willpower, Primal Urge with Essence, Harmony with Touchstones, Kuruth triggers,
+  Experience and Conditions.
+
+Still to come: guided creation, and the rules for the Pure and Ghost Wolves beyond their entries (no auspice, the extra
+Shadow Gift, the bonus Totem dot). Also Speed, Defense, Initiative and Perception for each form, Werewolf sourcebooks,
+and App Store assets.
+
 
 ## Later phases
 

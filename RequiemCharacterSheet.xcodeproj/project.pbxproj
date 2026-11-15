@@ -50,7 +50,7 @@
 		BC2B447C309AC93B00720F0C /* CreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B447B309AC93B00720F0C /* CreationTests.swift */; };
 		BC2B447E309B564700720F0C /* CreationPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B447D309B564700720F0C /* CreationPanelView.swift */; };
 		BC2B4482309C0DD400720F0C /* dark-eras-companion.json in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4481309C0DD400720F0C /* dark-eras-companion.json */; };
-		BC2B4484309C0E2300720F0C /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */; };
+		BC2B4484309C0E2300720F0C /* RequiemCatalogChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4483309C0E2300720F0C /* RequiemCatalogChoices.swift */; };
 		BC2B4486309C0E9200720F0C /* BloodlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2B4485309C0E9200720F0C /* BloodlineTests.swift */; };
 		BC2B4490309CC46200720F0C /* IMFellEnglish-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2B448F309CC46200720F0C /* IMFellEnglish-Regular.ttf */; };
 		BC2B4492309CC46200720F0C /* IMFellEnglish-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */; };
@@ -111,6 +111,8 @@
 		BC8BC9B630AA1AC80060E9BF /* ConditionRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */; };
 		BC8BC9D830AA1BBF0060E9BF /* ExperienceCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */; };
 		BC8BC9D930AA1BBF0060E9BF /* ExperienceCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */; };
+		BC8BCA2F30AA3CDF0060E9BF /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */; };
+		BC8BCA3030AA3CDF0060E9BF /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
 		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
@@ -258,7 +260,7 @@
 		BC2B447B309AC93B00720F0C /* CreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationTests.swift; sourceTree = "<group>"; };
 		BC2B447D309B564700720F0C /* CreationPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationPanelView.swift; sourceTree = "<group>"; };
 		BC2B4481309C0DD400720F0C /* dark-eras-companion.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-companion.json"; sourceTree = "<group>"; };
-		BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogChoiceRow.swift; sourceTree = "<group>"; };
+		BC2B4483309C0E2300720F0C /* RequiemCatalogChoices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiemCatalogChoices.swift; sourceTree = "<group>"; };
 		BC2B4485309C0E9200720F0C /* BloodlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodlineTests.swift; sourceTree = "<group>"; };
 		BC2B448F309CC46200720F0C /* IMFellEnglish-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "IMFellEnglish-Regular.ttf"; sourceTree = "<group>"; };
 		BC2B4491309CC46200720F0C /* IMFellEnglish-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "IMFellEnglish-OFL.txt"; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 		BC8BC9B430AA1AC80060E9BF /* ConditionRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionRules.swift; sourceTree = "<group>"; };
 		BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceCore.swift; sourceTree = "<group>"; };
 		BC8BC9FE30AA1E880060E9BF /* ForsakenCharacterSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForsakenCharacterSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogChoiceRow.swift; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -442,7 +445,7 @@
 				BC2B446D309AA18100720F0C /* RitualsView.swift */,
 				BC2B446F309AA1A400720F0C /* CoilsView.swift */,
 				BC2B447D309B564700720F0C /* CreationPanelView.swift */,
-				BC2B4483309C0E2300720F0C /* CatalogChoiceRow.swift */,
+				BC2B4483309C0E2300720F0C /* RequiemCatalogChoices.swift */,
 				BC8BC89730A9A19B0060E9BF /* RequiemSheetSections.swift */,
 				BC8BC95330A9AB780060E9BF /* RequiemSheetCharacter.swift */,
 			);
@@ -551,6 +554,7 @@
 				BC460D9830A195FB0062F53F /* ConditionIndicator.swift */,
 				BC460D9630A195820062F53F /* ConditionsView.swift */,
 				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
+				BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -934,6 +938,7 @@
 				BC8BC8F530A9A3900060E9BF /* CharacterSheetFrame.swift in Sources */,
 				F091C70BACB5259C98BD8642 /* CharacterCondition.swift in Sources */,
 				F022243D76CFFE6D06EC0E03 /* ChroniclesCharacter.swift in Sources */,
+				BC8BCA2F30AA3CDF0060E9BF /* CatalogChoiceRow.swift in Sources */,
 				F09865DD6424C885A554740B /* CharacterFileStore.swift in Sources */,
 				F022968F00A990F4A73FD67D /* BackgroundView.swift in Sources */,
 				F0EC760A0B2043D8BDDE3321 /* CatalogPickerView.swift in Sources */,
@@ -1014,6 +1019,7 @@
 				BCAD98FB30A673A6007FDB6D /* Merit.swift in Sources */,
 				BCB159072C987161003B6A8F /* Character.swift in Sources */,
 				BC8BC97530AA17AD0060E9BF /* Prerequisites.swift in Sources */,
+				BC8BCA3030AA3CDF0060E9BF /* CatalogChoiceRow.swift in Sources */,
 				BC460D9730A195820062F53F /* ConditionsView.swift in Sources */,
 				BCB159052C987143003B6A8F /* Attribute.swift in Sources */,
 				BCAFCCDA309EA8B200A5D9F1 /* SpecialtyRules.swift in Sources */,
@@ -1039,7 +1045,7 @@
 				BC6D36D92C9DE68F008D03F7 /* MeritsView.swift in Sources */,
 				BC460D9930A195FB0062F53F /* ConditionIndicator.swift in Sources */,
 				BC2B4472309AADC300720F0C /* Experience.swift in Sources */,
-				BC2B4484309C0E2300720F0C /* CatalogChoiceRow.swift in Sources */,
+				BC2B4484309C0E2300720F0C /* RequiemCatalogChoices.swift in Sources */,
 				BC6D36A02C9A318B008D03F7 /* HealthBoxView.swift in Sources */,
 				BC2B4452309A454200720F0C /* DisciplineDetailView.swift in Sources */,
 				BC460D9330A1945E0062F53F /* Conditions.swift in Sources */,

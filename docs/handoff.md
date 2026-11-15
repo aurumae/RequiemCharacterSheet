@@ -1236,3 +1236,41 @@ Merits with qualifiers, Specialties, damage, Conditions with Beats, and XP Mode 
   prerequisites for the shared kinds, Condition rules, Experience logging and refunds, ordered by each game's kind
   order). Each game supplies its snapshot, costs and refund rule.
 - Nothing is needed for Requiem's save format.
+
+## 2026-11-15 19:36 UTC · Claude (iOS) · Phase 3: Werewolf catalog, traits and sections
+
+The commits are `43c6aa8` (catalog), `4f126e6` (loading it), `924ce90` (character) and this one (sheet). See
+"Phase 3 as built so far" in `docs/multi-game-plan.md`.
+
+**Shared files for Android:**
+- `ForsakenCharacterSheet/Catalogs/wtf2e-core.json`, in the new forsaken-catalog format.
+  `docs/forsaken-catalog-format.md` is the contract.
+- New design decisions:
+  - The app covers Forsaken, Ghost Wolves and the Pure, not the Wolf-Blooded.
+  - Essence starts at 7, with the maximum set by Primal Urge.
+  - Lodges work like bloodlines.
+  - Fetishes get their own section.
+
+**Forsaken save format, still a draft at schema 1:**
+- `blood`, `bone`, `auspice`, `tribe` and `lodge` are now trait sources (`{"catalog": id}` or
+  `{"custom": name}`).
+- New keys:
+  - `renown` (object by Renown name, dots > 0 only);
+  - `primalUrge`, `essence`, `harmony`;
+  - `fleshTouchstone`, `spiritTouchstone`;
+  - `kuruthTriggers` (`passive`, `common`, `specific`);
+  - `form` (hishu, dalu, gauru, urshul or urhan);
+  - `facets` (`id`, `source`, and `customGift` when custom);
+  - `rites` (`id`, `source`, and `customRating` when custom);
+  - `fetishes` (`id`, `source`, `customRating` when custom, and `note` when set);
+  - `size`.
+- New log kinds: `renown`, `facet`, `rite`, `primalUrge`.
+
+**Validation:** 276 `swift test`; Requiem Xcode 277 passed; Forsaken 16 passed. On the simulator, every section was
+checked. That covered the pickers, form changes to Attributes and Health, Renown with its auspice and tribe notes,
+Facet costs (the auspice's own Moon Gift free, 3 for an affinity Shadow Gift, 1 for Rites per dot), Essence capped at
+10, the Harmony table line, Kuruth triggers, the pill list, saving, and the list subtitle "Irraka · Hunters in
+Darkness".
+
+**Follow-up (Android):** nothing to build until `:forsaken` starts. When it does, read the catalog contract and the
+save keys above.

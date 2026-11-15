@@ -92,7 +92,7 @@ struct GiftEntry: CatalogEntry {
         case moon, shadow, wolf
     }
 
-    struct Facet: Decodable, Identifiable {
+    struct Facet: CatalogEntry {
         let id: CatalogEntryID
         let name: String
         let source: SourceReference
