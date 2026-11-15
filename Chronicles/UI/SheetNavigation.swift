@@ -215,7 +215,8 @@ struct SectionPill: View {
             }
             .foregroundStyle(.white)
             .padding(.horizontal, 14)
-            .padding(.vertical, 8)
+            // The height of the toolbar's glass buttons (back, Save), whatever the face; it only grows for very large text
+            .frame(minHeight: 44)
             .background(Capsule().fill(theme.accent))
             .contentShape(Capsule())
         }
