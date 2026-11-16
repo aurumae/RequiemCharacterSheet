@@ -38,6 +38,19 @@ struct CharacterTrackTests {
         #expect(character.healthBoxes.first == .lethal)
     }
 
+    @Test func woundsInLostHealthBoxesUpgradeTheOnesLeft() {
+        // The book's example: nine lethal in ten boxes, cut to eight, makes the left-most wound aggravated
+        let nine = Array(repeating: HealthBoxFillType.lethal, count: 9) + [.none]
+        #expect(nine.folded(into: 8) == [.aggravated] + Array(repeating: .lethal, count: 7))
+        // The least severe wound is upgraded first, and a wound finds an empty box before upgrading anything
+        #expect([HealthBoxFillType.lethal, .bashing, .bashing, .bashing].folded(into: 3) == [.lethal, .lethal, .bashing])
+        #expect([HealthBoxFillType.lethal, .none, .none, .bashing].folded(into: 3) == [.lethal, .bashing, .none])
+        // Nothing to move: the track is only cut or padded
+        #expect([HealthBoxFillType.bashing, .none, .none].folded(into: 2) == [.bashing, .none])
+        #expect([HealthBoxFillType.bashing].folded(into: 2) == [.bashing, .none])
+        #expect(Array(repeating: HealthBoxFillType.aggravated, count: 3).folded(into: 2) == [.aggravated, .aggravated])
+    }
+
     @Test func changingDisciplineRatingUpdatesHealthBoxes() {
         let character = Character()
         let resilience = Discipline(name: "Resilience", rating: 1)

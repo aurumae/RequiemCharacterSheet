@@ -78,6 +78,9 @@ struct ForsakenRulesTests {
         #expect(catalog.gifts.all.filter { fromCore($0.source) }.flatMap(\.facets).count == 115)
         #expect(catalog.rites.all.filter { fromCore($0.source) }.count == 23)
         #expect(catalog.fetishes.all.count == 18)
+        #expect(catalog.tilts.all.map(\.name) == ["Arm Wrack", "Blinded", "Earthquake", "Heavy Winds", "Knocked Down",
+                                                  "Leg Wrack", "Poisoned", "Stunned"])
+        #expect(catalog.tilts.all.filter { $0.kind == .environmental }.map(\.id) == ["earthquake", "heavy-winds"])
         // The human Merits the Werewolf book reprints, e.g. Language, are offered
         #expect(catalog.merits.entry("language")?.source.book == "wtf2e-core")
         #expect(catalog.merits.all.filter { $0.category == .werewolf && fromCore($0.source) }.count == 24)
@@ -217,6 +220,42 @@ struct WerewolfRulesTests {
         #expect(loaded.facets.map(loaded.facetName) == ["Incite Fury"])
         #expect(loaded.rites.map(loaded.riteName) == ["Chain Rage"])
         #expect(loaded.fetishes.first?.customRating == 2 && loaded.fetishes.first?.note == "A blade-spirit")
+    }
+
+    @Test func shiftingToASmallerFormKeepsItsWounds() throws {
+        // The book's example (p. 172): Dalu with nine of ten boxes lethal, forced into Hishu
+        let character = ForsakenCharacter()
+        character.attributes.first { $0.kind == .stamina }?.rating = 3
+        character.form = .dalu
+        #expect(character.health == 10)
+        for index in 0..<9 { character.setHealthBox(at: index, to: .lethal) }
+        character.form = .hishu
+        #expect(character.healthBoxes == [.aggravated] + Array(repeating: .lethal, count: 7))
+        // and the wounds don't come back with the boxes
+        character.form = .dalu
+        #expect(character.healthBoxes.suffix(2) == [.none, .none])
+
+        // Health lost another way, e.g. Stamina, is folded when the sheet sees it, and in any case on saving
+        let other = ForsakenCharacter()
+        let stamina = try #require(other.attribute(.stamina))
+        stamina.rating = 3
+        for index in 0..<8 { other.setHealthBox(at: index, to: .bashing) }
+        stamina.rating = 1
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(other))
+        #expect(loaded.healthBoxes == [.lethal, .lethal, .bashing, .bashing, .bashing, .bashing])
+    }
+
+    @Test func untrainedBrawlTakesADieOff() throws {
+        let character = ForsakenCharacter()
+        character.attributes.first { $0.kind == .strength }?.rating = 3
+        #expect(character.brawlPool(in: .hishu) == 2)
+        try #require(character.skill(.brawl)).rating = 1
+        #expect(character.brawlPool(in: .hishu) == 4)
+    }
+
+    @Test func aTotemCantGrantTotemOrDedicatedLocus() {
+        #expect(Totem.meritsNeverGranted.allSatisfy { Catalog.bundled.merits.entry($0) != nil })
+        #expect(Totem.meritsNeverGranted == ["dedicated-locus", "totem"])
     }
 
     @Test func formsChangeAttributesSizeAndHealth() {
@@ -544,8 +583,29 @@ struct ForsakenCreationTests {
         ghost.setRenown(.glory, to: 1)
         ghost.facets = [facet("rage-berserkers-might")]
         #expect(ghost.creationReport.problems.contains(.shadowFacetOutsideAffinities))
+        ghost.facets = [facet("dominance-glorious-lunacy")]
+        #expect(ghost.creationReport.isWithinLimits)
+        // and start with one Shadow Gift (p. 50)
+        #expect(ghost.creationReport.shadowFacets.allowed == 1)
         ghost.facets = [facet("dominance-glorious-lunacy"), facet("strength-predators-unmatched-pursuit")]
-        #expect(!ghost.creationReport.problems.contains(.shadowFacetOutsideAffinities))
+        #expect(ghost.creationReport.problems.contains(.tooManyShadowFacets(allowed: 1)))
+    }
+
+    @Test func theTwoShadowFacetsComeFromDifferentGifts() throws {
+        let character = rahu()
+        character.setRenown(.purity, to: 1)
+        character.setRenown(.glory, to: 2)
+        character.facets = [facet("dominance-snarl-of-the-predator")]
+        let second = try #require(Catalog.bundled.facet("dominance-glorious-lunacy"))
+        #expect(!character.creationAllows(.facet(second.facet, gift: second.gift)))
+        character.facets.append(facet("dominance-glorious-lunacy"))
+        #expect(character.creationReport.problems == [.shadowFacetsFromOneGift])
+        // The Pure's two tribe Facets may share a Gift (Shunned by the Moon, p. 202)
+        let pure = rahu(tribe: "Predator Kings")
+        pure.setRenown(.glory, to: 1)
+        pure.setRenown(.purity, to: 1)
+        pure.facets = [facet("rage-berserkers-might"), facet("rage-slaughterer")]
+        #expect(!pure.creationReport.problems.contains(.shadowFacetsFromOneGift))
     }
 
     @Test func aWolfFacetUnlessTwoDotsOfAuspiceRenown() {
@@ -674,10 +734,10 @@ struct GiftEffectTests {
         character.facets = [primal]
         #expect(character.totalAttributeRating(for: strength) == 5)
         primal.isActive = true
-        // Purity 3 to Strength, past the usual maximum, and into the Brawl pool
+        // Purity 3 to Strength, past the usual maximum, and into the Brawl pool (a die off with no Brawl)
         #expect(character.totalAttributeRating(for: strength) == 8)
         #expect(character.countedAttributeRating(for: strength) == 8)
-        #expect(character.brawlPool(in: .hishu) == 8)
+        #expect(character.brawlPool(in: .hishu) == 7)
         // Predator's Unmatched Pursuit only adds to Speed in Urshul and Urhan
         character.setRenown(.glory, to: 2)
         let pursuit = OwnedFacet(source: .catalog("strength-predators-unmatched-pursuit"))
@@ -686,11 +746,13 @@ struct GiftEffectTests {
         character.facets.append(pursuit)
         #expect(character.speed(in: .hishu) == hishu)
         #expect(character.speed(in: .urhan) == urhan + 2)
-        // Totemic Empowerment: +1 Strength, Dexterity and Stamina while it lasts
+        // Totemic Empowerment: +1 Strength, Dexterity and Stamina and 5 more Essence while it lasts
         let rite = OwnedRite(source: .catalog("totemic-empowerment"))
         rite.isActive = true
+        let essence = character.essenceMaximum
         character.rites = [rite]
         #expect(character.rating(.dexterity, in: .hishu) == 2)
+        #expect(character.essenceMaximum == essence + 5)
         let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
         #expect(loaded.facets.first?.isActive == true)
         #expect(loaded.rites.first?.isActive == true)

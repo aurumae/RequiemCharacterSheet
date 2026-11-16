@@ -20,19 +20,25 @@ differ from the collected books' (see "Decisions needed").
   (p. 44).
 - **Storm Lords' oath** had dropped a word: "to witness or to tend" (pp. 46, 47, 71).
 
+Fixed afterwards, on the user's say (all ✔):
+
+- **Ghost Wolves start with one Shadow Facet** (p. 50), not two. The user ruled that Chapter Three's quick reference,
+  which implies two, is mistaken.
+- **The two starting Shadow Facets come from two different Gifts** (pp. 83–84).
+- **The totem's Merit picker** no longer offers Totem or Dedicated Locus (p. 92).
+- **Brawl pool:** a die off with no Brawl dots (p. 154).
+- **Wounds in Health boxes a smaller form doesn't have** upgrade the wounds left (p. 172), where they used to be
+  hidden and then lost on saving.
+- **Totemic Empowerment** also adds 5 to the Essence pool (p. 143); its summary gives the +2 to Perception rolls.
+- **Unseen Sense** is in the `human` category (p. 113), so a werewolf can't take it.
+- **Ghost Wolves' oath summary** no longer says they may follow the Oath of the Moon (pp. 49, 77).
+- **Tilts:** the core book's eight are in the catalog as a new kind (pp. 312–313).
+
 ## Wrong in the app, not yet fixed
 
 | What | The book | Checked |
 |---|---|---|
-| Ghost Wolves start with two Shadow Facets | One Shadow Gift only, and no Gift affinities of their own (p. 50) | ✔ |
-| Two starting Shadow Facets may come from one Gift | One Facet each of two Shadow Gifts (pp. 83–84) | ✔ |
-| A Ghost Wolf can reach the two-dot Moon Gift at creation | Can't start with it (p. 50); the reader found no check in the creation code | ✔ text |
-| The totem's Merit picker offers Totem and Dedicated Locus | A totem can't grant either (p. 92) | |
-| Totemic Empowerment gives +1 to three Attributes only | Also +5 to the Essence pool and +2 to Perception (p. 143) | |
-| Unseen Sense is a Mental Merit a werewolf can take | Humans only (p. 113): it belongs in the `human` category | |
-| Brawl pool with no Brawl dots is just Strength | −1 die untrained (pp. 154, 160); Requiem applies this | |
-| Damage in Health boxes a smaller form doesn't have is hidden, and lost on saving | The remaining wounds are upgraded (p. 172) | |
-| Ghost Wolves' oath summary says they may still follow the Oath of the Moon | Not in the text (pp. 49, 77) | |
+| A Ghost Wolf can reach the two-dot Moon Gift at creation | Can't start with it (p. 50 ✔); the creation code has no check | needs a reading |
 | Totem points of exactly 20 give 5 Experiences | The table puts 20 in both rows (p. 92 ✔); The Pack's 20-point sample totem spends 10 (p. 65) | ruling |
 
 Confirmed correct, entry by entry: all 23 Gifts and 115 Facets, 23 rites, 55 Merits, 18 fetishes, 12 archetypes, 6
@@ -115,23 +121,34 @@ don't name their book; those four attributions are the readers' own and should b
 No chapter states the eras' replacement Skills, though some stat blocks use Archery and Enigmas. That rule must be in
 the collected books' front matter, which wasn't among the files.
 
-## Decisions needed (user)
+## Decided (user, 2026-11-16)
 
-1. **A Pack section.** The Pack is mostly about the pack, not the werewolf. Does the sheet gain a Pack section
-   (Aspirations, Touchstones, Complications, Hunting Nature, Pack Merits, Pack Tactics, Beats and Experiences), kept
-   on each character as the Totem is?
-2. **Lodges with rules.** New lodge fields and a Lodge section. The Eaters of the Dead are in the core book as
-   story only and in The Pack with rules: one entry or two? Are lodges limited by tribe where the book only
-   describes who joins? Is the triple cost enforced, shown, or left to the player?
-3. **Lodges: The Faithful** is a later lodge book the user owns. Does it replace The Pack's lodge rules?
-4. **Tilts.** Add them as a kind, or keep them out as in Requiem?
-5. **Dark Eras.** Is era content wanted in the first release? Official books can't be switched off, so a legion rite
-   or a Viking Gift would show for every character; the era Gift of Technology needs a way to replace the core one.
-   Which pages are cited: the stand-alone PDFs' or the collected books'?
-6. **Ghost Wolves at creation:** one Shadow Facet, as p. 50 says?
-7. **Pure creation.** Forsaken by Rome (p. 78) gives the Pure three Renown dots and a free dot in two tribe Skills.
+Recorded in `docs/design-decisions.md`.
+
+- **No Pack section.** The app is one player character's sheet; group-level things are out of scope. So Pack Merits,
+  Pack Tactics, Hunting Nature and the pack's Aspirations, Touchstones and Experiences stay out. From The Pack, what
+  goes in is what reaches the character: the lodges and what they offer.
+- **Lodges: The Faithful is First Edition** and isn't a source. The Pack's lodge rules stand.
+- **Tilts go in the catalog.** A combat system that uses them, with weapons and armour, comes after the first
+  release.
+- **Dark Eras content goes in**, under its own books, the Viking-age Gift of Technology included. An era selector
+  comes later.
+- **Ghost Wolves start with one Shadow Facet.**
+
+## Decisions still needed (user)
+
+1. **Lodges with rules.** The Eaters of the Dead are in the core book as story only and in The Pack with rules: one
+   entry or two? Are lodges limited by tribe where the book only describes who joins? Is the triple cost for
+   outsiders enforced, shown, or left to the player?
+2. **Dark Eras pages.** The chapters are stand-alone PDFs with their own page numbers. Are they cited as their own
+   books with those pages, or under the collected books, whose pages weren't among the files?
+3. **Ghost Wolves and the Moon Gift.** They can't start with the two-dot Moon Gift (p. 50). Does that mean auspice
+   Renown can't start at 2, or that it can but brings a Wolf Facet and no second Moon Facet?
+4. **Pure creation.** Forsaken by Rome (p. 78) gives the Pure three Renown dots and a free dot in two tribe Skills.
    The app gives two and one, from Shunned by the Moon's quick reference (p. 202), which says it updates those
    rules but is silent on both points.
-8. **Totem points of exactly 20:** five Experiences or ten?
-9. **Equipment.** Weapon and armour tables, with armour's penalties applied to Defense and Speed?
-10. **Optional rules** (the trimester Conditions, the Punk Generation and others): in the pickers or not?
+5. **Totem points of exactly 20:** five Experiences or ten?
+6. **Optional rules** (the trimester Conditions, the Punk Generation and others): in the pickers or not?
+7. **Pack Merits that change the character.** Den adds to Defense in the den and Directed Rage changes the Kuruth
+   control time. They are the pack's Merits, so they are out with the Pack section unless the user wants them as
+   reminders.

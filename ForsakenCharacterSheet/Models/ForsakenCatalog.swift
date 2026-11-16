@@ -10,7 +10,7 @@
 
 import Foundation
 
-/// Reference data for auspices, tribes, lodges, Blood and Bone, Gifts, Rites, Merits, Conditions and fetishes,
+/// Reference data for auspices, tribes, lodges, Blood and Bone, Gifts, Rites, Merits, Conditions, fetishes and Tilts,
 /// merged from every catalog file bundled with the app.
 struct Catalog {
     let books: [Book]
@@ -24,6 +24,7 @@ struct Catalog {
     let conditions: CatalogIndex<ConditionEntry>
     let fetishes: CatalogIndex<FetishEntry>
     let kuruthTriggers: CatalogIndex<KuruthTriggerSetEntry>
+    let tilts: CatalogIndex<TiltEntry>
 
     /// Merges files in order; if two files use the same id for the same kind of entry, the first wins.
     init(files: [File]) {
@@ -38,6 +39,7 @@ struct Catalog {
         conditions = CatalogIndex(files.flatMap(\.conditions))
         fetishes = CatalogIndex(files.flatMap(\.fetishes))
         kuruthTriggers = CatalogIndex(files.flatMap(\.kuruthTriggers))
+        tilts = CatalogIndex(files.flatMap(\.tilts))
     }
 
     func book(_ id: String) -> Book? {
@@ -98,10 +100,11 @@ struct Catalog {
         let conditions: [ConditionEntry]
         let fetishes: [FetishEntry]
         let kuruthTriggers: [KuruthTriggerSetEntry]
+        let tilts: [TiltEntry]
 
         enum CodingKeys: CodingKey {
             case format, version, book, auspices, tribes, lodges, archetypes, gifts, rites, merits, conditions, fetishes
-            case kuruthTriggers
+            case kuruthTriggers, tilts
         }
 
         init(from decoder: Decoder) throws {
@@ -121,6 +124,7 @@ struct Catalog {
             conditions = try container.decode(.conditions, default: [])
             fetishes = isForsaken ? try container.decode(.fetishes, default: []) : []
             kuruthTriggers = isForsaken ? try container.decode(.kuruthTriggers, default: []) : []
+            tilts = isForsaken ? try container.decode(.tilts, default: []) : []
         }
     }
 }

@@ -15,6 +15,8 @@ struct MeritPickerView<C: SheetCharacter>: View {
     /// For a Merit granted from elsewhere, e.g. a pack totem: prerequisites and starting dots don't apply, and
     /// Merits the character has can be chosen again, to add to their dots.
     var grantsAdvantage = false
+    /// Merits left out of the list, e.g. those a totem can't grant.
+    var excluding: Set<CatalogEntryID> = []
     /// Called with the chosen catalog entry and qualifier, or `nil` for a custom Merit.
     let onChoose: (MeritEntry?, String?) -> Void
 
@@ -25,7 +27,8 @@ struct MeritPickerView<C: SheetCharacter>: View {
     /// Alphabetical; when searching, Merits whose name matches come first, then those whose summary does, then
     /// those from a book whose name matches, e.g. "Covenants" for Secrets of the Covenants.
     private var matchingEntries: [MeritEntry] {
-        let entries = Catalog.bundled.merits.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        let entries = Catalog.bundled.merits.all.filter { !excluding.contains($0.id) }
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
         let nameMatches = entries.filter { $0.name.matchesSearch(searchText) }
         let summaryMatches = entries.filter {

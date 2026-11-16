@@ -97,6 +97,12 @@ extension ChroniclesCharacter {
         healthTrack[index] = damage
     }
 
+    /// Keeps the wounds from Health boxes the character no longer has, e.g. after a shift to a smaller form.
+    package func foldLostHealth() {
+        guard healthTrack.dropFirst(max(health, 0)).contains(where: { $0 != .none }) else { return }
+        healthTrack = healthTrack.folded(into: health)
+    }
+
     package func setWillpowerBox(at index: Int, to state: WillpowerBoxFillType) {
         if willpowerTrack.count <= index {
             willpowerTrack += Array(repeating: .none, count: index - willpowerTrack.count + 1)

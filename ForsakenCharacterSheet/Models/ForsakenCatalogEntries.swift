@@ -184,6 +184,25 @@ struct KuruthTriggerSetEntry: CatalogEntry {
     let specific: String
 }
 
+/// A Tilt (pp. 312–313): a passing effect in a fight, on one character or on the whole scene. The sheet doesn't
+/// track Tilts yet; the catalog holds them for the combat tools to come.
+struct TiltEntry: CatalogEntry {
+    enum Kind: String, Decodable {
+        case personal, environmental
+    }
+
+    let id: CatalogEntryID
+    let name: String
+    let source: SourceReference
+    /// What the Tilt does.
+    let summary: String
+    let kind: Kind
+    /// How it's inflicted.
+    let cause: String
+    /// How it ends.
+    let ending: String
+}
+
 /// Forsaken's own kinds of Merit and Merit prerequisite.
 extension MeritEntry.Category {
     static let werewolf = MeritEntry.Category(rawValue: "werewolf")

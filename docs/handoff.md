@@ -1518,3 +1518,35 @@ these corrections, all checked against the text:
 
 **Follow-up (Android):** none. The audit will change Forsaken's catalog format and save format (lodges with rules,
 probably a Pack section), so read it only as a preview until the format settles.
+
+## 2026-11-16 23:27 UTC · Claude (iOS) · Forsaken rules fixes from the audit, Tilts, and what's in scope
+
+**Decisions (user)**, in `docs/design-decisions.md`:
+- Each app is one player character's sheet. Group-level things are out of scope, so Forsaken gets no Pack section;
+  the pack totem stays because it changes the character's sheet.
+- Second Edition only: Lodges: The Faithful isn't a source.
+- Tilts go in the catalog now. A combat system that uses them, with weapons and armour, comes after the first release.
+- Dark Eras content goes in under its own books. An era selector comes later.
+- Ghost Wolves start with one Shadow Facet (p. 50); Chapter Three's quick reference is taken to be mistaken.
+
+**Shared code** (`Chronicles/`), with nothing changing for Requiem:
+- `Chronicles/Core/BoxFillType.swift`: `[HealthBoxFillType].folded(into:)`. When Health boxes are lost, each wound in
+  them upgrades the least severe wound left, from the left, after filling any empty box (Werewolf p. 172).
+  `ChroniclesCharacter.foldLostHealth()` applies it. Requiem doesn't call it.
+- `Chronicles/UI/MeritPickerView.swift`: an `excluding` list of Merit ids, empty by default.
+
+**Forsaken:**
+- Shifting to a form with less Health keeps the wounds, by the rule above; they used to be hidden, then lost on saving.
+  The save format is unchanged: `healthTrack` is still one box per point of Health in the saved form.
+- Guided creation: the two Shadow Facets must be from two different Gifts (pp. 83–84; not the Pure's), and Ghost
+  Wolves get one.
+- The totem's Merit picker leaves out Totem and Dedicated Locus (p. 92). The Brawl pool loses a die with no Brawl.
+- `wtf2e-core.json`: a new kind, `tilts`, with the core book's eight (pp. 312–313); see
+  `docs/forsaken-catalog-format.md`. Totemic Empowerment adds 5 to the Essence maximum; Unseen Sense is `human`; the
+  Ghost Wolves' oath summary lost a clause the book doesn't support.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange both ways); Requiem Xcode 278;
+Forsaken 53. Not checked by hand on the simulator.
+
+**Follow-up (Android):** none for Requiem. For `:forsaken` later: the Health rule belongs in `:core`, and Tilts are a
+catalog kind to load.

@@ -869,7 +869,7 @@ struct TotemView: View {
         // A granted Merit gets a row in Merits, where its dots join any the character buys
         .onChange(of: character.totem.advantages) { old, _ in character.syncTotemMerits(previous: old) }
         .hostedSheet(isPresented: $showingMeritPicker) {
-            MeritPickerView(character: character, grantsAdvantage: true) { entry, qualifier in
+            MeritPickerView(character: character, grantsAdvantage: true, excluding: Totem.meritsNeverGranted) { entry, qualifier in
                 guard let entry else { return }
                 character.totem.advantages.append(TotemAdvantage(kind: .merit, target: entry.id, detail: qualifier ?? "",
                                                                  dots: entry.ratings.min() ?? 1))

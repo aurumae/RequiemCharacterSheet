@@ -50,6 +50,10 @@ struct ForsakenSheetView: View {
             // Last, so swiping through its cards doesn't interrupt scrolling
             ConditionsView(character: character)
         }
+        // As a shift to a smaller form does, anything else that takes Health boxes away keeps their wounds (p. 172)
+        .onChange(of: character.health) { old, new in
+            if new < old { character.foldLostHealth() }
+        }
         // Choosing an auspice or tribe during creation gives its Renown dot, and asks for the free Skill dot
         .onChange(of: character.auspiceSource) { creationTraitsChanged() }
         .onChange(of: character.tribeSource) { creationTraitsChanged() }

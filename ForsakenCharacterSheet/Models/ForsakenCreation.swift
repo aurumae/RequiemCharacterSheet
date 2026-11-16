@@ -91,6 +91,7 @@ enum CreationProblem: Hashable {
     case pureRenownElsewhere
     case tooManyShadowFacets(allowed: Int)
     case shadowFacetOutsideAffinities
+    case shadowFacetsFromOneGift
     case tooManyWolfFacets(allowed: Int)
     case facetWithoutRenown(facet: String, renown: String)
     case tooManyRiteDots
@@ -128,9 +129,11 @@ enum CreationProblem: Hashable {
         case .pureRenownElsewhere:
             "The Pure's second Renown dot goes in the tribe's primary or secondary Renown"
         case .tooManyShadowFacets(let allowed):
-            "More than \(allowed) Shadow Gift Facets"
+            allowed == 1 ? "Ghost Wolves start with one Shadow Gift Facet" : "More than \(allowed) Shadow Gift Facets"
         case .shadowFacetOutsideAffinities:
             "Too many Shadow Gift Facets outside your tribe's and auspice's Gifts"
+        case .shadowFacetsFromOneGift:
+            "The two Shadow Gift Facets come from two different Gifts"
         case .tooManyWolfFacets(let allowed):
             allowed == 0 ? "No Wolf Gift Facet: two dots of auspice Renown bring the Moon Gift's second Facet instead"
                 : "More than \(allowed) Wolf Gift Facet"
@@ -269,8 +272,9 @@ extension ForsakenCharacter {
             }
         }
 
-        // Gifts: two Shadow Facets from the tribe's or auspice's Gifts (the Pure: two from the tribe's and one from
-        // any), and a Wolf Facet unless two dots of auspice Renown bring the Moon Gift's second Facet
+        // Gifts: one Facet each of two Shadow Gifts from the tribe's or auspice's (pp. 83–84). Ghost Wolves start with
+        // one, of the auspice's (p. 50); the Pure with two from the tribe's and one from any (Shunned by the Moon,
+        // p. 202). Then a Wolf Facet, unless two dots of auspice Renown bring the Moon Gift's second Facet
         var gifts: [(gift: GiftEntry?, facet: GiftEntry.Facet?, name: String, kind: GiftEntry.Kind)] = facets
             .filter { level(TraitKey(.facet, $0.id.uuidString)) > 0 }
             .map { owned in
@@ -281,10 +285,12 @@ extension ForsakenCharacter {
         let shadow = gifts.filter { $0.kind == .shadow }
         // A custom Gift can't be checked, so it counts as one of the character's own
         let outsideAffinities = shadow.filter { $0.gift.map { !affinityGifts.contains($0.id) } ?? false }.count
-        let shadowAllowed = isPure ? 3 : 2
+        let shadowAllowed = isPure ? 3 : tribeEntry?.kind == .ghostWolf ? 1 : 2
         report.shadowFacets = CreationBudget(used: shadow.count, allowed: shadowAllowed)
         if shadow.count > shadowAllowed { report.problems.insert(.tooManyShadowFacets(allowed: shadowAllowed)) }
         if outsideAffinities > (isPure ? 1 : 0) { report.problems.insert(.shadowFacetOutsideAffinities) }
+        let shadowGifts = shadow.compactMap { $0.gift?.id }
+        if !isPure, Set(shadowGifts).count < shadowGifts.count { report.problems.insert(.shadowFacetsFromOneGift) }
         let auspiceRenown = effectiveAuspice.map { renownLevels[$0.renown] ?? 0 } ?? 0
         let wolfAllowed = !isPure && auspiceRenown >= 2 ? 0 : 1
         let wolf = gifts.filter { $0.kind == .wolf }.count
@@ -537,8 +543,8 @@ extension ForsakenCharacter {
         })
         let giftProblems: Set<CreationProblem> = Set(problems.filter {
             switch $0 {
-            case .tooManyShadowFacets, .shadowFacetOutsideAffinities, .tooManyWolfFacets, .facetWithoutRenown,
-                 .tooManyRiteDots: true
+            case .tooManyShadowFacets, .shadowFacetOutsideAffinities, .shadowFacetsFromOneGift, .tooManyWolfFacets,
+                 .facetWithoutRenown, .tooManyRiteDots: true
             default: false
             }
         })

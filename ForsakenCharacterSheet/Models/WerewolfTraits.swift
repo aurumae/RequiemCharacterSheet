@@ -325,6 +325,9 @@ struct Totem: Codable, Equatable {
     var packPoints = 0
     var advantages: [TotemAdvantage] = []
 
+    /// A totem can't grant dots of Dedicated Locus or Totem (p. 92).
+    static let meritsNeverGranted: Set<CatalogEntryID> = ["dedicated-locus", "totem"]
+
     /// The Experiences the pack has to buy advantages with (p. 92).
     var experienceBudget: Int {
         switch packPoints {

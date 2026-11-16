@@ -10,7 +10,7 @@ words, with the book's page. IDs are lower-case and hyphenated, unique within th
   "version": 1,
   "book": { "id": "wtf2e-core", "name": "Werewolf: The Forsaken Second Edition" },
   "auspices": [], "tribes": [], "lodges": [], "archetypes": [], "gifts": [], "rites": [],
-  "merits": [], "conditions": [], "fetishes": [], "kuruthTriggers": []
+  "merits": [], "conditions": [], "fetishes": [], "kuruthTriggers": [], "tilts": []
 }
 ```
 
@@ -50,5 +50,7 @@ Unofficial files load after all the books.
 - **conditions**: Requiem's Condition entry, which may have `noteOptions` (see `docs/phase-b-design.md`). Siskur-Dah
   uses them for the ritemaster's tribe, with `group` "forsaken" or "pure"; each option has its own `source`.
 - **kuruthTriggers**: the book's trigger sets (p. 103), each with `passive`, `common` and `specific` text.
+- **tilts**: `kind` ("personal" for one character, "environmental" for the whole scene), `summary` (what the Tilt
+  does), `cause` (how it's inflicted) and `ending` (how it ends). The sheet doesn't track Tilts yet.
 - **fetishes**: `kind` ("fetish" or "talen"), `rating` (1–5), and optional `spirit` (the kind of spirit bound in it),
   `activation` (e.g. "Spend 1 Essence" or "Roll Harmony"), `effect`.

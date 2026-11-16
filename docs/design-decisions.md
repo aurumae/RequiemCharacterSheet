@@ -167,7 +167,8 @@ Forsaken offers guided creation like Requiem, with the same hard limits, followi
   filled in automatically and can't be removed; they move if the auspice or tribe changes.
 - Renown: the auspice's, the tribe's and one more, none above two. **Ghost Wolves** have no tribal Renown, so they
   get two dots. The Pure get the tribe's primary Renown and a dot in it or a secondary Renown.
-- Gifts: two Shadow Facets from the tribe's or auspice's Gifts (Ghost Wolves: only the auspice's), and a Wolf
+- Gifts: one Facet each of two Shadow Gifts from the tribe's or auspice's (Ghost Wolves: one Facet, of the
+  auspice's; see "Werewolf: starting Shadow Gifts" below), and a Wolf
   Facet unless two dots of auspice Renown bring the Moon Gift's second Facet. The Pure take two Facets of the tribe's
   Gifts, one of any Shadow Gift and one Wolf Facet. A Facet needs a dot of its Renown.
 - Rites: two dots, and up to five more for a Merit dot each.
@@ -201,3 +202,40 @@ text size and gives them their heading as an accessibility label. A new or renam
 again; a test checks every heading has its picture. Text that isn't a fixed heading, such as book names in pickers,
 uses Grechen Fuemen instead (Comforter is too hard to read there). About credits the font.
 
+## The app is one player character's sheet (2026-11-16)
+
+Each app covers a single player character. Things that live at the level of the group are out of scope: Forsaken has
+no Pack section, so The Pack's Pack Merits, Pack Tactics, Hunting Nature, pack Aspirations, Touchstones and
+Experiences aren't in the app. The pack totem is the exception, because its Aspiration, ban and advantages apply
+directly to the character and change their sheet.
+
+## Second Edition only (2026-11-16)
+
+Both apps follow the Second Edition rules and take content only from Second Edition books. First Edition books, such
+as Lodges: The Faithful, aren't sources, even where a Second Edition book covers the same ground more briefly.
+
+## Tilts are in the catalog; combat tools come later (2026-11-16)
+
+Forsaken's catalogs hold Tilts as a kind of their own, starting with the core book's eight (pp. 312–313). The sheet
+doesn't track them yet. After the first App Store release the user intends a system for combat: dealing damage,
+applying Tilts, healing, working out dice pools, wearing equipment and so on. Tilts, weapons and armour wait for it.
+
+## Era content is grouped by its book; an era selector comes later (2026-11-16)
+
+Dark Eras content goes into Forsaken under its own books, including Gifts that stand in for a modern one, such as the
+Viking-age Gift of Technology. Grouping by book is how a player leaves content out: if a book isn't relevant or
+permitted, they don't choose from it. Later, an era selector will change the Skill list and flag options that don't
+suit the chosen era.
+
+## Werewolf: starting Shadow Gifts (2026-11-16)
+
+- A new character's two Shadow Facets come from **two different** Gifts (pp. 83–84). Guided creation refuses a
+  second Facet of the same Gift. The Pure's two tribe Facets may share one (Shunned by the Moon, p. 202).
+- **Ghost Wolves start with one Shadow Facet**, from their auspice's Gifts. Chapter One says so (p. 50); Chapter
+  Three's quick reference implies two for everyone. The user's ruling is that Chapter Three is mistaken.
+
+## Wounds outlast the Health boxes they were in (2026-11-16)
+
+When a character loses Health boxes, e.g. a werewolf shifting to a smaller form, the wounds in them aren't lost. Each
+one upgrades the least severe wound left, from the left: bashing to lethal, lethal to aggravated (p. 172). A wound
+finds an empty box first. The sheet does this as the form changes, and the wounds don't come back if the boxes do.

@@ -51,8 +51,11 @@ final class ForsakenCharacter: Codable {
     /// The character's set of Kuruth triggers: one of the book's, or the player's own, written in `kuruthTriggers`.
     var kuruthTriggerSource: TraitSource
     var kuruthTriggers: KuruthTriggers
-    /// The form the character is in, which changes their Attributes, Size and Speed.
-    var form: Form
+    /// The form the character is in, which changes their Attributes, Size and Speed. Wounds in Health boxes a
+    /// smaller form doesn't have upgrade the ones left (p. 172).
+    var form: Form {
+        didSet { foldLostHealth() }
+    }
     /// The Moon Gift the character uses, if not their auspice's own: an alternate Moon Gift, or the player's own.
     var moonGiftSource: TraitSource?
     /// For a custom Moon Gift, its Facets' names, from one dot up.
@@ -213,7 +216,7 @@ final class ForsakenCharacter: Codable {
         }
 
         // Only the boxes on the sheet are saved
-        try container.encode(healthBoxes, forKey: .healthTrack)
+        try container.encode(healthTrack.folded(into: health), forKey: .healthTrack)
         try container.encode(willpowerBoxes, forKey: .willpowerTrack)
         try container.encode(beats, forKey: .beats)
         try container.encode(experiences, forKey: .experiences)
@@ -907,9 +910,10 @@ extension ForsakenCharacter {
         return (armor + fortified.0, ballisticArmor + fortified.1)
     }
 
-    /// Strength + Brawl, the pool for claws and fists.
+    /// Strength + Brawl, the pool for claws and fists, with a die off when untrained (p. 154).
     func brawlPool(in form: Form) -> Int {
-        rating(.strength, in: form) + skillRating(.brawl, in: form)
+        let brawl = skillRating(.brawl, in: form)
+        return rating(.strength, in: form) + (brawl > 0 ? brawl : TraitCategory.physical.unskilledPenalty)
     }
 
     /// Strength + Weaponry and Dexterity + Firearms, for the forms with hands that can use them.

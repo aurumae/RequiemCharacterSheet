@@ -275,7 +275,7 @@
       "giftAffinities": [],
       "oath": {
         "name": "No tribal oath",
-        "summary": "Ghost Wolves have sworn no tribal vow and have no tribal Renown or Gift affinities, though they may still follow the Oath of the Moon."
+        "summary": "Ghost Wolves have sworn no tribal vow and have no tribal Renown or Gift affinities."
       }
     }
   ],
@@ -2456,7 +2456,7 @@
         "book": "wtf2e-core",
         "page": 143
       },
-      "summary": "The totem temporarily rides one pack member, granting physical bonuses, better perception, extra Essence and the totem's Influences and Numina, along with its ban and bane. A werewolf in Death Rage is controlled by the totem, and it's a breaking point for the subject.",
+      "summary": "The totem temporarily rides one pack member, who gains +1 Strength, Dexterity and Stamina, +2 to Perception rolls, 5 more Essence and the totem's Influences and Numina, along with its ban and bane. A werewolf in Death Rage is controlled by the totem, and it's a breaking point for the subject.",
       "action": "extended",
       "targetSuccesses": 10,
       "duration": "Until the next sunrise",
@@ -2480,6 +2480,12 @@
           "attribute": "stamina",
           "amount": {
             "fixed": 1
+          }
+        },
+        {
+          "type": "essenceMaximum",
+          "amount": {
+            "fixed": 5
           }
         }
       ]
@@ -4015,7 +4021,7 @@
     {
       "id": "unseen-sense",
       "name": "Unseen Sense",
-      "category": "mental",
+      "category": "human",
       "source": {
         "book": "wtf2e-core",
         "page": 113
@@ -5102,6 +5108,104 @@
       "passive": "Being in a Wound's area.",
       "common": "Dealing with a Wound-born spirit.",
       "specific": "Being attacked by a Wound-born spirit."
+    }
+  ],
+  "tilts": [
+    {
+      "id": "arm-wrack",
+      "name": "Arm Wrack",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 312
+      },
+      "kind": "personal",
+      "summary": "An arm is useless: you drop what it held and can't attack with it, and without the Ambidextrous Merit you take off-hand penalties on anything that needs manual dexterity. With both arms out, those rolls fall to a chance die and other Physical actions take −3.",
+      "cause": "A targeted blow to the arm (−2) that does more damage than your Stamina, or one to the hand that does any; some supernatural powers.",
+      "ending": "When the damage that caused it has healed. If that damage was aggravated, the arm is lost for good."
+    },
+    {
+      "id": "blinded",
+      "name": "Blinded",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 312
+      },
+      "kind": "personal",
+      "summary": "With one eye out, −3 to rolls that rely on sight, attacks included, and Defense is halved. With both, −5 and no Defense.",
+      "cause": "Damage from an attack aimed at the eyes (−5): one eye, or both on an exceptional success. Slashing a brow or throwing sand (Dexterity + Athletics − 3, against Defense) blinds for the next turn only.",
+      "ending": "When the damage that caused it has healed. Aggravated damage takes the eye's sight for good."
+    },
+    {
+      "id": "earthquake",
+      "name": "Earthquake",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 312
+      },
+      "kind": "environmental",
+      "summary": "While the ground shakes, Dexterity-based pools and Defense take −1 to −5 by the quake's severity, and everyone takes 1 to 3 lethal damage a turn. A reflexive Stamina + Athletics roll makes that bashing, or none on an exceptional success.",
+      "cause": "Rarely within anyone's power; a large explosion underground can do it over a city block for a few seconds.",
+      "ending": "Waiting it out: a quake seldom lasts more than a minute (20 turns)."
+    },
+    {
+      "id": "heavy-winds",
+      "name": "Heavy Winds",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 312
+      },
+      "kind": "environmental",
+      "summary": "Winds graded from 1 (a tropical storm) to 5 (a tornado). −3 to Perception rolls that rely on hearing, and the grade as a penalty to Physical rolls, Drive included. Anyone outside takes the grade in bashing damage each turn from debris, unless a reflexive Dexterity + Athletics roll avoids it.",
+      "cause": "Weather.",
+      "ending": "Getting out of the wind: into a building, or a car that nobody drives."
+    },
+    {
+      "id": "knocked-down",
+      "name": "Knocked Down",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 313
+      },
+      "kind": "personal",
+      "summary": "You're on the ground: you lose your action this turn if you hadn't taken it, and you're prone. You keep your Defense, and can attack from the ground at −2.",
+      "cause": "A weapon with Knockdown; a melee weapon with a damage modifier of +2 or more, or a firearm with +3 or more; or a melee or unarmed attack aimed at the legs (−2) that halves its damage to knock you down.",
+      "ending": "Standing up, which takes an action. If you haven't acted yet, Dexterity + Athletics minus any weapon modifier, in place of your action, avoids the Tilt altogether."
+    },
+    {
+      "id": "leg-wrack",
+      "name": "Leg Wrack",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 313
+      },
+      "kind": "personal",
+      "summary": "With one leg out, Speed is halved, and Defense and Physical rolls that need movement take −2. With both, you're Knocked Down and can't get up: Speed is 1, moving is all you can do in a turn, and Physical rolls that need movement fall to a chance die.",
+      "cause": "A targeted blow to the leg (−2) that does more damage than your Stamina; some supernatural powers.",
+      "ending": "When the damage that caused it has healed. If that damage was aggravated, the leg is useless for good."
+    },
+    {
+      "id": "poisoned",
+      "name": "Poisoned",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 313
+      },
+      "kind": "personal",
+      "summary": "A moderate poison does 1 bashing damage each turn of combat; a grave one does 1 lethal.",
+      "cause": "Being poisoned, knowingly or not. In a fight, injecting someone is a Dexterity + Weaponry attack at −1.",
+      "ending": "Short of medical attention, a reflexive Stamina + Resolve roll each turn (at −3 if you also take an action); success stops that turn's damage only."
+    },
+    {
+      "id": "stunned",
+      "name": "Stunned",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 313
+      },
+      "kind": "personal",
+      "summary": "You lose your next action, and your Defense is halved until you can next act.",
+      "cause": "A single hit that does damage of your Size or more. A weapon with the stun ability counts double its modifier for this, and a hit to the head counts your Size as one lower.",
+      "ending": "It lasts a turn. You can end it on your own action by reflexively spending a Willpower point, at −3 to what you do that turn."
     }
   ]
 }
