@@ -199,5 +199,5 @@ font installed, draws each Forsaken section heading as filled outlines into a ve
 `ForsakenCharacterSheet/Assets.xcassets/Section Headings`. The app tints them Werewolf Rust, scales them with the
 text size and gives them their heading as an accessibility label. A new or renamed section needs the script run
 again; a test checks every heading has its picture. Text that isn't a fixed heading, such as book names in pickers,
-uses Comforter instead. About credits the font.
+uses Grechen Fuemen instead (Comforter is too hard to read there). About credits the font.
 

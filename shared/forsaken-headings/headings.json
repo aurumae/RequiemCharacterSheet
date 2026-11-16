@@ -1,0 +1,143 @@
+{
+  "headings" : [
+    {
+      "drawable" : "heading_character_creation",
+      "heading" : "Character Creation",
+      "height" : 32,
+      "width" : 268
+    },
+    {
+      "drawable" : "heading_character",
+      "heading" : "Character",
+      "height" : 32,
+      "width" : 137
+    },
+    {
+      "drawable" : "heading_form",
+      "heading" : "Form",
+      "height" : 32,
+      "width" : 71
+    },
+    {
+      "drawable" : "heading_advantages",
+      "heading" : "Advantages",
+      "height" : 32,
+      "width" : 153
+    },
+    {
+      "drawable" : "heading_attributes",
+      "heading" : "Attributes",
+      "height" : 32,
+      "width" : 148
+    },
+    {
+      "drawable" : "heading_skills",
+      "heading" : "Skills",
+      "height" : 32,
+      "width" : 90
+    },
+    {
+      "drawable" : "heading_merits",
+      "heading" : "Merits",
+      "height" : 32,
+      "width" : 94
+    },
+    {
+      "drawable" : "heading_totem",
+      "heading" : "Totem",
+      "height" : 32,
+      "width" : 81
+    },
+    {
+      "drawable" : "heading_renown",
+      "heading" : "Renown",
+      "height" : 32,
+      "width" : 101
+    },
+    {
+      "drawable" : "heading_auspice_benefit",
+      "heading" : "Auspice Benefit",
+      "height" : 32,
+      "width" : 220
+    },
+    {
+      "drawable" : "heading_moon_gifts",
+      "heading" : "Moon Gifts",
+      "height" : 32,
+      "width" : 157
+    },
+    {
+      "drawable" : "heading_shadow_gifts",
+      "heading" : "Shadow Gifts",
+      "height" : 32,
+      "width" : 184
+    },
+    {
+      "drawable" : "heading_wolf_gifts",
+      "heading" : "Wolf Gifts",
+      "height" : 32,
+      "width" : 155
+    },
+    {
+      "drawable" : "heading_rites",
+      "heading" : "Rites",
+      "height" : 32,
+      "width" : 75
+    },
+    {
+      "drawable" : "heading_fetishes",
+      "heading" : "Fetishes",
+      "height" : 32,
+      "width" : 119
+    },
+    {
+      "drawable" : "heading_aspirations",
+      "heading" : "Aspirations",
+      "height" : 32,
+      "width" : 157
+    },
+    {
+      "drawable" : "heading_health",
+      "heading" : "Health",
+      "height" : 32,
+      "width" : 93
+    },
+    {
+      "drawable" : "heading_willpower",
+      "heading" : "Willpower",
+      "height" : 32,
+      "width" : 140
+    },
+    {
+      "drawable" : "heading_primal_urge",
+      "heading" : "Primal Urge",
+      "height" : 32,
+      "width" : 170
+    },
+    {
+      "drawable" : "heading_harmony",
+      "heading" : "Harmony",
+      "height" : 32,
+      "width" : 115
+    },
+    {
+      "drawable" : "heading_kuruth_triggers",
+      "heading" : "Kuruth Triggers",
+      "height" : 32,
+      "width" : 227
+    },
+    {
+      "drawable" : "heading_experience",
+      "heading" : "Experience",
+      "height" : 32,
+      "width" : 150
+    },
+    {
+      "drawable" : "heading_conditions",
+      "heading" : "Conditions",
+      "height" : 32,
+      "width" : 142
+    }
+  ],
+  "pointSize" : 27
+}

@@ -1417,3 +1417,13 @@ About credits Flat Earth Scribe (`AppIdentity.fontCredits`).
 
 **Follow-up (Android):** when `:forsaken` starts, never bundle Flat Earth Scribe; use these heading pictures
 (convert the PDFs to vector drawables) and don't ship Trade Winds.
+
+## 2026-11-16 · Claude (iOS) · Forsaken headings for Android, picker book headings
+
+- New shared folder `shared/forsaken-headings/`: the Forsaken section headings as Android vector drawables (outlines
+  only, no font) and `headings.json`, generated with the iOS PDFs by `scripts/render-forsaken-headings.swift` on the
+  user's Mac. See its README. Flat Earth Scribe must never be bundled.
+- Picker book headings in Forsaken use Grechen Fuemen, not Comforter (too hard to read).
+
+**Follow-up (Android):** nothing until `:forsaken` starts (after the iOS App Store build). Then use these drawables
+as they are; no font or conversion tools are needed on Fedora.

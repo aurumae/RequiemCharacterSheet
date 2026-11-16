@@ -49,8 +49,8 @@ extension Theme {
         sectionHeaderStyle: .brushLine,
         fonts: [
             // Section headings are images in the sheet's Flat Earth Scribe (see headingImagePrefix); this face is for
-            // the few headings that aren't, such as the books in pickers
-            .sectionHeader: ThemeFont(name: "Comforter-Regular", size: 34, relativeTo: .title2),
+            // the few headings that aren't, such as the books in pickers, where it must be easy to read
+            .sectionHeader: ThemeFont(name: "GrechenFuemen-Regular", size: 24, relativeTo: .title2),
             // Comforter's letters are small for their size, so it's set larger than the other faces
             .subsectionHeader: ThemeFont(name: "Comforter-Regular", size: 32, relativeTo: .headline),
             .label: ThemeFont(name: "Comforter-Regular", size: 30, relativeTo: .title3),
