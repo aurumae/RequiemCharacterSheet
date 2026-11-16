@@ -14,6 +14,21 @@ Android exports. Reports, the selected scenarios and produced files stay under
 The same generated plan controls both producers and consumers. Local supported tests
 still run even when their external exchange is not selected.
 
+## Keeping main green while iOS is ahead
+
+New work lands on iOS first and is ported to Android later. A red `main` must mean something is broken, never that
+Android hasn't caught up.
+
+- `scripts/check-policy` is the policy job's check: the policy unit tests, then `contract_policy.py` with any
+  arguments. It needs only Python. `swift test` runs it (`SaveContractTests.contractPolicyPasses`), so a stale
+  contract fails on the Mac before it's pushed.
+- Pushes to `main` and the weekly run are not strict: declared pending ports pass. Only `--strict` (the manual
+  run's default) claims parity, and the policy unit tests must never assert it of the live manifest.
+- A test named in the manifest can be renamed on iOS, with the manifest updated in the same commit. The PR-base
+  comparison rejects a renamed capability test, so do it in a push to `main`.
+- Forsaken is outside the contract until Android has a `:forsaken` module. Its catalogs aren't validated here and its
+  fixtures must stay out of `shared/fixtures/`, where every file has to be classified as a Requiem scenario.
+
 ## Adding an iOS feature before its Android port
 
 1. Give new behavior a stable capability ID. Add its iOS test reference and mark it

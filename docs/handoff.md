@@ -1443,3 +1443,50 @@ The Android and exchange jobs haven't run against anything since `a9675dd`, incl
 `cofd-core.json`; this push is their first run.
 
 **Follow-up (Android):** none for this. An entry on stopping this happening again follows.
+
+## 2026-11-16 22:00 UTC · Claude (iOS) · Keeping main green while iOS is ahead
+
+The user asked for a lasting fix: CI has gone red each time iOS did new work, and the model is iOS first, Android
+after (Forsaken's Android port starts once the iOS app has been submitted to the App Store). The run for the entry
+above (`e469af5`) passed policy and iOS but failed Android and exchange, so there were two causes, not one.
+
+**What was wrong**
+- The contract was only checked on GitHub. Nothing on the Mac failed when a test the manifest names was renamed.
+- A red `main` went unnoticed for 34 commits, and a failed policy job hid the Android failure behind it.
+- `Beta3RulesTest.statusChoicesAliasesAndMeritOverridesAreScopedToTheirEntries` asserted that Gallows Post Status
+  does *not* meet Carthian Pull. The user's ruling of 15 November ("Gallows Post Status covers every Carthian
+  Merit") changed that in `dark-eras-companion.json`. Android applied the catalog correctly; the test held the old
+  ruling.
+- The policy unit test `test_current_contract_is_strict_and_fully_classified` asserted strict parity of the live
+  manifest on every push. Declaring a pending Android port, the documented iOS-first step, would have failed it.
+
+**Shared files changed**
+- `scripts/check-policy` (new): the policy unit tests, then `contract_policy.py` with any arguments. The workflow's
+  policy job calls it instead of its two separate commands.
+- `RequiemCharacterSheetTests/SaveContractTests.swift`: `contractPolicyPasses` runs that script under `swift test`
+  (macOS only), so a stale contract fails before it's pushed. Checked by putting the old test name back: it fails
+  with "Missing capability test".
+- `scripts/tests/test_ci_policy.py`: the live-manifest test is no longer strict, and
+  `test_declared_pending_port_passes_until_strict` proves a pending Android port passes a push and fails `--strict`.
+- `android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt`: the Gallows Post line now expects Carthian
+  Pull to be met, and a new line keeps the test's point, that the override is scoped: Gallows Post Status doesn't
+  meet Attaché's Invictus Status. I can't run Kotlin on this Mac (no Java), so GitHub's run is its test.
+- `docs/ci-contract-policy.md` ("Keeping main green while iOS is ahead") and `CLAUDE.md` ("iOS goes first").
+
+**iOS now does this:** checks `main`'s CI before starting and watches the run after every push; searches
+`android/*/src/test` for an entry's id before changing an existing catalog entry, and updates the expectation in the
+same commit.
+
+**Validation:** `scripts/check-policy` and `--strict` pass (12 policy tests), also under macOS's bash 3.2; 278
+`swift test`; Requiem Xcode 277.
+
+**Follow-up (Android):**
+- Add the same two rules to `AGENTS.md`: check `main`'s CI before starting, and don't leave it red.
+- Kotlin tests that assert a rules outcome from the live catalogs break when the user corrects a catalog entry.
+  Please move those to synthetic catalogs, as you did for the chooser groups, and keep live-catalog tests to what
+  `shared/catalog-contract.json` promises.
+- A new iOS-first catalog field needs an Android `advisory-text` fallback test to name, and none exists yet. Please
+  add one general test (an unknown catalog field or rule value is ignored and the entry's text still shows), so iOS
+  can cite it without waiting for Android.
+- PR #9's handoff entry (15 November 01:37) never reached `main`. Please merge it.
+- Check the Beta3RulesTest edit reads as you'd want.

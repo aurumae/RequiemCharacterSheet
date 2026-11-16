@@ -616,4 +616,21 @@ struct CharacterTransferContractTests {
             #expect(NSDictionary(dictionary: original) == NSDictionary(dictionary: copy))
         }
     }
+
+    #if SWIFT_PACKAGE && os(macOS)
+    // CI's first job, run here so `swift test` fails before a stale contract is pushed: a renamed test the manifest
+    // names, an unclassified catalog field, save field or fixture, or a schema the manifest doesn't declare.
+    @Test func contractPolicyPasses() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let process = Process()
+        let output = Pipe()
+        process.executableURL = root.appendingPathComponent("scripts/check-policy")
+        process.standardOutput = output
+        process.standardError = output
+        try process.run()
+        let text = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+        process.waitUntilExit()
+        #expect(process.terminationStatus == 0, "scripts/check-policy failed:\n\(text)")
+    }
+    #endif
 }

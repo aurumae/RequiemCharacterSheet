@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# The contract checks CI's policy job runs before anything else. They need only Python and take a second or two,
+# so `swift test` runs them too (SaveContractTests.contractPolicyPasses): a stale contract fails before it's pushed.
+# Arguments go to contract_policy.py, e.g. --strict or --base origin/main.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+python3 -m unittest discover -s scripts/tests
+python3 scripts/contract_policy.py "$@"
