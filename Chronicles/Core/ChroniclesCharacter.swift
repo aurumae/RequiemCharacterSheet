@@ -26,6 +26,8 @@ package protocol ChroniclesCharacter: AnyObject {
     /// Health dots, worked out by each game, e.g. Stamina + Size and any bonuses.
     var health: Int { get }
     var willpowerTrack: [WillpowerBoxFillType] { get set }
+    /// Willpower dots beyond Resolve + Composure, e.g. from a Werewolf Gift.
+    var willpowerBonus: Int { get }
 
     var beats: Int { get set }
     var experiences: Int { get set }
@@ -71,9 +73,11 @@ extension ChroniclesCharacter {
         skill(id)?.rating ?? 0
     }
 
-    /// Willpower dots: Resolve + Composure.
+    /// Willpower dots: Resolve + Composure, plus any bonus.
+    package var willpowerBonus: Int { 0 }
+
     package var willpower: Int {
-        rating(of: .resolve) + rating(of: .composure)
+        rating(of: .resolve) + rating(of: .composure) + willpowerBonus
     }
 
     /// The health boxes on the sheet, one per point of Health.

@@ -2199,6 +2199,253 @@
         }
       ],
       "summary": "Defensive unarmed Style that redirects blows."
+    },
+    {
+      "id": "double-jointed",
+      "name": "Double Jointed",
+      "category": "physical",
+      "source": {
+        "book": "cofd-core",
+        "page": 47
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "dexterity",
+          "minimum": 3
+        }
+      ],
+      "summary": "Slips mundane bonds automatically and resists being overpowered in grapples."
+    },
+    {
+      "id": "fast-talking",
+      "name": "Fast-Talking",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 50
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "manipulation",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "subterfuge",
+          "minimum": 2
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Always Be Closing",
+          "summary": "Mark's Resolve or Composure is reduced by 1 when resisting you."
+        },
+        {
+          "dots": 2,
+          "name": "Jargon",
+          "summary": "Apply one relevant Specialty to any Social roll."
+        },
+        {
+          "dots": 3,
+          "name": "Devil's Advocacy",
+          "summary": "Reroll one failed Subterfuge roll per scene."
+        },
+        {
+          "dots": 4,
+          "name": "Salting",
+          "summary": "Spend Willpower after opening a Door to open a second."
+        },
+        {
+          "dots": 5,
+          "name": "Patron's Privilege",
+          "summary": "When the mark regains Willpower from Vice/Dirge, roll to open a Door at once."
+        }
+      ],
+      "summary": "Style of rapid, confusing persuasion."
+    },
+    {
+      "id": "hobbyist-clique",
+      "name": "Hobbyist Clique",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 51
+      },
+      "ratings": [
+        2
+      ],
+      "qualifier": {
+        "prompt": "Skill",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Member of a clique whose members all have this Merit and the chosen Skill at 2+"
+        }
+      ],
+      "summary": "Membership in a hobby group built around one Skill."
+    },
+    {
+      "id": "interdisciplinary-specialty",
+      "name": "Interdisciplinary Specialty",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 45
+      },
+      "ratings": [
+        1
+      ],
+      "qualifier": {
+        "prompt": "Specialty",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "A Skill at 3 or more with a Specialty in it"
+        }
+      ],
+      "summary": "One Specialty's bonus applies to other Skills when it fits."
+    },
+    {
+      "id": "library",
+      "name": "Library",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1,
+        2,
+        3
+      ],
+      "qualifier": {
+        "prompt": "Mental Skill",
+        "options": [
+          "Academics",
+          "Computer",
+          "Crafts",
+          "Investigation",
+          "Medicine",
+          "Occult",
+          "Politics",
+          "Science"
+        ]
+      },
+      "repeatable": true,
+      "summary": "Research resources for one Mental Skill."
+    },
+    {
+      "id": "mystery-cult-initiation",
+      "name": "Mystery Cult Initiation",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 51
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Cult",
+        "options": null
+      },
+      "repeatable": false,
+      "summary": "Rank in a mystery cult with benefits at each level."
+    },
+    {
+      "id": "taste",
+      "name": "Taste",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 55
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "crafts",
+          "minimum": 2
+        },
+        {
+          "kind": "other",
+          "text": "A Specialty in Crafts or Expression"
+        }
+      ],
+      "summary": "Expert appraiser of art and craft details."
+    },
+    {
+      "id": "trained-observer",
+      "name": "Trained Observer",
+      "category": "mental",
+      "source": {
+        "book": "cofd-core",
+        "page": 46
+      },
+      "ratings": [
+        1,
+        3
+      ],
+      "repeatable": false,
+      "prerequisitesAnyOf": [
+        [
+          {
+            "kind": "attribute",
+            "id": "wits",
+            "minimum": 3
+          }
+        ],
+        [
+          {
+            "kind": "attribute",
+            "id": "composure",
+            "minimum": 3
+          }
+        ]
+      ],
+      "summary": "Perception rolls gain 9-again, or 8-again at three dots."
+    },
+    {
+      "id": "true-friend",
+      "name": "True Friend",
+      "category": "social",
+      "source": {
+        "book": "cofd-core",
+        "page": 56
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "summary": "A friend who won't betray you and restores Willpower."
     }
   ],
   "conditions": [

@@ -596,7 +596,14 @@
           },
           "summary": "Permanently adds Purity to Health, growing as Purity rises.",
           "dots": 2,
-          "duration": "Permanent"
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "health",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
         },
         {
           "id": "full-moon-bloody-handed-hunter",
@@ -1972,7 +1979,17 @@
           "summary": "For a scene multiplies jump distance and adds Glory to Speed in Urhan and Urshul, with an option to double Speed for a turn; free in Basu-Im.",
           "cost": "1 Essence",
           "action": "instant",
-          "duration": "1 scene"
+          "duration": "1 scene",
+          "effects": [
+            {
+              "type": "speed",
+              "amount": "rating"
+            }
+          ],
+          "effectForms": [
+            "urshul",
+            "urhan"
+          ]
         },
         {
           "id": "strength-crushing-blow",
@@ -1997,7 +2014,14 @@
           "summary": "Adds Purity to Strength for the scene; triggers free in Basu-Im.",
           "cost": "1 Essence",
           "action": "reflexive",
-          "duration": "1 scene"
+          "duration": "1 scene",
+          "effects": [
+            {
+              "type": "attribute",
+              "attribute": "strength",
+              "amount": "rating"
+            }
+          ]
         },
         {
           "id": "strength-rending-claws",
@@ -2435,7 +2459,30 @@
       "summary": "The totem temporarily rides one pack member, granting physical bonuses, better perception, extra Essence and the totem's Influences and Numina, along with its ban and bane. A werewolf in Death Rage is controlled by the totem, and it's a breaking point for the subject.",
       "action": "extended",
       "targetSuccesses": 10,
-      "duration": "Until the next sunrise"
+      "duration": "Until the next sunrise",
+      "effects": [
+        {
+          "type": "attribute",
+          "attribute": "strength",
+          "amount": {
+            "fixed": 1
+          }
+        },
+        {
+          "type": "attribute",
+          "attribute": "dexterity",
+          "amount": {
+            "fixed": 1
+          }
+        },
+        {
+          "type": "attribute",
+          "attribute": "stamina",
+          "amount": {
+            "fixed": 1
+          }
+        }
+      ]
     },
     {
       "id": "hunting-ground",

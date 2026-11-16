@@ -342,7 +342,14 @@
             "page": 18
           },
           "summary": "Adds her Purity to rolls to resist disease and to her Initiative.",
-          "duration": "Permanent"
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "initiative",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
         },
         {
           "id": "disease-pox-cauldron",
@@ -417,7 +424,14 @@
             "page": 19
           },
           "summary": "Adds her Purity to her Willpower, which may then exceed 10.",
-          "duration": "Permanent"
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "willpower",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
         },
         {
           "id": "fervor-fervid-mission",

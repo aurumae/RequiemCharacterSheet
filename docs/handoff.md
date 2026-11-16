@@ -1389,3 +1389,19 @@ later clean-up.
   id. `CharacterInfoRowView` takes an optional `rowID` for that. Android should check its row ids are unique too.
 
 **Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 42.
+
+## 2026-11-16 · Claude (iOS) · Gift effects, combat pools, Facets with Renown, CofD Merits
+
+**Shared for Android:**
+- `cofd-core.json` gains nine Chronicles of Darkness Merits the Werewolf book doesn't reprint: Double Jointed,
+  Fast-Talking, Hobbyist Clique, Interdisciplinary Specialty, Library, Mystery Cult Initiation, Taste, Trained
+  Observer and True Friend (entries copied from `vtr2e-core.json`, cited to the CofD core pages). Requiem is
+  unchanged, as `vtr2e-core` comes first. Android should pick up the file.
+- Core `Effect` gains `skill`, `health`, `willpower` and `essenceMaximum` types (unknown types are already skipped).
+  `ChroniclesCharacter` gains `willpowerBonus` (default 0), added to Willpower.
+
+**Forsaken:** Facets may have `effects`, `passive` and `effectForms`, and rites `effects` (see the new design
+decision). Save format (draft): Facets and rites have `active` when switched on; Facets have `withRenown` when
+learned free; new character keys `ballisticArmor` and `renownFacetCredits`. Rites show only their own dots.
+
+**Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 48.

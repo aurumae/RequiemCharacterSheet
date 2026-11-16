@@ -374,9 +374,17 @@ package enum Effect: Decodable, Equatable {
     case defenseSkillFromQualifier
     /// Adds dots to another Merit, which may go above five. Flock (Herd).
     case merit(CatalogEntryID, Amount)
+    /// Adds dots to a Skill. Werewolf Gifts and rites.
+    case skill(SkillID, Amount)
+    /// Adds to Health. Warrior's Hide.
+    case health(Amount)
+    /// Adds to Willpower, which may then pass 10. Zeal.
+    case willpower(Amount)
+    /// Adds to the most Essence the character can hold. Primeval Echo.
+    case essenceMaximum(Amount)
 
     private enum CodingKeys: CodingKey {
-        case type, attribute, merit, amount
+        case type, attribute, merit, skill, amount
     }
 
     /// Saved as e.g. {"type": "attribute", "attribute": "strength", "amount": "rating"}.
@@ -400,6 +408,14 @@ package enum Effect: Decodable, Equatable {
             self = .defenseSkillFromQualifier
         case "merit":
             self = .merit(try container.decode(String.self, forKey: .merit), try container.decode(Amount.self, forKey: .amount))
+        case "skill":
+            self = .skill(try container.decode(SkillID.self, forKey: .skill), try container.decode(Amount.self, forKey: .amount))
+        case "health":
+            self = .health(try container.decode(Amount.self, forKey: .amount))
+        case "willpower":
+            self = .willpower(try container.decode(Amount.self, forKey: .amount))
+        case "essenceMaximum":
+            self = .essenceMaximum(try container.decode(Amount.self, forKey: .amount))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown effect \(type)")
         }

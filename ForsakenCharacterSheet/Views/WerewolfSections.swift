@@ -316,6 +316,19 @@ struct AdvantagesView: View {
                 traitRow("Initiative") { character.initiative(in: $0) }
                 traitRow("Speed") { character.speed(in: $0) }
                 traitRow("Perception", sign: true) { $0.perceptionBonus }
+                textRow("Armor") { form in
+                    let armor = character.armor(in: form)
+                    return "\(armor.general)/\(armor.ballistic)"
+                }
+                Divider()
+                traitRow("Brawl") { character.brawlPool(in: $0) }
+                // Weapons and guns need hands, so only in Hishu and Dalu, and only for a character trained in them
+                if character.rating(of: .weaponry) > 0 {
+                    textRow("Weaponry") { character.weaponryPool(in: $0).map(String.init) ?? "—" }
+                }
+                if character.rating(of: .firearms) > 0 {
+                    textRow("Firearms") { character.firearmsPool(in: $0).map(String.init) ?? "—" }
+                }
             }
             .padding(.vertical, 4)
             .accessibilityElement(children: .ignore)
@@ -327,6 +340,7 @@ struct AdvantagesView: View {
                 .foregroundStyle(theme.muted)
 
             TapToEditNumberRow("Armor:", value: $character.armor, in: 0...99)
+            TapToEditNumberRow("Ballistic Armor:", value: $character.ballisticArmor, in: 0...99)
         }
     }
 
@@ -350,9 +364,29 @@ struct AdvantagesView: View {
         }
     }
 
+    private func textRow(_ label: String, value: @escaping (Form) -> String) -> some View {
+        HStack(spacing: 2) {
+            Text(label)
+                .themedText(.label)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .frame(width: labelWidth, alignment: .leading)
+            ForEach(Form.allCases) { form in
+                Text(value(form))
+                    .themedText(form == character.form ? .ratedTrait : .body)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+    }
+
     private func summary(for form: Form) -> String {
         "Size \(character.size(in: form)), Defense \(character.defense(in: form)), Initiative \(character.initiative(in: form)), "
-            + "Speed \(character.speed(in: form)), Perception plus \(form.perceptionBonus)"
+            + "Speed \(character.speed(in: form)), Perception plus \(form.perceptionBonus), "
+            + "Armor \(character.armor(in: form).general) general, \(character.armor(in: form).ballistic) ballistic, "
+            + "Brawl pool \(character.brawlPool(in: form))"
     }
 
     /// What the numbers don't show (pp. 96–97).
@@ -579,15 +613,41 @@ struct GiftsView: View {
         character.facets.filter { (character.gift(of: $0)?.kind ?? $0.customKind) == kind }
     }
 
+    /// The Facets by Gift, in the order the Gifts were first learned, e.g. Primal Allure and Snarl of the Predator
+    /// together under the Gift of Dominance.
+    private var facetsByGift: [(name: String, facets: [OwnedFacet])] {
+        var groups: [(key: String, name: String, facets: [OwnedFacet])] = []
+        for owned in facets {
+            let gift = character.gift(of: owned)
+            let key = gift?.id ?? "custom:" + owned.customGift
+            let name = gift?.name ?? (owned.customGift.isEmpty ? "Custom Gift" : owned.customGift)
+            if let index = groups.firstIndex(where: { $0.key == key }) {
+                groups[index].facets.append(owned)
+            } else {
+                groups.append((key, name, [owned]))
+            }
+        }
+        return groups.map { ($0.name, $0.facets) }
+    }
+
     var body: some View {
         SheetSectionBlock(kind == .wolf ? .wolfGifts : .shadowGifts) {
-            ForEach(facets) { owned in
-                row(for: owned)
-                    .editingRow(owned.id)
+            if let credits = freeFacetText {
+                Label(credits, systemImage: "sparkles")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.accent)
             }
-            .onDelete { offsets in
-                let ids = Set(offsets.map { facets[$0].id })
-                character.facets.removeAll { ids.contains($0.id) }
+            ForEach(facetsByGift, id: \.name) { group in
+                Text(group.name)
+                    .themedText(.subsectionHeader)
+                    .accessibilityAddTraits(.isHeader)
+                ForEach(group.facets) { owned in
+                    row(for: owned)
+                        .editingRow(owned.id)
+                }
+                .onDelete { offsets in
+                    offsets.map { group.facets[$0] }.forEach(character.forget)
+                }
             }
 
             AddRowButton("Add \(kindName) Facet") {
@@ -602,7 +662,9 @@ struct GiftsView: View {
                 ) { choice in
                     switch choice {
                     case .entry(let id):
-                        character.facets.append(OwnedFacet(source: .catalog(id)))
+                        if let found = Catalog.bundled.facet(id) {
+                            character.learn(found.facet, of: found.gift)
+                        }
                     case .custom:
                         addsCustomOnDismiss = true
                     }
@@ -617,6 +679,16 @@ struct GiftsView: View {
         }
     }
 
+    /// The free Facets new Renown dots have brought, e.g. "Free Facets to learn: Glory 1".
+    private var freeFacetText: String? {
+        guard character.xpMode, !character.isInCreation else { return nil }
+        let credits = Renown.allCases.compactMap { kind in
+            (character.renownFacetCredits[kind] ?? 0) > 0 ? "\(kind.name) \(character.renownFacetCredits[kind] ?? 0)" : nil
+        }
+        guard !credits.isEmpty else { return nil }
+        return "Free Facets from new Renown: \(credits.joined(separator: ", ")). Learn one of that Renown in a Gift you know."
+    }
+
     @ViewBuilder
     private func row(for owned: OwnedFacet) -> some View {
         if let id = owned.source.catalogID, let found = Catalog.bundled.facet(id) {
@@ -626,9 +698,11 @@ struct GiftsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(found.facet.name)
                         .themedText(.traitName)
-                    Text([found.gift.name, found.facet.renown?.name].compactMap { $0 }.joined(separator: " · "))
+                    Text([found.facet.renown?.name, owned.learnedWithRenown ? "Learned with Renown" : nil]
+                        .compactMap { $0 }.joined(separator: " · "))
                         .themedText(.detail)
                         .foregroundStyle(theme.muted)
+                    PowerEffectNote(facet: found.facet)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
@@ -636,6 +710,10 @@ struct GiftsView: View {
             .buttonStyle(.plain)
             .accessibilityHint("Shows its details")
             .padding(.vertical, 4)
+            // A power that changes the sheet while in use, e.g. Primal Strength, is switched on here
+            if found.facet.effects?.isEmpty == false, found.facet.passive != true {
+                PowerToggle(isOn: Binding(get: { owned.isActive }, set: { owned.isActive = $0 }), name: found.facet.name)
+            }
         } else {
             VStack(alignment: .leading, spacing: 2) {
                 TapToEditText(placeholder: "Facet Name", text: Binding(
@@ -663,7 +741,8 @@ struct GiftsView: View {
                     id: facet.id,
                     name: facet.name,
                     summary: facet.summary,
-                    details: [facet.renown?.name, facet.cost].compactMap { $0 },
+                    details: [facet.renown?.name, facet.cost, character.canLearnFree(facet, of: gift) ? "Free with your new Renown" : nil]
+                        .compactMap { $0 },
                     warning: facet.renown.flatMap { character.renown($0) == 0 ? "Needs \($0.name) 1" : nil },
                     citation: facet.source.citation(),
                     isOwned: owned.contains(facet.id),
@@ -695,6 +774,37 @@ struct GiftsView: View {
         let facet = OwnedFacet(source: .custom(""), customKind: kind)
         newCustomFacetID = facet.id
         character.facets.append(facet)
+    }
+}
+
+/// What a Facet always does to the sheet, e.g. "Always on: adds Purity to Health".
+private struct PowerEffectNote: View {
+    @Environment(\.theme) private var theme
+    let facet: GiftEntry.Facet
+
+    var body: some View {
+        if facet.passive == true, facet.effects?.isEmpty == false {
+            Text("Always on, and counted on the sheet")
+                .themedText(.detail)
+                .foregroundStyle(theme.accent)
+        }
+    }
+}
+
+/// Switches on a power while it's in use, so its dots show on the sheet and in dice pools.
+struct PowerToggle: View {
+    @Environment(\.theme) private var theme
+    @Binding var isOn: Bool
+    let name: String
+
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            Text(isOn ? "In use, counted on the sheet" : "Not in use")
+                .themedText(.detail)
+                .foregroundStyle(isOn ? theme.accent : theme.muted)
+        }
+        .tint(theme.accent)
+        .accessibilityLabel("\(name) in use")
     }
 }
 
@@ -946,7 +1056,9 @@ struct RitesView: View {
                             .foregroundStyle(theme.muted)
                     }
                     Spacer()
-                    DotsRatingView(entry.name, value: entry.rating, maxRating: 5)
+                    // Only the rite's own dots, like a Merit with one rating, in the five-dot column
+                    DotsRatingView(entry.name, value: entry.rating, maxRating: entry.rating)
+                        .frame(width: DotsRatingView.width(forDots: 5), alignment: .leading)
                 }
                 .contentShape(Rectangle())
             }
@@ -957,6 +1069,9 @@ struct RitesView: View {
             .accessibilityAddTraits(.isButton)
             .accessibilityHint("Shows its details")
             .padding(.vertical, 4)
+            if entry.effects?.isEmpty == false {
+                PowerToggle(isOn: Binding(get: { rite.isActive }, set: { rite.isActive = $0 }), name: entry.name)
+            }
         } else {
             HStack {
                 TapToEditText(placeholder: "Rite Name", text: Binding(
@@ -1059,7 +1174,9 @@ struct FetishesView: View {
                 }
                 Spacer()
                 if let entry {
-                    DotsRatingView(entry.name, value: entry.rating, maxRating: 5)
+                    // Only the rite's own dots, like a Merit with one rating, in the five-dot column
+                    DotsRatingView(entry.name, value: entry.rating, maxRating: entry.rating)
+                        .frame(width: DotsRatingView.width(forDots: 5), alignment: .leading)
                 } else {
                     DotsRatingView("Fetish", rating: Binding(get: { fetish.customRating }, set: { fetish.customRating = max($0, 1) }),
                                    maxRating: 5)
@@ -1111,8 +1228,8 @@ struct PrimalUrgeView: View {
 
             let level = character.primalUrgeLevel
             CounterRow("Essence:", value: Binding(get: { character.essence }, set: { character.essence = $0 }),
-                       in: 0...level.essenceMaximum)
-            Text("Holds \(level.essenceMaximum) · Spend up to \(level.essencePerTurn) a turn")
+                       in: 0...character.essenceMaximum)
+            Text("Holds \(character.essenceMaximum) · Spend up to \(level.essencePerTurn) a turn")
                 .themedText(.detail)
                 .foregroundStyle(theme.muted)
         }

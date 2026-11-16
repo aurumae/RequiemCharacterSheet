@@ -119,6 +119,13 @@ struct GiftEntry: CatalogEntry {
         let action: String?
         let dicePool: String?
         let duration: String?
+        /// What it does to the sheet's traits, with "rating" meaning dots of its Renown, e.g. Primal Strength
+        /// adding Purity to Strength. See `PowerEffects`.
+        let effects: [Effect]?
+        /// The effects always apply, e.g. Warrior's Hide; otherwise the player switches them on while it's in use.
+        let passive: Bool?
+        /// The forms the effects apply in; `nil` for every form.
+        let effectForms: [Form]?
     }
 
     let id: CatalogEntryID
@@ -146,6 +153,8 @@ struct RiteEntry: CatalogEntry {
     let dicePool: String?
     let targetSuccesses: Int?
     let duration: String?
+    /// What it does to the sheet's traits while it lasts, switched on by the player; "rating" is the rite's dots.
+    let effects: [Effect]?
 }
 
 struct FetishEntry: CatalogEntry {

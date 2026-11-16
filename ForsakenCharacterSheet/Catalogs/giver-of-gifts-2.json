@@ -129,7 +129,14 @@
           "summary": "Her Essence maximum rises by her Purity.",
           "renown": "purity",
           "cost": "None",
-          "duration": "Permanent"
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "essenceMaximum",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
         },
         {
           "id": "essence-essence-sight",

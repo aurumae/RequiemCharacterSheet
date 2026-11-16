@@ -645,3 +645,97 @@ struct ForsakenCreationTests {
         #expect(character.xpMode)
     }
 }
+
+@MainActor
+struct GiftEffectTests {
+    @Test func passiveGiftsChangeDerivedTraits() throws {
+        let character = ForsakenCharacter()
+        character.auspice = "Rahu"
+        character.setRenown(.purity, to: 2)
+        // Warrior's Hide is the Full Moon's second dot: Purity to Health
+        let stamina = try #require(character.attribute(.stamina))
+        #expect(character.health == stamina.rating + 5 + 2)
+        // Rabid Fever: Purity to Initiative; Zeal: Purity to Willpower; Primeval Echo: Purity to the Essence maximum
+        let initiative = character.initiative(in: .hishu)
+        character.facets = [OwnedFacet(source: .catalog("disease-rabid-fever")), OwnedFacet(source: .catalog("fervor-zeal")),
+                            OwnedFacet(source: .catalog("essence-primeval-echo"))]
+        #expect(character.initiative(in: .hishu) == initiative + 2)
+        #expect(character.willpower == character.rating(of: .resolve) + character.rating(of: .composure) + 2)
+        #expect(character.essenceMaximum == character.primalUrgeLevel.essenceMaximum + 2)
+    }
+
+    @Test func activePowersAreSwitchedOn() throws {
+        let character = ForsakenCharacter()
+        character.setRenown(.purity, to: 3)
+        let strength = try #require(character.attribute(.strength))
+        strength.rating = 5
+        let primal = OwnedFacet(source: .catalog("strength-primal-strength"))
+        character.facets = [primal]
+        #expect(character.totalAttributeRating(for: strength) == 5)
+        primal.isActive = true
+        // Purity 3 to Strength, past the usual maximum, and into the Brawl pool
+        #expect(character.totalAttributeRating(for: strength) == 8)
+        #expect(character.countedAttributeRating(for: strength) == 8)
+        #expect(character.brawlPool(in: .hishu) == 8)
+        // Predator's Unmatched Pursuit only adds to Speed in Urshul and Urhan
+        character.setRenown(.glory, to: 2)
+        let pursuit = OwnedFacet(source: .catalog("strength-predators-unmatched-pursuit"))
+        pursuit.isActive = true
+        let hishu = character.speed(in: .hishu), urhan = character.speed(in: .urhan)
+        character.facets.append(pursuit)
+        #expect(character.speed(in: .hishu) == hishu)
+        #expect(character.speed(in: .urhan) == urhan + 2)
+        // Totemic Empowerment: +1 Strength, Dexterity and Stamina while it lasts
+        let rite = OwnedRite(source: .catalog("totemic-empowerment"))
+        rite.isActive = true
+        character.rites = [rite]
+        #expect(character.rating(.dexterity, in: .hishu) == 2)
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.facets.first?.isActive == true)
+        #expect(loaded.rites.first?.isActive == true)
+    }
+
+    @Test func fortifiedFormArmorsItsForm() {
+        let character = ForsakenCharacter()
+        character.armor = 1
+        character.merits = [Merit(source: .catalog("fortified-form"), qualifier: "Gauru", rating: 4)]
+        #expect(character.armor(in: .hishu) == (1, 0))
+        #expect(character.armor(in: .gauru) == (2, 1))
+    }
+
+    @Test func weaponsOnlyInFormsWithHands() throws {
+        let character = ForsakenCharacter()
+        try #require(character.skill(.weaponry)).rating = 2
+        // Dalu adds a dot of Strength
+        #expect(character.weaponryPool(in: .dalu) == 4)
+        #expect(character.weaponryPool(in: .gauru) == nil)
+        #expect(character.firearmsPool(in: .hishu) == 1)
+    }
+
+    @Test func newRenownBringsAFreeFacet() throws {
+        let character = ForsakenCharacter()
+        character.xpMode = true
+        character.experiences = 10
+        character.facets = [OwnedFacet(source: .catalog("dominance-primal-allure"))]
+        character.setRenown(.purity, to: 1)
+        #expect(character.renownFacetCredits[.purity] == 1)
+        let found = try #require(Catalog.bundled.facet("dominance-snarl-of-the-predator"))
+        #expect(character.canLearnFree(found.facet, of: found.gift))
+        // Not in a Gift the character hasn't unlocked
+        let other = try #require(Catalog.bundled.facet("death-bone-gnaw"))
+        #expect(!character.canLearnFree(other.facet, of: other.gift))
+        character.learn(found.facet, of: found.gift)
+        let learned = try #require(character.facets.last)
+        #expect(learned.learnedWithRenown)
+        #expect(character.experienceCost(of: TraitKey(.facet, learned.id.uuidString), level: 1) == 0)
+        #expect(character.renownFacetCredits[.purity] == 0)
+        character.forget(learned)
+        #expect(character.renownFacetCredits[.purity] == 1)
+    }
+
+    @Test func chroniclesCoreMeritsMissingFromTheWerewolfBookAreThere() {
+        for id in ["mystery-cult-initiation", "library", "true-friend", "trained-observer"] {
+            #expect(Catalog.bundled.merits.entry(id)?.source.book == "cofd-core", "\(id)")
+        }
+    }
+}

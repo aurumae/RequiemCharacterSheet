@@ -37,9 +37,11 @@ Unofficial files load after all the books.
   alternates, and its `moonGift` names the core one), and `facets`, each with `id`,
   `name`, `source`, `summary`, and either `renown` (Shadow and Wolf Gifts) or `dots` (1–5, Moon Gifts), plus optional
   `cost` (e.g. "1 Essence"), `action` ("instant", "reflexive", "contested", "extended"…), `dicePool` (e.g.
-  "Wits + Investigation + Cunning") and `duration`.
+  "Wits + Investigation + Cunning") and `duration`, and `effects` (Requiem's effect objects; `"amount": "rating"`
+  means dots of the Facet's Renown, or of auspice Renown for a Moon Gift), `passive` (true if always on) and
+  `effectForms` (forms it applies in, if not all).
 - **rites**: `kind` ("wolf" or "pack"), `rating` (1–5), and optional `action`, `dicePool`, `targetSuccesses`,
-  `duration`.
+  `duration`, `effects` (while switched on; "rating" is the rite's dots).
 - **merits**: Requiem's Merit entry. Categories: "werewolf", "human" (only humans can take them, e.g. the Church of
   the Wolf's; listed but unavailable to werewolves), "fighting", "mental", "physical", "social", "other".
   Prerequisite kinds include Requiem's shared ones (attribute, skill, merit, willpower, other) and Forsaken's:

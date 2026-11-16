@@ -174,3 +174,19 @@ Forsaken offers guided creation like Requiem, with the same hard limits, followi
 - Merits: ten dots, also paying for extra Rites and Primal Urge (five a dot, up to 3). Every character gets a free
   Totem dot (two for the Pure) and Language (First Tongue). Harmony starts at 7.
 
+## Werewolf: Gifts and rites that change the sheet (2026-11-16)
+
+A Facet or rite that changes a trait is counted on the sheet. Passive ones always count, e.g. Warrior's Hide (Purity
+to Health), Rabid Fever (Purity to Initiative), Zeal (Purity to Willpower, which may pass 10) and Primeval Echo
+(Purity to the Essence maximum). Ones that are used, e.g. Primal Strength or Totemic Empowerment, have a switch on
+their row; while it's on, their dots show in black on the Attribute or Skill and count in derived traits and dice
+pools, past the usual maximum. The Advantages table also shows Armor (general/ballistic, with Fortified Form in its
+form) and the Brawl pool in every form, and Weaponry and Firearms pools in Hishu and Dalu for a character with dots in
+them.
+
+## Werewolf: Facets learned with Renown (2026-11-16)
+
+In XP Mode, each Renown dot gained lets the character learn one Facet of that Renown free, in a Gift they've
+unlocked (one whose Facet they know, or any Wolf Gift) (p. 115). The Gift sections show the free Facets waiting, and
+the picker marks the Facets they can go on. Shadow and Wolf Facets are listed under their Gifts.
+

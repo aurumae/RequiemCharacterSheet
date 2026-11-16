@@ -184,16 +184,23 @@ final class OwnedFacet: Identifiable, Codable {
     /// For a custom Facet, the Gift it belongs to and whether it's a Shadow or Wolf Gift.
     var customGift: String
     var customKind: GiftEntry.Kind
+    /// Switched on while it's in use, for a Facet whose effects change the sheet, e.g. Primal Strength.
+    var isActive: Bool
+    /// Learned free with a new dot of its Renown (p. 115), so it cost no Experiences.
+    var learnedWithRenown: Bool
 
-    init(id: UUID = UUID(), source: TraitSource, customGift: String = "", customKind: GiftEntry.Kind = .shadow) {
+    init(id: UUID = UUID(), source: TraitSource, customGift: String = "", customKind: GiftEntry.Kind = .shadow,
+         learnedWithRenown: Bool = false) {
         self.id = id
         self.source = source
         self.customGift = customGift
         self.customKind = customKind
+        self.isActive = false
+        self.learnedWithRenown = learnedWithRenown
     }
 
     enum CodingKeys: CodingKey {
-        case id, source, customGift, customKind
+        case id, source, customGift, customKind, active, withRenown
     }
 
     func encode(to encoder: Encoder) throws {
@@ -204,6 +211,12 @@ final class OwnedFacet: Identifiable, Codable {
             try container.encode(customGift, forKey: .customGift)
             try container.encode(customKind, forKey: .customKind)
         }
+        if isActive {
+            try container.encode(true, forKey: .active)
+        }
+        if learnedWithRenown {
+            try container.encode(true, forKey: .withRenown)
+        }
     }
 
     required init(from decoder: Decoder) throws {
@@ -212,6 +225,8 @@ final class OwnedFacet: Identifiable, Codable {
         source = try container.decode(TraitSource.self, forKey: .source)
         customGift = try container.decode(.customGift, default: "")
         customKind = try container.decode(.customKind, default: .shadow)
+        isActive = try container.decode(.active, default: false)
+        learnedWithRenown = try container.decode(.withRenown, default: false)
     }
 }
 
@@ -222,6 +237,8 @@ final class OwnedRite: Identifiable, Codable {
     var source: TraitSource
     /// For a custom Rite, its dots.
     var customRating: Int
+    /// Switched on while it lasts, for a Rite whose effects change the sheet, e.g. Totemic Empowerment.
+    var isActive = false
 
     init(id: UUID = UUID(), source: TraitSource, customRating: Int = 1) {
         self.id = id
@@ -230,7 +247,7 @@ final class OwnedRite: Identifiable, Codable {
     }
 
     enum CodingKeys: CodingKey {
-        case id, source, customRating
+        case id, source, customRating, active
     }
 
     func encode(to encoder: Encoder) throws {
@@ -240,6 +257,9 @@ final class OwnedRite: Identifiable, Codable {
         if source.catalogID == nil {
             try container.encode(customRating, forKey: .customRating)
         }
+        if isActive {
+            try container.encode(true, forKey: .active)
+        }
     }
 
     required init(from decoder: Decoder) throws {
@@ -247,6 +267,7 @@ final class OwnedRite: Identifiable, Codable {
         id = try container.decode(.id, default: UUID())
         source = try container.decode(TraitSource.self, forKey: .source)
         customRating = try container.decode(.customRating, default: 1)
+        isActive = try container.decode(.active, default: false)
     }
 }
 

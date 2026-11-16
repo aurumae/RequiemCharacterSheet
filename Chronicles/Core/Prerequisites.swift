@@ -127,6 +127,14 @@ extension Effect {
             return "Defense can use \(qualifier ?? "the chosen Skill") instead of Athletics"
         case .merit(let id, let amount):
             return adds(amount.value(forRating: rating), to: merits.entry(id)?.name ?? id)
+        case .skill(let id, let amount):
+            return adds(amount.value(forRating: rating), to: SkillDefinition.withID(id)?.name ?? id.rawValue)
+        case .health(let amount):
+            return adds(amount.value(forRating: rating), to: "Health")
+        case .willpower(let amount):
+            return adds(amount.value(forRating: rating), to: "Willpower")
+        case .essenceMaximum(let amount):
+            return adds(amount.value(forRating: rating), to: "the Essence maximum")
         }
     }
 
