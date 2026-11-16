@@ -9,6 +9,7 @@ import SwiftUI
 struct DisciplinePickerView: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.showsUnofficialContent) private var showsUnofficialContent
     let character: Character
     /// Called with the chosen catalog entry, or `nil` for a custom Discipline.
     let onChoose: (DisciplineEntry?) -> Void
@@ -44,7 +45,7 @@ struct DisciplinePickerView: View {
                     }
                 }
 
-                ForEach(CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)])) { section in
+                ForEach(CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)], includingUnofficial: showsUnofficialContent)) { section in
                     Section(header: section.header) {
                         ForEach(section.entries) { entry in
                             row(for: entry)

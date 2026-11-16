@@ -22,6 +22,51 @@ package protocol CatalogEntry: Identifiable, Decodable where ID == CatalogEntryI
 package struct Book: Codable, Hashable {
     package let id: String
     package let name: String
+    /// `false` for fan-made or preview material, e.g. a design article on a publisher's blog. Each character chooses
+    /// whether to see unofficial books; official ones are always shown.
+    package let official: Bool
+    /// Where an unofficial source can be read online.
+    package let url: String?
+
+    package init(id: String, name: String, official: Bool = true, url: String? = nil) {
+        self.id = id
+        self.name = name
+        self.official = official
+        self.url = url
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, official, url
+    }
+
+    package init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        official = try container.decodeIfPresent(Bool.self, forKey: .official) ?? true
+        url = try container.decodeIfPresent(String.self, forKey: .url)
+    }
+
+    package func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        if !official {
+            try container.encode(official, forKey: .official)
+        }
+        try container.encodeIfPresent(url, forKey: .url)
+    }
+}
+
+extension Array where Element == Book {
+    /// The books a character sees: all the official ones, and the unofficial ones if they've chosen to.
+    package func visible(includingUnofficial: Bool) -> [Book] {
+        includingUnofficial ? self : filter(\.official)
+    }
+
+    package var hasUnofficial: Bool {
+        contains { !$0.official }
+    }
 }
 
 /// Where an entry is described: a book, and the page if known.

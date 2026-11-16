@@ -11,7 +11,9 @@ import SwiftUI
 extension SheetSection {
     static let form = SheetSection("form", title: "Form")
     static let renown = SheetSection("renown", title: "Renown")
-    static let gifts = SheetSection("gifts", title: "Gifts")
+    static let moonGifts = SheetSection("moonGifts", title: "Moon Gifts")
+    static let shadowGifts = SheetSection("shadowGifts", title: "Shadow Gifts")
+    static let wolfGifts = SheetSection("wolfGifts", title: "Wolf Gifts")
     static let rites = SheetSection("rites", title: "Rites")
     static let fetishes = SheetSection("fetishes", title: "Fetishes")
     static let primalUrge = SheetSection("primalUrge", title: "Primal Urge")
@@ -54,6 +56,9 @@ struct ForsakenCharacterInfoView: View {
             }
             tribeRow
             lodgeRow
+            if Catalog.bundled.books.hasUnofficial {
+                UnofficialContentRow(isOn: $character.showsUnofficialContent)
+            }
         }
     }
 
@@ -103,7 +108,14 @@ struct ForsakenCharacterInfoView: View {
                     ])
                 }
             },
-            choose: { id in character.auspiceSource = id.map { .catalog($0) } ?? .custom("") }
+            choose: { id in
+                let source: TraitSource = id.map { .catalog($0) } ?? .custom("")
+                // An alternate Moon Gift belongs to one auspice, so it goes back to the new auspice's own
+                if source != character.auspiceSource {
+                    character.moonGiftSource = nil
+                }
+                character.auspiceSource = source
+            }
         )
     }
 
@@ -314,32 +326,164 @@ struct RenownView: View {
 
 // MARK: - Gifts
 
+/// The Moon Gift the character uses, and its Facets: one for each dot of auspice Renown, unlocked automatically.
+struct MoonGiftView: View {
+    @Environment(\.theme) private var theme
+    @Bindable var character: ForsakenCharacter
+    @State private var shownFacet: (gift: GiftEntry, facet: GiftEntry.Facet)?
+
+    var body: some View {
+        SheetSectionBlock(.moonGifts) {
+            moonGiftRow
+            if let gift = character.moonGift {
+                ForEach(gift.facets.sorted { ($0.dots ?? 0) < ($1.dots ?? 0) }) { facet in
+                    let dots = facet.dots ?? 0
+                    Button {
+                        shownFacet = (gift, facet)
+                    } label: {
+                        facetLabel(name: Text(facet.name), dots: dots)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityHint("Shows its details")
+                }
+            } else if case .custom = character.moonGiftSource {
+                ForEach(1...5, id: \.self) { dots in
+                    facetLabel(name: TapToEditText("Facet Name", accessibilityName: "\(dots)-dot Facet",
+                                                   text: customFacetName(dots)), dots: dots)
+                        .editingRow("moon-facet-\(dots)")
+                }
+            }
+        }
+        .hostedSheet(isPresented: Binding(get: { shownFacet != nil }, set: { if !$0 { shownFacet = nil } })) {
+            if let shownFacet {
+                CatalogDetailView(title: shownFacet.facet.name, summary: shownFacet.facet.summary,
+                                  citation: shownFacet.facet.source.citation(), facts: facetFacts(shownFacet.gift, shownFacet.facet))
+            }
+        }
+    }
+
+    /// A Facet beside its dots, muted until auspice Renown reaches them.
+    private func facetLabel(name: some View, dots: Int) -> some View {
+        let unlocked = dots <= character.moonGiftDots
+        return HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                name.themedText(.traitName)
+                if !unlocked, let renown = character.moonGiftRenown {
+                    Text("Unlocks at \(renown.name) \(dots)")
+                        .themedText(.detail)
+                        .foregroundStyle(theme.muted)
+                }
+            }
+            Spacer()
+            Text(String(repeating: "●", count: dots))
+                .foregroundStyle(theme.accent)
+                .accessibilityLabel(dots == 1 ? "1 dot" : "\(dots) dots")
+        }
+        .opacity(unlocked ? 1 : 0.45)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(unlocked ? "Unlocked" : "Locked")
+    }
+
+    private func customFacetName(_ dots: Int) -> Binding<String> {
+        Binding(
+            get: { character.customMoonFacets.indices.contains(dots - 1) ? character.customMoonFacets[dots - 1] : "" },
+            set: { name in
+                var names = character.customMoonFacets
+                while names.count < dots { names.append("") }
+                names[dots - 1] = name
+                // Trailing empty names aren't kept
+                while names.last?.isEmpty == true { names.removeLast() }
+                character.customMoonFacets = names
+            }
+        )
+    }
+
+    /// The auspice's own Moon Gifts first, e.g. the core book's and any alternates, then the rest.
+    private var moonGiftRow: some View {
+        let moonGifts = Catalog.bundled.gifts.all.filter { $0.kind == .moon }
+        let auspice = character.effectiveAuspice?.id
+        let isCustom: Bool = if case .custom = character.moonGiftSource { true } else { false }
+        return CatalogChoiceRow(
+            label: "Moon Gift:",
+            value: character.moonGiftName,
+            isCustom: isCustom,
+            setCustomText: { character.moonGiftSource = .custom($0) },
+            pickerTitle: "Moon Gift",
+            searchPrompt: "Search Moon Gifts",
+            sections: {
+                pickerSections([
+                    CatalogPickerGroup(auspice == nil ? "" : "Your Auspice", moonGifts.filter { $0.auspice == auspice }),
+                    CatalogPickerGroup(auspice == nil ? "" : "Other Auspices", moonGifts.filter { $0.auspice != auspice }),
+                ]) { gift in
+                    let auspiceName = gift.auspice.flatMap { Catalog.bundled.auspices.entry($0)?.name }
+                    return CatalogPickerItem(id: gift.id, name: gift.name, summary: gift.summary,
+                                             details: auspiceName.map { ["\($0) only"] } ?? [],
+                                             citation: gift.source.citation())
+                }
+            },
+            customTitle: "Custom Moon Gift",
+            detail: {
+                character.moonGift.map {
+                    CatalogChoiceDetail(title: $0.name, summary: $0.summary, citation: $0.source.citation())
+                }
+            },
+            choose: { id in
+                // The auspice's own Moon Gift is the default, so isn't stored
+                let ownID = character.effectiveAuspice?.moonGift
+                if let id {
+                    character.moonGiftSource = id == ownID ? nil : .catalog(id)
+                } else {
+                    character.moonGiftSource = .custom("")
+                }
+            }
+        )
+    }
+}
+
+/// The Shadow or Wolf Gift Facets the character knows, and adding more.
 struct GiftsView: View {
     @Environment(\.theme) private var theme
     @Bindable var character: ForsakenCharacter
+    /// `.shadow` or `.wolf`.
+    let kind: GiftEntry.Kind
     @State private var showingPicker = false
     @State private var shownFacet: (gift: GiftEntry, facet: GiftEntry.Facet)?
     /// A custom Facet that was just added, whose name opens for editing.
     @State private var newCustomFacetID: UUID?
     @State private var addsCustomOnDismiss = false
 
+    private var kindName: String {
+        kind == .wolf ? "Wolf" : "Shadow"
+    }
+
+    /// The character's Facets of this kind of Gift.
+    private var facets: [OwnedFacet] {
+        character.facets.filter { (character.gift(of: $0)?.kind ?? $0.customKind) == kind }
+    }
+
     var body: some View {
-        SheetSectionBlock(.gifts) {
-            ForEach(character.facets) { owned in
+        SheetSectionBlock(kind == .wolf ? .wolfGifts : .shadowGifts) {
+            ForEach(facets) { owned in
                 row(for: owned)
                     .editingRow(owned.id)
             }
-            .onDelete { character.facets.remove(atOffsets: $0) }
+            .onDelete { offsets in
+                let ids = Set(offsets.map { facets[$0].id })
+                character.facets.removeAll { ids.contains($0.id) }
+            }
 
-            AddRowButton("Add Facet") {
+            AddRowButton("Add \(kindName) Facet") {
                 showingPicker = true
             }
             .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomIfChosen) {
                 CatalogPickerView(
-                    title: "Add Facet",
-                    searchPrompt: "Search Gifts and Facets",
-                    sections: pickerSections(),
-                    customOptions: [CatalogPickerCustomOption(id: "custom", title: "Custom Facet")]
+                    title: "Add \(kindName) Facet",
+                    searchPrompt: "Search \(kindName) Gifts and Facets",
+                    sections: facetSections(),
+                    customOptions: [CatalogPickerCustomOption(id: "custom", title: "Custom \(kindName) Facet")]
                 ) { choice in
                     switch choice {
                     case .entry(let id):
@@ -353,7 +497,7 @@ struct GiftsView: View {
         .hostedSheet(isPresented: Binding(get: { shownFacet != nil }, set: { if !$0 { shownFacet = nil } })) {
             if let shownFacet {
                 CatalogDetailView(title: shownFacet.facet.name, summary: shownFacet.facet.summary,
-                                  citation: shownFacet.facet.source.citation(), facts: facts(shownFacet.gift, shownFacet.facet))
+                                  citation: shownFacet.facet.source.citation(), facts: facetFacts(shownFacet.gift, shownFacet.facet))
             }
         }
     }
@@ -367,7 +511,7 @@ struct GiftsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(found.facet.name)
                         .themedText(.traitName)
-                    Text(subtitle(found.gift, found.facet))
+                    Text([found.gift.name, found.facet.renown?.name].compactMap { $0 }.joined(separator: " · "))
                         .themedText(.detail)
                         .foregroundStyle(theme.muted)
                 }
@@ -392,43 +536,20 @@ struct GiftsView: View {
         }
     }
 
-    /// e.g. "Gift of Death · Cunning" or "New Moon's Gift · •••".
-    private func subtitle(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> String {
-        let place = facet.renown?.name ?? facet.dots.map { String(repeating: "●", count: $0) } ?? ""
-        return [gift.name, place].filter { !$0.isEmpty }.joined(separator: " · ")
-    }
-
-    private func facts(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> [DetailFact] {
-        var facts = [DetailFact(label: "Gift", value: gift.name)]
-        if let renown = facet.renown { facts.append(DetailFact(label: "Renown", value: renown.name)) }
-        if let dots = facet.dots { facts.append(DetailFact(label: "Dots", value: String(repeating: "●", count: dots))) }
-        if let cost = facet.cost { facts.append(DetailFact(label: "Cost", value: cost)) }
-        if let pool = facet.dicePool { facts.append(DetailFact(label: "Dice Pool", value: pool)) }
-        if let action = facet.action { facts.append(DetailFact(label: "Action", value: action.capitalized)) }
-        if let duration = facet.duration { facts.append(DetailFact(label: "Duration", value: duration)) }
-        return facts
-    }
-
-    /// The Gifts by book, each a section: the auspice's Moon Gift first, then the tribe's and auspice's Shadow Gifts,
-    /// the other Shadow Gifts, the Wolf Gifts, and the other Moon Gifts.
-    private func pickerSections() -> [CatalogPickerSection] {
-        let gifts = Catalog.bundled.gifts.all
-        let ownMoon = gifts.filter { $0.kind == .moon && $0.auspice == character.effectiveAuspice?.id }
-        let affinity = gifts.filter { $0.kind == .shadow && character.affinityGifts.contains($0.id) }
-        let otherShadow = gifts.filter { $0.kind == .shadow && !character.affinityGifts.contains($0.id) }
-        let wolf = gifts.filter { $0.kind == .wolf }
-        let otherMoon = gifts.filter { $0.kind == .moon && $0.auspice != character.effectiveAuspice?.id }
+    /// The Gifts by book, each a section: for Shadow Gifts, the tribe's and auspice's first, then the others.
+    private func facetSections() -> [CatalogPickerSection] {
+        let gifts = Catalog.bundled.gifts.all.filter { $0.kind == kind }
+        let ordered = gifts.filter { character.affinityGifts.contains($0.id) }
+            + gifts.filter { !character.affinityGifts.contains($0.id) }
         let owned = Set(character.facets.compactMap(\.source.catalogID))
-        let ordered = ownMoon + affinity + otherShadow + wolf + otherMoon
         return ordered.flatMap { gift in
-            CatalogPickerSection.byBook([CatalogPickerGroup(sectionTitle(gift), gift.facets)], books: Catalog.bundled.books) { facet in
+            pickerSections([CatalogPickerGroup(sectionTitle(gift), gift.facets)]) { facet in
                 CatalogPickerItem(
                     id: facet.id,
                     name: facet.name,
-                    dots: facet.dots,
                     summary: facet.summary,
                     details: [facet.renown?.name, facet.cost].compactMap { $0 },
-                    warning: warning(gift, facet),
+                    warning: facet.renown.flatMap { character.renown($0) == 0 ? "Needs \($0.name) 1" : nil },
                     citation: facet.source.citation(),
                     isOwned: owned.contains(facet.id)
                 )
@@ -437,31 +558,28 @@ struct GiftsView: View {
     }
 
     private func sectionTitle(_ gift: GiftEntry) -> String {
-        switch gift.kind {
-        case .moon: "\(gift.name) (Moon)"
-        case .wolf: "\(gift.name) (Wolf)"
-        case .shadow: character.affinityGifts.contains(gift.id) ? "\(gift.name) (Affinity)" : gift.name
-        }
-    }
-
-    /// A Facet needs a dot in its Renown (p. 85), and a Moon Gift's Facets come with auspice Renown.
-    private func warning(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> String? {
-        if let renown = facet.renown, character.renown(renown) == 0 {
-            return "Needs \(renown.name) 1"
-        }
-        if let dots = facet.dots, let renown = character.effectiveAuspice?.renown, character.renown(renown) < dots {
-            return "Needs \(renown.name) \(dots)"
-        }
-        return nil
+        character.affinityGifts.contains(gift.id) ? "\(gift.name) (Affinity)" : gift.name
     }
 
     private func addCustomIfChosen() {
         guard addsCustomOnDismiss else { return }
         addsCustomOnDismiss = false
-        let facet = OwnedFacet(source: .custom(""))
+        let facet = OwnedFacet(source: .custom(""), customKind: kind)
         newCustomFacetID = facet.id
         character.facets.append(facet)
     }
+}
+
+/// A Facet's details: its Gift, Renown or dots, cost, dice pool, action and duration.
+private func facetFacts(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> [DetailFact] {
+    var facts = [DetailFact(label: "Gift", value: gift.name)]
+    if let renown = facet.renown { facts.append(DetailFact(label: "Renown", value: renown.name)) }
+    if let dots = facet.dots { facts.append(DetailFact(label: "Dots", value: String(repeating: "●", count: dots))) }
+    if let cost = facet.cost { facts.append(DetailFact(label: "Cost", value: cost)) }
+    if let pool = facet.dicePool { facts.append(DetailFact(label: "Dice Pool", value: pool)) }
+    if let action = facet.action { facts.append(DetailFact(label: "Action", value: action.capitalized)) }
+    if let duration = facet.duration { facts.append(DetailFact(label: "Duration", value: duration)) }
+    return facts
 }
 
 // MARK: - Rites

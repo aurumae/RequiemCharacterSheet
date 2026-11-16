@@ -1296,3 +1296,24 @@ It's cleared when the tribe changes.
 Hunter's Aspect row and menu match the other choice rows, and the tribe details and Renown notes are right.
 
 **Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-16 · Claude (iOS) · Moon Gifts, Gift sections and unofficial content
+
+**Shared files for Android:**
+- `Chronicles/Core/CatalogCore.swift`: `Book` has `official` (default true; written only when false) and an optional
+  `url`. Both catalog formats can use them; see `docs/phase-b-design.md` and `docs/forsaken-catalog-format.md`.
+  An entry from a book with a `url` is cited by the URL.
+- New design decision: unofficial content, per character, with a sheet switch that's off by default. See
+  `docs/design-decisions.md`. Requiem has no unofficial content yet, so its switch and save key aren't added; when
+  its first unofficial catalog arrives, Requiem needs a save-format key (schema bump) on both platforms.
+- Forsaken catalogs: `giver-of-gifts-1.json` and `giver-of-gifts-2.json` (unofficial, Onyx Path blog), and six
+  human-only Church of the Wolf and shadow-occultist Merits (new category `human`) in `nh-shunned-by-the-moon.json`.
+
+**Forsaken save format (draft, schema 1):** new keys `moonGift` (a trait source, only when it isn't the auspice's
+own), `moonFacets` (names for a custom Moon Gift's Facets, from one dot up), `showsUnofficialContent` (only when
+true), and `customKind` ("shadow" or "wolf") on custom Facets. Saved Moon Gift Facets in `facets` are dropped on load.
+
+**Validation:** 276 `swift test`; Requiem Xcode 276 + 2 UI passed; Forsaken 25 passed. Checked on the simulator.
+
+**Follow-up (Android):** read `Book.official`/`url` when decoding Requiem catalogs (ignoring them is fine until
+Requiem has unofficial content).

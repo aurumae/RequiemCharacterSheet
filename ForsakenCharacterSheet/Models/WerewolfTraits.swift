@@ -151,17 +151,19 @@ struct KuruthTriggers: Codable, Equatable {
 final class OwnedFacet: Identifiable, Codable {
     let id: UUID
     var source: TraitSource
-    /// For a custom Facet, the Gift it belongs to.
+    /// For a custom Facet, the Gift it belongs to and whether it's a Shadow or Wolf Gift.
     var customGift: String
+    var customKind: GiftEntry.Kind
 
-    init(id: UUID = UUID(), source: TraitSource, customGift: String = "") {
+    init(id: UUID = UUID(), source: TraitSource, customGift: String = "", customKind: GiftEntry.Kind = .shadow) {
         self.id = id
         self.source = source
         self.customGift = customGift
+        self.customKind = customKind
     }
 
     enum CodingKeys: CodingKey {
-        case id, source, customGift
+        case id, source, customGift, customKind
     }
 
     func encode(to encoder: Encoder) throws {
@@ -170,6 +172,7 @@ final class OwnedFacet: Identifiable, Codable {
         try container.encode(source, forKey: .source)
         if source.catalogID == nil {
             try container.encode(customGift, forKey: .customGift)
+            try container.encode(customKind, forKey: .customKind)
         }
     }
 
@@ -178,6 +181,7 @@ final class OwnedFacet: Identifiable, Codable {
         id = try container.decode(.id, default: UUID())
         source = try container.decode(TraitSource.self, forKey: .source)
         customGift = try container.decode(.customGift, default: "")
+        customKind = try container.decode(.customKind, default: .shadow)
     }
 }
 

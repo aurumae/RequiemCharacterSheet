@@ -50,6 +50,11 @@ final class ForsakenCharacter: Codable {
     var kuruthTriggers: KuruthTriggers
     /// The form the character is in, which changes their Attributes, Size and Speed.
     var form: Form
+    /// The Moon Gift the character uses, if not their auspice's own: an alternate Moon Gift, or the player's own.
+    var moonGiftSource: TraitSource?
+    /// For a custom Moon Gift, its Facets' names, from one dot up.
+    var customMoonFacets: [String]
+    /// Shadow and Wolf Gift Facets. Moon Gift Facets come with auspice Renown, so aren't listed.
     var facets: [OwnedFacet]
     var rites: [OwnedRite]
     var fetishes: [OwnedFetish]
@@ -65,6 +70,8 @@ final class ForsakenCharacter: Codable {
     var changeLog: [TraitChange]
     /// The Experiences paid for each dot, so lowering a trait in XP Mode refunds them.
     var paidDots: [TraitKey: [Int: Int]]
+    /// Whether pickers offer unofficial content as well as the books.
+    var showsUnofficialContent: Bool
 
     init() {
         id = UUID()
@@ -98,6 +105,8 @@ final class ForsakenCharacter: Codable {
         spiritTouchstone = ""
         kuruthTriggers = KuruthTriggers()
         form = .hishu
+        moonGiftSource = nil
+        customMoonFacets = []
         facets = []
         rites = []
         fetishes = []
@@ -111,6 +120,7 @@ final class ForsakenCharacter: Codable {
         xpMode = false
         changeLog = []
         paidDots = [:]
+        showsUnofficialContent = false
     }
 
     // MARK: - Saving
@@ -120,8 +130,8 @@ final class ForsakenCharacter: Codable {
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
              renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggers, form,
-             facets, rites, fetishes, size,
-             healthTrack, willpowerTrack, beats, experiences, xpMode, changeLog, paidDots
+             moonGift, moonFacets, facets, rites, fetishes, size,
+             healthTrack, willpowerTrack, beats, experiences, xpMode, changeLog, paidDots, showsUnofficialContent
     }
 
     func encode(to encoder: Encoder) throws {
@@ -161,6 +171,10 @@ final class ForsakenCharacter: Codable {
         try container.encode(spiritTouchstone, forKey: .spiritTouchstone)
         try container.encode(kuruthTriggers, forKey: .kuruthTriggers)
         try container.encode(form, forKey: .form)
+        try container.encodeIfPresent(moonGiftSource, forKey: .moonGift)
+        if !customMoonFacets.isEmpty {
+            try container.encode(customMoonFacets, forKey: .moonFacets)
+        }
         try container.encode(facets, forKey: .facets)
         try container.encode(rites, forKey: .rites)
         try container.encode(fetishes, forKey: .fetishes)
@@ -174,6 +188,9 @@ final class ForsakenCharacter: Codable {
         try container.encode(xpMode, forKey: .xpMode)
         try container.encode(changeLog, forKey: .changeLog)
         try container.encode(paidDots, forKey: .paidDots)
+        if showsUnofficialContent {
+            try container.encode(showsUnofficialContent, forKey: .showsUnofficialContent)
+        }
     }
 
     /// Missing fields fall back to a new character's, so a file from an older version opens.
@@ -216,7 +233,11 @@ final class ForsakenCharacter: Codable {
         spiritTouchstone = try container.decode(.spiritTouchstone, default: "")
         kuruthTriggers = try container.decode(.kuruthTriggers, default: KuruthTriggers())
         form = try container.decode(.form, default: .hishu)
-        facets = try container.decode(.facets, default: [])
+        moonGiftSource = try container.decodeIfPresent(TraitSource.self, forKey: .moonGift)
+        customMoonFacets = try container.decode(.moonFacets, default: [])
+        // Early drafts listed Moon Gift Facets with the others; they now come from auspice Renown
+        let savedFacets: [OwnedFacet] = try container.decode(.facets, default: [])
+        facets = savedFacets.filter { $0.source.catalogID.flatMap { catalog.facet($0)?.gift.kind } != .moon }
         rites = try container.decode(.rites, default: [])
         fetishes = try container.decode(.fetishes, default: [])
         size = try container.decode(.size, default: 5)
@@ -228,6 +249,7 @@ final class ForsakenCharacter: Codable {
         xpMode = try container.decode(.xpMode, default: false)
         changeLog = try container.decode(.changeLog, default: [])
         paidDots = try container.decode(.paidDots, default: [:])
+        showsUnofficialContent = try container.decode(.showsUnofficialContent, default: false)
     }
 }
 
@@ -297,6 +319,34 @@ extension ForsakenCharacter {
         return tribeEntry?.huntersAspects?.first { $0.name == pureHuntersAspect }
     }
 
+    /// The catalog Moon Gift the character uses: the one chosen, or else their auspice's. `nil` for the Pure, who
+    /// have none, and for a custom Moon Gift.
+    var moonGift: GiftEntry? {
+        guard !isPure else { return nil }
+        switch moonGiftSource {
+        case .catalog(let id): return Catalog.bundled.gifts.entry(id)
+        case .custom: return nil
+        case nil: return effectiveAuspice.flatMap { Catalog.bundled.gifts.entry($0.moonGift) }
+        }
+    }
+
+    /// The Moon Gift's name, or the player's own for a custom one.
+    var moonGiftName: String {
+        if case .custom(let name) = moonGiftSource { return name }
+        return moonGift?.name ?? ""
+    }
+
+    /// The Renown that unlocks Moon Gift Facets: the auspice's.
+    var moonGiftRenown: Renown? {
+        effectiveAuspice?.renown
+    }
+
+    /// How many of the Moon Gift's Facets the character has: one for each dot of auspice Renown (p. 85).
+    var moonGiftDots: Int {
+        guard !isPure, let kind = moonGiftRenown else { return 0 }
+        return min(renown(kind), 5)
+    }
+
     /// The Shadow Gifts the character's tribe and auspice favour, which cost less to learn.
     var affinityGifts: Set<CatalogEntryID> {
         Set((effectiveAuspice?.giftAffinities ?? []) + (tribeEntry?.giftAffinities ?? []))
@@ -354,7 +404,11 @@ extension ForsakenCharacter: SheetCharacter {
     }
 
     var meritCategoryOrder: [MeritEntry.Category] {
-        [.werewolf, .mental, .physical, .social, .fighting, .other, .supernatural]
+        [.werewolf, .mental, .physical, .social, .fighting, .other, .supernatural, .human]
+    }
+
+    func meritUnavailableReason(_ entry: MeritEntry) -> String? {
+        entry.category == .human ? "Only for humans" : nil
     }
 
     func meritCategoryTitle(_ category: MeritEntry.Category) -> String {
@@ -366,6 +420,7 @@ extension ForsakenCharacter: SheetCharacter {
         case .fighting: "Fighting"
         case .supernatural: "Supernatural"
         case .other: "Other"
+        case .human: "Human"
         default: category.rawValue.capitalized
         }
     }

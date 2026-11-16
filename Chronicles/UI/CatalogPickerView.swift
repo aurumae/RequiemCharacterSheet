@@ -30,6 +30,8 @@ struct CatalogPickerSection: Identifiable {
     /// The name of the book its entries come from, shown as a heading above its first section.
     var book: String?
     let items: [CatalogPickerItem]
+    /// Whether its book is official; unofficial sections show only if the character has chosen to see them.
+    var isOfficial = true
 
     /// One section per book, in catalog order, so players can always see which book an option comes from, and
     /// within each book one per group, in the order given. Empty sections are left out.
@@ -39,15 +41,29 @@ struct CatalogPickerSection: Identifiable {
         item: (Entry) -> CatalogPickerItem
     ) -> [CatalogPickerSection] {
         CatalogBookSection.sections(groups, books: books).map { section in
-            CatalogPickerSection(title: section.title, book: section.book.name, items: section.entries.map(item))
+            CatalogPickerSection(title: section.title, book: section.book.heading, items: section.entries.map(item),
+                                 isOfficial: section.book.official)
         }
     }
 }
 
 extension CatalogBookSection {
     var header: CatalogSectionHeader {
-        CatalogSectionHeader(book: startsBook ? book.name : nil, title: title)
+        CatalogSectionHeader(book: startsBook ? book.heading : nil, title: title)
     }
+}
+
+extension Book {
+    /// The book's name as a picker heading, marked if it isn't official.
+    var heading: String {
+        // Kept together so the mark never starts a line on its own
+        official ? name : "\(name)\u{00A0}(Unofficial)"
+    }
+}
+
+extension EnvironmentValues {
+    /// Whether the character on the sheet has chosen to see unofficial content in pickers; set by the sheet.
+    @Entry var showsUnofficialContent = false
 }
 
 /// A picker section's heading: the book's name above its first section, then the group within it, if any.
@@ -104,6 +120,7 @@ struct CatalogPickerView: View {
 
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.showsUnofficialContent) private var showsUnofficialContent
     let title: String
     let searchPrompt: String
     let sections: [CatalogPickerSection]
@@ -132,7 +149,14 @@ struct CatalogPickerView: View {
             List {
                 // Book headings follow the sections that match the search
                 let visible = sections
-                    .map { CatalogPickerSection(title: $0.title, book: $0.book, items: matching($0.items)) }
+                    .filter { $0.isOfficial || showsUnofficialContent }
+                    // A search for a group's title, e.g. a Gift's name, finds everything in it
+                    .map { section in
+                        let titleMatches = !searchText.isEmpty && section.title.localizedStandardContains(searchText)
+                        return CatalogPickerSection(title: section.title, book: section.book,
+                                                    items: titleMatches ? section.items : matching(section.items),
+                                                    isOfficial: section.isOfficial)
+                    }
                     .filter { !$0.items.isEmpty }
                 let headings = visible.bookHeadings()
                 ForEach(Array(visible.enumerated()), id: \.element.id) { index, section in

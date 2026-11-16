@@ -94,7 +94,7 @@ struct ArchetypeEntry: CatalogEntry {
 }
 
 struct GiftEntry: CatalogEntry {
-    enum Kind: String, Decodable {
+    enum Kind: String, Codable {
         case moon, shadow, wolf
     }
 
@@ -159,6 +159,8 @@ struct FetishEntry: CatalogEntry {
 /// Forsaken's own kinds of Merit and Merit prerequisite.
 extension MeritEntry.Category {
     static let werewolf = MeritEntry.Category(rawValue: "werewolf")
+    /// Merits only humans can take, e.g. the Church of the Wolf's.
+    static let human = MeritEntry.Category(rawValue: "human")
 }
 
 extension Prerequisite.Kind {

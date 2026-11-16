@@ -10,6 +10,7 @@ import SwiftUI
 struct MeritPickerView<C: SheetCharacter>: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.showsUnofficialContent) private var showsUnofficialContent
     let character: C
     /// Called with the chosen catalog entry and qualifier, or `nil` for a custom Merit.
     let onChoose: (MeritEntry?, String?) -> Void
@@ -45,7 +46,7 @@ struct MeritPickerView<C: SheetCharacter>: View {
                         CatalogPickerGroup(character.meritCategoryTitle(category), entries.filter { $0.category == category })
                     }
                     : [CatalogPickerGroup("", entries)]
-                ForEach(CatalogBookSection.sections(groups, books: Catalog.bundled.books)) { section in
+                ForEach(CatalogBookSection.sections(groups, books: Catalog.bundled.books.visible(includingUnofficial: showsUnofficialContent))) { section in
                     Section(header: section.header) {
                         ForEach(section.entries) { row(for: $0) }
                     }

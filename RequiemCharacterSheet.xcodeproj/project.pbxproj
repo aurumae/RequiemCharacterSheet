@@ -113,6 +113,8 @@
 		BC8BC9D930AA1BBF0060E9BF /* ExperienceCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */; };
 		BC8BCA2F30AA3CDF0060E9BF /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */; };
 		BC8BCA3030AA3CDF0060E9BF /* CatalogChoiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */; };
+		BC8BCA3630AABC550060E9BF /* UnofficialContentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BCA3530AABC550060E9BF /* UnofficialContentRow.swift */; };
+		BC8BCA3730AABC550060E9BF /* UnofficialContentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BCA3530AABC550060E9BF /* UnofficialContentRow.swift */; };
 		BCA1AE1C30A410C7001317CA /* dark-eras.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1B30A410C7001317CA /* dark-eras.json */; };
 		BCA1AE1E30A41B00001317CA /* dark-eras-2.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1D30A41B00001317CA /* dark-eras-2.json */; };
 		BCA1AE2030A433D0001317CA /* spilled-blood.json in Resources */ = {isa = PBXBuildFile; fileRef = BCA1AE1F30A433D0001317CA /* spilled-blood.json */; };
@@ -319,6 +321,7 @@
 		BC8BC9D730AA1BBF0060E9BF /* ExperienceCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceCore.swift; sourceTree = "<group>"; };
 		BC8BC9FE30AA1E880060E9BF /* ForsakenCharacterSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForsakenCharacterSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogChoiceRow.swift; sourceTree = "<group>"; };
+		BC8BCA3530AABC550060E9BF /* UnofficialContentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnofficialContentRow.swift; sourceTree = "<group>"; };
 		BCA1AE1B30A410C7001317CA /* dark-eras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras.json"; sourceTree = "<group>"; };
 		BCA1AE1D30A41B00001317CA /* dark-eras-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dark-eras-2.json"; sourceTree = "<group>"; };
 		BCA1AE1F30A433D0001317CA /* spilled-blood.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "spilled-blood.json"; sourceTree = "<group>"; };
@@ -555,6 +558,7 @@
 				BC460D9630A195820062F53F /* ConditionsView.swift */,
 				BC2B4477309ABD4300720F0C /* ExperienceView.swift */,
 				BC8BCA2E30AA3CDF0060E9BF /* CatalogChoiceRow.swift */,
+				BC8BCA3530AABC550060E9BF /* UnofficialContentRow.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -909,6 +913,7 @@
 				F0AD40B64C04B0CFB2062C8E /* MeritRowView.swift in Sources */,
 				F01C64316132F77A8B028BCA /* MeritPickerView.swift in Sources */,
 				F0808645DF8FB16858C0A0D2 /* MeritDetailView.swift in Sources */,
+				BC8BCA3630AABC550060E9BF /* UnofficialContentRow.swift in Sources */,
 				F0C43B90322657F2881964A2 /* AttributeRowView.swift in Sources */,
 				F0045B5269C4F0BEE024C634 /* SkillsView.swift in Sources */,
 				F0618EC607E9B2E5D08E3CEA /* SkillRowView.swift in Sources */,
@@ -1010,6 +1015,7 @@
 				BC6D36E72C9E0074008D03F7 /* BaneRowView.swift in Sources */,
 				BC2B4454309A454C00720F0C /* DisciplinePickerView.swift in Sources */,
 				BC2B4446309A310200720F0C /* Catalog.swift in Sources */,
+				BC8BCA3730AABC550060E9BF /* UnofficialContentRow.swift in Sources */,
 				BC8BC8F130A9A3900060E9BF /* SplashContainer.swift in Sources */,
 				BCB159162C9874A5003B6A8F /* BackgroundView.swift in Sources */,
 				BC6D36B82C9CF52B008D03F7 /* SkillsView.swift in Sources */,

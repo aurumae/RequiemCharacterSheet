@@ -797,6 +797,138 @@
         }
       ],
       "summary": "On the Sacred Hunt, spend 1 Willpower to cross the Gauntlet either way without a Locus, whatever your Harmony."
+    },
+    {
+      "id": "apocalypsis-fidei",
+      "name": "Apocalypsis Fidei",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must be a true believer of the Church of the Wolf"
+        }
+      ],
+      "summary": "A Merit for humans of the Church of the Wolf: when Lunacy forces a breaking point, the believer gains the Enraptured Condition on a success or Awestruck on a failure, and may pick Enraptured on an exceptional success. A dramatic failure breaks her faith, making her Wolf-Blooded and costing her this Merit and every Merit that needs it; it also unlocks the Church's other Merits and its rites."
+    },
+    {
+      "id": "invenire-venandi",
+      "name": "Invenire Venandi",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "apocalypsis-fidei",
+          "minimum": 1
+        }
+      ],
+      "summary": "A Church of the Wolf Merit for humans: the believer automatically senses when she is within Wits x 10 miles of a werewolf, and can roll Perception to find one within Empathy x 10 yards. A werewolf in Hishu form applies its usual Primal Urge penalty to that roll."
+    },
+    {
+      "id": "manticae",
+      "name": "Manticae",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "invenire-venandi",
+          "minimum": 2
+        }
+      ],
+      "summary": "A Church of the Wolf Merit for humans: werewolves in Basu-im Death Rage treat the believer as a packmate in Gauru Kuruth and won't attack her."
+    },
+    {
+      "id": "ligulae",
+      "name": "Ligulae",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "manticae",
+          "minimum": 3
+        }
+      ],
+      "summary": "A Church of the Wolf Merit for humans: the believer's presence acts as a general Kuruth trigger for any werewolf that comes within its Primal Urge in yards of her, even if it doesn't know who or what she is."
+    },
+    {
+      "id": "shadow-occultism",
+      "name": "Shadow Occultism",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 138
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Has been possessed, Ridden or Claimed by a spirit and fed its Essence as a transgression"
+        },
+        {
+          "kind": "other",
+          "text": "Has suffered at least one breaking point in pursuit of this Merit"
+        }
+      ],
+      "summary": "A Supernatural Merit for humans: the occultist perceives her spirit patrons in Twilight, gains an Essence pool equal to Stamina + Resolve, can learn and lead Pack Rites without a pack, and starts with 3 dots in one Influence of her patron, rolled with Presence + Wits. She regains Essence from her Influence's resonance, from kept taboos (bought for 1 XP each, up to Composure) and from loci, but takes on her patron's Bane and a taboo, gains the Madness Condition while her Essence exceeds her Resolve, and gains the Sick Tilt in combat while it exceeds her Stamina."
+    },
+    {
+      "id": "shadow-perception",
+      "name": "Shadow Perception",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 138
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "shadow-occultism",
+          "minimum": 4
+        },
+        {
+          "kind": "other",
+          "text": "Has suffered a further breaking point in pursuit of this Merit"
+        }
+      ],
+      "summary": "A Supernatural Merit for humans: the occultist sees spirits in Twilight, understands the First Tongue, senses whether a place, person or object resonates with any of her Influences, and can sense a locus within its area, though a willing spirit has to carry her through it. She can't stop seeing spirits in Twilight, and they notice her easily and may bother her."
     }
   ],
   "conditions": [

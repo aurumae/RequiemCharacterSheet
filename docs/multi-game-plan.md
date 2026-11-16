@@ -145,6 +145,13 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
   Hunter's Aspect choice, their Gift affinities are the tribe's alone, no Moon Gift is free, and Renown notes mark the
   secondary Renowns.
 
+- **Gifts.** Moon, Shadow and Wolf Gifts are separate sections. Moon Gift Facets aren't listed with the others: each
+  dot of auspice Renown unlocks the next Facet of the character's Moon Gift, which is their auspice's own unless
+  they choose an alternate or write their own.
+- **Unofficial content.** A book can be marked unofficial. The Giver of Gifts 1 and 2 (Onyx Path blog) add the Gift
+  of the Screaming Moon, the Gift of Cities and the Gift of Essence. Each character's Unofficial Content switch,
+  off by default, decides whether pickers show them.
+
 Still to come: guided creation (the core and the Pure quick references, including the Pure's starting Facets and
 Totem 2), the Ghost Wolf rules, Speed, Defense, Initiative and Perception for each form, more Werewolf sourcebooks, and
 App Store assets.

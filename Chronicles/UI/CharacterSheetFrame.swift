@@ -110,6 +110,8 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
         }
         .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
         .sheetHost($hostedSheet, lastPresented: $lastHostedSheet)
+        // Pickers in the list and in hosted sheets leave out unofficial books unless the character wants them
+        .environment(\.showsUnofficialContent, character.showsUnofficialContent)
         // Log every change to a trait, and charge for it in XP Mode
         .background(TraitChangeRecorder(character: character, onExperiencesBelowZero: showNegativeExperienceNotice))
         // A brief notice, not a banner: a character may stay below zero for many sessions

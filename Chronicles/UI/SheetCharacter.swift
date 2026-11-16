@@ -57,9 +57,19 @@ protocol SheetCharacter: ExperienceCharacter, Observable {
     func conditionMark(for target: ConditionTarget, traitName: String) -> AnyView?
     /// Controls beside a Mental, Physical or Social heading, e.g. guided creation's priority menu. `nil` for none.
     func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView?
+
+    /// Whether this character's pickers offer unofficial content, e.g. design articles from a publisher's blog, as
+    /// well as the books.
+    var showsUnofficialContent: Bool { get set }
 }
 
 extension SheetCharacter {
+    /// Off for a game whose save format doesn't keep the choice yet.
+    var showsUnofficialContent: Bool {
+        get { false }
+        set {}
+    }
+
     var baseRatingCap: Int { 5 }
     var attributeRatingRange: ClosedRange<Int> { 1...baseRatingCap }
     var skillRatingRange: ClosedRange<Int> { 0...baseRatingCap }

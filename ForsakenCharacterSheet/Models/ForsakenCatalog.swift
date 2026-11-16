@@ -55,7 +55,7 @@ struct Catalog {
     static let bundled = Catalog(files: bundledFiles())
 
     /// Every catalog file in the app bundle: the Werewolf core book first, then the Chronicles of Darkness core, then
-    /// the other books by file name.
+    /// the other books by file name, with unofficial sources after all the books.
     private static func bundledFiles() -> [File] {
         let order = ["wtf2e-core", "cofd-core"]
         let urls = (Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
@@ -63,7 +63,7 @@ struct Catalog {
                 let rank = { (url: URL) in order.firstIndex(of: url.deletingPathExtension().lastPathComponent) ?? order.count }
                 return rank(lhs) != rank(rhs) ? rank(lhs) < rank(rhs) : lhs.lastPathComponent < rhs.lastPathComponent
             }
-        return urls.compactMap { url in
+        let files: [File] = urls.compactMap { url in
             guard let data = try? Data(contentsOf: url) else { return nil }
             do {
                 let file = try JSONDecoder().decode(File.self, from: data)
@@ -74,6 +74,7 @@ struct Catalog {
                 return nil
             }
         }
+        return files.filter(\.book.official) + files.filter { !$0.book.official }
     }
 
     /// A catalog file: Forsaken's own format, or the shared core's in Requiem's format, of which only the Merits and
@@ -136,6 +137,10 @@ extension Merit {
 extension SourceReference {
     /// "Chronicles of Darkness, p. 44".
     func citation() -> String {
+        // An article online is cited by its address
+        if let url = Catalog.bundled.book(book)?.url {
+            return url
+        }
         let book = Catalog.bundled.book(book)?.name ?? book
         return page.map { "\(book), p. \($0)" } ?? book
     }

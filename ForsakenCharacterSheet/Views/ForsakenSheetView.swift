@@ -18,7 +18,12 @@ struct ForsakenSheetView: View {
             SkillsView(character: character)
             MeritsView(character: character)
             RenownView(character: character)
-            GiftsView(character: character)
+            // The Pure flay away Luna's mark, and with it any Moon Gift
+            if !character.isPure {
+                MoonGiftView(character: character)
+            }
+            GiftsView(character: character, kind: .shadow)
+            GiftsView(character: character, kind: .wolf)
             RitesView(character: character)
             FetishesView(character: character)
             AspirationsView(character: character)
@@ -41,7 +46,8 @@ struct ForsakenSheetView: View {
 extension ForsakenCharacter {
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
-        [.character, .form, .attributes, .skills, .merits, .renown, .gifts, .rites, .fetishes, .aspirations, .health,
-         .willpower, .primalUrge, .harmony, .kuruth, .experience, .conditions]
+        let gifts: [SheetSection] = isPure ? [.shadowGifts, .wolfGifts] : [.moonGifts, .shadowGifts, .wolfGifts]
+        return [.character, .form, .attributes, .skills, .merits, .renown] + gifts
+            + [.rites, .fetishes, .aspirations, .health, .willpower, .primalUrge, .harmony, .kuruth, .experience, .conditions]
     }
 }

@@ -100,3 +100,22 @@ the character list. Requiem uses its app-icon skull and Forsaken uses the wolf s
 - **Fetishes and talens** have their own section: the core book's samples (pp. 147–149) or the player's own, with
   rating and Essence notes.
 - **Wolf Gift Facets cost 1 Experience** (decided 2026-11-12; see above).
+
+## Unofficial content is optional, per character (2026-11-16)
+
+Catalogs can include unofficial content: fan-made material and the publisher's design previews, such as the Giver
+of Gifts articles on the Onyx Path blog. A catalog marks its book `"official": false`. Every app has an **Unofficial
+Content** switch on the character sheet, saved with each character and off by default. While it's off, every picker
+on that sheet leaves unofficial books out; while it's on, they appear after the official books, under their name and
+"(Unofficial)". Official books are always shown and still can't be switched off. Turning the switch off doesn't
+remove anything the character already took. An unofficial entry is cited by its URL if it has one.
+
+The switch appears once an app has unofficial content. Forsaken has it now; Requiem will show it when its first
+unofficial catalog is added, which needs a Requiem save-format key.
+
+## Werewolf: Moon Gifts come with auspice Renown, and can be swapped (2026-11-16)
+
+The sheet splits Gifts into Moon, Shadow and Wolf sections. The Moon Gifts section is left out for the Pure. A
+character's Moon Gift Facets aren't bought: each dot of auspice Renown unlocks the next. The Moon Gift is the
+auspice's own by default, but the player can choose another, e.g. an alternate Moon Gift shared by the developers or
+fans, or write their own. Changing auspice goes back to the new auspice's own Moon Gift.
