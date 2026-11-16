@@ -12,6 +12,9 @@ struct ForsakenSheetView: View {
 
     var body: some View {
         CharacterSheetFrame(character: character, store: store, sections: character.sheetSections) {
+            if character.isInCreation {
+                CreationPanelView(character: character)
+            }
             ForsakenCharacterInfoView(character: character)
             FormView(character: character)
             AdvantagesView(character: character)
@@ -59,7 +62,7 @@ extension ForsakenCharacter {
     var sheetSections: [SheetSection] {
         let gifts: [SheetSection] = isPure ? [.shadowGifts, .wolfGifts] : [.moonGifts, .shadowGifts, .wolfGifts]
         let benefit: [SheetSection] = auspiceBenefit == nil ? [] : [.auspiceBenefit]
-        return [.character, .form, .advantages, .attributes, .skills, .merits, .totem, .renown] + benefit + gifts
+        return (isInCreation ? [.creation] : []) + [.character, .form, .advantages, .attributes, .skills, .merits, .totem, .renown] + benefit + gifts
             + [.rites, .fetishes, .aspirations, .health, .willpower, .primalUrge, .harmony, .kuruth, .experience, .conditions]
     }
 }

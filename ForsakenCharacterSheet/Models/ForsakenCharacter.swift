@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import SwiftUI
 
 @Observable
 final class ForsakenCharacter: Codable {
@@ -72,6 +73,8 @@ final class ForsakenCharacter: Codable {
     var beats: Int
     var experiences: Int
     var xpMode: Bool
+    /// Set while the character is being made with guided creation.
+    var creation: CreationState?
     var changeLog: [TraitChange]
     /// The Experiences paid for each dot, so lowering a trait in XP Mode refunds them.
     var paidDots: [TraitKey: [Int: Int]]
@@ -126,6 +129,7 @@ final class ForsakenCharacter: Codable {
         beats = 0
         experiences = 0
         xpMode = false
+        creation = nil
         changeLog = []
         paidDots = [:]
         showsUnofficialContent = false
@@ -139,7 +143,7 @@ final class ForsakenCharacter: Codable {
              attributes, skills, merits, aspirations, conditions,
              renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggerSet, kuruthTriggers, form,
              moonGift, moonFacets, facets, rites, fetishes, totem, size, armor,
-             healthTrack, willpowerTrack, beats, experiences, xpMode, changeLog, paidDots, showsUnofficialContent
+             healthTrack, willpowerTrack, beats, experiences, xpMode, creation, changeLog, paidDots, showsUnofficialContent
     }
 
     func encode(to encoder: Encoder) throws {
@@ -204,6 +208,7 @@ final class ForsakenCharacter: Codable {
         try container.encode(xpMode, forKey: .xpMode)
         try container.encode(changeLog, forKey: .changeLog)
         try container.encode(paidDots, forKey: .paidDots)
+        try container.encodeIfPresent(creation, forKey: .creation)
         if showsUnofficialContent {
             try container.encode(showsUnofficialContent, forKey: .showsUnofficialContent)
         }
@@ -268,6 +273,7 @@ final class ForsakenCharacter: Codable {
         xpMode = try container.decode(.xpMode, default: false)
         changeLog = try container.decode(.changeLog, default: [])
         paidDots = try container.decode(.paidDots, default: [:])
+        creation = try container.decodeIfPresent(CreationState.self, forKey: .creation)
         showsUnofficialContent = try container.decode(.showsUnofficialContent, default: false)
     }
 }
@@ -418,7 +424,34 @@ extension ForsakenCharacter: SheetCharacter {
         Catalog.bundled.conditions
     }
 
-    var isInCreation: Bool { false }
+    func editableMaximum(for key: TraitKey, upTo cap: Int) -> Int {
+        creationMaximum(for: key, upTo: cap) ?? cap
+    }
+
+    /// During guided creation, only while fewer than three are taken.
+    var canAddSpecialty: Bool {
+        !isInCreation || creationReport.specialties.remaining > 0
+    }
+
+    func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool {
+        creationAllows(.merit(entry, rating: rating))
+    }
+
+    func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView? {
+        // During guided creation, the player chooses where the 5/4/3 or 11/7/4 dots go
+        isInCreation ? AnyView(CreationPriorityMenu(character: self, category: category, skills: skills)) : nil
+    }
+
+    func attributeNote(for kind: AttributeKind) -> String? {
+        var notes: [String] = []
+        if let change = form.attributeModifiers[kind], change != 0 {
+            notes.append("\(change > 0 ? "+" : "−")\(abs(change)) in \(form.name)")
+        }
+        let totem = totem.dots(for: .attribute, kind.rawValue)
+        if totem > 0 { notes.append("+\(totem) from the totem") }
+        if attributeBonus(for: kind) > totem { notes.append("+1 from Embodiment of the Firstborn") }
+        return notes.isEmpty ? nil : notes.joined(separator: " · ")
+    }
 
     /// Attributes and Skills can go as high as Primal Urge allows (p. 93).
     var baseRatingCap: Int {
@@ -450,10 +483,6 @@ extension ForsakenCharacter: SheetCharacter {
         totem.advantages.filter { $0.kind == .specialty && $0.target == skill.skillID.rawValue && !$0.detail.isEmpty }.map(\.detail)
     }
 
-    func attributeNote(for kind: AttributeKind) -> String? {
-        guard let change = form.attributeModifiers[kind], change != 0 else { return nil }
-        return "\(change > 0 ? "+" : "−")\(abs(change)) in \(form.name)"
-    }
 
     var meritCategoryOrder: [MeritEntry.Category] {
         [.werewolf, .mental, .physical, .social, .fighting, .other, .supernatural, .human]
@@ -650,11 +679,10 @@ extension ForsakenCharacter: StoredCharacter {
 }
 
 extension ForsakenCharacter: ListedCharacter {
-    /// Guided creation comes later; for now every character starts as a blank sheet.
-    static var offersGuidedCreation: Bool { false }
+    static var offersGuidedCreation: Bool { true }
 
     static func newCharacter(guided: Bool) -> ForsakenCharacter {
-        ForsakenCharacter()
+        guided ? .guided() : ForsakenCharacter()
     }
 }
 

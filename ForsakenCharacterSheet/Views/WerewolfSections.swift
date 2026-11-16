@@ -9,6 +9,7 @@
 import SwiftUI
 
 extension SheetSection {
+    static let creation = SheetSection("creation", title: "Creation", heading: "Character Creation")
     static let form = SheetSection("form", title: "Form")
     static let renown = SheetSection("renown", title: "Renown")
     static let auspiceBenefit = SheetSection("auspiceBenefit", title: "Auspice Benefit")
@@ -170,6 +171,11 @@ struct ForsakenCharacterInfoView: View {
                     character.pureHuntersAspect = ""
                 }
                 character.tribeSource = source
+                // The Pure start with two Totem dots
+                if character.isInCreation, character.isPure,
+                   let totem = character.merits.first(where: { $0.source == .catalog("totem") }), totem.rating < 2 {
+                    totem.rating = 2
+                }
             }
         )
     }
@@ -391,6 +397,7 @@ struct RenownView: View {
                         kind.name,
                         rating: Binding(get: { character.renown(kind) }, set: { character.setRenown(kind, to: $0) }),
                         maxRating: 5,
+                        maxEditableRating: character.editableMaximum(for: TraitKey(.renown, kind.rawValue), upTo: 5),
                         allowsResetToZero: true
                     )
                 }
@@ -663,7 +670,8 @@ struct GiftsView: View {
                     details: [facet.renown?.name, facet.cost].compactMap { $0 },
                     warning: facet.renown.flatMap { character.renown($0) == 0 ? "Needs \($0.name) 1" : nil },
                     citation: facet.source.citation(),
-                    isOwned: owned.contains(facet.id)
+                    isOwned: owned.contains(facet.id),
+                    unavailableReason: character.creationAllows(.facet(facet, gift: gift)) ? nil : "Doesn't fit the starting Gifts"
                 )
             }
         }
@@ -884,7 +892,9 @@ struct RitesView: View {
                     ]) { rite in
                         CatalogPickerItem(id: rite.id, name: rite.name, dots: rite.rating, summary: rite.summary,
                                           details: rite.targetSuccesses.map { ["\($0) successes"] } ?? [],
-                                          citation: rite.source.citation(), isOwned: owned.contains(rite.id))
+                                          citation: rite.source.citation(), isOwned: owned.contains(rite.id),
+                                          unavailableReason: character.creationAllows(.rite(dots: rite.rating))
+                                              ? nil : "Doesn't fit the starting Rites and Merit dots")
                     },
                     customOptions: [CatalogPickerCustomOption(id: "custom", title: "Custom Rite")]
                 ) { choice in
@@ -1070,6 +1080,7 @@ struct PrimalUrgeView: View {
                     "Primal Urge",
                     rating: Binding(get: { character.primalUrge }, set: { character.primalUrge = max($0, 1) }),
                     maxRating: 10,
+                    maxEditableRating: character.editableMaximum(for: TraitKey(.primalUrge, "primalUrge"), upTo: 10),
                     minEditableRating: 1,
                     dotsPerRow: 10
                 )
@@ -1108,6 +1119,8 @@ struct HarmonyView: View {
                     rating: $character.harmony,
                     maxRating: 10,
                     dotsPerRow: 10,
+                    // Every werewolf starts at 7
+                    isInteractive: !character.isInCreation,
                     allowsResetToZero: true
                 )
                 Text(levelText)

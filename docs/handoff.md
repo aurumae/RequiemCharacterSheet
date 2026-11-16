@@ -1365,3 +1365,15 @@ draw bonus dots in ink like Attributes, and list granted Specialties muted under
 stacking over-limit sources, and the totem.
 
 **Validation:** Forsaken 32 passed.
+
+## 2026-11-16 · Claude (iOS) · Forsaken guided creation
+
+Forsaken now offers guided creation, following Requiem's design (checklist panel, priority menus, hard limits), with
+its own rules in `ForsakenCharacterSheet/Models/ForsakenCreation.swift`. See the new design decision. Save key
+`creation` (`attributePriorities`, `skillPriorities`, `freeSkill`) while in creation. Ghost Wolves get one fewer
+Renown dot and only their auspice's Shadow Gifts.
+
+The panel and priority menu are copies of Requiem's adapted for Forsaken; folding the two into shared code is a
+later clean-up.
+
+**Validation:** Forsaken 39 passed.

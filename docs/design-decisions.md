@@ -156,3 +156,18 @@ sheet. The points set the Experiences for advantages (1, 3, 5 or 10, p. 92), whi
 Skill dots, Specialties and Merits. Every pack member gains them. Totem Merits ignore prerequisites, and totem
 Attribute and Skill dots follow the limit rule above.
 
+## Werewolf: guided creation (2026-11-16)
+
+Forsaken offers guided creation like Requiem, with the same hard limits, following the core book's quick reference
+(pp. 82–84) and, for the Pure, Night Horrors: Shunned by the Moon's (p. 202):
+- Attributes 5/4/3 and Skills 11/7/4 by priority; three Specialties; a free dot in one of the auspice's Skills (a
+  Pure tribe's Skills for the Pure).
+- Renown: the auspice's, the tribe's and one more, none above two. **Ghost Wolves** have no tribal Renown, so they
+  get two dots. The Pure get the tribe's primary Renown and a dot in it or a secondary Renown.
+- Gifts: two Shadow Facets from the tribe's or auspice's Gifts (Ghost Wolves: only the auspice's), and a Wolf
+  Facet unless two dots of auspice Renown bring the Moon Gift's second Facet. The Pure take two Facets of the tribe's
+  Gifts, one of any Shadow Gift and one Wolf Facet. A Facet needs a dot of its Renown.
+- Rites: two dots, and up to five more for a Merit dot each.
+- Merits: ten dots, also paying for extra Rites and Primal Urge (five a dot, up to 3). Every character gets a free
+  Totem dot (two for the Pure) and Language (First Tongue). Harmony starts at 7.
+

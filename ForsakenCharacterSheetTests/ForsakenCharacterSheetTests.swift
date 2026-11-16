@@ -480,3 +480,117 @@ struct WerewolfRulesTests {
         #expect(character.unmetPrerequisites(for: embodiment).count == 1)
     }
 }
+
+@MainActor
+struct ForsakenCreationTests {
+    private func facet(_ id: String) -> OwnedFacet {
+        OwnedFacet(source: .catalog(id))
+    }
+
+    /// A Rahu Blood Talon with Purity and Glory.
+    private func rahu(tribe: String = "Blood Talons") -> ForsakenCharacter {
+        let character = ForsakenCharacter.guided()
+        character.auspice = "Rahu"
+        character.tribe = tribe
+        return character
+    }
+
+    @Test func guidedCharactersStartWithTheFreeMerits() throws {
+        let character = ForsakenCharacter.guided()
+        #expect(character.isInCreation)
+        #expect(character.merits.map(\.name) == ["Totem", "Language (First Tongue)"])
+        #expect(character.creationReport.merits.used == 0)
+        #expect(character.creationReport.isWithinLimits)
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.isInCreation)
+    }
+
+    @Test func renownFollowsTheTribe() {
+        let forsaken = rahu()
+        #expect(forsaken.creationReport.renown.allowed == 3)
+        forsaken.setRenown(.purity, to: 1)
+        forsaken.setRenown(.glory, to: 1)
+        forsaken.setRenown(.honor, to: 1)
+        #expect(forsaken.creationReport.isWithinLimits)
+        // No Renown above two at creation
+        #expect(forsaken.editableMaximum(for: TraitKey(.renown, "glory"), upTo: 5) == 1)
+
+        // Ghost Wolves have no tribal Renown, so one fewer dot
+        let ghost = rahu(tribe: "Ghost Wolves")
+        #expect(ghost.creationReport.renown.allowed == 2)
+        ghost.setRenown(.honor, to: 2)
+        #expect(ghost.creationReport.problems.contains(.renownMissing("Rahu Renown (Purity)")))
+
+        // The Pure: the primary Renown, and a dot in it or a secondary one
+        let pure = rahu(tribe: "Predator Kings")
+        #expect(pure.creationReport.renown.allowed == 2)
+        pure.setRenown(.glory, to: 1)
+        pure.setRenown(.cunning, to: 1)
+        #expect(pure.creationReport.problems.contains(.pureRenownElsewhere))
+    }
+
+    @Test func shadowFacetsComeFromTheTribeAndAuspice() {
+        let character = rahu()
+        character.setRenown(.purity, to: 1)
+        character.setRenown(.glory, to: 2)
+        // Rage is the Blood Talons', Dominance the Rahu's
+        character.facets = [facet("rage-berserkers-might"), facet("dominance-snarl-of-the-predator")]
+        #expect(character.creationReport.isWithinLimits)
+        #expect(!character.creationAllows(.facet(Catalog.bundled.facet("death-barghest")!.facet, gift: Catalog.bundled.gifts.entry("death")!)))
+
+        // Ghost Wolves only have the auspice's
+        let ghost = rahu(tribe: "Ghost Wolves")
+        ghost.setRenown(.glory, to: 1)
+        ghost.facets = [facet("rage-berserkers-might")]
+        #expect(ghost.creationReport.problems.contains(.shadowFacetOutsideAffinities))
+        ghost.facets = [facet("dominance-glorious-lunacy"), facet("strength-predators-unmatched-pursuit")]
+        #expect(!ghost.creationReport.problems.contains(.shadowFacetOutsideAffinities))
+    }
+
+    @Test func aWolfFacetUnlessTwoDotsOfAuspiceRenown() {
+        let character = rahu()
+        character.setRenown(.cunning, to: 1)
+        character.facets = [facet("hunting-honed-senses")]
+        #expect(character.creationReport.wolfFacets.allowed == 1)
+        #expect(character.creationReport.isWithinLimits)
+        character.setRenown(.purity, to: 2)
+        #expect(character.creationReport.problems.contains(.tooManyWolfFacets(allowed: 0)))
+    }
+
+    @Test func thePureTakeThreeShadowFacetsAndAWolfFacet() {
+        let pure = rahu(tribe: "Predator Kings")
+        pure.setRenown(.glory, to: 1)
+        pure.setRenown(.purity, to: 1)
+        // Two of the tribe's (Rage, Strength) and one of any (Dominance)
+        pure.facets = [facet("rage-berserkers-might"), facet("strength-predators-unmatched-pursuit"),
+                       facet("dominance-snarl-of-the-predator"), facet("hunting-cow-the-prey")]
+        #expect(pure.creationReport.shadowFacets.allowed == 3)
+        #expect(pure.creationReport.isWithinLimits)
+        #expect(pure.freeTotemDots == 2)
+    }
+
+    @Test func meritDotsPayForPrimalUrgeAndExtraRites() {
+        let character = rahu()
+        character.primalUrge = 2
+        #expect(character.creationReport.merits.used == 5)
+        character.rites = [OwnedRite(source: .custom("Rite of One"), customRating: 3)]
+        #expect(character.creationReport.merits.used == 6)
+        #expect(character.editableMaximum(for: TraitKey(.primalUrge, "primalUrge"), upTo: 10) == 2)
+        character.primalUrge = 1
+        #expect(character.editableMaximum(for: TraitKey(.primalUrge, "primalUrge"), upTo: 10) == 2)
+    }
+
+    @Test func theFreeSkillDotIsOutsideThePriorities() throws {
+        let character = rahu()
+        character.setPriority(.primary, for: .physical, skills: true)
+        character.chooseFreeSkill(.brawl)
+        let brawl = try #require(character.skill(.brawl))
+        #expect(brawl.rating == 1)
+        #expect(character.creationReport.skills[.physical]?.used == 0)
+        #expect(!character.needsFreeSkill)
+        character.finishCreation(bonusExperiences: 5)
+        #expect(!character.isInCreation)
+        #expect(character.experiences == 5)
+        #expect(character.xpMode)
+    }
+}
