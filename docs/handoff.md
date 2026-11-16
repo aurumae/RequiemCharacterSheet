@@ -1317,3 +1317,22 @@ true), and `customKind` ("shadow" or "wolf") on custom Facets. Saved Moon Gift F
 
 **Follow-up (Android):** read `Book.official`/`url` when decoding Requiem catalogs (ignoring them is fine until
 Requiem has unofficial content).
+
+## 2026-11-16 · Claude (iOS) · Watermark, search, Auspice Benefit, Kuruth sets and Siskur-Dah
+
+**Shared code and files for Android:**
+- The sheet watermark keeps its size and place when the keyboard opens, and is partly covered (`BackgroundView`).
+  Android should match.
+- Search folds curly and straight apostrophes and quotes (`String.matchesSearch` in `CatalogCore.swift`), in every
+  picker. Android should do the same. New design decision in `docs/design-decisions.md`.
+- `ConditionEntry.noteOptions`: optional set choices for a Condition's note, documented in `docs/phase-b-design.md`.
+  No Requiem Condition uses it, so nothing changes for Requiem yet; decoders should accept it.
+
+**Forsaken (iOS only for now):** `wtf2e-core.json` adds auspice `benefit`s, `kuruthTriggers` (the six sets) and
+Siskur-Dah `noteOptions` (Forsaken and Pure tribes). Save format (draft): new `kuruthTriggerSet` (trait source);
+`kuruthTriggers` is now written only for a custom set.
+
+**Validation:** 277 `swift test`; Requiem Xcode 277 + 2 UI passed; Forsaken 29 passed. On the simulator, everything
+was checked, and both apps' watermarks stay put with the keyboard open.
+
+**Follow-up (Android):** the watermark behaviour and quote-folding search.

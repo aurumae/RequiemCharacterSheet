@@ -73,6 +73,11 @@ extension Array where Element == Book {
 package struct SourceReference: Codable, Hashable {
     package let book: String
     package let page: Int?
+
+    package init(book: String, page: Int?) {
+        self.book = book
+        self.page = page
+    }
 }
 
 /// The entries of one kind, looked up by id or by name.
@@ -255,10 +260,18 @@ package struct ConditionEntry: CatalogEntry {
     package let counter: Bool
     /// The traits it clearly affects, marked on the sheet. Situational effects aren't listed.
     package let affects: [ConditionEffect]
+    /// Set choices for the note, each with its own effect, e.g. Siskur-Dah's by the ritemaster's tribe. Empty when
+    /// the note is free text.
+    package let noteOptions: [ConditionNoteOption]
 
     package enum CodingKeys: CodingKey {
         case id, name, source, persistent, summary, resolution, beat, possibleSources, beatOnResolve, repeatable
-        case notePrompt, counter, affects
+        case notePrompt, counter, affects, noteOptions
+    }
+
+    /// The choice the note names, if it's one of the set choices.
+    package func noteOption(named note: String) -> ConditionNoteOption? {
+        noteOptions.first { $0.name == note }
     }
 
     package init(from decoder: Decoder) throws {
@@ -276,7 +289,19 @@ package struct ConditionEntry: CatalogEntry {
         notePrompt = try container.decodeIfPresent(String.self, forKey: .notePrompt)
         counter = try container.decode(.counter, default: false)
         affects = try container.decode(.affects, default: [])
+        noteOptions = try container.decode(.noteOptions, default: [])
     }
+}
+
+/// One of a Condition's set choices for its note, and what it does. The note saves its name.
+package struct ConditionNoteOption: Decodable, Hashable, Identifiable {
+    package let id: String
+    package let name: String
+    /// What the game groups it under, e.g. "forsaken" or "pure"; each game decides how to show the groups.
+    package let group: String?
+    /// Where it's described, if not with the Condition.
+    package let source: SourceReference?
+    package let summary: String
 }
 
 /// Traits a Condition affects, and how, e.g. Deprived: "−1 to dice pools using Stamina, Resolve or Composure".
@@ -467,3 +492,29 @@ package struct CatalogPickerGroup<Entry: CatalogEntry> {
     }
 }
 
+
+// MARK: - Search
+
+extension String {
+    /// Whether a search finds this text, ignoring case and accents, and treating curly and straight quotes and
+    /// apostrophes alike, so "Predator's" typed on the keyboard finds "Predator’s Unmatched Pursuit".
+    package func matchesSearch(_ search: String) -> Bool {
+        Self.foldingQuotes(self).localizedStandardContains(Self.foldingQuotes(search))
+    }
+
+    private static func foldingQuotes(_ text: String) -> String {
+        var folded = ""
+        folded.reserveCapacity(text.count)
+        for character in text {
+            switch character {
+            case "\u{2018}", "\u{2019}", "\u{201A}", "\u{201B}", "\u{2032}", "\u{02BC}", "`", "\u{00B4}":
+                folded.append("'")
+            case "\u{201C}", "\u{201D}", "\u{201E}", "\u{201F}", "\u{2033}":
+                folded.append("\"")
+            default:
+                folded.append(character)
+            }
+        }
+        return folded
+    }
+}

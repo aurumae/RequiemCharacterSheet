@@ -10,7 +10,7 @@ words, with the book's page. IDs are lower-case and hyphenated, unique within th
   "version": 1,
   "book": { "id": "wtf2e-core", "name": "Werewolf: The Forsaken Second Edition" },
   "auspices": [], "tribes": [], "lodges": [], "archetypes": [], "gifts": [], "rites": [],
-  "merits": [], "conditions": [], "fetishes": []
+  "merits": [], "conditions": [], "fetishes": [], "kuruthTriggers": []
 }
 ```
 
@@ -22,7 +22,8 @@ Unofficial files load after all the books.
 
 - **auspices**: `moon` ("crescent", "full", "gibbous", "half", "new"), `renown` (one of "cunning", "glory", "honor",
   "purity", "wisdom"), `skills` (three Skill ids, e.g. "animal-ken"), `huntersAspect` (`{ "name", "condition" }`,
-  the condition's id), `moonGift` (a gift id), `giftAffinities` (Shadow Gift ids).
+  the condition's id), `moonGift` (a gift id), `giftAffinities` (Shadow Gift ids), `benefit` (`{ "name", "summary",
+  "page" }`, the Auspice Benefit every member has).
 - **tribes**: `kind` ("forsaken", "ghost-wolf" or "pure"), `renown` (absent for Ghost Wolves and the Pure),
   `giftAffinities` (Shadow Gift ids; empty when the book gives none), `oath` (`{ "name", "summary" }`, the tribal
   vow, or the Pure tribe's restriction), `firstTongueName` (optional).
@@ -44,6 +45,8 @@ Unofficial files load after all the books.
   Prerequisite kinds include Requiem's shared ones (attribute, skill, merit, willpower, other) and Forsaken's:
   `renown` (id = the Renown, minimum = dots), `primalUrge` (minimum), `harmony` (minimum), `tribe`, `auspice`,
   `notTribe` (id = tribe).
-- **conditions**: Requiem's Condition entry.
+- **conditions**: Requiem's Condition entry, which may have `noteOptions` (see `docs/phase-b-design.md`). Siskur-Dah
+  uses them for the ritemaster's tribe, with `group` "forsaken" or "pure"; each option has its own `source`.
+- **kuruthTriggers**: the book's trigger sets (p. 103), each with `passive`, `common` and `specific` text.
 - **fetishes**: `kind` ("fetish" or "talen"), `rating` (1–5), and optional `spirit` (the kind of spirit bound in it),
   `activation` (e.g. "Spend 1 Essence" or "Roll Harmony"), `effect`.

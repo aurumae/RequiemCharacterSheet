@@ -58,12 +58,28 @@ protocol SheetCharacter: ExperienceCharacter, Observable {
     /// Controls beside a Mental, Physical or Social heading, e.g. guided creation's priority menu. `nil` for none.
     func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView?
 
+    /// A Condition's set choices for its note, in sections, e.g. Siskur-Dah's ritemaster tribes with the other
+    /// faction's apart.
+    func noteOptionGroups(for entry: ConditionEntry) -> [ConditionNoteOptionGroup]
+
     /// Whether this character's pickers offer unofficial content, e.g. design articles from a publisher's blog, as
     /// well as the books.
     var showsUnofficialContent: Bool { get set }
 }
 
+/// A section of a Condition's note choices; a warning marks choices the character wouldn't usually have.
+struct ConditionNoteOptionGroup: Identifiable {
+    var id: String { title }
+    let title: String
+    var warning: String?
+    let options: [ConditionNoteOption]
+}
+
 extension SheetCharacter {
+    func noteOptionGroups(for entry: ConditionEntry) -> [ConditionNoteOptionGroup] {
+        entry.noteOptions.isEmpty ? [] : [ConditionNoteOptionGroup(title: "", options: entry.noteOptions)]
+    }
+
     /// Off for a game whose save format doesn't keep the choice yet.
     var showsUnofficialContent: Bool {
         get { false }

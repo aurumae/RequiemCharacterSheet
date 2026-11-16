@@ -133,13 +133,13 @@ struct CatalogPickerView: View {
     /// book whose name matches, e.g. "Covenants" for everything from Secrets of the Covenants.
     private func matching(_ items: [CatalogPickerItem]) -> [CatalogPickerItem] {
         guard !searchText.isEmpty else { return items }
-        let nameMatches = items.filter { $0.name.localizedStandardContains(searchText) }
+        let nameMatches = items.filter { $0.name.matchesSearch(searchText) }
         let summaryMatches = items.filter {
-            !$0.name.localizedStandardContains(searchText) && $0.summary.localizedStandardContains(searchText)
+            !$0.name.matchesSearch(searchText) && $0.summary.matchesSearch(searchText)
         }
         let bookMatches = items.filter {
-            !$0.name.localizedStandardContains(searchText) && !$0.summary.localizedStandardContains(searchText)
-                && $0.citation.localizedStandardContains(searchText)
+            !$0.name.matchesSearch(searchText) && !$0.summary.matchesSearch(searchText)
+                && $0.citation.matchesSearch(searchText)
         }
         return nameMatches + summaryMatches + bookMatches
     }
@@ -152,7 +152,7 @@ struct CatalogPickerView: View {
                     .filter { $0.isOfficial || showsUnofficialContent }
                     // A search for a group's title, e.g. a Gift's name, finds everything in it
                     .map { section in
-                        let titleMatches = !searchText.isEmpty && section.title.localizedStandardContains(searchText)
+                        let titleMatches = !searchText.isEmpty && section.title.matchesSearch(searchText)
                         return CatalogPickerSection(title: section.title, book: section.book,
                                                     items: titleMatches ? section.items : matching(section.items),
                                                     isOfficial: section.isOfficial)

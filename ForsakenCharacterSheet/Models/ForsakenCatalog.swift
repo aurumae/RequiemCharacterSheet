@@ -23,6 +23,7 @@ struct Catalog {
     let merits: CatalogIndex<MeritEntry>
     let conditions: CatalogIndex<ConditionEntry>
     let fetishes: CatalogIndex<FetishEntry>
+    let kuruthTriggers: CatalogIndex<KuruthTriggerSetEntry>
 
     /// Merges files in order; if two files use the same id for the same kind of entry, the first wins.
     init(files: [File]) {
@@ -36,6 +37,7 @@ struct Catalog {
         merits = CatalogIndex(files.flatMap(\.merits))
         conditions = CatalogIndex(files.flatMap(\.conditions))
         fetishes = CatalogIndex(files.flatMap(\.fetishes))
+        kuruthTriggers = CatalogIndex(files.flatMap(\.kuruthTriggers))
     }
 
     func book(_ id: String) -> Book? {
@@ -95,9 +97,11 @@ struct Catalog {
         let merits: [MeritEntry]
         let conditions: [ConditionEntry]
         let fetishes: [FetishEntry]
+        let kuruthTriggers: [KuruthTriggerSetEntry]
 
         enum CodingKeys: CodingKey {
             case format, version, book, auspices, tribes, lodges, archetypes, gifts, rites, merits, conditions, fetishes
+            case kuruthTriggers
         }
 
         init(from decoder: Decoder) throws {
@@ -116,6 +120,7 @@ struct Catalog {
             merits = try container.decode(.merits, default: [])
             conditions = try container.decode(.conditions, default: [])
             fetishes = isForsaken ? try container.decode(.fetishes, default: []) : []
+            kuruthTriggers = isForsaken ? try container.decode(.kuruthTriggers, default: []) : []
         }
     }
 }

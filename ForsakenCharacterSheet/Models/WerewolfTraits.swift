@@ -137,11 +137,41 @@ struct PrimalUrgeLevel {
 // MARK: - Kuruth
 
 /// The things that can drive the character into Death Rage (p. 103): one set's passive, common and specific
-/// triggers, in the player's words or a set from the book.
+/// triggers. A set from the book comes from the catalog; these are the player's own words for a custom set.
 struct KuruthTriggers: Codable, Equatable {
     var passive = ""
     var common = ""
     var specific = ""
+
+    /// The kinds of personal trigger, from the most to the least easily set off.
+    enum Kind: String, CaseIterable, Identifiable {
+        case passive, common, specific
+
+        var id: Self { self }
+
+        var name: String {
+            rawValue.capitalized
+        }
+
+        /// Whether triggers of this kind send a werewolf into Kuruth at a level of Harmony (p. 105): every kind at 0
+        /// and 10, common and specific at 1, 2, 8 and 9, only specific at 3, 4, 6 and 7, and none at 5.
+        func applies(atHarmony harmony: Int) -> Bool {
+            let distance = abs(harmony - 5)
+            switch self {
+            case .passive: return distance == 5
+            case .common: return distance >= 3
+            case .specific: return distance >= 1
+            }
+        }
+    }
+
+    /// What sets off every werewolf, whatever their Harmony and as often as it happens (p. 103).
+    static let general = [
+        "Spending too long in Gauru",
+        "Taking Gauru outside of combat",
+        "Taking damage from silver",
+        "Being forced into Kuruth by an Elodoth",
+    ]
 }
 
 // MARK: - Gifts, Rites and fetishes

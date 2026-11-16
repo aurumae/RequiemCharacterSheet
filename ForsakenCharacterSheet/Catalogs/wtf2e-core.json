@@ -29,7 +29,12 @@
       "giftAffinities": [
         "inspiration",
         "knowledge"
-      ]
+      ],
+      "benefit": {
+        "name": "Prophetic Dreams",
+        "summary": "The Storyteller may send you a prophetic dream at any time (Intelligence + Occult may interpret it). After a night of more than four hours' unbroken sleep, once per chapter you can declare an action was foretold: +3 to you or a packmate, or −3 to a Storyteller character; or, if the omen was bad, choose to fail it or suffer the setback and take a Beat.",
+        "page": 17
+      }
     },
     {
       "id": "elodoth",
@@ -54,7 +59,12 @@
       "giftAffinities": [
         "insight",
         "warding"
-      ]
+      ],
+      "benefit": {
+        "name": "Darkness Into Light",
+        "summary": "Once per chapter, pull a werewolf out of Death Rage (they're Stunned for the next turn if they were in Basu-Im), or push one into Wasu-Im with Presence + Empathy + Primal Urge against their Resolve + Composure.",
+        "page": 21
+      }
     },
     {
       "id": "irraka",
@@ -79,7 +89,12 @@
       "giftAffinities": [
         "evasion",
         "stealth"
-      ]
+      ],
+      "benefit": {
+        "name": "Closer Than You Thought",
+        "summary": "Once per chapter, close on a target: move your Initiative to just above or below theirs, get within claw and bite reach of one opponent who isn't attacking you, or need two fewer Doors in Social maneuvering.",
+        "page": 25
+      }
     },
     {
       "id": "ithaeur",
@@ -104,7 +119,12 @@
       "giftAffinities": [
         "elemental",
         "shaping"
-      ]
+      ],
+      "benefit": {
+        "name": "Spirit Howl",
+        "summary": "Once per chapter, for 1 Essence and no roll, howl silently into the Shadow: lower-Rank spirits flee, hide or go dormant and stronger ones keep clear; allied spirits may help, and hostile ones take your Wisdom as a Defense penalty.",
+        "page": 29
+      }
     },
     {
       "id": "rahu",
@@ -129,7 +149,12 @@
       "giftAffinities": [
         "dominance",
         "strength"
-      ]
+      ],
+      "benefit": {
+        "name": "Tenacious",
+        "summary": "Once per chapter in combat, ignore the effects of the Conditions and Tilts hindering you for two turns. They return afterwards; nothing is resolved or ended.",
+        "page": 31
+      }
     }
   ],
   "tribes": [
@@ -4383,11 +4408,93 @@
         "page": 310
       },
       "persistent": true,
-      "summary": "You're on the Sacred Hunt and gain a benefit from the ritemaster's tribe: Blood Talons read the prey's Renown brands, Bone Shadows can strike ephemeral prey, Hunters in Darkness sense the Gauntlet and the prey's breaches in it, Iron Masters choose which Lunacy Condition they inflict, and Storm Lords see the prey's possession, Urging or Claiming.",
+      "summary": "You're on the Sacred Hunt, and gain a benefit that depends on the ritemaster's tribe.",
       "resolution": "The prey is brought down (it needn't die), or the pack turns its efforts away from the hunt.",
       "beat": "You get an exceptional success on an action involving the prey.",
       "possibleSources": "The Sacred Hunt rite, a Firstborn's personal blessing",
-      "notePrompt": "Ritemaster's tribe"
+      "notePrompt": "Ritemaster's tribe",
+      "noteOptions": [
+        {
+          "id": "blood-talons",
+          "name": "Blood Talons",
+          "group": "forsaken",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 310
+          },
+          "summary": "You see werewolf prey's Renown brands, glowing silver (fiery red on the Pure), and can read each Renown's rating as a reflexive action."
+        },
+        {
+          "id": "bone-shadows",
+          "name": "Bone Shadows",
+          "group": "forsaken",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 310
+          },
+          "summary": "Your natural weapons can touch and strike ephemeral beings named as prey."
+        },
+        {
+          "id": "hunters-in-darkness",
+          "name": "Hunters in Darkness",
+          "group": "forsaken",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 310
+          },
+          "summary": "You always know the Gauntlet's strength around you and whether it's raised or lowered (and if the prey did it), and sense breaches into other realms the prey has passed through in the last lunar month."
+        },
+        {
+          "id": "iron-masters",
+          "name": "Iron Masters",
+          "group": "forsaken",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 310
+          },
+          "summary": "You choose which Lunacy Condition you inflict on humans while hunting the prey."
+        },
+        {
+          "id": "storm-lords",
+          "name": "Storm Lords",
+          "group": "forsaken",
+          "source": {
+            "book": "wtf2e-core",
+            "page": 310
+          },
+          "summary": "You clearly see prey who are possessed, Urged or Claimed, such as the spirit coiled inside a Ridden human."
+        },
+        {
+          "id": "fire-touched",
+          "name": "Fire-Touched",
+          "group": "pure",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "Spirits get a bonus equal to your effective spirit Rank when they follow your direct orders, or when they attack the prey in combat or with their powers."
+        },
+        {
+          "id": "ivory-claws",
+          "name": "Ivory Claws",
+          "group": "pure",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "You sense the family and community ties anyone you meet has with the prey, and the prey's blood relatives take your Primal Urge as a penalty to hinder you or withhold information."
+        },
+        {
+          "id": "predator-kings",
+          "name": "Predator Kings",
+          "group": "pure",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "You have Influence over the natural world equal to your effective spirit Rank, twisting animals and plants to aid the hunt: spend Essence for Influence Effects as a spirit would (pp. 186–187), rolling Strength + Primal Urge."
+        }
+      ]
     },
     {
       "id": "spooked",
@@ -4814,6 +4921,80 @@
       "rating": 5,
       "summary": "A heavy drum whose music spirits love, which also draws pestering spirit admirers.",
       "effect": "Each minute a non-hostile spirit listens, its impression of the drummer improves by one step."
+    }
+  ],
+  "kuruthTriggers": [
+    {
+      "id": "blood",
+      "name": "Blood",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 103
+      },
+      "summary": "Human blood.",
+      "passive": "Smelling human blood.",
+      "common": "Tasting human blood.",
+      "specific": "Swallowing human blood."
+    },
+    {
+      "id": "moon",
+      "name": "Moon",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 103
+      },
+      "summary": "Your auspice moon.",
+      "passive": "Your auspice moon is in the sky.",
+      "common": "Seeing your auspice moon in the sky.",
+      "specific": "Hearing a wolf or werewolf howl while your auspice moon is in the sky."
+    },
+    {
+      "id": "the-other",
+      "name": "The Other",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 103
+      },
+      "summary": "Other supernatural beings.",
+      "passive": "Coming within 10 yards of a supernatural creature.",
+      "common": "Seeing a supernatural creature do something plainly inhuman.",
+      "specific": "Being the target of a supernatural power."
+    },
+    {
+      "id": "pack",
+      "name": "Pack",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 103
+      },
+      "summary": "Harm to your pack.",
+      "passive": "A packmate takes lethal damage.",
+      "common": "Seeing someone attack a packmate.",
+      "specific": "Dealing lethal damage to a packmate yourself."
+    },
+    {
+      "id": "territory",
+      "name": "Territory",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 103
+      },
+      "summary": "Strange werewolves on your ground.",
+      "passive": "A werewolf you don't know enters your territory without leave.",
+      "common": "Seeing a werewolf you don't know in your territory.",
+      "specific": "A werewolf you don't know challenges your pack's ability to do its duty."
+    },
+    {
+      "id": "wounds",
+      "name": "Wounds",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 103
+      },
+      "summary": "Wounds and their spirits.",
+      "passive": "Being in a Wound's area.",
+      "common": "Dealing with a Wound-born spirit.",
+      "specific": "Being attacked by a Wound-born spirit."
     }
   ]
 }

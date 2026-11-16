@@ -47,6 +47,8 @@ final class ForsakenCharacter: Codable {
     var harmony: Int
     var fleshTouchstone: String
     var spiritTouchstone: String
+    /// The character's set of Kuruth triggers: one of the book's, or the player's own, written in `kuruthTriggers`.
+    var kuruthTriggerSource: TraitSource
     var kuruthTriggers: KuruthTriggers
     /// The form the character is in, which changes their Attributes, Size and Speed.
     var form: Form
@@ -103,6 +105,7 @@ final class ForsakenCharacter: Codable {
         harmony = 7
         fleshTouchstone = ""
         spiritTouchstone = ""
+        kuruthTriggerSource = .custom("")
         kuruthTriggers = KuruthTriggers()
         form = .hishu
         moonGiftSource = nil
@@ -129,7 +132,7 @@ final class ForsakenCharacter: Codable {
         case game, schemaVersion, id, createdAt, modifiedAt,
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
-             renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggers, form,
+             renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggerSet, kuruthTriggers, form,
              moonGift, moonFacets, facets, rites, fetishes, size,
              healthTrack, willpowerTrack, beats, experiences, xpMode, changeLog, paidDots, showsUnofficialContent
     }
@@ -169,7 +172,11 @@ final class ForsakenCharacter: Codable {
         try container.encode(harmony, forKey: .harmony)
         try container.encode(fleshTouchstone, forKey: .fleshTouchstone)
         try container.encode(spiritTouchstone, forKey: .spiritTouchstone)
-        try container.encode(kuruthTriggers, forKey: .kuruthTriggers)
+        try container.encode(kuruthTriggerSource, forKey: .kuruthTriggerSet)
+        // A book set's triggers come from the catalog, so only a custom set's are written
+        if kuruthTriggerSource.catalogID == nil {
+            try container.encode(kuruthTriggers, forKey: .kuruthTriggers)
+        }
         try container.encode(form, forKey: .form)
         try container.encodeIfPresent(moonGiftSource, forKey: .moonGift)
         if !customMoonFacets.isEmpty {
@@ -231,6 +238,7 @@ final class ForsakenCharacter: Codable {
         harmony = try container.decode(.harmony, default: 7)
         fleshTouchstone = try container.decode(.fleshTouchstone, default: "")
         spiritTouchstone = try container.decode(.spiritTouchstone, default: "")
+        kuruthTriggerSource = try container.decodeIfPresent(TraitSource.self, forKey: .kuruthTriggerSet) ?? .custom("")
         kuruthTriggers = try container.decode(.kuruthTriggers, default: KuruthTriggers())
         form = try container.decode(.form, default: .hishu)
         moonGiftSource = try container.decodeIfPresent(TraitSource.self, forKey: .moonGift)
@@ -288,6 +296,19 @@ extension ForsakenCharacter {
 
     var tribeEntry: TribeEntry? {
         tribeSource.catalogID.flatMap { Catalog.bundled.tribes.entry($0) }
+    }
+
+    var kuruthTriggerSet: KuruthTriggerSetEntry? {
+        kuruthTriggerSource.catalogID.flatMap { Catalog.bundled.kuruthTriggers.entry($0) }
+    }
+
+    /// The character's trigger of a kind, from their set from the book or their own words.
+    func kuruthTrigger(_ kind: KuruthTriggers.Kind) -> String {
+        switch kind {
+        case .passive: kuruthTriggerSet?.passive ?? kuruthTriggers.passive
+        case .common: kuruthTriggerSet?.common ?? kuruthTriggers.common
+        case .specific: kuruthTriggerSet?.specific ?? kuruthTriggers.specific
+        }
     }
 
     func renown(_ kind: Renown) -> Int {
@@ -405,6 +426,22 @@ extension ForsakenCharacter: SheetCharacter {
 
     var meritCategoryOrder: [MeritEntry.Category] {
         [.werewolf, .mental, .physical, .social, .fighting, .other, .supernatural, .human]
+    }
+
+    /// A Condition's choices by faction, e.g. Siskur-Dah's ritemaster tribes: the character's own side first, then
+    /// the other side's apart, as Pure and Forsaken only rarely hunt together.
+    func noteOptionGroups(for entry: ConditionEntry) -> [ConditionNoteOptionGroup] {
+        guard !entry.noteOptions.isEmpty else { return [] }
+        let ownGroup = isPure ? "pure" : "forsaken"
+        let own = entry.noteOptions.filter { ($0.group ?? ownGroup) == ownGroup }
+        let other = entry.noteOptions.filter { ($0.group ?? ownGroup) != ownGroup }
+        var groups = [ConditionNoteOptionGroup(title: isPure ? "Pure Tribes" : "Forsaken Tribes", options: own)]
+        if !other.isEmpty {
+            groups.append(ConditionNoteOptionGroup(title: isPure ? "Forsaken Tribes" : "Pure Tribes",
+                                                   warning: isPure ? "The Forsaken are your enemies" : "The Pure are your enemies",
+                                                   options: other))
+        }
+        return groups
     }
 
     func meritUnavailableReason(_ entry: MeritEntry) -> String? {

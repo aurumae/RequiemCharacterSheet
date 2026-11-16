@@ -24,13 +24,13 @@ struct MeritPickerView<C: SheetCharacter>: View {
     private var matchingEntries: [MeritEntry] {
         let entries = Catalog.bundled.merits.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
-        let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
+        let nameMatches = entries.filter { $0.name.matchesSearch(searchText) }
         let summaryMatches = entries.filter {
-            !$0.name.localizedStandardContains(searchText) && $0.summary.localizedStandardContains(searchText)
+            !$0.name.matchesSearch(searchText) && $0.summary.matchesSearch(searchText)
         }
         let bookMatches = entries.filter {
-            !$0.name.localizedStandardContains(searchText) && !$0.summary.localizedStandardContains(searchText)
-                && $0.source.citation().localizedStandardContains(searchText)
+            !$0.name.matchesSearch(searchText) && !$0.summary.matchesSearch(searchText)
+                && $0.source.citation().matchesSearch(searchText)
         }
         return nameMatches + summaryMatches + bookMatches
     }

@@ -128,7 +128,7 @@ struct ConditionCard<C: SheetCharacter>: View {
                             .themedText(.label)
                     }
                 } else {
-                    NoteField(condition: condition)
+                    NoteField(condition: condition, character: character)
                     if condition.hasCounter {
                         ConditionCounterRow(condition: condition)
                     }
@@ -143,6 +143,9 @@ struct ConditionCard<C: SheetCharacter>: View {
                     Text(condition.effectText.isEmpty ? "No description" : condition.effectText)
                         .themedText(.body)
                         .lineLimit(isCompact ? 4 : nil)
+                    if !isCompact {
+                        noteOptionEffect
+                    }
                     labelled("Resolution", condition.resolutionText.isEmpty ? "—" : condition.resolutionText)
                         .lineLimit(isCompact ? 2 : nil)
                     beatRow
@@ -174,6 +177,32 @@ struct ConditionCard<C: SheetCharacter>: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(RoundedRectangle(cornerRadius: 10).stroke(theme.accent.opacity(0.4)))
         .accessibilityElement(children: isCompact ? .combine : .contain)
+    }
+
+    /// The effect of the note's set choice, e.g. the ritemaster's tribe's for Siskur-Dah, or a reminder to choose.
+    @ViewBuilder
+    private var noteOptionEffect: some View {
+        if let entry = condition.entry, !entry.noteOptions.isEmpty {
+            if let option = entry.noteOption(named: condition.note) {
+                VStack(alignment: .leading, spacing: 4) {
+                    labelled(option.name, option.summary)
+                    if let warning = character.noteOptionGroups(for: entry).first(where: { $0.options.contains(option) })?.warning {
+                        Label(warning, systemImage: "exclamationmark.triangle.fill")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.accent)
+                    }
+                    if let source = option.source, source != entry.source {
+                        Text(source.citation())
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    }
+                }
+            } else {
+                Text("Choose the \((entry.notePrompt ?? "option").lowercased()) for its effect.")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+        }
     }
 
     private var noteLine: String {
@@ -252,19 +281,53 @@ struct ConditionCard<C: SheetCharacter>: View {
     }
 }
 
-/// Who or what the Condition is about, e.g. "For: Marcus Vale".
-private struct NoteField: View {
+/// Who or what the Condition is about, e.g. "For: Marcus Vale", or one of its set choices, e.g. Siskur-Dah's
+/// ritemaster's tribe.
+private struct NoteField<C: SheetCharacter>: View {
+    @Environment(\.theme) private var theme
     @Bindable var condition: CharacterCondition
+    let character: C
 
     var body: some View {
         let prompt = condition.entry?.notePrompt ?? "Note"
         HStack(alignment: .firstTextBaseline) {
             Text("\(prompt):")
                 .themedText(.label)
-            TextField(condition.entry?.notePrompt == nil ? "Optional" : "Who or what", text: $condition.note)
-                .themedText(.body)
-                .submitLabel(.done)
+            if let entry = condition.entry, !entry.noteOptions.isEmpty {
+                Spacer()
+                Menu {
+                    ForEach(character.noteOptionGroups(for: entry)) { group in
+                        Section {
+                            ForEach(group.options) { option in
+                                Button(option.name) { condition.note = option.name }
+                            }
+                        } header: {
+                            if let warning = group.warning {
+                                Text("\(group.title) — \(warning)")
+                            } else if !group.title.isEmpty {
+                                Text(group.title)
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(condition.note.isEmpty ? "Choose" : condition.note)
+                            .themedText(.body)
+                            .foregroundStyle(condition.note.isEmpty ? theme.muted : Color.primary)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.caption)
+                            .foregroundStyle(theme.accent)
+                    }
+                }
+                .buttonStyle(.plain)
                 .accessibilityLabel(prompt)
+                .accessibilityValue(condition.note.isEmpty ? "Not chosen" : condition.note)
+            } else {
+                TextField(condition.entry?.notePrompt == nil ? "Optional" : "Who or what", text: $condition.note)
+                    .themedText(.body)
+                    .submitLabel(.done)
+                    .accessibilityLabel(prompt)
+            }
         }
     }
 }

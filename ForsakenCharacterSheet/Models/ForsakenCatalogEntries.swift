@@ -36,6 +36,14 @@ struct AuspiceEntry: CatalogEntry {
     let huntersAspect: HuntersAspect
     let moonGift: CatalogEntryID
     let giftAffinities: [CatalogEntryID]
+    /// The power every member of the auspice has, e.g. the Cahalith's Prophetic Dreams.
+    let benefit: Benefit?
+
+    struct Benefit: Decodable {
+        let name: String
+        let summary: String
+        let page: Int?
+    }
 }
 
 struct TribeEntry: CatalogEntry {
@@ -154,6 +162,17 @@ struct FetishEntry: CatalogEntry {
     let spirit: String?
     let activation: String?
     let effect: String?
+}
+
+/// One of the book's sets of Kuruth triggers (p. 103), each with what sets it off at each level of Harmony.
+struct KuruthTriggerSetEntry: CatalogEntry {
+    let id: CatalogEntryID
+    let name: String
+    let source: SourceReference
+    let summary: String
+    let passive: String
+    let common: String
+    let specific: String
 }
 
 /// Forsaken's own kinds of Merit and Merit prerequisite.

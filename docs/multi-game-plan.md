@@ -152,6 +152,9 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
   of the Screaming Moon, the Gift of Cities and the Gift of Essence. Each character's Unofficial Content switch,
   off by default, decides whether pickers show them.
 
+- **Reminders.** An Auspice Benefit section, Kuruth trigger sets muted by Harmony with the general triggers, and
+  Siskur-Dah effects by the ritemaster's tribe.
+
 Still to come: guided creation (the core and the Pure quick references, including the Pure's starting Facets and
 Totem 2), the Ghost Wolf rules, Speed, Defense, Initiative and Perception for each form, more Werewolf sourcebooks, and
 App Store assets.

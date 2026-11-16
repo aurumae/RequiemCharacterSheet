@@ -11,6 +11,7 @@ import SwiftUI
 extension SheetSection {
     static let form = SheetSection("form", title: "Form")
     static let renown = SheetSection("renown", title: "Renown")
+    static let auspiceBenefit = SheetSection("auspiceBenefit", title: "Auspice Benefit")
     static let moonGifts = SheetSection("moonGifts", title: "Moon Gifts")
     static let shadowGifts = SheetSection("shadowGifts", title: "Shadow Gifts")
     static let wolfGifts = SheetSection("wolfGifts", title: "Wolf Gifts")
@@ -321,6 +322,31 @@ struct RenownView: View {
             return character.tribeEntry?.secondaryRenown?.contains(kind) == true ? "Secondary Tribe Renown" : nil
         }
         return givers.joined(separator: " and ") + " Renown"
+    }
+}
+
+// MARK: - Auspice Benefit
+
+/// The power the character's auspice gives them, shown where it won't be forgotten.
+struct AuspiceBenefitView: View {
+    @Environment(\.theme) private var theme
+    let benefit: AuspiceEntry.Benefit
+    let auspice: AuspiceEntry
+
+    var body: some View {
+        SheetSectionBlock(.auspiceBenefit) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(benefit.name)
+                    .themedText(.traitName)
+                Text(benefit.summary)
+                    .themedText(.body)
+                Text(SourceReference(book: auspice.source.book, page: benefit.page ?? auspice.source.page).citation())
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+            .padding(.vertical, 4)
+            .accessibilityElement(children: .combine)
+        }
     }
 }
 
@@ -874,14 +900,98 @@ struct HarmonyView: View {
 
 // MARK: - Kuruth
 
+/// The character's set of Kuruth triggers, muted where their Harmony means they don't apply, and the triggers every
+/// werewolf has.
 struct KuruthView: View {
+    @Environment(\.theme) private var theme
     @Bindable var character: ForsakenCharacter
 
     var body: some View {
         SheetSectionBlock(.kuruth) {
-            CharacterInfoRowView(label: "Passive:", text: $character.kuruthTriggers.passive)
-            CharacterInfoRowView(label: "Common:", text: $character.kuruthTriggers.common)
-            CharacterInfoRowView(label: "Specific:", text: $character.kuruthTriggers.specific)
+            triggerSetRow
+            ForEach(KuruthTriggers.Kind.allCases) { kind in
+                triggerRow(kind)
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                Text("General Triggers")
+                    .themedText(.subsectionHeader)
+                    .accessibilityAddTraits(.isHeader)
+                ForEach(KuruthTriggers.general, id: \.self) { trigger in
+                    Text("• \(trigger)")
+                        .themedText(.body)
+                }
+                Text("They apply at any Harmony, as often as they happen; personal triggers only once a night.")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+            .padding(.vertical, 4)
+        }
+    }
+
+    private var triggerSetRow: some View {
+        let catalog = Catalog.bundled.kuruthTriggers
+        return CatalogChoiceRow(
+            label: "Trigger Set:",
+            value: catalog.name(of: character.kuruthTriggerSource),
+            isCustom: character.kuruthTriggerSource.catalogID == nil,
+            setCustomText: { character.kuruthTriggerSource = .custom($0) },
+            pickerTitle: "Kuruth Triggers",
+            searchPrompt: "Search trigger sets",
+            sections: {
+                pickerSections([CatalogPickerGroup("", catalog.all)]) { set in
+                    CatalogPickerItem(id: set.id, name: set.name, summary: set.summary,
+                                      details: ["Passive: \(set.passive)", "Common: \(set.common)", "Specific: \(set.specific)"],
+                                      citation: set.source.citation())
+                }
+            },
+            customTitle: "Custom Trigger Set",
+            detail: {
+                character.kuruthTriggerSet.map {
+                    CatalogChoiceDetail(title: $0.name, summary: $0.summary, citation: $0.source.citation(), facts: [
+                        DetailFact(label: "Passive", value: $0.passive),
+                        DetailFact(label: "Common", value: $0.common),
+                        DetailFact(label: "Specific", value: $0.specific),
+                    ])
+                }
+            },
+            choose: { id in character.kuruthTriggerSource = id.map { .catalog($0) } ?? .custom("") }
+        )
+    }
+
+    @ViewBuilder
+    private func triggerRow(_ kind: KuruthTriggers.Kind) -> some View {
+        let applies = kind.applies(atHarmony: character.harmony)
+        VStack(alignment: .leading, spacing: 2) {
+            if character.kuruthTriggerSet != nil {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("\(kind.name):")
+                        .themedText(.label)
+                        .frame(minWidth: 100, alignment: .leading)
+                    // At the right, like the other rows' values
+                    Text(character.kuruthTrigger(kind))
+                        .themedText(.body)
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            } else {
+                CharacterInfoRowView(label: "\(kind.name):", text: customTrigger(kind))
+            }
+            if !applies {
+                Text("Doesn't apply at Harmony \(character.harmony)")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+        }
+        .padding(.vertical, character.kuruthTriggerSet != nil ? 4 : 0)
+        .opacity(applies ? 1 : 0.45)
+        .accessibilityElement(children: character.kuruthTriggerSet != nil ? .combine : .contain)
+    }
+
+    private func customTrigger(_ kind: KuruthTriggers.Kind) -> Binding<String> {
+        switch kind {
+        case .passive: $character.kuruthTriggers.passive
+        case .common: $character.kuruthTriggers.common
+        case .specific: $character.kuruthTriggers.specific
         }
     }
 }

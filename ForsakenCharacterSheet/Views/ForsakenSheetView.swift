@@ -18,6 +18,9 @@ struct ForsakenSheetView: View {
             SkillsView(character: character)
             MeritsView(character: character)
             RenownView(character: character)
+            if let (auspice, benefit) = character.auspiceBenefit {
+                AuspiceBenefitView(benefit: benefit, auspice: auspice)
+            }
             // The Pure flay away Luna's mark, and with it any Moon Gift
             if !character.isPure {
                 MoonGiftView(character: character)
@@ -44,10 +47,17 @@ struct ForsakenSheetView: View {
 }
 
 extension ForsakenCharacter {
+    /// The auspice's benefit, if the character has an auspice from the book; never for the Pure.
+    var auspiceBenefit: (AuspiceEntry, AuspiceEntry.Benefit)? {
+        guard let auspice = effectiveAuspice, let benefit = auspice.benefit else { return nil }
+        return (auspice, benefit)
+    }
+
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
         let gifts: [SheetSection] = isPure ? [.shadowGifts, .wolfGifts] : [.moonGifts, .shadowGifts, .wolfGifts]
-        return [.character, .form, .attributes, .skills, .merits, .renown] + gifts
+        let benefit: [SheetSection] = auspiceBenefit == nil ? [] : [.auspiceBenefit]
+        return [.character, .form, .attributes, .skills, .merits, .renown] + benefit + gifts
             + [.rites, .fetishes, .aspirations, .health, .willpower, .primalUrge, .harmony, .kuruth, .experience, .conditions]
     }
 }

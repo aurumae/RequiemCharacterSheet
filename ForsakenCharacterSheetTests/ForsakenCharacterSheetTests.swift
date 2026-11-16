@@ -342,6 +342,52 @@ struct WerewolfRulesTests {
         #expect(Catalog.bundled.conditions.entry("enraptured") != nil)
     }
 
+    @Test func kuruthTriggersComeFromTheChosenSet() throws {
+        let character = ForsakenCharacter()
+        character.kuruthTriggerSource = .catalog("blood")
+        #expect(character.kuruthTrigger(.common) == "Tasting human blood.")
+        #expect(Catalog.bundled.kuruthTriggers.all.map(\.name) == ["Blood", "Moon", "The Other", "Pack", "Territory", "Wounds"])
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.kuruthTriggerSet?.id == "blood")
+    }
+
+    @Test func harmonySetsWhichTriggersApply() {
+        let applying = { (harmony: Int) in KuruthTriggers.Kind.allCases.filter { $0.applies(atHarmony: harmony) } }
+        #expect(applying(0) == [.passive, .common, .specific])
+        #expect(applying(10) == [.passive, .common, .specific])
+        #expect(applying(1) == [.common, .specific])
+        #expect(applying(9) == [.common, .specific])
+        #expect(applying(3) == [.specific])
+        #expect(applying(7) == [.specific])
+        #expect(applying(5).isEmpty)
+    }
+
+    @Test func auspiceBenefitIsShownExceptForThePure() {
+        let character = ForsakenCharacter()
+        #expect(character.auspiceBenefit == nil)
+        character.auspice = "Rahu"
+        #expect(character.auspiceBenefit?.1.name == "Tenacious")
+        #expect(character.sheetSections.contains(.auspiceBenefit))
+        #expect(Catalog.bundled.auspices.all.allSatisfy { $0.benefit != nil })
+        character.tribe = "Ivory Claws"
+        #expect(character.auspiceBenefit == nil)
+        #expect(!character.sheetSections.contains(.auspiceBenefit))
+    }
+
+    @Test func siskurDahListsTheOtherFactionApart() throws {
+        let entry = try #require(Catalog.bundled.conditions.entry("siskur-dah"))
+        let forsaken = ForsakenCharacter()
+        let groups = forsaken.noteOptionGroups(for: entry)
+        #expect(groups.map(\.title) == ["Forsaken Tribes", "Pure Tribes"])
+        #expect(groups[0].options.count == 5 && groups[0].warning == nil)
+        #expect(groups[1].options.map(\.name) == ["Fire-Touched", "Ivory Claws", "Predator Kings"])
+        #expect(groups[1].warning != nil)
+        #expect(entry.noteOption(named: "Storm Lords")?.summary.isEmpty == false)
+        let pure = ForsakenCharacter()
+        pure.tribe = "Predator Kings"
+        #expect(pure.noteOptionGroups(for: entry).map(\.title) == ["Pure Tribes", "Forsaken Tribes"])
+    }
+
     @Test func pureHuntersAspectLoadsBackAsSaved() throws {
         let character = ForsakenCharacter()
         character.tribe = "Fire-Touched"

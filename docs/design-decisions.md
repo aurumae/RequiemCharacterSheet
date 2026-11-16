@@ -119,3 +119,20 @@ The sheet splits Gifts into Moon, Shadow and Wolf sections. The Moon Gifts secti
 character's Moon Gift Facets aren't bought: each dot of auspice Renown unlocks the next. The Moon Gift is the
 auspice's own by default, but the player can choose another, e.g. an alternate Moon Gift shared by the developers or
 fans, or write their own. Changing auspice goes back to the new auspice's own Moon Gift.
+
+## Search treats every kind of apostrophe and quote alike (2026-11-16)
+
+Every search in every app matches straight and curly apostrophes and quotes against each other, as well as ignoring
+case and accents, so what the keyboard types always finds the catalog's text.
+
+## Werewolf: the sheet keeps easily forgotten rules in view (2026-11-16)
+
+- **Auspice Benefit.** A section after Renown shows the character's auspice benefit, e.g. the Rahu's Tenacious. The
+  Pure, who have no auspice, don't have the section.
+- **Kuruth triggers.** The player picks one of the book's trigger sets (Blood, Moon, The Other, Pack, Territory,
+  Wounds) or writes their own. Its Passive, Common and Specific triggers are shown, muted when the character's
+  Harmony means they don't apply: all apply at 0 and 10, Common and Specific at 1, 2, 8 and 9, only Specific at 3, 4,
+  6 and 7, none at 5. The general triggers every werewolf has are listed below.
+- **Siskur-Dah.** The player chooses the ritemaster's tribe, as the character didn't necessarily lead the rite, and
+  the card shows that tribe's effect. The other faction's tribes (Pure for the Forsaken, Forsaken for the Pure) are
+  offered in a separate section marked as the character's enemies, as the two sides rarely hunt together.
