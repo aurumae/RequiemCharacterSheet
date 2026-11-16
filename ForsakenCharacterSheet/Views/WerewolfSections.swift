@@ -671,10 +671,22 @@ struct GiftsView: View {
                     warning: facet.renown.flatMap { character.renown($0) == 0 ? "Needs \($0.name) 1" : nil },
                     citation: facet.source.citation(),
                     isOwned: owned.contains(facet.id),
-                    unavailableReason: character.creationAllows(.facet(facet, gift: gift)) ? nil : "Doesn't fit the starting Gifts"
+                    unavailableReason: creationReason(gift, facet)
                 )
             }
         }
+    }
+
+    /// Why guided creation won't take the Facet, if it won't: the clearest reason first.
+    private func creationReason(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> String? {
+        guard !character.creationAllows(.facet(facet, gift: gift)) else { return nil }
+        if let renown = facet.renown, character.renown(renown) == 0 {
+            return "Needs a dot of \(renown.name) first"
+        }
+        if gift.kind == .shadow, !character.affinityGifts.contains(gift.id) {
+            return character.isPure ? "Only one Facet may be from outside your tribe's Gifts" : "Not one of your tribe's or auspice's Gifts"
+        }
+        return "No more \(kindName) Facets at creation"
     }
 
     private func sectionTitle(_ gift: GiftEntry) -> String {
@@ -731,9 +743,10 @@ struct TotemView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 let totem = character.totem
+                // The colour goes inside the theme style, whose own colour would otherwise win
                 Text("Advantages: \(totem.experiencesSpent) of \(totem.experienceBudget) Experiences")
+                    .foregroundStyle(totem.experiencesSpent > totem.experienceBudget ? theme.caution : theme.accent)
                     .themedText(.label)
-                    .foregroundStyle(totem.experiencesSpent > totem.experienceBudget ? theme.caution : Color.primary)
                 Text("Every pack member gains them, even past their usual limits or without a Merit's prerequisites.")
                     .themedText(.detail)
                     .foregroundStyle(theme.muted)
@@ -780,9 +793,10 @@ struct TotemView: View {
                     }
                 }
             }
-            Menu("Skill") { skillButtons { add(.skill, $0.id.rawValue) } }
+            // A menu for each category, so none is too long to fit
+            Menu("Skill") { skillMenus { add(.skill, $0.id.rawValue) } }
             Menu("Skill Specialty") {
-                skillButtons { skill in
+                skillMenus { skill in
                     specialtyDraft = ""
                     specialtySkill = skill
                 }
@@ -795,9 +809,9 @@ struct TotemView: View {
         }
     }
 
-    private func skillButtons(_ choose: @escaping (SkillDefinition) -> Void) -> some View {
+    private func skillMenus(_ choose: @escaping (SkillDefinition) -> Void) -> some View {
         ForEach(TraitCategory.allCases, id: \.self) { category in
-            Section(category.name) {
+            Menu(category.name) {
                 ForEach(character.skills(in: category).compactMap { SkillDefinition.withID($0.skillID) }) { skill in
                     Button(skill.name) { choose(skill) }
                 }
@@ -829,8 +843,10 @@ struct TotemView: View {
             if value.kind != .specialty {
                 Stepper("Dots", value: advantage.dots, in: dotRange(value))
                     .labelsHidden()
+                // A set width, so the steppers line up from row to row
                 Text(String(repeating: "●", count: value.dots))
                     .foregroundStyle(theme.ink)
+                    .frame(width: 64, alignment: .leading)
                     .accessibilityLabel(value.dots == 1 ? "1 dot" : "\(value.dots) dots")
             }
         }
