@@ -35,6 +35,10 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
     /// The pill keeps a section jumped to until the player scrolls, even if the sheet can't scroll far enough
     /// to bring its heading to the top, e.g. a short section at the end.
     @State private var jumpedSection: SheetSection?
+    /// The sheet's width, and the room the toolbar's other buttons (XP, Save, back) need, which grows with the text
+    /// size until the toolbar stops growing them. The section pill gets the rest.
+    @State private var sheetWidth: CGFloat = 402
+    @ScaledMetric(relativeTo: .body) private var toolbarButtonsWidth: CGFloat = 238
 
     var body: some View {
         BackgroundView {
@@ -108,6 +112,7 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
                 }
             }
         }
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { sheetWidth = $0 }
         .modifier(SpecialtyPrompt(character: character, edit: $specialtyEdit, draft: $specialtyDraft))
         .sheetHost($hostedSheet, lastPresented: $lastHostedSheet)
         // Pickers in the list and in hosted sheets leave out unofficial books unless the character wants them
@@ -127,7 +132,8 @@ struct CharacterSheetFrame<C: StoredCharacter & SheetCharacter, Rows: View>: Vie
         .toolbar {
             // Jumps between the sheet's sections
             ToolbarItem(placement: .topBarLeading) {
-                SectionPill(current: currentSection, isOpen: $showingSectionMenu)
+                SectionPill(current: currentSection, isOpen: $showingSectionMenu,
+                            maxWidth: max(min(sheetWidth - min(toolbarButtonsWidth, 255), 200), 90))
             }
             .sharedBackgroundVisibility(.hidden)
             // Starting dots are free; XP Mode starts when creation is finished

@@ -62,6 +62,8 @@ final class ForsakenCharacter: Codable {
     var fetishes: [OwnedFetish]
     /// Size in Hishu form.
     var size: Int
+    /// Armor the player enters, e.g. from worn armor or a fetish.
+    var armor: Int
 
     var healthTrack: [HealthBoxFillType]
     var willpowerTrack: [WillpowerBoxFillType]
@@ -114,6 +116,7 @@ final class ForsakenCharacter: Codable {
         rites = []
         fetishes = []
         size = 5
+        armor = 0
 
         healthTrack = []
         willpowerTrack = []
@@ -133,7 +136,7 @@ final class ForsakenCharacter: Codable {
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
              renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggerSet, kuruthTriggers, form,
-             moonGift, moonFacets, facets, rites, fetishes, size,
+             moonGift, moonFacets, facets, rites, fetishes, size, armor,
              healthTrack, willpowerTrack, beats, experiences, xpMode, changeLog, paidDots, showsUnofficialContent
     }
 
@@ -186,6 +189,7 @@ final class ForsakenCharacter: Codable {
         try container.encode(rites, forKey: .rites)
         try container.encode(fetishes, forKey: .fetishes)
         try container.encode(size, forKey: .size)
+        try container.encode(armor, forKey: .armor)
 
         // Only the boxes on the sheet are saved
         try container.encode(healthBoxes, forKey: .healthTrack)
@@ -249,6 +253,7 @@ final class ForsakenCharacter: Codable {
         rites = try container.decode(.rites, default: [])
         fetishes = try container.decode(.fetishes, default: [])
         size = try container.decode(.size, default: 5)
+        armor = try container.decode(.armor, default: 0)
 
         healthTrack = try container.decode(.healthTrack, default: [])
         willpowerTrack = try container.decode(.willpowerTrack, default: [])
@@ -380,7 +385,7 @@ extension ForsakenCharacter {
 
     /// Size in the current form.
     var effectiveSize: Int {
-        size + form.sizeModifier
+        size(in: form)
     }
 
     func facetName(_ facet: OwnedFacet) -> String {
@@ -433,8 +438,10 @@ extension ForsakenCharacter: SheetCharacter {
     func noteOptionGroups(for entry: ConditionEntry) -> [ConditionNoteOptionGroup] {
         guard !entry.noteOptions.isEmpty else { return [] }
         let ownGroup = isPure ? "pure" : "forsaken"
+        let otherGroup = isPure ? "forsaken" : "pure"
+        // Others in the catalog, e.g. Bale Hound lodges and the Urighur, aren't offered to player characters yet
         let own = entry.noteOptions.filter { ($0.group ?? ownGroup) == ownGroup }
-        let other = entry.noteOptions.filter { ($0.group ?? ownGroup) != ownGroup }
+        let other = entry.noteOptions.filter { $0.group == otherGroup }
         var groups = [ConditionNoteOptionGroup(title: isPure ? "Pure Tribes" : "Forsaken Tribes", options: own)]
         if !other.isEmpty {
             groups.append(ConditionNoteOptionGroup(title: isPure ? "Forsaken Tribes" : "Pure Tribes",
@@ -622,5 +629,55 @@ extension ForsakenCharacter: ListedCharacter {
 
     static func newCharacter(guided: Bool) -> ForsakenCharacter {
         ForsakenCharacter()
+    }
+}
+
+// MARK: - Derived traits
+
+extension ForsakenCharacter {
+    /// The effects of the character's catalog Merits with at least one dot, e.g. Fast Reflexes on Initiative.
+    private func meritEffectTotal(_ select: (Effect) -> Amount?) -> Int {
+        merits.filter { $0.rating > 0 }.reduce(0) { total, merit in
+            total + (merit.entry?.effects ?? []).reduce(0) { sum, effect in
+                sum + (select(effect)?.value(forRating: merit.rating) ?? 0)
+            }
+        }
+    }
+
+    /// An Attribute's dots in a form (pp. 96–97).
+    func rating(_ kind: AttributeKind, in form: Form) -> Int {
+        max(rating(of: kind) + (form.attributeModifiers[kind] ?? 0), 0)
+    }
+
+    /// Size in a form, with Merits such as Giant.
+    func size(in form: Form) -> Int {
+        size + form.sizeModifier + meritEffectTotal { if case .size(let amount) = $0 { amount } else { nil } }
+    }
+
+    /// Strength + Dexterity + the species factor: 5, or 8 for the wolf forms.
+    func speed(in form: Form) -> Int {
+        rating(.strength, in: form) + rating(.dexterity, in: form) + 5 + form.speciesSpeedBonus
+            + meritEffectTotal { if case .speed(let amount) = $0 { amount } else { nil } }
+    }
+
+    /// The lower of Dexterity and Wits, plus Athletics or a Skill a Merit allows, e.g. Defensive Combat (Brawl).
+    func defense(in form: Form, using skill: SkillID = .athletics) -> Int {
+        min(rating(.dexterity, in: form), rating(.wits, in: form)) + rating(of: skill)
+            + meritEffectTotal { if case .defense(let amount) = $0 { amount } else { nil } }
+    }
+
+    /// Dexterity + Composure.
+    func initiative(in form: Form) -> Int {
+        rating(.dexterity, in: form) + rating(.composure, in: form)
+            + meritEffectTotal { if case .initiative(let amount) = $0 { amount } else { nil } }
+    }
+
+    /// Skills Merits let the character use for Defense in place of Athletics, e.g. Defensive Combat (Brawl).
+    var alternativeDefenseSkills: [SkillID] {
+        merits.filter { $0.rating > 0 }.flatMap { merit -> [SkillID] in
+            guard merit.entry?.effects.contains(.defenseSkillFromQualifier) == true,
+                  let qualifier = merit.qualifier, let skill = SkillDefinition.named(qualifier)?.id else { return [] }
+            return [skill]
+        }
     }
 }

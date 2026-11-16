@@ -199,6 +199,8 @@ struct XPModeBadge<C: SheetCharacter>: View {
                 }
         }
         .buttonStyle(.plain)
+        // Short, and a control the player needs to read, so the pill beside it gives way instead
+        .fixedSize()
         .accessibilityLabel("XP Mode")
         .accessibilityValue(character.xpMode ? "On, \(experiencesText(character.experiencesAvailable)) available" : "Off")
         .accessibilityHint("Double-tap to turn XP Mode \(character.xpMode ? "off" : "on")")

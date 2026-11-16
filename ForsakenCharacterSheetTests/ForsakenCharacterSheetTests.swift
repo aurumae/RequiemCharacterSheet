@@ -382,10 +382,36 @@ struct WerewolfRulesTests {
         #expect(groups[0].options.count == 5 && groups[0].warning == nil)
         #expect(groups[1].options.map(\.name) == ["Fire-Touched", "Ivory Claws", "Predator Kings"])
         #expect(groups[1].warning != nil)
+        // Bale Hounds and the Urighur are in the catalog but not offered
+        #expect(entry.noteOption(named: "Urighur") != nil)
+        #expect(!groups.flatMap(\.options).contains { $0.name == "Urighur" })
         #expect(entry.noteOption(named: "Storm Lords")?.summary.isEmpty == false)
         let pure = ForsakenCharacter()
         pure.tribe = "Predator Kings"
         #expect(pure.noteOptionGroups(for: entry).map(\.title) == ["Pure Tribes", "Forsaken Tribes"])
+    }
+
+    @Test func derivedTraitsFollowTheForm() throws {
+        let character = ForsakenCharacter()
+        for (kind, rating) in [(AttributeKind.strength, 2), (.dexterity, 3), (.wits, 2), (.composure, 2)] {
+            character.attributes.first { $0.kind == kind }?.rating = rating
+        }
+        character.skills.first { $0.skillID == .athletics }?.rating = 2
+        #expect(character.size(in: .hishu) == 5)
+        #expect(character.defense(in: .hishu) == 4)
+        #expect(character.initiative(in: .hishu) == 5)
+        #expect(character.speed(in: .hishu) == 10)
+        // Gauru: Strength +3, Dexterity +1, Size +2 (Speed +4, Initiative +1)
+        #expect(character.size(in: .gauru) == 7)
+        #expect(character.speed(in: .gauru) == 14)
+        #expect(character.initiative(in: .gauru) == 6)
+        // Urhan: Dexterity +2, Size −1, and the wolf's species factor (Speed +5, Initiative +2)
+        #expect(character.size(in: .urhan) == 4)
+        #expect(character.speed(in: .urhan) == 15)
+        #expect(character.initiative(in: .urhan) == 7)
+        character.armor = 2
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.armor == 2)
     }
 
     @Test func pureHuntersAspectLoadsBackAsSaved() throws {

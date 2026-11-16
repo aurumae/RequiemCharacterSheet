@@ -4493,6 +4493,66 @@
             "page": 201
           },
           "summary": "You have Influence over the natural world equal to your effective spirit Rank, twisting animals and plants to aid the hunt: spend Essence for Influence Effects as a spirit would (pp. 186–187), rolling Strength + Primal Urge."
+        },
+        {
+          "id": "hounds-of-consumption",
+          "name": "Hounds of Consumption",
+          "group": "bale-hound",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "You gain twice the Essence from eating forbidden flesh."
+        },
+        {
+          "id": "hounds-of-destruction",
+          "name": "Hounds of Destruction",
+          "group": "bale-hound",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "Your attacks deal extra damage equal to half your Primal Urge, rounded up."
+        },
+        {
+          "id": "hounds-of-disharmony",
+          "name": "Hounds of Disharmony",
+          "group": "bale-hound",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "Roll Perception to find the weakest part of any working system; actions that directly undermine or destroy it are exceptional on three successes."
+        },
+        {
+          "id": "hounds-of-exposure",
+          "name": "Hounds of Exposure",
+          "group": "bale-hound",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "You can use uncontested tracking (Werewolf: The Forsaken, p. 95) to find the prey's most damaging secret."
+        },
+        {
+          "id": "hounds-of-invasion",
+          "name": "Hounds of Invasion",
+          "group": "bale-hound",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "Add Primal Urge to Stealth, and anyone trying to find or track you takes your Stealth + Primal Urge as a penalty."
+        },
+        {
+          "id": "urighur",
+          "name": "Urighur",
+          "group": "urighur",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 201
+          },
+          "summary": "Roll Perception to know which direction the prey is in. It also wakes your World Shaking ability."
         }
       ]
     },

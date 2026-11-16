@@ -14,6 +14,7 @@ struct ForsakenSheetView: View {
         CharacterSheetFrame(character: character, store: store, sections: character.sheetSections) {
             ForsakenCharacterInfoView(character: character)
             FormView(character: character)
+            AdvantagesView(character: character)
             AttributesView(character: character)
             SkillsView(character: character)
             MeritsView(character: character)
@@ -57,7 +58,7 @@ extension ForsakenCharacter {
     var sheetSections: [SheetSection] {
         let gifts: [SheetSection] = isPure ? [.shadowGifts, .wolfGifts] : [.moonGifts, .shadowGifts, .wolfGifts]
         let benefit: [SheetSection] = auspiceBenefit == nil ? [] : [.auspiceBenefit]
-        return [.character, .form, .attributes, .skills, .merits, .renown] + benefit + gifts
+        return [.character, .form, .advantages, .attributes, .skills, .merits, .renown] + benefit + gifts
             + [.rites, .fetishes, .aspirations, .health, .willpower, .primalUrge, .harmony, .kuruth, .experience, .conditions]
     }
 }

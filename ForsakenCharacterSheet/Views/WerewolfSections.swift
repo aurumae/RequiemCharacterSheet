@@ -266,9 +266,7 @@ struct FormView: View {
                     guard let change = form.attributeModifiers[kind] else { return nil }
                     return "\(kind.name) \(change > 0 ? "+" : "−")\(abs(change))"
                 }
-                + (form.sizeModifier != 0 ? ["Size \(form.sizeModifier > 0 ? "+" : "−")\(abs(form.sizeModifier))"] : [])
-                + (form.speciesSpeedBonus > 0 ? ["Speed +\(form.speciesSpeedBonus) more"] : [])
-                + ["Perception +\(form.perceptionBonus)"]
+                // Size, Speed and Perception are in Advantages, below
                 Text(changes.joined(separator: " · "))
                     .themedText(.detail)
                 Text(form.notes)
@@ -278,6 +276,93 @@ struct FormView: View {
             .padding(.vertical, 4)
             .accessibilityElement(children: .combine)
         }
+    }
+}
+
+// MARK: - Advantages
+
+/// Size, Defense, Initiative, Speed and Perception in every form, as on the official sheet, with the current form
+/// marked, and Armor.
+struct AdvantagesView: View {
+    @Environment(\.theme) private var theme
+    @Bindable var character: ForsakenCharacter
+    @ScaledMetric(relativeTo: .body) private var labelWidth: CGFloat = 82
+
+    var body: some View {
+        SheetSectionBlock(.advantages) {
+            VStack(spacing: 6) {
+                HStack(spacing: 2) {
+                    Color.clear.frame(width: labelWidth, height: 1)
+                    ForEach(Form.allCases) { form in
+                        Text(form.name)
+                            .themedText(.detail)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                            .foregroundStyle(form == character.form ? Color.white : theme.accent)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 3)
+                            .background(form == character.form ? theme.accent : Color.clear, in: Capsule())
+                    }
+                }
+                // Five names in a row stay legible only up to a point; larger text goes to the numbers
+                .dynamicTypeSize(...DynamicTypeSize.xLarge)
+                traitRow("Size") { character.size(in: $0) }
+                traitRow("Defense") { character.defense(in: $0) }
+                ForEach(character.alternativeDefenseSkills, id: \.self) { skill in
+                    traitRow("Def. (\(SkillDefinition.withID(skill)?.name ?? skill.rawValue))") { character.defense(in: $0, using: skill) }
+                }
+                traitRow("Initiative") { character.initiative(in: $0) }
+                traitRow("Speed") { character.speed(in: $0) }
+                traitRow("Perception", sign: true) { $0.perceptionBonus }
+            }
+            .padding(.vertical, 4)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Traits in \(character.form.name)")
+            .accessibilityValue(summary(for: character.form))
+
+            Text(notes)
+                .themedText(.detail)
+                .foregroundStyle(theme.muted)
+
+            TapToEditNumberRow("Armor:", value: $character.armor, in: 0...99)
+        }
+    }
+
+    private func traitRow(_ label: String, sign: Bool = false, value: @escaping (Form) -> Int) -> some View {
+        HStack(spacing: 2) {
+            // A set width, shrinking a long label, so the five forms always fit beside it
+            Text(label)
+                .themedText(.label)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .frame(width: labelWidth, alignment: .leading)
+            ForEach(Form.allCases) { form in
+                let number = value(form)
+                Text(sign ? "+\(number)" : "\(number)")
+                    .themedText(form == character.form ? .ratedTrait : .body)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+    }
+
+    private func summary(for form: Form) -> String {
+        "Size \(character.size(in: form)), Defense \(character.defense(in: form)), Initiative \(character.initiative(in: form)), "
+            + "Speed \(character.speed(in: form)), Perception plus \(form.perceptionBonus)"
+    }
+
+    /// What the numbers don't show (pp. 96–97).
+    private var notes: String {
+        var notes = ["Perception is the bonus to rolls using wolf senses."]
+        if character.form != .hishu {
+            notes.append("Defense applies against Firearms in \(character.form.name).")
+        }
+        if character.form == .gauru {
+            notes.append("Initiative +3 when attacking with teeth or claws.")
+        }
+        return notes.joined(separator: " ")
     }
 }
 

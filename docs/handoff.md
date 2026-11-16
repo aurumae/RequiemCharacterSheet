@@ -1336,3 +1336,19 @@ Siskur-Dah `noteOptions` (Forsaken and Pure tribes). Save format (draft): new `k
 was checked, and both apps' watermarks stay put with the keyboard open.
 
 **Follow-up (Android):** the watermark behaviour and quote-folding search.
+
+## 2026-11-16 · Claude (iOS) · Toolbar room, section menu, and Forsaken Advantages
+
+**Shared UI for Android to match:**
+- The XP badge never shrinks. The section pill takes at most the screen width minus about 238pt (up to 255pt at larger
+  text sizes, as the toolbar's buttons stop growing), shrinking its text a little and then ending in "…". Checked
+  on an iPhone SE and an iPhone 17, at default, extra-extra-large and accessibility sizes.
+- The section menu is as tall as its rows up to the space below the pill, then scrolls with a faded bottom edge, and
+  opens scrolled to the current section.
+
+**Forsaken:** an Advantages section after Form shows Size, Defense (and Defensive Combat's alternative), Initiative,
+Speed and the Perception bonus for all five forms, with the current form marked, plus Armor (new save key `armor`).
+Merit effects (Fast Reflexes, Fleet of Foot, Giant, Defensive Combat) count. Siskur-Dah's catalog entry also lists
+the Bale Hound lodges' and the Urighur's effects (groups `bale-hound`, `urighur`); they aren't offered yet.
+
+**Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 30.

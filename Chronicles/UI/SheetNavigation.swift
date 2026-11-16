@@ -201,15 +201,20 @@ struct SectionPill: View {
     @Environment(\.theme) private var theme
     let current: SheetSection?
     @Binding var isOpen: Bool
+    /// The most the pill may take, leaving room for the toolbar's other buttons.
+    var maxWidth: CGFloat = 170
 
     var body: some View {
         Button {
             withAnimation(.snappy(duration: 0.2)) { isOpen.toggle() }
         } label: {
             HStack(spacing: 6) {
+                // A long name shrinks a little, then ends in "…", so the controls beside the pill keep their room
                 Text(current?.title ?? "Sections")
                     .font(theme.controlFace)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .truncationMode(.tail)
                 Image(systemName: isOpen ? "chevron.up" : "chevron.down")
                     .font(.caption.weight(.semibold))
             }
@@ -217,10 +222,12 @@ struct SectionPill: View {
             .padding(.horizontal, 14)
             // The height of the toolbar's glass buttons (back, Save), whatever the face; it only grows for very large text
             .frame(minHeight: 44)
+            .frame(maxWidth: maxWidth)
             .background(Capsule().fill(theme.accent))
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
+        // Its own width, up to the cap above, rather than whatever the toolbar has left
         .fixedSize()
         .accessibilityLabel("Section")
         .accessibilityValue(current?.title ?? "")
@@ -235,6 +242,8 @@ struct SectionMenu: View {
     let current: SheetSection?
     let choose: (SheetSection) -> Void
     let close: () -> Void
+    @State private var rowsHeight: CGFloat = 0
+    @State private var scrolledToEnd = false
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -244,19 +253,42 @@ struct SectionMenu: View {
                 .onTapGesture(perform: close)
                 .accessibilityHidden(true)
 
-            // All of it if it fits, which it does at most text sizes; otherwise it scrolls
-            ViewThatFits(in: .vertical) {
-                rows
-                ScrollView { rows }
+            // As tall as its rows, up to the space below the pill; then it scrolls, opening at the current section,
+            // with the bottom edge faded so it's clear there's more
+            GeometryReader { space in
+                let available = max(space.size.height - 12, 0)
+                let scrolls = rowsHeight > available
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        rows
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { rowsHeight = $0 }
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .mask {
+                        LinearGradient(stops: [.init(color: .black, location: 0),
+                                               .init(color: .black, location: scrolls && !scrolledToEnd ? 0.88 : 1),
+                                               .init(color: .black.opacity(scrolls && !scrolledToEnd ? 0.1 : 1), location: 1)],
+                                       startPoint: .top, endPoint: .bottom)
+                    }
+                    .onScrollGeometryChange(for: Bool.self) { geometry in
+                        geometry.contentOffset.y + geometry.containerSize.height >= geometry.contentSize.height - 2
+                    } action: { _, atEnd in
+                        scrolledToEnd = atEnd
+                    }
+                    .onAppear {
+                        if let current {
+                            proxy.scrollTo(current, anchor: .center)
+                        }
+                    }
+                }
+                .frame(width: 230, height: min(rowsHeight, available))
+                .background(RoundedRectangle(cornerRadius: 14).fill(Color.white))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay(RoundedRectangle(cornerRadius: 14).stroke(theme.accent.opacity(0.5)))
+                .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+                .padding(.leading, 60)
+                .padding(.top, 4)
             }
-            .frame(width: 230)
-            .background(RoundedRectangle(cornerRadius: 14).fill(Color.white))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(theme.accent.opacity(0.5)))
-            .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
-            .padding(.leading, 60)
-            .padding(.top, 4)
-            .padding(.bottom, 8)
         }
         .transition(.opacity)
     }
@@ -286,6 +318,7 @@ struct SectionMenu: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(isCurrent ? .isSelected : [])
+                .id(section)
             }
         }
     }
