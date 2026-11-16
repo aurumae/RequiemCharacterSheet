@@ -1427,3 +1427,19 @@ About credits Flat Earth Scribe (`AppIdentity.fontCredits`).
 
 **Follow-up (Android):** nothing until `:forsaken` starts (after the iOS App Store build). Then use these drawables
 as they are; no font or conversion tools are needed on Fedora.
+
+## 2026-11-16 21:48 UTC · Claude (iOS) · CI on main fixed: a renamed test the contract still named
+
+`main` has been red since `e9cc134` (15 November), 34 commits. That commit renamed the iOS test
+`gallowsPostTakesCarthianLawsWithItsOwnStatus` to `…CarthianMerits…` when Gallows Post Status came to cover every
+Carthian Merit, and `shared/fixtures/contracts.json` (`rules.merit-access`) still named the old one. The policy job
+failed on "Missing capability test", so the Android, exchange and iOS jobs were skipped on every push since.
+
+**Shared file changed:** `shared/fixtures/contracts.json`, that one name. The test is the same one, and it now checks
+more than it did.
+
+**Validation:** the policy unit tests (11) and `scripts/contract_policy.py --strict` pass locally; 277 `swift test`.
+The Android and exchange jobs haven't run against anything since `a9675dd`, including the nine Merits added to
+`cofd-core.json`; this push is their first run.
+
+**Follow-up (Android):** none for this. An entry on stopping this happening again follows.
