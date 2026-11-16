@@ -142,9 +142,21 @@ struct SectionHeading: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     /// In mixed case, e.g. "Coils of the Dragon".
     let text: String
+    /// How much larger a heading image is drawn than its natural size, following the text size as the headings' text
+    /// style, Title 2, does.
+    private var headingScale: CGFloat {
+        // Read through the environment's text size, so the heading redraws when it changes
+        _ = dynamicTypeSize
+        return UIFont.preferredFont(forTextStyle: .title2).pointSize / 22
+    }
 
     init(_ text: String) {
         self.text = text
+    }
+
+    /// The theme's picture of this heading, if it has one.
+    private var headingImage: UIImage? {
+        theme.headingImagePrefix.flatMap { UIImage(named: $0 + text) }
     }
 
     var body: some View {
@@ -157,13 +169,25 @@ struct SectionHeading: View {
         case .brushLine:
             HStack(spacing: 8) {
                 BrushLine(seed: text + "-leading", solidEnd: .trailing)
-                    .frame(minWidth: 16)
-                smallCapitals(text)
-                    .foregroundStyle(theme.accent)
-                    .multilineTextAlignment(.center)
-                    .layoutPriority(1)
+                    .frame(minWidth: 24)
+                Group {
+                    if let image = headingImage {
+                        // Drawn ahead of time in a face licensed only for graphics
+                        Image(uiImage: image)
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            // As large as the text size asks, but narrower if need be, so the brush lines still show
+                            .frame(maxWidth: image.size.width * headingScale, maxHeight: image.size.height * headingScale)
+                    } else {
+                        smallCapitals(text)
+                            .multilineTextAlignment(.center)
+                    }
+                }
+                .foregroundStyle(theme.accent)
+                .layoutPriority(1)
                 BrushLine(seed: text + "-trailing", solidEnd: .leading)
-                    .frame(minWidth: 16)
+                    .frame(minWidth: 24)
             }
             .textCase(nil)
             .accessibilityElement(children: .ignore)

@@ -5,6 +5,7 @@
 
 import Foundation
 import Testing
+import UIKit
 @testable import ForsakenCharacterSheet
 
 @MainActor
@@ -736,6 +737,23 @@ struct GiftEffectTests {
     @Test func chroniclesCoreMeritsMissingFromTheWerewolfBookAreThere() {
         for id in ["mystery-cult-initiation", "library", "true-friend", "trained-observer"] {
             #expect(Catalog.bundled.merits.entry(id)?.source.book == "cofd-core", "\(id)")
+        }
+    }
+}
+
+@MainActor
+struct SectionHeadingTests {
+    /// Flat Earth Scribe can't ship in the app, so every heading needs its picture from
+    /// scripts/render-forsaken-headings.swift.
+    @Test func everySectionHeadingHasItsPicture() {
+        let blank = ForsakenCharacter()
+        let rahu = ForsakenCharacter.guided()
+        rahu.auspice = "Rahu"
+        let pure = ForsakenCharacter.guided()
+        pure.tribe = "Fire-Touched"
+        let sections = Set([blank, rahu, pure].flatMap(\.sheetSections))
+        for section in sections {
+            #expect(UIImage(named: "Heading " + section.heading) != nil, "\(section.heading)")
         }
     }
 }

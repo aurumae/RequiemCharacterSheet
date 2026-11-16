@@ -81,6 +81,11 @@ struct AboutView: View {
                             }
                         }
                     }
+                    ForEach(AppIdentity.current.fontCredits, id: \.self) { credit in
+                        Text(credit)
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                    }
                 }
             }
             .navigationTitle("About")

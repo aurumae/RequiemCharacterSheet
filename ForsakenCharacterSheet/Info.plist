@@ -43,7 +43,6 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>TradeWinds-Regular.ttf</string>
 		<string>Comforter-Regular.ttf</string>
 		<string>GrechenFuemen-Regular.ttf</string>
 	</array>

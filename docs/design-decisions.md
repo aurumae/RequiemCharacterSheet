@@ -60,7 +60,7 @@ Storyteller's Vault template fonts are not licensed for use in an app. Forsaken'
 
 | Role | Official sheet | Forsaken app |
 |---|---|---|
-| Section headings | Flat Earth Scribe | **Trade Winds** (OFL), a stand-in while the user asks the designer about a licence |
+| Section headings | Flat Earth Scribe | **Flat Earth Scribe** itself, as pictures (see below) |
 | Subheadings and labels | Treefrog | **Comforter** (OFL) |
 | Trait names | Arnova ITC | **Grechen Fuemen** (OFL) |
 | Small print | Goudy Old Style | the system font |
@@ -189,4 +189,15 @@ them.
 In XP Mode, each Renown dot gained lets the character learn one Facet of that Renown free, in a Gift they've
 unlocked (one whose Facet they know, or any Wolf Gift) (p. 115). The Gift sections show the free Facets waiting, and
 the picker marks the Facets they can go on. Shadow and Wolf Facets are listed under their Gifts.
+
+## Werewolf: section headings are pictures in Flat Earth Scribe (2026-11-16)
+
+The user bought Blambot's Basic Desktop licence for Flat Earth Scribe (Nate Piekos), which covers the font
+"flattened into graphics" but not embedded in an app (that's a separate, much dearer licence). So the font file is
+**never** added to either app or the repo. `scripts/render-forsaken-headings.swift`, run on the user's Mac with the
+font installed, draws each Forsaken section heading as filled outlines into a vector PDF in
+`ForsakenCharacterSheet/Assets.xcassets/Section Headings`. The app tints them Werewolf Rust, scales them with the
+text size and gives them their heading as an accessibility label. A new or renamed section needs the script run
+again; a test checks every heading has its picture. Text that isn't a fixed heading, such as book names in pickers,
+uses Comforter instead. About credits the font.
 

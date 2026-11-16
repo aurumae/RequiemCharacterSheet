@@ -1405,3 +1405,15 @@ decision). Save format (draft): Facets and rites have `active` when switched on;
 learned free; new character keys `ballisticArmor` and `renownFacetCredits`. Rites show only their own dots.
 
 **Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 48.
+
+## 2026-11-16 · Claude (iOS) · Forsaken headings in Flat Earth Scribe
+
+The user bought Blambot's Basic Desktop licence for Flat Earth Scribe, which covers it only as graphics. Forsaken's
+section headings are now vector PDFs in `ForsakenCharacterSheet/Assets.xcassets/Section Headings`, drawn as
+outlines (no font inside) by `scripts/render-forsaken-headings.swift` on the user's Mac. `Theme.headingImagePrefix`
+makes `SectionHeading` use them, tinted and scaled with the text size, narrowing so the brush lines keep 24pt. Trade
+Winds is removed from `ForsakenCharacterSheet/Fonts/` (shared with Android); picker book headings use Comforter.
+About credits Flat Earth Scribe (`AppIdentity.fontCredits`).
+
+**Follow-up (Android):** when `:forsaken` starts, never bundle Flat Earth Scribe; use these heading pictures
+(convert the PDFs to vector drawables) and don't ship Trade Winds.

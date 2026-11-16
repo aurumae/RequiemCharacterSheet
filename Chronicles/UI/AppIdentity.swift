@@ -16,6 +16,9 @@ struct AppIdentity {
     /// Every font the app bundles, credited in About. Each is under the SIL Open Font License, which asks that its
     /// licence ship with it.
     let bundledFonts: [BundledFont]
+    /// Faces used only in the app's pictures, not bundled, credited in About, e.g. "Section headings: Flat Earth
+    /// Scribe by Blambot".
+    var fontCredits: [String] = []
 }
 
 extension UTType {

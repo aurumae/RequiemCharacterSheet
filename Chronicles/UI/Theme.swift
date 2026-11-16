@@ -45,6 +45,10 @@ struct Theme {
     var controlFont: ThemeFont? = nil
     /// Whether About is set in the system font, for a theme whose faces are hard to read in paragraphs and lists.
     var systemFontInAbout = false
+    /// Section headings drawn as images named this plus the heading, e.g. "Heading Moon Gifts", for a face that can
+    /// only be used for graphics, not shipped in the app. Headings without an image use the section header style.
+    /// `nil` to set every heading as text.
+    var headingImagePrefix: String? = nil
 
     /// Each style scales with the user's preferred text size, relative to the given system style.
     func font(_ style: ThemeTextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {

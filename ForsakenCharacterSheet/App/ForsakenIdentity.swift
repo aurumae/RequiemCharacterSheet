@@ -14,10 +14,10 @@ extension AppIdentity {
         characterFileType: .forsakenCharacter,
         characterFileExtension: "wtfcharacter",
         bundledFonts: [
-            BundledFont(name: "Trade Winds", author: "Sideshow", licenseFile: "TradeWinds-OFL"),
             BundledFont(name: "Comforter", author: "The Comforter Project Authors", licenseFile: "Comforter-OFL"),
             BundledFont(name: "Grechen Fuemen", author: "The Grechen Fuemen Project Authors", licenseFile: "GrechenFuemen-OFL"),
-        ]
+        ],
+        fontCredits: ["Section headings lettered in Flat Earth Scribe by Nate Piekos of Blambot, used under licence."]
     )
 }
 
@@ -36,7 +36,7 @@ extension Theme {
         ink: .black,
         muted: Color(red: 108 / 255, green: 108 / 255, blue: 112 / 255),
         caution: Color(red: 140 / 255, green: 100 / 255, blue: 8 / 255),
-        // All under the SIL Open Font License; the licences are bundled beside them in Fonts/.
+        // The bundled faces are all under the SIL Open Font License; the licences are beside them in Fonts/.
         // Trait names, in place of the sheet's Arnova ITC
         displayFontName: "GrechenFuemen-Regular",
         displayFallbackFontName: nil,
@@ -48,8 +48,9 @@ extension Theme {
         watermarkImageName: "WtF Skull Watermark",
         sectionHeaderStyle: .brushLine,
         fonts: [
-            // A stand-in for the sheet's Flat Earth Scribe while a licence is sought
-            .sectionHeader: ThemeFont(name: "TradeWinds", size: 27, relativeTo: .title2),
+            // Section headings are images in the sheet's Flat Earth Scribe (see headingImagePrefix); this face is for
+            // the few headings that aren't, such as the books in pickers
+            .sectionHeader: ThemeFont(name: "Comforter-Regular", size: 34, relativeTo: .title2),
             // Comforter's letters are small for their size, so it's set larger than the other faces
             .subsectionHeader: ThemeFont(name: "Comforter-Regular", size: 32, relativeTo: .headline),
             .label: ThemeFont(name: "Comforter-Regular", size: 30, relativeTo: .title3),
@@ -62,6 +63,8 @@ extension Theme {
         // The pill must be easy to read; Grechen Fuemen's letters are small for their size
         controlFont: ThemeFont(name: "GrechenFuemen-Regular", size: 21, relativeTo: .subheadline),
         // The script faces are hard to read in About's lists and licences
-        systemFontInAbout: true
+        systemFontInAbout: true,
+        // Drawn by scripts/render-forsaken-headings.swift; the face's licence covers graphics, not apps
+        headingImagePrefix: "Heading "
     )
 }

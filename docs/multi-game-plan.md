@@ -79,7 +79,8 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 
 - **Bundle ID:** `com.omccolgan.ForsakenCharacterSheet`. Files use `.wtfcharacter`; saves carry `"game": "forsaken"`.
 - **Assets in `ForsakenCharacterSheet/`,** ready for the target:
-  - `Fonts/`: Trade Winds, Comforter and Grechen Fuemen, each with its OFL licence.
+  - `Fonts/`: Comforter and Grechen Fuemen, each with its OFL licence. Section headings are pictures in Flat
+    Earth Scribe (see `design-decisions.md`); the font itself is never bundled.
   - `Assets.xcassets`: the app icon, the Werewolf logo, the skull watermark (a template image the app tints Werewolf
     Rust) and Werewolf Rust as the accent colour.
 
