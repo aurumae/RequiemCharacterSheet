@@ -28,6 +28,9 @@ struct ForsakenSheetView: View {
             if let (auspice, benefit) = character.auspiceBenefit {
                 AuspiceBenefitView(benefit: benefit, auspice: auspice)
             }
+            if let lodge = character.lodgeWithRules {
+                LodgeView(lodge: lodge)
+            }
             // The Pure flay away Luna's mark, and with it any Moon Gift
             if !character.isPure {
                 MoonGiftView(character: character)
@@ -85,10 +88,15 @@ extension ForsakenCharacter {
         return (auspice, benefit)
     }
 
+    /// The character's lodge, if it's one that marks its adherents with a Blessing, Aspiration and Ban.
+    var lodgeWithRules: LodgeEntry? {
+        lodgeEntry.flatMap { $0.hasRules ? $0 : nil }
+    }
+
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
         let gifts: [SheetSection] = isPure ? [.shadowGifts, .wolfGifts] : [.moonGifts, .shadowGifts, .wolfGifts]
-        let benefit: [SheetSection] = auspiceBenefit == nil ? [] : [.auspiceBenefit]
+        let benefit: [SheetSection] = (auspiceBenefit == nil ? [] : [.auspiceBenefit]) + (lodgeWithRules == nil ? [] : [.lodge])
         return (isInCreation ? [.creation] : []) + [.character, .form, .advantages, .attributes, .skills, .merits, .totem, .renown] + benefit + gifts
             + [.rites, .fetishes, .aspirations, .health, .willpower, .primalUrge, .harmony, .kuruth, .experience, .conditions]
     }

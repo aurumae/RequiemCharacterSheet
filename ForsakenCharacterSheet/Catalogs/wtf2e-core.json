@@ -4461,11 +4461,11 @@
         "page": 310
       },
       "persistent": true,
-      "summary": "You're on the Sacred Hunt, and gain a benefit that depends on the ritemaster's tribe.",
+      "summary": "You're on the Sacred Hunt, and gain a benefit that depends on the ritemaster's tribe, or on their lodge if they choose its benefit.",
       "resolution": "The prey is brought down (it needn't die), or the pack turns its efforts away from the hunt.",
       "beat": "You get an exceptional success on an action involving the prey.",
       "possibleSources": "The Sacred Hunt rite, a Firstborn's personal blessing",
-      "notePrompt": "Ritemaster's tribe",
+      "notePrompt": "Ritemaster's tribe or lodge",
       "noteOptions": [
         {
           "id": "blood-talons",
@@ -4606,6 +4606,56 @@
             "page": 201
           },
           "summary": "Roll Perception to know which direction the prey is in. It also wakes your World Shaking ability."
+        },
+        {
+          "id": "garm",
+          "name": "Lodge of Garm",
+          "group": "lodge",
+          "source": {
+            "book": "the-pack",
+            "page": 83
+          },
+          "summary": "You sense whether the prey has Primal Urge 6 or more, and keep your full Defense when you make an all-out attack on such prey."
+        },
+        {
+          "id": "thousand-steel-teeth",
+          "name": "The Thousand Steel Teeth",
+          "group": "lodge",
+          "source": {
+            "book": "the-pack",
+            "page": 85
+          },
+          "summary": "You can track from a moving vehicle, with no penalty for the prey using one. While the prey is in a vehicle, you can take as bashing any lethal damage from being hit by a vehicle, falling from a moving one, or your own being damaged or wrecked."
+        },
+        {
+          "id": "screaming-moon",
+          "name": "Lodge of the Screaming Moon",
+          "group": "lodge",
+          "source": {
+            "book": "the-pack",
+            "page": 87
+          },
+          "summary": "Spend 1 Essence to shrug off a supernatural fear or panic effect that comes from the prey or blocks the hunt, along with any damage it would do you; others are affected as usual. With the Fearless Hunter Facet it costs nothing."
+        },
+        {
+          "id": "temple-of-apollo",
+          "name": "The Temple of Apollo",
+          "group": "lodge",
+          "source": {
+            "book": "the-pack",
+            "page": 89
+          },
+          "summary": "You sense whether the prey has entered a shrine of Apollo as an outsider. If so, Facets that target the prey, add to attacks on it or defend against its attacks cost no Essence. After five of them in a scene, for the rest of it you add Glory to Defense and Cunning to perception rolls, and see through any darkness. During intense solar activity, killing human prey of the hunt refills your Willpower and gives 5 Essence."
+        },
+        {
+          "id": "the-pack-eaters-of-the-dead",
+          "name": "The Eaters of the Dead",
+          "group": "lodge",
+          "source": {
+            "book": "the-pack",
+            "page": 91
+          },
+          "summary": "Your bite also destroys a point of an undead prey's Essence, Vitae, Plasm or other fuel, or does 1 aggravated damage if it has none left. Ghosts, vampires, Sin-Eaters, mummies and other reanimated things count; Prometheans don't."
         }
       ]
     },

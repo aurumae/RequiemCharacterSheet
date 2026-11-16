@@ -31,7 +31,12 @@ Unofficial files load after all the books.
   Renowns a second creation dot may go to), `skills` (tribe Skills, ids), `huntersAspects` (`[{ "name", "condition" }]`
   to choose from, for tribes without an auspice).
 - **lodges**: as tribes' optional extras: `tribes` and `auspices` (ids it's limited to, empty for any), `requirements`
-  (free text), `benefit` (free text). The core book's lodges have only `summary`.
+  (free text), `benefit` (free text). The core book's lodges have only `summary`. A lodge with rules (The Pack,
+  p. 80) also has `totem` (its name), the three marks every adherent bears, `blessing`, `aspiration` and `ban`, and
+  what it teaches: `merits`, `rites` and `fetishes` (ids), with `tools` (free text) for what is particular to this
+  lodge, e.g. the Influences its Lodge Sorcery offers. A Merit or rite listed by any lodge is lodge lore: it asks for
+  one of those lodges, and costs a werewolf outside them three times the Experiences. The lodge's Sacred Hunt is a
+  Siskur-Dah `noteOptions` entry with the lodge's `id` and `group` "lodge".
 - **archetypes**: `kind` ("blood" or "bone"); `summary` says how it regains Willpower.
 - **gifts**: `kind` ("moon", "shadow" or "wolf"), `auspice` (for a Moon Gift; an auspice may have several, e.g.
   alternates, and its `moonGift` names the core one), and `facets`, each with `id`,
@@ -48,7 +53,8 @@ Unofficial files load after all the books.
   `renown` (id = the Renown, minimum = dots), `primalUrge` (minimum), `harmony` (minimum), `tribe`, `auspice`,
   `notTribe` (id = tribe).
 - **conditions**: Requiem's Condition entry, which may have `noteOptions` (see `docs/phase-b-design.md`). Siskur-Dah
-  uses them for the ritemaster's tribe, with `group` "forsaken" or "pure"; each option has its own `source`.
+  uses them for the ritemaster's tribe, with `group` "forsaken" or "pure", or their lodge, with `group` "lodge"; each
+  option has its own `source`, which may be another book.
 - **kuruthTriggers**: the book's trigger sets (p. 103), each with `passive`, `common` and `specific` text.
 - **tilts**: `kind` ("personal" for one character, "environmental" for the whole scene), `summary` (what the Tilt
   does), `cause` (how it's inflicted) and `ending` (how it ends). The sheet doesn't track Tilts yet.

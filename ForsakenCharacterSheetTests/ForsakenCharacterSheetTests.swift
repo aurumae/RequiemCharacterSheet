@@ -63,7 +63,7 @@ struct ForsakenRulesTests {
     @Test func catalogHasTheChroniclesCoreMeritsAndConditions() {
         #expect(Catalog.bundled.merits.entry("fast-reflexes") != nil)
         #expect(!Catalog.bundled.conditions.all.isEmpty)
-        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core", "night-horrors-shunned-by-the-moon", "giver-of-gifts-1", "giver-of-gifts-2"])
+        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core", "night-horrors-shunned-by-the-moon", "the-pack", "giver-of-gifts-1", "giver-of-gifts-2"])
     }
 
     @Test func werewolfCoreBookIsLoaded() {
@@ -71,15 +71,15 @@ struct ForsakenRulesTests {
         let fromCore = { (source: SourceReference) in source.book == "wtf2e-core" }
         #expect(catalog.auspices.all.count == 5)
         #expect(catalog.tribes.all.filter { fromCore($0.source) }.count == 6)
-        #expect(catalog.lodges.all.count == 8)
+        #expect(catalog.lodges.all.filter { fromCore($0.source) }.count == 8)
         #expect(catalog.archetypes.all.filter { $0.kind == .blood }.count == 6)
         #expect(catalog.archetypes.all.filter { $0.kind == .bone }.count == 6)
         #expect(catalog.gifts.all.filter { fromCore($0.source) }.count == 23)
         #expect(catalog.gifts.all.filter { fromCore($0.source) }.flatMap(\.facets).count == 115)
         #expect(catalog.rites.all.filter { fromCore($0.source) }.count == 23)
-        #expect(catalog.fetishes.all.count == 18)
-        #expect(catalog.tilts.all.map(\.name) == ["Arm Wrack", "Blinded", "Earthquake", "Heavy Winds", "Knocked Down",
-                                                  "Leg Wrack", "Poisoned", "Stunned"])
+        #expect(catalog.fetishes.all.filter { fromCore($0.source) }.count == 18)
+        #expect(catalog.tilts.all.filter { fromCore($0.source) }.map(\.name)
+                == ["Arm Wrack", "Blinded", "Earthquake", "Heavy Winds", "Knocked Down", "Leg Wrack", "Poisoned", "Stunned"])
         #expect(catalog.tilts.all.filter { $0.kind == .environmental }.map(\.id) == ["earthquake", "heavy-winds"])
         // The human Merits the Werewolf book reprints, e.g. Language, are offered
         #expect(catalog.merits.entry("language")?.source.book == "wtf2e-core")
@@ -418,17 +418,19 @@ struct WerewolfRulesTests {
         let entry = try #require(Catalog.bundled.conditions.entry("siskur-dah"))
         let forsaken = ForsakenCharacter()
         let groups = forsaken.noteOptionGroups(for: entry)
-        #expect(groups.map(\.title) == ["Forsaken Tribes", "Pure Tribes"])
+        #expect(groups.map(\.title) == ["Forsaken Tribes", "Lodges", "Pure Tribes"])
         #expect(groups[0].options.count == 5 && groups[0].warning == nil)
-        #expect(groups[1].options.map(\.name) == ["Fire-Touched", "Ivory Claws", "Predator Kings"])
-        #expect(groups[1].warning != nil)
+        // A ritemaster may give their lodge's Sacred Hunt in place of their tribe's (The Pack, p. 80)
+        #expect(groups[1].options.count == 5 && groups[1].warning == nil)
+        #expect(groups[2].options.map(\.name) == ["Fire-Touched", "Ivory Claws", "Predator Kings"])
+        #expect(groups[2].warning != nil)
         // Bale Hounds and the Urighur are in the catalog but not offered
         #expect(entry.noteOption(named: "Urighur") != nil)
         #expect(!groups.flatMap(\.options).contains { $0.name == "Urighur" })
         #expect(entry.noteOption(named: "Storm Lords")?.summary.isEmpty == false)
         let pure = ForsakenCharacter()
         pure.tribe = "Predator Kings"
-        #expect(pure.noteOptionGroups(for: entry).map(\.title) == ["Pure Tribes", "Forsaken Tribes"])
+#expect(pure.noteOptionGroups(for: entry).map(\.title) == ["Pure Tribes", "Lodges", "Forsaken Tribes"])
     }
 
     @Test func derivedTraitsFollowTheForm() throws {
@@ -589,6 +591,21 @@ struct ForsakenCreationTests {
         #expect(ghost.creationReport.shadowFacets.allowed == 1)
         ghost.facets = [facet("dominance-glorious-lunacy"), facet("strength-predators-unmatched-pursuit")]
         #expect(ghost.creationReport.problems.contains(.tooManyShadowFacets(allowed: 1)))
+    }
+
+    @Test func ghostWolvesCantStartWithTheSecondMoonFacet() {
+        let ghost = rahu(tribe: "Ghost Wolves")
+        ghost.applyCreationGrants()
+        #expect(ghost.renown(.purity) == 1)
+        // The other dot can't go on the auspice's Renown, which would bring the Facet (p. 50)
+        #expect(ghost.editableMaximum(for: TraitKey(.renown, "purity"), upTo: 5) == 1)
+        #expect(ghost.editableMaximum(for: TraitKey(.renown, "glory"), upTo: 5) == 1)
+        ghost.setRenown(.purity, to: 2)
+        #expect(ghost.creationReport.problems.contains(.ghostWolfMoonGift(renown: "Purity")))
+        // A tribe's werewolf may
+        let forsaken = rahu()
+        forsaken.applyCreationGrants()
+        #expect(forsaken.editableMaximum(for: TraitKey(.renown, "purity"), upTo: 5) == 2)
     }
 
     @Test func theTwoShadowFacetsComeFromDifferentGifts() throws {
@@ -804,6 +821,91 @@ struct GiftEffectTests {
 }
 
 @MainActor
+struct ThePackTests {
+    private let catalog = Catalog.bundled
+    private let fromThePack = { (source: SourceReference) in source.book == "the-pack" }
+
+    @Test func thePackHasItsLodgesAndTheirLore() throws {
+        let lodges = catalog.lodges.all.filter { fromThePack($0.source) }
+        #expect(lodges.map(\.name) == ["Lodge of Garm", "The Thousand Steel Teeth", "Lodge of the Screaming Moon",
+                                       "The Temple of Apollo", "The Eaters of the Dead"])
+        // Each marks its adherents three ways, has its own Sacred Hunt, and teaches things that are in the catalog
+        for lodge in lodges {
+            #expect(lodge.hasRules && lodge.marks.map(\.label) == ["Blessing", "Aspiration", "Ban"], "\(lodge.name)")
+            #expect(lodge.sacredHunt?.name == lodge.name, "\(lodge.name)")
+            #expect(lodge.lore.count == (lodge.merits ?? []).count + (lodge.rites ?? []).count + (lodge.fetishes ?? []).count)
+            #expect(!lodge.lore.isEmpty, "\(lodge.name)")
+        }
+        // The core book's Eaters of the Dead stay, as a story-only lodge under their own book
+        let core = try #require(catalog.lodges.entry("eaters-of-the-dead"))
+        #expect(!core.hasRules && core.source.book == "wtf2e-core")
+        #expect(catalog.merits.all.filter { fromThePack($0.source) }.count == 6)
+        #expect(catalog.rites.all.filter { fromThePack($0.source) }.map(\.name) == ["Banshee Howl", "Carrion Feast"])
+        #expect(catalog.fetishes.all.filter { fromThePack($0.source) }.count == 5)
+        #expect(catalog.tilts.entry("essence-bleed") != nil)
+        // Every Merit and rite of the book belongs to a lodge
+        #expect(catalog.merits.all.filter { fromThePack($0.source) }.allSatisfy { !catalog.lodges(teachingMerit: $0.id).isEmpty })
+        #expect(catalog.lodges(teachingMerit: "lodge-sorcery").count == 3)
+        let style = try #require(catalog.merits.entry("uma-suguthkuth"))
+        #expect(style.styleManeuvers.count == 5 && style.category == .fighting)
+    }
+
+    @Test func aLodgeWithRulesGetsItsSection() {
+        let character = ForsakenCharacter()
+        #expect(!character.sheetSections.contains(.lodge))
+        character.lodgeSource = .catalog("eaters-of-the-dead")
+        #expect(character.lodgeWithRules == nil && !character.sheetSections.contains(.lodge))
+        character.lodgeSource = .catalog("the-pack-eaters-of-the-dead")
+        #expect(character.lodgeWithRules?.blessing != nil && character.sheetSections.contains(.lodge))
+    }
+
+    @Test func lodgeMeritsAskForTheLodge() throws {
+        let character = ForsakenCharacter()
+        let sorcery = try #require(catalog.merits.entry("lodge-sorcery"))
+        #expect(character.unmetPrerequisites(for: sorcery).map(\.description) == [
+            "Lodge: Lodge of the Screaming Moon, The Temple of Apollo or The Eaters of the Dead (three times the cost otherwise)"])
+        character.lodgeSource = .catalog("temple-of-apollo")
+        #expect(character.unmetPrerequisites(for: sorcery).isEmpty)
+        // A Merit no lodge teaches asks for none
+        #expect(character.prerequisiteChecks(for: try #require(catalog.merits.entry("fast-reflexes"))).allSatisfy { !$0.description.hasPrefix("Lodge") })
+    }
+
+    @Test func lodgeLoreCostsOutsidersThreeTimesAsMuch() throws {
+        let character = ForsakenCharacter()
+        character.xpMode = true
+        character.experiences = 40
+
+        // An outsider pays 3 a dot for a lodge's Merit, and 3 a dot for its rite
+        var before = character.traitSnapshot
+        let armory = Merit(source: .catalog("lodge-armory"), rating: 3)
+        character.merits.append(armory)
+        character.rites.append(OwnedRite(source: .catalog("banshee-howl")))
+        character.recordChanges(since: before)
+        #expect(character.changeLog.map(\.experiences) == [9, 9])
+
+        // Lowering the Merit gives back what was paid, even after joining
+        character.lodgeSource = .catalog("garm")
+        before = character.traitSnapshot
+        character.merits.removeAll { $0.id == armory.id }
+        character.recordChanges(since: before)
+        #expect(character.changeLog.last?.experiences == -9)
+
+        // An adherent pays the usual cost: 1 a dot. Another lodge's rite is still dear
+        before = character.traitSnapshot
+        character.merits.append(Merit(source: .catalog("lodge-armory"), rating: 5))
+        character.rites.append(OwnedRite(source: .catalog("carrion-feast")))
+        character.recordChanges(since: before)
+        #expect(character.changeLog.suffix(2).map(\.experiences) == [5, 9])
+
+        // A Merit that isn't lodge lore costs what it always did
+        before = character.traitSnapshot
+        character.merits.append(Merit(source: .catalog("fast-reflexes"), rating: 2))
+        character.recordChanges(since: before)
+        #expect(character.changeLog.last?.experiences == 2)
+    }
+}
+
+@MainActor
 struct SectionHeadingTests {
     /// Flat Earth Scribe can't ship in the app, so every heading needs its picture from
     /// scripts/render-forsaken-headings.swift.
@@ -813,7 +915,9 @@ struct SectionHeadingTests {
         rahu.auspice = "Rahu"
         let pure = ForsakenCharacter.guided()
         pure.tribe = "Fire-Touched"
-        let sections = Set([blank, rahu, pure].flatMap(\.sheetSections))
+        let adherent = ForsakenCharacter()
+        adherent.lodgeSource = .catalog("garm")
+        let sections = Set([blank, rahu, pure, adherent].flatMap(\.sheetSections))
         for section in sections {
             #expect(UIImage(named: "Heading " + section.heading) != nil, "\(section.heading)")
         }

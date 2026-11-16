@@ -296,6 +296,13 @@ final class ForsakenCharacter: Codable {
     }
 }
 
+extension [String] {
+    /// "A", "A or B", "A, B or C": the sheet's own wording, whatever the device's language does with lists.
+    func listed(_ conjunction: String) -> String {
+        count < 2 ? first ?? "" : dropLast().joined(separator: ", ") + " \(conjunction) " + self[count - 1]
+    }
+}
+
 // MARK: - Details by name
 
 extension ForsakenCharacter {
@@ -331,6 +338,25 @@ extension ForsakenCharacter {
 
     var tribeEntry: TribeEntry? {
         tribeSource.catalogID.flatMap { Catalog.bundled.tribes.entry($0) }
+    }
+
+    var lodgeEntry: LodgeEntry? {
+        lodgeSource.catalogID.flatMap { Catalog.bundled.lodges.entry($0) }
+    }
+
+    /// Lodge lore costs a werewolf outside the lodge three times the Experiences (The Pack, p. 80). `lodges` are
+    /// those that teach the Merit or rite; none means it isn't lodge lore.
+    func lodgeLoreCostMultiplier(_ lodges: [LodgeEntry]) -> Int {
+        lodges.isEmpty || isAdherent(ofAny: lodges) ? 1 : 3
+    }
+
+    func isAdherent(ofAny lodges: [LodgeEntry]) -> Bool {
+        lodges.contains { lodgeSource == .catalog($0.id) }
+    }
+
+    /// The lodges that teach a rite the character knows or might learn.
+    func lodges(teaching rite: OwnedRite) -> [LodgeEntry] {
+        rite.source.catalogID.map { Catalog.bundled.lodges(teachingRite: $0) } ?? []
     }
 
     var kuruthTriggerSet: KuruthTriggerSetEntry? {
@@ -528,7 +554,12 @@ extension ForsakenCharacter: SheetCharacter {
         // Others in the catalog, e.g. Bale Hound lodges and the Urighur, aren't offered to player characters yet
         let own = entry.noteOptions.filter { ($0.group ?? ownGroup) == ownGroup }
         let other = entry.noteOptions.filter { $0.group == otherGroup }
+        // A ritemaster may give their lodge's benefit in place of their tribe's, to everyone on the hunt (The Pack, p. 80)
+        let lodges = entry.noteOptions.filter { $0.group == "lodge" }
         var groups = [ConditionNoteOptionGroup(title: isPure ? "Pure Tribes" : "Forsaken Tribes", options: own)]
+        if !lodges.isEmpty {
+            groups.append(ConditionNoteOptionGroup(title: "Lodges", options: lodges))
+        }
         if !other.isEmpty {
             groups.append(ConditionNoteOptionGroup(title: isPure ? "Forsaken Tribes" : "Pure Tribes",
                                                    warning: isPure ? "The Forsaken are your enemies" : "The Pure are your enemies",
@@ -555,10 +586,14 @@ extension ForsakenCharacter: SheetCharacter {
         }
     }
 
-    /// The shared prerequisites, and Forsaken's: Renown, Primal Urge, Harmony, tribe and auspice.
+    /// The shared prerequisites, and Forsaken's: Renown, Primal Urge, Harmony, tribe and auspice. A Merit a lodge
+    /// teaches also asks for the lodge, though a werewolf outside it can learn it at three times the cost.
     func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck] {
         let catalog = Catalog.bundled
-        return prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf) { prerequisite in
+        let lodges = catalog.lodges(teachingMerit: entry.id)
+        let lodgeCheck = lodges.isEmpty ? [] : [PrerequisiteCheck(
+            description: "\(Self.lodgeRequirement(lodges)) (three times the cost otherwise)", isMet: isAdherent(ofAny: lodges))]
+        return lodgeCheck + prerequisiteChecks(entry.prerequisites, anyOf: entry.prerequisitesAnyOf) { prerequisite in
             if let common = commonCheck(prerequisite, merits: catalog.merits) {
                 return common
             }
@@ -619,8 +654,17 @@ extension ForsakenCharacter: ExperienceCharacter {
         return snapshot
     }
 
-    /// The book's Experience costs (pp. 84–85). A Wolf Gift Facet costs 1 (decided 2026-11-12).
+    /// e.g. "Lodge: Lodge of the Screaming Moon or The Temple of Apollo".
+    static func lodgeRequirement(_ lodges: [LodgeEntry]) -> String {
+        "Lodge: " + lodges.map(\.name).listed("or")
+    }
+
+    /// The book's Experience costs (pp. 84–85). A Wolf Gift Facet costs 1 (decided 2026-11-12). A lodge's Merits and
+    /// rites cost a werewolf outside it three times as much (The Pack, p. 80).
     func experienceCost(of key: TraitKey, level: Int) -> Int {
+        if key.kind == .merit, let id = merits.first(where: { $0.id.uuidString == key.id })?.source.catalogID {
+            return lodgeLoreCostMultiplier(Catalog.bundled.lodges(teachingMerit: id))
+        }
         if let shared = sharedExperienceCost(of: key.kind) {
             return shared
         }
@@ -628,7 +672,7 @@ extension ForsakenCharacter: ExperienceCharacter {
         case .renown:
             return 3
         case .rite:
-            return 1
+            return rites.first { $0.id.uuidString == key.id }.map { lodgeLoreCostMultiplier(lodges(teaching: $0)) } ?? 1
         case .primalUrge:
             return 5
         case .facet:

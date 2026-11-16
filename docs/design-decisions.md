@@ -239,3 +239,36 @@ suit the chosen era.
 When a character loses Health boxes, e.g. a werewolf shifting to a smaller form, the wounds in them aren't lost. Each
 one upgrades the least severe wound left, from the left: bashing to lethal, lethal to aggravated (p. 172). A wound
 finds an empty box first. The sheet does this as the form changes, and the wounds don't come back if the boxes do.
+
+## The sheet works out Experience costs (2026-11-16)
+
+In XP Mode the sheet charges what the rules say, as accurately as it can, and doesn't leave a cost for the player to
+adjust by hand. Where a cost depends on who the character is, the sheet applies it.
+
+## Werewolf: lodges with rules (2026-11-16)
+
+- **What a lodge gives.** The Pack's lodges mark each adherent with a Blessing, one more Aspiration and a Ban
+  (p. 80). A character in such a lodge gets a Lodge section, after the Auspice Benefit, with those three, the lodge's
+  Sacred Hunt and what it teaches. The core book's lodges are story only and get no section.
+- **Who can join.** The books describe who usually joins a lodge; they set no requirement. The lodge's summary says
+  who they are, and the picker offers every lodge to every character.
+- **The same lodge in two books.** The Eaters of the Dead are in the core book as story only and in The Pack with
+  rules. They are listed under both, so a table that doesn't use The Pack still has the core book's.
+- **Lodge lore.** A Merit or rite a lodge teaches shows that lodge as a prerequisite. A werewolf outside it can still
+  learn it, and XP Mode charges three times the usual cost (p. 80): 3 Experiences a dot. What was paid is what's
+  refunded, whatever the character's lodge is by then.
+- **Sacred Hunt.** A ritemaster may give their lodge's benefit in place of their tribe's, to everyone on the hunt. So
+  Siskur-Dah offers the lodges to every character, in a group of their own.
+
+## Werewolf: Ghost Wolves follow Chapter One (2026-11-16)
+
+Where the core book's Chapter Three conflicts with Chapter One about Ghost Wolves, Chapter One is right (p. 50). They
+start with one Shadow Facet, and can't start with their Moon Gift's second Facet. A dot of auspice Renown always
+brings its Moon Gift Facet (p. 115), so guided creation keeps a Ghost Wolf's auspice Renown at 1: their other Renown
+dot goes elsewhere.
+
+## Dark Eras is cited by the full books' pages (2026-11-16)
+
+As in Requiem, Dark Eras content is cited to the collected books (Dark Eras, Dark Eras Companion, Dark Eras 2) with
+their page numbers, not to the chapters sold on their own, whose pages differ. The user supplies the pages.
+

@@ -18,7 +18,7 @@ import CoreText
 /// Every section heading the Forsaken sheet can show, as `SheetSection.heading` spells it.
 let headings = [
     "Character Creation", "Character", "Form", "Advantages", "Attributes", "Skills", "Merits", "Totem", "Renown",
-    "Auspice Benefit", "Moon Gifts", "Shadow Gifts", "Wolf Gifts", "Rites", "Fetishes", "Aspirations", "Health",
+    "Auspice Benefit", "Lodge", "Moon Gifts", "Shadow Gifts", "Wolf Gifts", "Rites", "Fetishes", "Aspirations", "Health",
     "Willpower", "Primal Urge", "Harmony", "Kuruth Triggers", "Experience", "Conditions",
 ]
 

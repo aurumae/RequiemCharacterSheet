@@ -1550,3 +1550,36 @@ Forsaken 53. Not checked by hand on the simulator.
 
 **Follow-up (Android):** none for Requiem. For `:forsaken` later: the Health rule belongs in `:core`, and Tilts are a
 catalog kind to load.
+
+## 2026-11-16 23:55 UTC · Claude (iOS) · The Pack: lodges with rules, and lodge lore's triple cost
+
+**Decisions (user)**, in `docs/design-decisions.md`: the sheet works out Experience costs itself; lodges with rules
+(who can join, the same lodge in two books, lodge lore, the Sacred Hunt); Ghost Wolves follow Chapter One; Dark Eras is
+cited by the full books' pages, which the user will supply.
+
+**Forsaken catalogs** (format in `docs/forsaken-catalog-format.md`):
+- New book `ForsakenCharacterSheet/Catalogs/the-pack.json` (`the-pack`): five lodges, six Merits, two rites, five
+  fetishes and the Essence Bleed Tilt. It loads after Shunned by the Moon. Pack Merits, Pack Tactics and Hunting Nature
+  are left out: the app has no Pack section.
+- Lodge entries may have `totem`, `blessing`, `aspiration`, `ban`, `tools`, and what they teach: `merits`, `rites`,
+  `fetishes` (ids). A Merit or rite any lodge lists is lodge lore.
+- The Eaters of the Dead are in twice: `eaters-of-the-dead` (core, story only) and `the-pack-eaters-of-the-dead`.
+- `wtf2e-core.json`: Siskur-Dah has five more `noteOptions` in the group `lodge`, cited to The Pack, each with its
+  lodge's id.
+
+**Forsaken rules and sheet:**
+- A character in a lodge with rules gets a Lodge section after the Auspice Benefit: Blessing, Aspiration, Ban, Sacred
+  Hunt and what the lodge teaches. New heading picture, also in `shared/forsaken-headings/` (`heading_lodge.xml`,
+  `headings.json`).
+- Lodge lore shows its lodge as a prerequisite, and in XP Mode costs a werewolf outside the lodge 3 Experiences a dot
+  (The Pack, p. 80). Refunds give back what was paid.
+- Siskur-Dah offers the lodges to every character, in a group of their own.
+- Guided creation keeps a Ghost Wolf's auspice Renown at 1, since a second dot would bring the Moon Gift's second
+  Facet (pp. 50, 115).
+
+No save-format change. No change to Requiem or to `Chronicles/`.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 58.
+The Lodge section was rendered from a test and looked at; the pickers weren't tried by hand.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.

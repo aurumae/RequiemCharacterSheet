@@ -13,6 +13,7 @@ extension SheetSection {
     static let form = SheetSection("form", title: "Form")
     static let renown = SheetSection("renown", title: "Renown")
     static let auspiceBenefit = SheetSection("auspiceBenefit", title: "Auspice Benefit")
+    static let lodge = SheetSection("lodge", title: "Lodge")
     static let moonGifts = SheetSection("moonGifts", title: "Moon Gifts")
     static let shadowGifts = SheetSection("shadowGifts", title: "Shadow Gifts")
     static let wolfGifts = SheetSection("wolfGifts", title: "Wolf Gifts")
@@ -227,7 +228,8 @@ struct ForsakenCharacterInfoView: View {
                     let limits = (lodge.auspices ?? []).compactMap { Catalog.bundled.auspices.entry($0)?.name }
                         + (lodge.tribes ?? []).compactMap { Catalog.bundled.tribes.entry($0)?.name }
                     return CatalogPickerItem(id: lodge.id, name: lodge.name, summary: lodge.summary,
-                                             details: limits.isEmpty ? [] : ["\(limits.joined(separator: ", ")) only"],
+                                             details: (limits.isEmpty ? [] : ["\(limits.joined(separator: ", ")) only"])
+                                                 + lodge.marks.map { "\($0.label): \($0.value)" },
                                              citation: lodge.source.citation())
                 }
             },
@@ -235,7 +237,8 @@ struct ForsakenCharacterInfoView: View {
             noneTitle: "No Lodge",
             detail: {
                 character.lodgeSource.catalogID.flatMap { catalog.entry($0) }.map {
-                    CatalogChoiceDetail(title: $0.name, summary: $0.summary, citation: $0.source.citation())
+                    CatalogChoiceDetail(title: $0.name, summary: $0.summary, citation: $0.source.citation(),
+                                        facts: ($0.totem.map { [DetailFact(label: "Totem", value: $0)] } ?? []) + $0.marks)
                 }
             },
             choose: { id in character.lodgeSource = id.map { .catalog($0) } ?? .custom("") }
@@ -470,6 +473,70 @@ struct AuspiceBenefitView: View {
             .padding(.vertical, 4)
             .accessibilityElement(children: .combine)
         }
+    }
+}
+
+// MARK: - Lodge
+
+extension LodgeEntry {
+    /// The three marks of the lodge's totem bond (The Pack, p. 80).
+    var marks: [DetailFact] {
+        [blessing.map { DetailFact(label: "Blessing", value: $0) },
+         aspiration.map { DetailFact(label: "Aspiration", value: $0) },
+         ban.map { DetailFact(label: "Ban", value: $0) }].compactMap { $0 }
+    }
+
+    /// The benefit the lodge's ritemaster can give the Sacred Hunt in place of their tribe's.
+    var sacredHunt: ConditionNoteOption? {
+        Catalog.bundled.conditions.entry("siskur-dah")?.noteOptions.first { $0.group == "lodge" && $0.id == id }
+    }
+
+    /// What the lodge teaches, by name, e.g. "Lodge Armory, Uma Suguthkuth, Predator's Doom".
+    var lore: [String] {
+        let catalog = Catalog.bundled
+        return (merits ?? []).compactMap { catalog.merits.entry($0)?.name }
+            + (rites ?? []).compactMap { catalog.rites.entry($0)?.name }
+            + (fetishes ?? []).compactMap { catalog.fetishes.entry($0)?.name }
+    }
+}
+
+/// What a lodge with rules gives its adherent, kept in view like the auspice's benefit: the Blessing, the extra
+/// Aspiration and the Ban, its Sacred Hunt and what it teaches.
+struct LodgeView: View {
+    @Environment(\.theme) private var theme
+    let lodge: LodgeEntry
+
+    var body: some View {
+        SheetSectionBlock(.lodge) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(lodge.name)
+                    .themedText(.traitName)
+                ForEach(lodge.marks + facts) { fact in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(fact.label)
+                            .themedText(.subsectionHeader)
+                        Text(fact.value)
+                            .themedText(.body)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+                Text("Breaking the ban brings the Ban Condition; breaking it again under that Condition takes the Blessing away while it lasts. Lodge lore costs a werewolf outside the lodge three times the Experiences.")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+                Text(lodge.source.citation())
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+            .padding(.vertical, 4)
+        }
+    }
+
+    private var facts: [DetailFact] {
+        let lore = lodge.lore.isEmpty ? nil : lodge.lore.listed("and") + "."
+        return [lodge.sacredHunt.map { DetailFact(label: "Sacred Hunt", value: $0.summary) },
+                [lore, lodge.tools].compactMap { $0 }.isEmpty ? nil
+                    : DetailFact(label: "Lodge Lore", value: [lore, lodge.tools].compactMap { $0 }.joined(separator: " "))]
+            .compactMap { $0 }
     }
 }
 
@@ -1014,8 +1081,11 @@ struct RitesView: View {
                         CatalogPickerGroup("Wolf Rites", rites.filter { $0.kind == .wolf }),
                         CatalogPickerGroup("Pack Rites", rites.filter { $0.kind == .pack }),
                     ]) { rite in
-                        CatalogPickerItem(id: rite.id, name: rite.name, dots: rite.rating, summary: rite.summary,
+                        let lodges = Catalog.bundled.lodges(teachingRite: rite.id)
+                        return CatalogPickerItem(id: rite.id, name: rite.name, dots: rite.rating, summary: rite.summary,
                                           details: rite.targetSuccesses.map { ["\($0) successes"] } ?? [],
+                                          warning: lodges.isEmpty || character.isAdherent(ofAny: lodges) ? nil
+                                              : "Requires \(ForsakenCharacter.lodgeRequirement(lodges)) (three times the cost otherwise)",
                                           citation: rite.source.citation(), isOwned: owned.contains(rite.id),
                                           unavailableReason: character.creationAllows(.rite(dots: rite.rating))
                                               ? nil : "Doesn't fit the starting Rites and Merit dots")
@@ -1035,10 +1105,19 @@ struct RitesView: View {
             if let rite = shownRite {
                 CatalogDetailView(title: rite.name, summary: rite.summary, citation: rite.source.citation(), facts: [
                     DetailFact(label: "Rite", value: "\(rite.kind == .wolf ? "Wolf" : "Pack") rite, \(String(repeating: "●", count: rite.rating))"),
-                ] + [rite.targetSuccesses.map { DetailFact(label: "Target", value: "\($0) successes") },
-                     rite.duration.map { DetailFact(label: "Duration", value: $0) }].compactMap { $0 })
+                ] + [rite.dicePool.map { DetailFact(label: "Dice Pool", value: $0) },
+                     rite.targetSuccesses.map { DetailFact(label: "Target", value: "\($0) successes") },
+                     rite.duration.map { DetailFact(label: "Duration", value: $0) },
+                     lodgeFact(for: rite)].compactMap { $0 })
             }
         }
+    }
+
+    /// e.g. "Lodge of the Screaming Moon", for a rite a lodge teaches.
+    private func lodgeFact(for rite: RiteEntry) -> DetailFact? {
+        let lodges = Catalog.bundled.lodges(teachingRite: rite.id)
+        return lodges.isEmpty ? nil : DetailFact(label: "Lodge", value: lodges.map(\.name).listed("or")
+            + ". A werewolf outside it pays three times the Experiences.")
     }
 
     @ViewBuilder

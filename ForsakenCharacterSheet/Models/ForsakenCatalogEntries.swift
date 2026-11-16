@@ -86,6 +86,22 @@ struct LodgeEntry: CatalogEntry {
     let auspices: [CatalogEntryID]?
     let requirements: String?
     let benefit: String?
+    /// A lodge with rules (The Pack, p. 80) marks every adherent three ways: a Blessing, one more Aspiration and a
+    /// Ban. The core book's lodges are story only and have none.
+    let totem: String?
+    let blessing: String?
+    let aspiration: String?
+    let ban: String?
+    /// What's particular to this lodge's lore, e.g. the Influences its Lodge Sorcery offers.
+    let tools: String?
+    /// The Merits, rites and fetishes the lodge teaches its adherents.
+    let merits: [CatalogEntryID]?
+    let rites: [CatalogEntryID]?
+    let fetishes: [CatalogEntryID]?
+
+    var hasRules: Bool {
+        blessing != nil || aspiration != nil || ban != nil
+    }
 }
 
 /// A Blood or Bone archetype.

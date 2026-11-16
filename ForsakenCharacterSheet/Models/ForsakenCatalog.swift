@@ -46,6 +46,15 @@ struct Catalog {
         books.first { $0.id == id }
     }
 
+    /// The lodges that teach a Merit to their adherents; none for a Merit open to anyone.
+    func lodges(teachingMerit id: CatalogEntryID) -> [LodgeEntry] {
+        lodges.all.filter { $0.merits?.contains(id) ?? false }
+    }
+
+    func lodges(teachingRite id: CatalogEntryID) -> [LodgeEntry] {
+        lodges.all.filter { $0.rites?.contains(id) ?? false }
+    }
+
     /// A Gift Facet by its id, with its Gift.
     func facet(_ id: CatalogEntryID) -> (gift: GiftEntry, facet: GiftEntry.Facet)? {
         for gift in gifts.all {

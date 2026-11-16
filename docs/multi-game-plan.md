@@ -162,7 +162,7 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 
 ### Before the App Store (user, 2026-11-16)
 
-1. Add **The Pack** as a book.
+1. Add **The Pack** as a book. Done 2026-11-16, as far as it reaches one character: the lodges and what they teach.
 2. Go through the Werewolf chapters of **Dark Eras** and the rest of the **core book**, and add any mechanics the
    catalogs lack. `docs/forsaken-content-audit.md` lists what was found.
 3. Settle the save format (it is still a draft at schema 1), then the App Store listing and screenshots.

@@ -89,6 +89,7 @@ enum CreationProblem: Hashable {
     case renownAboveTwo
     case renownMissing(String)
     case pureRenownElsewhere
+    case ghostWolfMoonGift(renown: String)
     case tooManyShadowFacets(allowed: Int)
     case shadowFacetOutsideAffinities
     case shadowFacetsFromOneGift
@@ -128,6 +129,8 @@ enum CreationProblem: Hashable {
             "\(what) needs a dot"
         case .pureRenownElsewhere:
             "The Pure's second Renown dot goes in the tribe's primary or secondary Renown"
+        case .ghostWolfMoonGift(let renown):
+            "Ghost Wolves can't start with their Moon Gift's second Facet, so \(renown) starts at 1"
         case .tooManyShadowFacets(let allowed):
             allowed == 1 ? "Ghost Wolves start with one Shadow Gift Facet" : "More than \(allowed) Shadow Gift Facets"
         case .shadowFacetOutsideAffinities:
@@ -264,6 +267,11 @@ extension ForsakenCharacter {
             if let tribe = tribeEntry, let tribal = tribe.renown, renownLevels[tribal] == 0 {
                 report.problems.insert(.renownMissing("\(tribe.name) Renown (\(tribal.name))"))
             }
+        }
+        // A dot of auspice Renown always brings its Moon Gift Facet (p. 115), and a Ghost Wolf can't start with the
+        // second (p. 50), so their other dot goes elsewhere
+        if tribeEntry?.kind == .ghostWolf, let auspice = effectiveAuspice, (renownLevels[auspice.renown] ?? 0) > 1 {
+            report.problems.insert(.ghostWolfMoonGift(renown: auspice.renown.name))
         }
         if isPure, let tribe = tribeEntry, let primary = tribe.renown {
             let allowedRenown = Set([primary] + (tribe.secondaryRenown ?? []))
@@ -537,7 +545,8 @@ extension ForsakenCharacter {
             + " · Rites \(report.rites.used) of \(report.rites.allowed)"
         let traitProblems: Set<CreationProblem> = Set(problems.filter {
             switch $0 {
-            case .tooManyRenownDots, .renownAboveTwo, .renownMissing, .pureRenownElsewhere, .harmonyNotSeven: true
+            case .tooManyRenownDots, .renownAboveTwo, .renownMissing, .pureRenownElsewhere, .ghostWolfMoonGift,
+                 .harmonyNotSeven: true
             default: false
             }
         })

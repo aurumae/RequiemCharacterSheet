@@ -61,6 +61,12 @@
       "width" : 220
     },
     {
+      "drawable" : "heading_lodge",
+      "heading" : "Lodge",
+      "height" : 32,
+      "width" : 80
+    },
+    {
       "drawable" : "heading_moon_gifts",
       "heading" : "Moon Gifts",
       "height" : 32,
