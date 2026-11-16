@@ -16,6 +16,15 @@ protocol SheetCharacter: ExperienceCharacter, Observable {
     var skillRatingRange: ClosedRange<Int> { get }
     /// An Attribute's dots with any bonuses, e.g. from a Discipline.
     func totalAttributeRating(for attribute: Attribute) -> Int
+    /// The dots of the total that count; any more are shown faded, e.g. a totem's second Strength dot past the
+    /// maximum.
+    func countedAttributeRating(for attribute: Attribute) -> Int
+    /// Dots a Skill gets beyond those bought, e.g. from a pack totem.
+    func skillBonus(for skill: Skill) -> Int
+    /// The dots of the Skill's total that count.
+    func countedSkillRating(for skill: Skill) -> Int
+    /// Specialties the character has from elsewhere, e.g. a pack totem, shown with their own but not editable.
+    func grantedSpecialties(for skill: Skill) -> [String]
     /// The highest rating the player may set a trait to now, no higher than `cap`, e.g. less during guided creation.
     func editableMaximum(for key: TraitKey, upTo cap: Int) -> Int
     /// The lowest rating an Attribute can be set to.
@@ -92,6 +101,22 @@ extension SheetCharacter {
 
     func totalAttributeRating(for attribute: Attribute) -> Int {
         attribute.rating
+    }
+
+    func countedAttributeRating(for attribute: Attribute) -> Int {
+        totalAttributeRating(for: attribute)
+    }
+
+    func skillBonus(for skill: Skill) -> Int {
+        0
+    }
+
+    func countedSkillRating(for skill: Skill) -> Int {
+        skill.rating + skillBonus(for: skill)
+    }
+
+    func grantedSpecialties(for skill: Skill) -> [String] {
+        []
     }
 
     func editableMaximum(for key: TraitKey, upTo cap: Int) -> Int {

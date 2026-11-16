@@ -414,6 +414,51 @@ struct WerewolfRulesTests {
         #expect(loaded.armor == 2)
     }
 
+    @Test func bonusDotsPastTheLimitStackBySource() throws {
+        // The user's ruling: each source lets a trait go one past the maximum, and sources stack; a totem counts once
+        let character = ForsakenCharacter()
+        let strength = try #require(character.attribute(.strength))
+        strength.rating = 5
+        character.totem.advantages = [TotemAdvantage(kind: .attribute, target: "strength", dots: 2)]
+        #expect(character.totalAttributeRating(for: strength) == 7)
+        #expect(character.countedAttributeRating(for: strength) == 6)
+        character.merits.append(Merit(source: .catalog("embodiment-of-the-firstborn"), qualifier: "Strength", rating: 5))
+        #expect(character.totalAttributeRating(for: strength) == 8)
+        #expect(character.countedAttributeRating(for: strength) == 7)
+        character.primalUrge = 6
+        #expect(character.countedAttributeRating(for: strength) == 8)
+        strength.rating = 6
+        #expect(character.totalAttributeRating(for: strength) == 9)
+        #expect(character.countedAttributeRating(for: strength) == 8)
+        // The form's changes come on top
+        character.form = .gauru
+        #expect(character.countedAttributeRating(for: strength) == 11)
+    }
+
+    @Test func totemAdvantagesCostExperiencesFromThePacksPoints() throws {
+        var totem = Totem()
+        #expect(totem.experienceBudget == 0)
+        for (points, budget) in [(1, 1), (8, 1), (9, 3), (14, 3), (15, 5), (20, 5), (21, 10)] {
+            totem.packPoints = points
+            #expect(totem.experienceBudget == budget)
+        }
+        totem.advantages = [TotemAdvantage(kind: .attribute, target: "strength"),
+                            TotemAdvantage(kind: .merit, target: "fleet-of-foot")]
+        #expect(totem.experiencesSpent == 5)
+        let character = ForsakenCharacter()
+        character.totem = totem
+        character.totem.advantages.append(TotemAdvantage(kind: .skill, target: "brawl"))
+        character.totem.advantages.append(TotemAdvantage(kind: .specialty, target: "brawl", detail: "Claws"))
+        let brawl = try #require(character.skill(.brawl))
+        brawl.rating = 5
+        #expect(character.countedSkillRating(for: brawl) == 6)
+        #expect(character.grantedSpecialties(for: brawl) == ["Claws"])
+        // The totem's Strength dot and Fleet of Foot both add to Speed
+        #expect(character.speed(in: .hishu) == (1 + 1) + 1 + 5 + 1)
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.totem == character.totem)
+    }
+
     @Test func pureHuntersAspectLoadsBackAsSaved() throws {
         let character = ForsakenCharacter()
         character.tribe = "Fire-Touched"

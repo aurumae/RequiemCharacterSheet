@@ -1352,3 +1352,16 @@ Merit effects (Fast Reflexes, Fleet of Foot, Giant, Defensive Combat) count. Sis
 the Bale Hound lodges' and the Urighur's effects (groups `bale-hound`, `urighur`); they aren't offered yet.
 
 **Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 30.
+
+## 2026-11-16 · Claude (iOS) · Forsaken pack totem and dots past the limit
+
+**Shared UI:** `DotsRatingView` takes an optional `countedRating`; filled dots above it are faded (shown but not
+counted). `SheetCharacter` gains `countedAttributeRating`, `skillBonus`, `countedSkillRating` and
+`grantedSpecialties`, all defaulting to Requiem's current behaviour, so Requiem's sheet doesn't change. Skill rows
+draw bonus dots in ink like Attributes, and list granted Specialties muted under the player's own.
+
+**Forsaken:** a Totem section after Merits (new save key `totem`: `name`, `aspiration`, `ban`, `packPoints`,
+`advantages` of `{ id, kind: attribute|skill|specialty|merit, target, detail, dots }`). New design decisions:
+stacking over-limit sources, and the totem.
+
+**Validation:** Forsaken 32 passed.

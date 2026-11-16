@@ -291,3 +291,99 @@ final class OwnedFetish: Identifiable, Codable {
         note = try container.decode(.note, default: "")
     }
 }
+
+// MARK: - Totem
+
+/// The pack's totem (pp. 92–93): a spirit whose Aspiration every pack member shares and whose ban they all keep. The
+/// pack's combined Totem points buy advantages every member gains, which can break the usual rules.
+struct Totem: Codable, Equatable {
+    var name = ""
+    var aspiration = ""
+    var ban = ""
+    /// Every pack member's Totem dots added up. Players enter it, as only their own character is on the sheet.
+    var packPoints = 0
+    var advantages: [TotemAdvantage] = []
+
+    /// The Experiences the pack has to buy advantages with (p. 92).
+    var experienceBudget: Int {
+        switch packPoints {
+        case ..<1: 0
+        case 1...8: 1
+        case 9...14: 3
+        case 15...20: 5
+        default: 10
+        }
+    }
+
+    /// The Experiences the advantages cost, as if bought by a werewolf (p. 84).
+    var experiencesSpent: Int {
+        advantages.reduce(0) { $0 + $1.cost }
+    }
+
+    /// Dots the advantages add to an Attribute or Skill.
+    func dots(for kind: TotemAdvantage.Kind, _ target: String) -> Int {
+        advantages.filter { $0.kind == kind && $0.target == target }.reduce(0) { $0 + $1.dots }
+    }
+
+    init() {}
+
+    enum CodingKeys: CodingKey {
+        case name, aspiration, ban, packPoints, advantages
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(.name, default: "")
+        aspiration = try container.decode(.aspiration, default: "")
+        ban = try container.decode(.ban, default: "")
+        packPoints = try container.decode(.packPoints, default: 0)
+        advantages = try container.decode(.advantages, default: [])
+    }
+}
+
+/// A trait the totem grants every pack member: Attribute or Skill dots, a Skill Specialty, or a Merit, whether or not
+/// they meet its prerequisites.
+struct TotemAdvantage: Codable, Equatable, Identifiable {
+    enum Kind: String, Codable {
+        case attribute, skill, specialty, merit
+    }
+
+    var id = UUID()
+    var kind: Kind
+    /// The Attribute (e.g. "strength"), the Skill's id (also for a Specialty), or the Merit's catalog id or, for a
+    /// Merit not in the catalog, its name.
+    var target: String
+    /// The Specialty's name, or the Merit's qualifier.
+    var detail = ""
+    var dots = 1
+
+    /// As a werewolf buys it: 4 per Attribute dot, 2 per Skill dot, 1 per Specialty or Merit dot.
+    var cost: Int {
+        switch kind {
+        case .attribute: 4 * dots
+        case .skill: 2 * dots
+        case .specialty: 1
+        case .merit: dots
+        }
+    }
+
+    enum CodingKeys: CodingKey {
+        case id, kind, target, detail, dots
+    }
+
+    init(kind: Kind, target: String, detail: String = "", dots: Int = 1) {
+        self.kind = kind
+        self.target = target
+        self.detail = detail
+        self.dots = dots
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(.id, default: UUID())
+        kind = try container.decode(Kind.self, forKey: .kind)
+        target = try container.decode(String.self, forKey: .target)
+        detail = try container.decode(.detail, default: "")
+        dots = try container.decode(.dots, default: 1)
+    }
+}

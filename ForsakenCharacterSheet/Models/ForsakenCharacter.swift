@@ -60,6 +60,7 @@ final class ForsakenCharacter: Codable {
     var facets: [OwnedFacet]
     var rites: [OwnedRite]
     var fetishes: [OwnedFetish]
+    var totem: Totem
     /// Size in Hishu form.
     var size: Int
     /// Armor the player enters, e.g. from worn armor or a fetish.
@@ -115,6 +116,7 @@ final class ForsakenCharacter: Codable {
         facets = []
         rites = []
         fetishes = []
+        totem = Totem()
         size = 5
         armor = 0
 
@@ -136,7 +138,7 @@ final class ForsakenCharacter: Codable {
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
              renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggerSet, kuruthTriggers, form,
-             moonGift, moonFacets, facets, rites, fetishes, size, armor,
+             moonGift, moonFacets, facets, rites, fetishes, totem, size, armor,
              healthTrack, willpowerTrack, beats, experiences, xpMode, changeLog, paidDots, showsUnofficialContent
     }
 
@@ -188,6 +190,9 @@ final class ForsakenCharacter: Codable {
         try container.encode(facets, forKey: .facets)
         try container.encode(rites, forKey: .rites)
         try container.encode(fetishes, forKey: .fetishes)
+        if totem != Totem() {
+            try container.encode(totem, forKey: .totem)
+        }
         try container.encode(size, forKey: .size)
         try container.encode(armor, forKey: .armor)
 
@@ -252,6 +257,7 @@ final class ForsakenCharacter: Codable {
         facets = savedFacets.filter { $0.source.catalogID.flatMap { catalog.facet($0)?.gift.kind } != .moon }
         rites = try container.decode(.rites, default: [])
         fetishes = try container.decode(.fetishes, default: [])
+        totem = try container.decode(.totem, default: Totem())
         size = try container.decode(.size, default: 5)
         armor = try container.decode(.armor, default: 0)
 
@@ -420,8 +426,28 @@ extension ForsakenCharacter: SheetCharacter {
     }
 
     /// The Attribute in the current form, e.g. Strength +3 in Gauru.
+    /// Every dot on the sheet: those bought, those from the totem and Embodiment of the Firstborn, and the form's.
     func totalAttributeRating(for attribute: Attribute) -> Int {
-        max(attribute.rating + (form.attributeModifiers[attribute.kind] ?? 0), 0)
+        max(attribute.rating + attributeBonus(for: attribute.kind) + (form.attributeModifiers[attribute.kind] ?? 0), 0)
+    }
+
+    /// The dots that count: bonus dots may only go past the Primal Urge maximum as far as their sources allow.
+    func countedAttributeRating(for attribute: Attribute) -> Int {
+        max(countedRating(of: attribute.kind) + (form.attributeModifiers[attribute.kind] ?? 0), 0)
+    }
+
+    func skillBonus(for skill: Skill) -> Int {
+        totem.dots(for: .skill, skill.skillID.rawValue)
+    }
+
+    func countedSkillRating(for skill: Skill) -> Int {
+        let bonus = skillBonus(for: skill)
+        // A totem's Skill dots can go one past the maximum, however many it grants (p. 93)
+        return min(skill.rating + bonus, max(skill.rating, baseRatingCap + (bonus > 0 ? 1 : 0)))
+    }
+
+    func grantedSpecialties(for skill: Skill) -> [String] {
+        totem.advantages.filter { $0.kind == .specialty && $0.target == skill.skillID.rawValue && !$0.detail.isEmpty }.map(\.detail)
     }
 
     func attributeNote(for kind: AttributeKind) -> String? {
@@ -591,7 +617,7 @@ extension ForsakenCharacter: ExperienceCharacter {
 extension ForsakenCharacter: ChroniclesCharacter {
     /// Stamina + Size in the current form (p. 96).
     var health: Int {
-        (attribute(.stamina).map(totalAttributeRating) ?? 0) + effectiveSize
+        (attribute(.stamina).map(countedAttributeRating) ?? 0) + effectiveSize
     }
 }
 
@@ -637,16 +663,44 @@ extension ForsakenCharacter: ListedCharacter {
 extension ForsakenCharacter {
     /// The effects of the character's catalog Merits with at least one dot, e.g. Fast Reflexes on Initiative.
     private func meritEffectTotal(_ select: (Effect) -> Amount?) -> Int {
-        merits.filter { $0.rating > 0 }.reduce(0) { total, merit in
-            total + (merit.entry?.effects ?? []).reduce(0) { sum, effect in
-                sum + (select(effect)?.value(forRating: merit.rating) ?? 0)
+        let owned = merits.filter { $0.rating > 0 }.map { ($0.entry, $0.rating) }
+        // Merits the pack's totem grants count too
+        let granted = totem.advantages.filter { $0.kind == .merit }.map { (Catalog.bundled.merits.entry($0.target), $0.dots) }
+        return (owned + granted).reduce(0) { total, pair in
+            total + (pair.0?.effects ?? []).reduce(0) { sum, effect in
+                sum + (select(effect)?.value(forRating: pair.1) ?? 0)
             }
         }
     }
 
     /// An Attribute's dots in a form (pp. 96–97).
     func rating(_ kind: AttributeKind, in form: Form) -> Int {
-        max(rating(of: kind) + (form.attributeModifiers[kind] ?? 0), 0)
+        max(countedRating(of: kind) + (form.attributeModifiers[kind] ?? 0), 0)
+    }
+
+    /// Dots an Attribute gets beyond those bought: the totem's, and Embodiment of the Firstborn's.
+    func attributeBonus(for kind: AttributeKind) -> Int {
+        totem.dots(for: .attribute, kind.rawValue) + (embodiesFirstborn(in: kind) ? 1 : 0)
+    }
+
+    /// How far bonus dots may take an Attribute past the Primal Urge maximum. Each source allows one, and they stack
+    /// (the user's ruling, 2026-11-16), but a totem allows only one however many dots it grants.
+    func overLimitAllowance(for kind: AttributeKind) -> Int {
+        (totem.dots(for: .attribute, kind.rawValue) > 0 ? 1 : 0) + (embodiesFirstborn(in: kind) ? 1 : 0)
+    }
+
+    /// The Attribute's dots that count, before the form: bought and bonus dots, up to the maximum plus the allowance.
+    func countedRating(of kind: AttributeKind) -> Int {
+        let bought = rating(of: kind)
+        return min(bought + attributeBonus(for: kind), max(bought, baseRatingCap + overLimitAllowance(for: kind)))
+    }
+
+    /// Embodiment of the Firstborn adds a dot to the Attribute it names, which may go one past the maximum (p. 106).
+    private func embodiesFirstborn(in kind: AttributeKind) -> Bool {
+        merits.contains { merit in
+            merit.source == .catalog("embodiment-of-the-firstborn") && merit.rating > 0
+                && merit.qualifier.map { $0.caseInsensitiveCompare(kind.name) == .orderedSame } == true
+        }
     }
 
     /// Size in a form, with Merits such as Giant.

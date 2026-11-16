@@ -60,6 +60,7 @@ struct AttributeRowView<C: SheetCharacter>: View {
                 attribute.name,
                 rating: $attribute.rating,
                 totalRating: totalRating,
+                countedRating: character.countedAttributeRating(for: attribute),
                 maxRating: maximumVisibleRating,
                 maxEditableRating: maxEditableRating,
                 minEditableRating: character.minimumRating(of: attribute.kind),

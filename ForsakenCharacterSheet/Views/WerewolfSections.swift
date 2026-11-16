@@ -16,6 +16,7 @@ extension SheetSection {
     static let shadowGifts = SheetSection("shadowGifts", title: "Shadow Gifts")
     static let wolfGifts = SheetSection("wolfGifts", title: "Wolf Gifts")
     static let rites = SheetSection("rites", title: "Rites")
+    static let totem = SheetSection("totem", title: "Totem")
     static let fetishes = SheetSection("fetishes", title: "Fetishes")
     static let primalUrge = SheetSection("primalUrge", title: "Primal Urge")
     static let harmony = SheetSection("harmony", title: "Harmony")
@@ -691,6 +692,163 @@ private func facetFacts(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> [DetailF
     if let action = facet.action { facts.append(DetailFact(label: "Action", value: action.capitalized)) }
     if let duration = facet.duration { facts.append(DetailFact(label: "Duration", value: duration)) }
     return facts
+}
+
+// MARK: - Totem
+
+/// The pack's totem: its name, Aspiration and ban, the pack's Totem points, and the advantages they buy, which every
+/// pack member gains and which may break the usual rules (pp. 92–93).
+struct TotemView: View {
+    @Environment(\.theme) private var theme
+    @Bindable var character: ForsakenCharacter
+    @State private var showingMeritPicker = false
+    @State private var specialtySkill: SkillDefinition?
+    @State private var specialtyDraft = ""
+
+    private var ownDots: Int {
+        character.merits.first { $0.source == .catalog("totem") }?.rating ?? 0
+    }
+
+    var body: some View {
+        SheetSectionBlock(.totem) {
+            CharacterInfoRowView(label: "Name:", text: $character.totem.name)
+            CharacterInfoRowView(label: "Aspiration:", text: $character.totem.aspiration)
+            CharacterInfoRowView(label: "Ban:", text: $character.totem.ban)
+            VStack(alignment: .leading, spacing: 2) {
+                CounterRow("Pack's Totem points:", value: $character.totem.packPoints, in: 0...99)
+                Text("Every packmate's Totem dots added up. Yours: \(ownDots), from the Totem Merit.")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                let totem = character.totem
+                Text("Advantages: \(totem.experiencesSpent) of \(totem.experienceBudget) Experiences")
+                    .themedText(.label)
+                    .foregroundStyle(totem.experiencesSpent > totem.experienceBudget ? theme.caution : Color.primary)
+                Text("Every pack member gains them, even past their usual limits or without a Merit's prerequisites.")
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+            .padding(.vertical, 4)
+
+            ForEach($character.totem.advantages) { $advantage in
+                advantageRow($advantage)
+            }
+            .onDelete { character.totem.advantages.remove(atOffsets: $0) }
+
+            addMenu
+        }
+        .hostedSheet(isPresented: $showingMeritPicker) {
+            MeritPickerView(character: character) { entry, qualifier in
+                guard let entry else { return }
+                character.totem.advantages.append(TotemAdvantage(kind: .merit, target: entry.id, detail: qualifier ?? "",
+                                                                 dots: entry.ratings.min() ?? 1))
+            }
+        }
+        .alert("Totem Specialty", isPresented: Binding(get: { specialtySkill != nil }, set: { if !$0 { specialtySkill = nil } }),
+               presenting: specialtySkill) { skill in
+            TextField("Specialty", text: $specialtyDraft)
+            Button("Add") {
+                let name = specialtyDraft.trimmingCharacters(in: .whitespaces)
+                if !name.isEmpty {
+                    character.totem.advantages.append(TotemAdvantage(kind: .specialty, target: skill.id.rawValue, detail: name))
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: { skill in
+            Text(skill.name)
+        }
+    }
+
+    private var addMenu: some View {
+        Menu {
+            Menu("Attribute") {
+                ForEach(TraitCategory.allCases, id: \.self) { category in
+                    Section(category.name) {
+                        ForEach(AttributeKind.allCases.filter { $0.category == category }, id: \.self) { kind in
+                            Button(kind.name) { add(.attribute, kind.rawValue) }
+                        }
+                    }
+                }
+            }
+            Menu("Skill") { skillButtons { add(.skill, $0.id.rawValue) } }
+            Menu("Skill Specialty") {
+                skillButtons { skill in
+                    specialtyDraft = ""
+                    specialtySkill = skill
+                }
+            }
+            Button("Merit") { showingMeritPicker = true }
+        } label: {
+            Label("Add Advantage", systemImage: "plus.circle")
+                .themedText(.body)
+                .foregroundStyle(theme.accent)
+        }
+    }
+
+    private func skillButtons(_ choose: @escaping (SkillDefinition) -> Void) -> some View {
+        ForEach(TraitCategory.allCases, id: \.self) { category in
+            Section(category.name) {
+                ForEach(character.skills(in: category).compactMap { SkillDefinition.withID($0.skillID) }) { skill in
+                    Button(skill.name) { choose(skill) }
+                }
+            }
+        }
+    }
+
+    private func add(_ kind: TotemAdvantage.Kind, _ target: String) {
+        // Another dot of something already granted goes on the same line
+        if let index = character.totem.advantages.firstIndex(where: { $0.kind == kind && $0.target == target }) {
+            character.totem.advantages[index].dots += 1
+        } else {
+            character.totem.advantages.append(TotemAdvantage(kind: kind, target: target))
+        }
+    }
+
+    private func advantageRow(_ advantage: Binding<TotemAdvantage>) -> some View {
+        let value = advantage.wrappedValue
+        let costText = "\(value.cost) \(value.cost == 1 ? "Experience" : "Experiences")"
+        return HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(name(of: value))
+                    .themedText(.traitName)
+                Text(costText)
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+            Spacer()
+            if value.kind != .specialty {
+                Stepper("Dots", value: advantage.dots, in: dotRange(value))
+                    .labelsHidden()
+                Text(String(repeating: "●", count: value.dots))
+                    .foregroundStyle(theme.ink)
+                    .accessibilityLabel(value.dots == 1 ? "1 dot" : "\(value.dots) dots")
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func dotRange(_ advantage: TotemAdvantage) -> ClosedRange<Int> {
+        guard advantage.kind == .merit, let ratings = Catalog.bundled.merits.entry(advantage.target)?.ratings,
+              let low = ratings.min(), let high = ratings.max() else { return 1...5 }
+        return low...high
+    }
+
+    private func name(of advantage: TotemAdvantage) -> String {
+        switch advantage.kind {
+        case .attribute:
+            return AttributeKind(rawValue: advantage.target)?.name ?? advantage.target
+        case .skill:
+            return SkillDefinition.withID(SkillID(rawValue: advantage.target))?.name ?? advantage.target
+        case .specialty:
+            let skill = SkillDefinition.withID(SkillID(rawValue: advantage.target))?.name ?? advantage.target
+            return "\(skill) (\(advantage.detail))"
+        case .merit:
+            let merit = Catalog.bundled.merits.entry(advantage.target)?.name ?? advantage.target
+            return advantage.detail.isEmpty ? merit : "\(merit) (\(advantage.detail))"
+        }
+    }
 }
 
 // MARK: - Rites

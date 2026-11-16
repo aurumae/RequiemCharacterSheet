@@ -136,3 +136,23 @@ case and accents, so what the keyboard types always finds the catalog's text.
 - **Siskur-Dah.** The player chooses the ritemaster's tribe, as the character didn't necessarily lead the rite, and
   the card shows that tribe's effect. The other faction's tribes (Pure for the Forsaken, Forsaken for the Pure) are
   offered in a separate section marked as the character's enemies, as the two sides rarely hunt together.
+
+## Werewolf: going past a trait's limit stacks by source (2026-11-16)
+
+Several rules let a trait go "one dot above the normal limit", e.g. a totem's Attribute or Skill advantage and
+Embodiment of the Firstborn. The book doesn't say what happens with more than one. The user's ruling: **each source
+allows one dot past the limit, and different sources stack.** One source doesn't stack with itself: however many
+dots of a trait a totem grants, it allows only one past the limit.
+
+The sheet shows every dot. Bought dots are Werewolf Rust and bonus dots are black, and any dots past what the sources
+allow are faded and don't count. Example: Strength 5 at Primal Urge 1 with two totem dots shows 7 dots, the last
+faded; adding Embodiment of the Firstborn (Strength) shows 8, the last faded; Primal Urge 6 makes them all count.
+
+## Werewolf: the pack totem (2026-11-16)
+
+The Totem section has the totem's name, Aspiration (a fourth Aspiration for every pack member) and ban. The player
+enters the pack's total Totem points, any number, because points are pooled and the other characters aren't on the
+sheet. The points set the Experiences for advantages (1, 3, 5 or 10, p. 92), which the player spends on Attribute or
+Skill dots, Specialties and Merits. Every pack member gains them. Totem Merits ignore prerequisites, and totem
+Attribute and Skill dots follow the limit rule above.
+

@@ -89,9 +89,14 @@ struct SkillRowView<C: SheetCharacter>: View {
         character.editableMaximum(for: TraitKey(.skill, skill.skillID.rawValue), upTo: character.baseRatingCap)
     }
 
+    /// Bought dots plus any from elsewhere, e.g. a pack totem, drawn in ink.
+    private var totalRating: Int {
+        skill.rating + character.skillBonus(for: skill)
+    }
+
     /// As many dots as Blood Potency allows, or the rating if that's more. Dots that can never be bought aren't drawn.
     private var maximumVisibleRating: Int {
-        min(10, max(character.baseRatingCap, skill.rating))
+        min(10, max(character.baseRatingCap, totalRating))
     }
 
     var body: some View {
@@ -130,6 +135,14 @@ struct SkillRowView<C: SheetCharacter>: View {
                     .accessibilityHint("Double-tap to edit")
                 }
 
+                // Specialties from elsewhere, e.g. a pack totem, which are changed there
+                ForEach(character.grantedSpecialties(for: skill), id: \.self) { specialty in
+                    Text(specialty)
+                        .themedText(.detail)
+                        .foregroundStyle(theme.muted)
+                        .accessibilityLabel("Specialty: \(specialty), granted")
+                }
+
                 Button {
                     editSpecialty(SpecialtyEdit(skill: skill, index: nil))
                 } label: {
@@ -148,6 +161,8 @@ struct SkillRowView<C: SheetCharacter>: View {
             DotsRatingView(
                 skill.name,
                 rating: $skill.rating,
+                totalRating: totalRating,
+                countedRating: character.countedSkillRating(for: skill),
                 maxRating: maximumVisibleRating,
                 maxEditableRating: maxEditableRating,
                 showsOverflowTotal: true,
