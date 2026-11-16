@@ -691,13 +691,41 @@ extension ForsakenCharacter: ListedCharacter {
 extension ForsakenCharacter {
     /// The effects of the character's catalog Merits with at least one dot, e.g. Fast Reflexes on Initiative.
     private func meritEffectTotal(_ select: (Effect) -> Amount?) -> Int {
-        let owned = merits.filter { $0.rating > 0 }.map { ($0.entry, $0.rating) }
-        // Merits the pack's totem grants count too
-        let granted = totem.advantages.filter { $0.kind == .merit }.map { (Catalog.bundled.merits.entry($0.target), $0.dots) }
-        return (owned + granted).reduce(0) { total, pair in
-            total + (pair.0?.effects ?? []).reduce(0) { sum, effect in
-                sum + (select(effect)?.value(forRating: pair.1) ?? 0)
-            }
+        // Each Merit's own dots with any the totem grants, and granted Merits not yet given a row (see
+        // `syncTotemMerits`)
+        let owned = merits.compactMap { merit in merit.entry.map { ($0, merit.rating + meritBonus(for: $0.id)) } }
+        let ownedIDs = Set(owned.map(\.0.id))
+        let unlisted = Set(totem.advantages.filter { $0.kind == .merit }.map(\.target)).subtracting(ownedIDs)
+            .compactMap { id in Catalog.bundled.merits.entry(id).map { ($0, meritBonus(for: id)) } }
+        return (owned + unlisted).reduce(0) { total, pair in
+            guard pair.1 > 0 else { return total }
+            return total + pair.0.effects.reduce(0) { $0 + (select($1)?.value(forRating: pair.1) ?? 0) }
+        }
+    }
+
+    /// Dots the pack's totem grants in a Merit (p. 93).
+    func meritBonus(for id: CatalogEntryID) -> Int {
+        totem.advantages.filter { $0.kind == .merit && $0.target == id }.reduce(0) { $0 + $1.dots }
+    }
+
+    /// A Merit the totem grants is taken whatever its prerequisites.
+    func prerequisitesApply(to merit: Merit) -> Bool {
+        merit.source.catalogID.map { meritBonus(for: $0) == 0 } ?? true
+    }
+
+    /// Gives every Merit the totem grants a row in Merits, with no dots of the character's own, so its dots show in
+    /// ink and the character can add their own; and takes away rows the totem gave but no longer grants, if the
+    /// character hasn't bought dots in them.
+    func syncTotemMerits(previous: [TotemAdvantage] = []) {
+        let granted = Set(totem.advantages.filter { $0.kind == .merit }.map(\.target))
+        for advantage in totem.advantages where advantage.kind == .merit
+            && !merits.contains(where: { $0.source == .catalog(advantage.target) }) {
+            merits.append(Merit(source: .catalog(advantage.target), qualifier: advantage.detail.isEmpty ? nil : advantage.detail,
+                                rating: 0))
+        }
+        let dropped = Set(previous.filter { $0.kind == .merit }.map(\.target)).subtracting(granted)
+        merits.removeAll { merit in
+            merit.rating == 0 && merit.source.catalogID.map(dropped.contains) == true
         }
     }
 

@@ -47,6 +47,8 @@ protocol SheetCharacter: ExperienceCharacter, Observable {
     func meritBonus(for id: CatalogEntryID) -> Int
     /// Every requirement of a Merit, met or not.
     func prerequisiteChecks(for entry: MeritEntry) -> [PrerequisiteCheck]
+    /// Whether a Merit on the sheet must meet its prerequisites; not one granted regardless, e.g. by a pack totem.
+    func prerequisitesApply(to merit: Merit) -> Bool
     /// Whether a Merit can be added at `rating` now, e.g. within the starting dots during guided creation. `nil` for a
     /// custom Merit.
     func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool
@@ -181,6 +183,10 @@ extension SheetCharacter {
     /// The requirements the character is known not to meet. Merits can still be taken; these are warnings.
     func unmetPrerequisites(for entry: MeritEntry) -> [PrerequisiteCheck] {
         prerequisiteChecks(for: entry).filter { $0.isMet == false }
+    }
+
+    func prerequisitesApply(to merit: Merit) -> Bool {
+        true
     }
 
     func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool {

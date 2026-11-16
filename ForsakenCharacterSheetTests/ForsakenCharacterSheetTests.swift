@@ -580,6 +580,57 @@ struct ForsakenCreationTests {
         #expect(character.editableMaximum(for: TraitKey(.primalUrge, "primalUrge"), upTo: 10) == 2)
     }
 
+    @Test func auspiceAndTribeGiveTheirRenownDots() {
+        let character = rahu()
+        character.applyCreationGrants()
+        #expect(character.renown(.purity) == 1)
+        #expect(character.renown(.glory) == 1)
+        #expect(character.grantedRenownDots(.purity) == 1)
+        // A new tribe moves its dot
+        character.tribe = "Storm Lords"
+        character.applyCreationGrants()
+        #expect(character.renown(.glory) == 0)
+        #expect(character.renown(.honor) == 1)
+        // Ghost Wolves have none; the Pure have the tribe's and no auspice's, and two Totem dots
+        character.tribe = "Ghost Wolves"
+        character.applyCreationGrants()
+        #expect(character.creationReport.renown.used == 1)
+        character.tribe = "Predator Kings"
+        character.applyCreationGrants()
+        #expect(character.renown(.purity) == 0)
+        #expect(character.renown(.glory) == 1)
+        #expect(character.merits.first { $0.source == .catalog("totem") }?.rating == 2)
+    }
+
+    @Test func aNewAuspiceTakesBackTheFreeSkillDot() throws {
+        let character = rahu()
+        character.chooseFreeSkill(.brawl)
+        character.auspice = "Cahalith"
+        character.applyCreationGrants()
+        #expect(try #require(character.skill(.brawl)).rating == 0)
+        #expect(character.needsFreeSkill)
+    }
+
+    @Test func totemMeritsGetARowAndIgnorePrerequisites() throws {
+        let character = rahu()
+        let previous = character.totem.advantages
+        character.totem.advantages = [TotemAdvantage(kind: .merit, target: "fleet-of-foot", dots: 2)]
+        character.syncTotemMerits(previous: previous)
+        let merit = try #require(character.merits.first { $0.source == .catalog("fleet-of-foot") })
+        #expect(merit.rating == 0)
+        #expect(character.meritBonus(for: "fleet-of-foot") == 2)
+        #expect(!character.prerequisitesApply(to: merit))
+        #expect(character.creationReport.isWithinLimits)
+        // Bought dots add to the totem's
+        merit.rating = 1
+        #expect(character.speed(in: .hishu) == 1 + 1 + 5 + 3)
+        merit.rating = 0
+        let granted = character.totem.advantages
+        character.totem.advantages = []
+        character.syncTotemMerits(previous: granted)
+        #expect(!character.merits.contains { $0.source == .catalog("fleet-of-foot") })
+    }
+
     @Test func theFreeSkillDotIsOutsideThePriorities() throws {
         let character = rahu()
         character.setPriority(.primary, for: .physical, skills: true)

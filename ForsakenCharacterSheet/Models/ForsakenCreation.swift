@@ -16,11 +16,13 @@ struct CreationState: Codable, Equatable {
     var skillPriorities: [TraitCategory: Int] = [:]
     /// The Skill given the free dot from the auspice's Skills, or a Pure tribe's.
     var freeSkill: SkillID?
+    /// The Renown dots given for the auspice and tribe, so they move if either changes.
+    var grantedRenown: [Renown] = []
 
     init() {}
 
     enum CodingKeys: CodingKey {
-        case attributePriorities, skillPriorities, freeSkill
+        case attributePriorities, skillPriorities, freeSkill, grantedRenown
     }
 
     init(from decoder: Decoder) throws {
@@ -28,6 +30,7 @@ struct CreationState: Codable, Equatable {
         attributePriorities = try container.decode(.attributePriorities, default: [:])
         skillPriorities = try container.decode(.skillPriorities, default: [:])
         freeSkill = try container.decodeIfPresent(SkillID.self, forKey: .freeSkill)
+        grantedRenown = try container.decode(.grantedRenown, default: [])
     }
 }
 
@@ -321,7 +324,8 @@ extension ForsakenCharacter {
         report.merits = CreationBudget(used: meritDots, allowed: CreationRules.meritDots)
         if meritDots > CreationRules.meritDots { report.problems.insert(.tooManyMeritDots) }
         for (entry, name, _, _) in meritList {
-            guard let entry else { continue }
+            // A Merit the totem grants needn't meet its prerequisites
+            guard let entry, meritBonus(for: entry.id) == 0 else { continue }
             if meritUnavailableReason(entry) != nil {
                 report.problems.insert(.meritUnavailable(merit: name))
             } else if !unmetPrerequisites(for: entry).isEmpty {
@@ -401,6 +405,45 @@ extension ForsakenCharacter {
         }
         state.freeSkill = id
         creation = state
+    }
+
+    /// Takes the free Skill dot back off, e.g. when the auspice changes.
+    func clearFreeSkill() {
+        guard var state = creation, let old = state.freeSkill else { return }
+        if let skill = skill(old) {
+            skill.rating = max(skill.rating - 1, 0)
+        }
+        state.freeSkill = nil
+        creation = state
+    }
+
+    /// The Renown dots of a kind given for the auspice and tribe during creation, which can't be taken away.
+    func grantedRenownDots(_ kind: Renown) -> Int {
+        creation?.grantedRenown.filter { $0 == kind }.count ?? 0
+    }
+
+    /// Keeps what the auspice and tribe give in step with them during creation: a Renown dot each (none for Ghost
+    /// Wolves' tribe or the Pure's auspice), the free Skill dot among the right Skills, and the Pure's second Totem
+    /// dot.
+    func applyCreationGrants() {
+        guard var state = creation else { return }
+        let wanted = [effectiveAuspice?.renown, tribeEntry?.renown].compactMap { $0 }
+        if wanted != state.grantedRenown {
+            for kind in state.grantedRenown {
+                setRenown(kind, to: max(renown(kind) - 1, 0))
+            }
+            for kind in wanted {
+                setRenown(kind, to: min(renown(kind) + 1, CreationRules.maxRenown))
+            }
+            state.grantedRenown = wanted
+            creation = state
+        }
+        if let free = creation?.freeSkill, !freeSkillChoices.contains(free) {
+            clearFreeSkill()
+        }
+        if let totem = merits.first(where: { $0.source == .catalog("totem") }), totem.rating < freeTotemDots {
+            totem.rating = freeTotemDots
+        }
     }
 
     /// Whether the free Skill dot still has to be placed.

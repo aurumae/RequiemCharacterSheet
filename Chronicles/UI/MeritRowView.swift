@@ -50,7 +50,7 @@ struct MeritRowView<C: SheetCharacter>: View {
                     .frame(width: DotsRatingView.width(forDots: 5), alignment: .leading)
                 }
 
-                let unmet = character.unmetPrerequisites(for: entry)
+                let unmet = character.prerequisitesApply(to: merit) ? character.unmetPrerequisites(for: entry) : []
                 if !unmet.isEmpty {
                     Label(unmet.warningText, systemImage: "exclamationmark.triangle")
                         .themedText(.detail)

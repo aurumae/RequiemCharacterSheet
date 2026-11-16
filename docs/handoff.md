@@ -1377,3 +1377,15 @@ The panel and priority menu are copies of Requiem's adapted for Forsaken; foldin
 later clean-up.
 
 **Validation:** Forsaken 39 passed.
+
+## 2026-11-16 · Claude (iOS) · Creation and totem fixes from testing
+
+- Forsaken creation: choosing an auspice prompts for the free Skill dot; the auspice's and tribe's Renown dots are
+  given automatically (`creation.grantedRenown` in the save) and can't be removed during creation.
+- Totem Merits: the Merit picker has a `grantsAdvantage` mode (no prerequisites or starting-dot limits, owned Merits
+  allowed). A granted Merit gets a Merits row with 0 bought dots, its granted dots shown via `meritBonus`, and
+  `SheetCharacter.prerequisitesApply(to:)` (default true) hides its prerequisite warning.
+- Fixed the sheet jumping to the top when tapping text fields: the totem's "Name:" row shared the character's row
+  id. `CharacterInfoRowView` takes an optional `rowID` for that. Android should check its row ids are unique too.
+
+**Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 42.

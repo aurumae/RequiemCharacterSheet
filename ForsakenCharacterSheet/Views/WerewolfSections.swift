@@ -171,11 +171,6 @@ struct ForsakenCharacterInfoView: View {
                     character.pureHuntersAspect = ""
                 }
                 character.tribeSource = source
-                // The Pure start with two Totem dots
-                if character.isInCreation, character.isPure,
-                   let totem = character.merits.first(where: { $0.source == .catalog("totem") }), totem.rating < 2 {
-                    totem.rating = 2
-                }
             }
         )
     }
@@ -398,6 +393,7 @@ struct RenownView: View {
                         rating: Binding(get: { character.renown(kind) }, set: { character.setRenown(kind, to: $0) }),
                         maxRating: 5,
                         maxEditableRating: character.editableMaximum(for: TraitKey(.renown, kind.rawValue), upTo: 5),
+                        minEditableRating: character.grantedRenownDots(kind),
                         allowsResetToZero: true
                     )
                 }
@@ -731,9 +727,9 @@ struct TotemView: View {
 
     var body: some View {
         SheetSectionBlock(.totem) {
-            CharacterInfoRowView(label: "Name:", text: $character.totem.name)
-            CharacterInfoRowView(label: "Aspiration:", text: $character.totem.aspiration)
-            CharacterInfoRowView(label: "Ban:", text: $character.totem.ban)
+            CharacterInfoRowView(label: "Name:", text: $character.totem.name, rowID: "totem-name")
+            CharacterInfoRowView(label: "Aspiration:", text: $character.totem.aspiration, rowID: "totem-aspiration")
+            CharacterInfoRowView(label: "Ban:", text: $character.totem.ban, rowID: "totem-ban")
             VStack(alignment: .leading, spacing: 2) {
                 CounterRow("Pack's Totem points:", value: $character.totem.packPoints, in: 0...99)
                 Text("Every packmate's Totem dots added up. Yours: \(ownDots), from the Totem Merit.")
@@ -760,8 +756,10 @@ struct TotemView: View {
 
             addMenu
         }
+        // A granted Merit gets a row in Merits, where its dots join any the character buys
+        .onChange(of: character.totem.advantages) { old, _ in character.syncTotemMerits(previous: old) }
         .hostedSheet(isPresented: $showingMeritPicker) {
-            MeritPickerView(character: character) { entry, qualifier in
+            MeritPickerView(character: character, grantsAdvantage: true) { entry, qualifier in
                 guard let entry else { return }
                 character.totem.advantages.append(TotemAdvantage(kind: .merit, target: entry.id, detail: qualifier ?? "",
                                                                  dots: entry.ratings.min() ?? 1))

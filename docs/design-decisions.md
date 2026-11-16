@@ -154,7 +154,8 @@ The Totem section has the totem's name, Aspiration (a fourth Aspiration for ever
 enters the pack's total Totem points, any number, because points are pooled and the other characters aren't on the
 sheet. The points set the Experiences for advantages (1, 3, 5 or 10, p. 92), which the player spends on Attribute or
 Skill dots, Specialties and Merits. Every pack member gains them. Totem Merits ignore prerequisites, and totem
-Attribute and Skill dots follow the limit rule above.
+Attribute and Skill dots follow the limit rule above. A Merit the totem grants gets a row in Merits, its granted
+dots in black after any the character buys in Werewolf Rust, so the two can be combined.
 
 ## Werewolf: guided creation (2026-11-16)
 
@@ -162,6 +163,8 @@ Forsaken offers guided creation like Requiem, with the same hard limits, followi
 (pp. 82–84) and, for the Pure, Night Horrors: Shunned by the Moon's (p. 202):
 - Attributes 5/4/3 and Skills 11/7/4 by priority; three Specialties; a free dot in one of the auspice's Skills (a
   Pure tribe's Skills for the Pure).
+- Choosing an auspice asks which of its Skills takes the free dot, and the auspice's and tribe's Renown dots are
+  filled in automatically and can't be removed; they move if the auspice or tribe changes.
 - Renown: the auspice's, the tribe's and one more, none above two. **Ghost Wolves** have no tribal Renown, so they
   get two dots. The Pure get the tribe's primary Renown and a dot in it or a secondary Renown.
 - Gifts: two Shadow Facets from the tribe's or auspice's Gifts (Ghost Wolves: only the auspice's), and a Wolf

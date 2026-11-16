@@ -9,6 +9,8 @@ import SwiftUI
 struct ForsakenSheetView: View {
     let character: ForsakenCharacter
     let store: CharacterFileStore<ForsakenCharacter>
+    /// During guided creation, asks which of the auspice's Skills takes the free dot.
+    @State private var choosingFreeSkill = false
 
     var body: some View {
         CharacterSheetFrame(character: character, store: store, sections: character.sheetSections) {
@@ -47,6 +49,27 @@ struct ForsakenSheetView: View {
             ExperienceView(character: character)
             // Last, so swiping through its cards doesn't interrupt scrolling
             ConditionsView(character: character)
+        }
+        // Choosing an auspice or tribe during creation gives its Renown dot, and asks for the free Skill dot
+        .onChange(of: character.auspiceSource) { creationTraitsChanged() }
+        .onChange(of: character.tribeSource) { creationTraitsChanged() }
+        .confirmationDialog("Free Skill Dot", isPresented: $choosingFreeSkill, titleVisibility: .visible) {
+            ForEach(character.freeSkillChoices, id: \.self) { id in
+                Button(SkillDefinition.withID(id)?.name ?? id.rawValue) { character.chooseFreeSkill(id) }
+            }
+            Button("Later", role: .cancel) {}
+        } message: {
+            Text("\(character.freeSkillGiver ?? "Your auspice") gives a free dot in one of these Skills. You can change it in the Character Creation panel.")
+        }
+    }
+}
+
+extension ForsakenSheetView {
+    private func creationTraitsChanged() {
+        guard character.isInCreation else { return }
+        character.applyCreationGrants()
+        if character.needsFreeSkill {
+            choosingFreeSkill = true
         }
     }
 }

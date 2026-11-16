@@ -12,6 +12,9 @@ struct MeritPickerView<C: SheetCharacter>: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.showsUnofficialContent) private var showsUnofficialContent
     let character: C
+    /// For a Merit granted from elsewhere, e.g. a pack totem: prerequisites and starting dots don't apply, and
+    /// Merits the character has can be chosen again, to add to their dots.
+    var grantsAdvantage = false
     /// Called with the chosen catalog entry and qualifier, or `nil` for a custom Merit.
     let onChoose: (MeritEntry?, String?) -> Void
 
@@ -52,25 +55,28 @@ struct MeritPickerView<C: SheetCharacter>: View {
                     }
                 }
 
-                Section {
-                    let customFits = character.creationAllowsMerit(nil, rating: 1)
-                    Button {
-                        onChoose(nil, nil)
-                        dismiss()
-                    } label: {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Custom Merit")
-                                .themedText(.traitName)
-                            Text("For homebrew, or one that isn't listed.")
-                                .themedText(.detail)
-                                .foregroundStyle(theme.muted)
+                // A granted Merit comes from the catalog, so it can be matched with one the character buys
+                if !grantsAdvantage {
+                    Section {
+                        let customFits = character.creationAllowsMerit(nil, rating: 1)
+                        Button {
+                            onChoose(nil, nil)
+                            dismiss()
+                        } label: {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Custom Merit")
+                                    .themedText(.traitName)
+                                Text("For homebrew, or one that isn't listed.")
+                                    .themedText(.detail)
+                                    .foregroundStyle(theme.muted)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
+                        .buttonStyle(.plain)
+                        .disabled(!customFits)
+                        .opacity(customFits ? 1 : 0.5)
                     }
-                    .buttonStyle(.plain)
-                    .disabled(!customFits)
-                    .opacity(customFits ? 1 : 0.5)
                 }
             }
             .searchable(text: $searchText, prompt: "Search Merits")
@@ -129,10 +135,11 @@ struct MeritPickerView<C: SheetCharacter>: View {
 
     @ViewBuilder
     private func row(for entry: MeritEntry) -> some View {
-        let isOwned = !entry.repeatable && character.merits.contains { $0.source == .catalog(entry.id) }
-        let unmet = character.unmetPrerequisites(for: entry)
+        let isOwned = !grantsAdvantage && !entry.repeatable && character.merits.contains { $0.source == .catalog(entry.id) }
+        let unmet = grantsAdvantage ? [] : character.unmetPrerequisites(for: entry)
         // During guided creation, only Merits that fit the ten starting dots, and none Kindred can't take
-        let fits = character.creationAllowsMerit(entry, rating: entry.ratings.min() ?? 1)
+        let fits = grantsAdvantage ? character.meritUnavailableReason(entry) == nil
+            : character.creationAllowsMerit(entry, rating: entry.ratings.min() ?? 1)
         // e.g. Area of Expertise, which is for one of the character's Specialties
         let needsSpecialty = entry.qualifier?.usesSpecialty == true && character.specialtyChoices.isEmpty
         Button {
