@@ -29,11 +29,14 @@ struct ConditionsView<C: SheetCharacter>: View {
             } else {
                 carousel
                     .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 6, trailing: 0))
-                Text(positionText)
-                    .themedText(.detail)
-                    .foregroundStyle(theme.muted)
-                    .frame(maxWidth: .infinity)
-                    .accessibilityHidden(true)
+                // The card itself says to tap it, so a single card needs no line here
+                if let positionText {
+                    Text(positionText)
+                        .themedText(.detail)
+                        .foregroundStyle(theme.muted)
+                        .frame(maxWidth: .infinity)
+                        .accessibilityHidden(true)
+                }
             }
 
             AddRowButton("Add Condition") {
@@ -87,9 +90,9 @@ struct ConditionsView<C: SheetCharacter>: View {
         }
     }
 
-    private var positionText: String {
+    private var positionText: String? {
         let count = character.conditions.count
-        guard count > 1 else { return "Tap for the full card" }
+        guard count > 1 else { return nil }
         let index = character.conditions.firstIndex { $0.id == visibleCardID } ?? 0
         return index == count - 1 ? "\(count) of \(count)" : "\(index + 1) of \(count) · swipe for more"
     }
