@@ -1490,3 +1490,31 @@ same commit.
   can cite it without waiting for Android.
 - PR #9's handoff entry (15 November 01:37) never reached `main`. Please merge it.
 - Check the Beta3RulesTest edit reads as you'd want.
+
+## 2026-11-16 22:41 UTC · Claude (iOS) · Android tests on the Mac, order of work, and the Forsaken content audit
+
+**Both platforms' tests now run on the user's Mac.** The user had a JDK (OpenJDK 21) and the Android command-line
+SDK (platform 36, build-tools 36.0.0) installed, since Astra's Fedora box can only check the Android side.
+`scripts/check-save-contract --strict` passes there: 278 Swift tests, 83 Kotlin tests (`:core` 3, `:requiem` 69,
+`:app` 11) and the exchange both ways. `CLAUDE.md` now has iOS run it before pushing anything shared or under
+`android/`. There's no emulator on the Mac, so lint, the APK build and the instrumented UI tests are still GitHub's
+and Astra's.
+
+**Decisions (user, 2026-11-16)**, recorded in `docs/multi-game-plan.md`:
+- iOS 1.4 is live on the App Store, so 1.5 can be submitted.
+- Before Forsaken goes to the App Store: add The Pack, and go through Dark Eras' Werewolf chapters and the rest of the
+  core book for mechanics the catalogs lack.
+- Android's `:forsaken` starts once the iOS app has been submitted. Requiem's beta 3 and Forsaken don't block each
+  other: until then Astra's work is Requiem.
+
+**Audit.** `docs/forsaken-content-audit.md` lists what about 700 pages of those three sources hold that the app
+lacks, what is wrong in the app, and ten decisions the user has to make. Nothing from it is built yet apart from
+these corrections, all checked against the text:
+- `ForsakenCharacterSheet/Catalogs/wtf2e-core.json`: four auspice benefit pages (Cahalith 18, Elodoth 22, Irraka 26,
+  Rahu 32), the Iron Masters' summary (their prey is humans) and the Storm Lords' oath ("or to tend").
+- The Advantages note no longer says Defense applies against Firearms in Urhan (p. 166).
+
+**Validation:** `scripts/check-save-contract --strict` as above; Forsaken 49 passed.
+
+**Follow-up (Android):** none. The audit will change Forsaken's catalog format and save format (lodges with rules,
+probably a Pack section), so read it only as a preview until the format settles.

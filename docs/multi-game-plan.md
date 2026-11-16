@@ -156,9 +156,24 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 - **Reminders.** An Auspice Benefit section, Kuruth trigger sets muted by Harmony with the general triggers, and
   Siskur-Dah effects by the ritemaster's tribe.
 
-Still to come: guided creation (the core and the Pure quick references, including the Pure's starting Facets and
-Totem 2), the Ghost Wolf rules, Speed, Defense, Initiative and Perception for each form, more Werewolf sourcebooks, and
-App Store assets.
+- **Since then (2026-11-16):** guided creation for the Forsaken, Ghost Wolves and the Pure; the pack totem; an
+  Advantages section with Defense, Initiative, Speed and Perception for each form; Gift and rite effects; section
+  headings as Flat Earth Scribe pictures. See the handoff entries of that date.
+
+### Before the App Store (user, 2026-11-16)
+
+1. Add **The Pack** as a book.
+2. Go through the Werewolf chapters of **Dark Eras** and the rest of the **core book**, and add any mechanics the
+   catalogs lack. `docs/forsaken-content-audit.md` lists what was found.
+3. Settle the save format (it is still a draft at schema 1), then the App Store listing and screenshots.
+
+### Order of work between the apps (user, 2026-11-16)
+
+- New work is done on iOS first and ported to Android afterwards.
+- Android's `:forsaken` starts once the iOS app has been submitted to the App Store, not before.
+- Requiem's Android beta 3 and Forsaken don't block each other. Until iOS Forsaken is submitted, Astra's work is
+  Requiem: beta 3's acceptance and release, and the iOS 1.5 follow-ups. After that, `:forsaken` starts wherever
+  the Play release has got to.
 
 ## Later phases
 

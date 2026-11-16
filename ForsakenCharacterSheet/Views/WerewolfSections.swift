@@ -389,10 +389,10 @@ struct AdvantagesView: View {
             + "Brawl pool \(character.brawlPool(in: form))"
     }
 
-    /// What the numbers don't show (pp. 96–97).
+    /// What the numbers don't show (pp. 96–97). Hishu and Urhan don't apply Defense against Firearms (p. 166).
     private var notes: String {
         var notes = ["Perception is the bonus to rolls using wolf senses."]
-        if character.form != .hishu {
+        if character.form != .hishu && character.form != .urhan {
             notes.append("Defense applies against Firearms in \(character.form.name).")
         }
         if character.form == .gauru {

@@ -33,7 +33,7 @@
       "benefit": {
         "name": "Prophetic Dreams",
         "summary": "The Storyteller may send you a prophetic dream at any time (Intelligence + Occult may interpret it). After a night of more than four hours' unbroken sleep, once per chapter you can declare an action was foretold: +3 to you or a packmate, or −3 to a Storyteller character; or, if the omen was bad, choose to fail it or suffer the setback and take a Beat.",
-        "page": 17
+        "page": 18
       }
     },
     {
@@ -63,7 +63,7 @@
       "benefit": {
         "name": "Darkness Into Light",
         "summary": "Once per chapter, pull a werewolf out of Death Rage (they're Stunned for the next turn if they were in Basu-Im), or push one into Wasu-Im with Presence + Empathy + Primal Urge against their Resolve + Composure.",
-        "page": 21
+        "page": 22
       }
     },
     {
@@ -93,7 +93,7 @@
       "benefit": {
         "name": "Closer Than You Thought",
         "summary": "Once per chapter, close on a target: move your Initiative to just above or below theirs, get within claw and bite reach of one opponent who isn't attacking you, or need two fewer Doors in Social maneuvering.",
-        "page": 25
+        "page": 26
       }
     },
     {
@@ -153,7 +153,7 @@
       "benefit": {
         "name": "Tenacious",
         "summary": "Once per chapter in combat, ignore the effects of the Conditions and Tilts hindering you for two turns. They return afterwards; nothing is resolved or ended.",
-        "page": 31
+        "page": 32
       }
     }
   ],
@@ -229,7 +229,7 @@
         "page": 43
       },
       "kind": "forsaken",
-      "summary": "Children of Red Wolf, Sagrim-Ur, who adapt to the modern world, live among people and hunt the Created and spirits born of human change.",
+      "summary": "Children of Red Wolf, Sagrim-Ur, who adapt to the modern world, live among people and hunt humans, and the supernatural beings that hide among them.",
       "renown": "cunning",
       "giftAffinities": [
         "knowledge",
@@ -258,7 +258,7 @@
         "weather"
       ],
       "oath": {
-        "name": "Allow no one to witness or tend your weakness",
+        "name": "Allow no one to witness or to tend your weakness",
         "summary": "Never let others see you weak or care for you when you are; hide your failings and overcome them alone."
       },
       "firstTongueName": "Iminir"

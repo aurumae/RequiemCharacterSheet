@@ -33,8 +33,11 @@ doesn't start until the iOS app has been submitted to the App Store. CI must sta
   ids it lists. Update any expectation the change makes wrong in the same commit, and say so in the handoff.
 - Forsaken is outside the contract until Android has a `:forsaken` module. Keep Forsaken fixtures out of
   `shared/fixtures/` until then.
-- This Mac has no Java, so the Android tests run only on GitHub. That run is the only check that a catalog change
-  hasn't broken Android.
+- The Android tests run on this Mac too. `scripts/check-save-contract` does everything CI's exchange job does: the
+  policy check, `swift test`, Android's unit tests (`:core`, `:requiem`, `:app`) and the save exchange both ways.
+  Run it before pushing a change to anything shared or to `android/`. To run only Android's tests:
+  `android/gradlew -p android :core:test :requiem:test :app:testDebugUnitTest`. Lint, the APK build and the
+  emulator UI tests still run only on GitHub or on Astra's machine.
 
 ## Shared with Android
 
