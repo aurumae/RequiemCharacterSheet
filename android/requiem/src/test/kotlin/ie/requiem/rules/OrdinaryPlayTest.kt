@@ -7,13 +7,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class OrdinaryPlayTest {
-    private val catalog = Catalog.bundled()
+    private val catalog = rulesTestCatalog()
     private val codec = CharacterCodec(catalog)
     private fun book(kind: CatalogKind, id: String) = requireNotNull(catalog.entry(kind, id))
     private fun add(kind: EntryKind, id: String, qualifier: String? = null) = SheetEdit.AddEntry(kind, TraitSource(catalog = id), qualifier)
     private fun id(row: Int) = UUID.fromString("10000000-0000-0000-0000-${row.toString().padStart(12, '0')}")
 
     @Test fun sharedPlaySequenceMatchesSwiftPricesRefundsAndRoundTrips() {
+        val catalog = Catalog.bundled()
+        val codec = CharacterCodec(catalog)
         val steps = Json.parseToJsonElement(javaClass.getResource("/ordinary-play.json")!!.readText()).jsonArray
         var c = CharacterSave()
         val expected = mutableListOf<Int>()

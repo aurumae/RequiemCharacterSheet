@@ -55,6 +55,24 @@ Android hasn't caught up.
    support. Its local tests and expanded exchange become required immediately.
 
 Tests named in the manifest must exist and have passed in the actual test reports.
+
+Android rule-engine outcome tests use the fixed, test-only inputs in
+`android/requiem/src/test/kotlin/ie/requiem/rules/RulesTestCatalog.kt`. These are
+deliberately incomplete examples with familiar IDs, not copies of the shipped
+books; do not update their values when correcting a production catalog. Shared
+fixture/action exchanges, writer probes, storage tests and structural catalog
+checks still use the authoritative bundled catalogs.
+
+For a safe `advisory-text` fallback, iOS can cite
+`CatalogFallbackTest.unknownCatalogFieldsAndRuleValuesRemainAdvisoryText` in
+`android/requiem/src/test/kotlin/ie/requiem/rules/CatalogFallbackTest.kt`. It exercises
+the actual catalog decoder, chooser, details, prerequisites, derived traits and
+save round trip: unknown fields/effect types/prerequisite kinds/Humanity-rule
+values do not prevent reading an entry, its summary and citation remain visible,
+and unsupported mechanics are not enforced. The rule must have usable descriptive
+text in the supported presentation fields. This test is not evidence of numeric
+parity and does not make a lossy save field or unsafe editor an acceptable fallback.
+
 Writer declarations are checked against real encoder output. Current canonical saves
 must retain every field, while untouched file transfer and Keep Both preserve bytes
 or all fields other than ID/name respectively. A synthetic next-version file always

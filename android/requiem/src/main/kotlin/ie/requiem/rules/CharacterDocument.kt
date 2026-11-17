@@ -16,6 +16,7 @@ class CharacterDocuments(catalog: Catalog) {
         try {
             val text = bytes.decodeToString(throwOnInvalidSequence = true)
             val objectValue = Json.parseToJsonElement(text) as? JsonObject ?: throw IllegalArgumentException()
+            requireRequiemGame(objectValue)
             val version = objectValue["schemaVersion"] as? JsonPrimitive
             if (version?.isString == false && (version.longOrNull ?: 0) > CURRENT_SCHEMA) {
                 throw CharacterDocumentError("This character was saved by a newer version of the app. Update the app to open it.")
@@ -26,6 +27,8 @@ class CharacterDocuments(catalog: Catalog) {
             val stored = if (objectValue["id"] == null || objectValue["id"] == JsonNull)
                 codec.encode(character).toByteArray(Charsets.UTF_8) else bytes.copyOf()
             return CharacterDocument(stored, character)
+        } catch (e: UnsupportedGame) {
+            throw CharacterDocumentError(requireNotNull(e.message))
         } catch (e: CharacterDocumentError) {
             throw e
         } catch (_: Exception) {

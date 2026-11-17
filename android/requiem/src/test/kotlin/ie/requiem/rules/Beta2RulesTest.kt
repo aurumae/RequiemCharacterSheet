@@ -7,7 +7,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class Beta2RulesTest {
-    private val catalog = Catalog.bundled()
+    private val catalog = rulesTestCatalog()
     private val codec = CharacterCodec(catalog)
     private fun source(id: String) = TraitSource(catalog = id)
     private fun CharacterSave.add(id: String) = edit(SheetEdit.AddCondition(source(id)), catalog, 800_000_000.0)
@@ -26,7 +26,7 @@ class Beta2RulesTest {
     }
     @Test fun catalogFlagsAndSourcebookCountsMatchIOS() {
         val entries = catalog.bookEntries(CatalogKind.conditions)
-        assertEquals(sourceEntries(CatalogKind.conditions), catalog.entries(CatalogKind.conditions))
+        assertEquals(sourceEntries(CatalogKind.conditions), Catalog.bundled().entries(CatalogKind.conditions))
         for (id in listOf("distracted", "stumbled")) assertFalse(CharacterCondition(source(id)).info(catalog).beatOnResolve)
         assertTrue(entries.any { it.id == "primeval-truths" && it.bookId == "secrets-of-the-covenants" })
     }
@@ -144,6 +144,11 @@ class Beta2RulesTest {
         assertEquals(setOf("Secrets of the Covenants"), rated.catalogOptions(EntryKind.Coil, catalog, "Covenants").map { it.group }.toSet())
     }
     @Test fun androidConditionActionsWriteAFileThatSwiftCanContinue() {
+        // This is a declared cross-platform scenario, so its input remains the shipped catalog.
+        val catalog = Catalog.bundled()
+        val codec = CharacterCodec(catalog)
+        fun CharacterSave.add(id: String) = edit(SheetEdit.AddCondition(source(id)), catalog, 800_000_000.0)
+        fun CharacterSave.action(event: ConditionEvent) = edit(SheetEdit.ConditionAction(conditions[0].id, event), catalog, 800_000_001.0)
         var c = CharacterSave(name = "Beta 2 exchange", beats = 4).add("charmed")
         c = c.edit(SheetEdit.ConditionText(c.conditions.single().id, ConditionField.Note, "Lady Ysolde"), catalog)
             .action(ConditionEvent.beat).action(ConditionEvent.resolved).add("tempted")

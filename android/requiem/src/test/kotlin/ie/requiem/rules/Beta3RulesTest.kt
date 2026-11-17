@@ -5,7 +5,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class Beta3RulesTest {
-    private val catalog = Catalog.bundled()
+    private val catalog = rulesTestCatalog()
     private val codec = CharacterCodec(catalog)
     private fun source(id: String) = TraitSource(catalog = id)
     private fun entry(kind: CatalogKind, id: String) = requireNotNull(catalog.entry(kind, id))
@@ -75,6 +75,8 @@ class Beta3RulesTest {
         assertTrue(gallows.checks("breaking-the-chains").all { it.met == true })
         assertFalse(gallows.checks("cease-fire").single().met!!)
         assertTrue(gallows.checks("carthian-pull").single().met!!)
+        assertFalse(gallows.checks("jack-booted-thug").single().met!!)
+        assertTrue(gallows.status("gallows-post", 2).checks("jack-booted-thug").single().met!!)
         assertFalse(gallows.checks("attache").single().met!!)
         val firawn = CharacterSave().status("firawn")
         assertTrue(firawn.checks("altar").single().met!!)

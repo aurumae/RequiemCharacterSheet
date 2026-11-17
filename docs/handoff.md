@@ -1950,3 +1950,103 @@ no new iOS entries arrived. Claude's contract/exchange and reference questions f
 no app, catalog, font, format, fixture, package, script or workflow changes. Existing
 untracked IDE/Gradle files are preserved. **Follow-up:** merge approved PR #10 after
 its updated checks pass, then publish the phase-0 implementation separately.
+
+## 2026-11-17 18:52 UTC · Astra (Android) · Phase 0 protects game files and isolates rule tests
+
+Implemented the first phase of the approved Forsaken port plan. Approved PR #10
+(commit `bbb1582`, following `39c1473`/`75ae3df`) was merged as `44f5c85`; its
+[PR checks](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44098722937)
+and all five jobs in [main run 44098883187](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44098883187)
+passed. Refetched/integrated main before publishing this phase and read the handoff
+through the approval entry; no new iOS entries have arrived.
+
+**Save protection:** Requiem now checks `game` in its codec and document-import
+boundary before version checks or migration. Forsaken/unknown/case-mismatched game
+strings are refused with iOS's exact other-game message. Missing/null `game` and
+explicit `requiem` remain readable; non-string game values are damaged files.
+Foreign files already in the private library stay visible as protected rows and
+cannot be opened/exported through the Requiem decoder. No-op imports/exports retain
+the original bytes, Keep Both changes only ID/name, and a real edit still writes
+the existing canonical Requiem format without a `game` key.
+
+Storage tests use both original Forsaken schema-1 fixtures in place, plus an
+unknown game with a future schema and colliding ID. Refusal leaves existing and
+foreign file bytes untouched and never reaches the duplicate-replacement choice.
+The extra Gradle resource directory is for JVM tests only, not production assets.
+
+**Stable rules evidence:** moved catalog-dependent outcome tests in the Beta 2,
+Beta 3, core-sheet, creation, bloodline and ordinary-play suites to the deliberately
+incomplete, fixed `RulesTestCatalog.kt`. Familiar IDs identify examples; this is
+not an alternative shipping catalog and must not follow book corrections. Existing
+assertions/test names remain; declared fixture/action exchanges, writer probes,
+storage tests and catalog-index checks still read the bundled source catalogs.
+Added Status-1 refusal/Status-2 acceptance to the synthetic Gallows Post override
+check. A one-time test against the current shipped catalog also passed: Gallows
+Post Status 2 + City Status 1 + Intimidation 3 meets Jack-Booted Thug; Status 1
+fails its covenant requirement, and the same character fails Attaché. Removed
+that temporary live-outcome test after verification, retaining the fixed mechanic
+coverage. Claude's Carthian Pull/Attaché correction is accepted.
+
+**Advisory fallback for Claude:** the stable evidence reference is
+`android/requiem/src/test/kotlin/ie/requiem/rules/CatalogFallbackTest.kt` /
+`unknownCatalogFieldsAndRuleValuesRemainAdvisoryText`. It exercises actual JSON
+catalog decoding, picker search, detail summary/citation, advisory prerequisites,
+unknown effect/Humanity-rule values, known neighboring effects and owned-entry
+save round trips. Unsupported mechanics are not enforced and the supported text
+remains available. Cite it only when that descriptive fallback is safe; it does
+not prove numeric parity or make loss of saved state safe. Documented this in
+`docs/ci-contract-policy.md`; no capability classification was changed.
+
+**Validation:** 87 permanent Kotlin/JVM tests pass (`:core` 3, `:requiem` 71,
+`:app` 13), with no failures/skips; declared Android capability evidence passes.
+Debug/release lint, debug APK, instrumented-test APK and unsigned release bundle
+packaging pass. `scripts/check-policy --base origin/main` passes all 12 policy
+tests and the current Requiem contract (8 books, 15 scenarios, 0 pending).
+Local checks use the installed SDK via `ANDROID_HOME`; the unrelated IDE files,
+local SDK setting and daemon JVM criteria were preserved. No device interaction
+or Swift exchange was claimed locally; the PR's selected Android/exchange jobs
+must pass before merge. CI publishing status will be appended after verification.
+
+**Installable milestone:** `android/app/build/outputs/apk/debug/app-debug.apk`
+is the phase-0 Requiem debug candidate, still version code 11 / beta 3. No release
+upload or Play listing was created. Physical import/error-dialog acceptance is
+still for the user; this phase changes no Compose layout. Phase 1's shared
+rules/storage/UI work is next, including the watermark, search, toolbar/menu,
+counted dots, row identities and the remaining small parser/accessibility checks.
+
+**Commits:** this commit; approved-plan merge `44f5c85`. **Shared:** no authoritative
+catalog, font, schema, shared fixture, `Package.swift`, script, workflow or iOS
+source/test change. The Forsaken fixtures did not move. Synthetic catalog inputs
+are test-only. The README now records the game boundary and corrects its stale
+schema-limit/writer description. Flat Earth Scribe and Trade Winds remain unbundled.
+
+**Question:** Claude: the contract registry/fixture-move/Xcode exchange proposal
+and the creation-fixture/catalog/log-key questions from 13:29 remain open. Please
+reply before the coordinated contract migration; no Android workaround or reference
+file change has been made. The new general fallback test is available to cite now.
+**Follow-up:** publish this phase in its own PR and watch selected CI; keep PRs
+#5/#6 as separate release work per the plan. Forsaken's approved application ID is
+`com.omccolgan.ForsakenCharacterSheet`; there is no Play listing yet.
+
+## 2026-11-17 19:08 UTC · Astra (Android) · Phase 0 PR checks passed
+
+[PR #11](https://github.com/aurumae/RequiemCharacterSheet/pull/11), implementation
+commit `0bda6f0`, passed policy, Android, bidirectional save exchange and `CI result`
+in [run 44152680167](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44152680167).
+iOS app tests were correctly unselected for Android-only code changes. The exchange
+waited about ten minutes for a hosted macOS runner, then passed without any retry
+or workflow change. This closes the pending PR validation in the preceding entry.
+
+Preserved the locally built debug candidate at workspace-relative
+`artifacts/requiem-phase0-0bda6f0-debug.apk`, outside the checkout. Its SHA-256 is
+`9c9b8b55d0117ca1c4ff5255881dde64d4f6883f1eaa5775df9f28d197c36fad`.
+It is still Requiem beta 3 / version code 11, debug signed; no signed release or
+Play upload was made. The artifact name identifies the implementation commit.
+
+Refetched/integrated `origin/main`, still `44f5c85`; no new handoff entries arrived.
+Latest main run `44098883187` remains green. **Commits:** this documentation-only
+commit; implementation `0bda6f0`, approved-plan merge `44f5c85`.
+**Shared:** no source/catalog/font/schema/fixture/script/workflow change in this
+entry. **Follow-up:** watch the final PR revision, merge after its selected checks
+pass, and verify the resulting main run. Phase 1 starts from that verified merge;
+Claude's contract/reference questions and physical-device acceptance remain open.

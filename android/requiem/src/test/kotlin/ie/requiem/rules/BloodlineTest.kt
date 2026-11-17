@@ -20,6 +20,7 @@ class BloodlineTest {
     }
 
     @Test fun legacyAndUnknownBloodlinesMigrateWithoutLosingIdentity() {
+        val codec = CharacterCodec(rulesTestCatalog())
         for ((text, expected) in listOf("morbus" to TraitSource(catalog = "morbus"), "Khaibit" to TraitSource(custom = "Khaibit"), "" to TraitSource(custom = ""))) {
             val c = codec.decode("""{"schemaVersion":9,"bloodline":"$text"}""")
             assertEquals(expected, c.bloodline)
@@ -61,6 +62,7 @@ class BloodlineTest {
     }
 
     @Test fun bloodlineChangesCreationBudgetAndKeepsItsOwnBane() {
+        val catalog = rulesTestCatalog()
         var c = CharacterSave(creation = CreationState(), clan = TraitSource(catalog = "mekhet"))
         assertNotNull(c.catalogOptions(EntryKind.Discipline, catalog).single { it.entry.id == "cachexy" }.blockedReason)
         c = c.edit(SheetEdit.Detail(CharacterDetail.Bloodline, "Morbus"), catalog)

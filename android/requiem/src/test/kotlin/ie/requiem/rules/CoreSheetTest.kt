@@ -5,10 +5,12 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class CoreSheetTest {
-    private val catalog = Catalog.bundled()
+    private val catalog = rulesTestCatalog()
     private val codec = CharacterCodec(catalog)
 
     @Test fun coreAdvancementMatchesSwiftIncludingRenamesAndFreeLosses() {
+        val catalog = Catalog.bundled()
+        val codec = CharacterCodec(catalog)
         val steps = Json.parseToJsonElement(javaClass.getResource("/core-advancement.json")!!.readText()).jsonArray
         var c = CharacterSave()
         val costs = mutableListOf<Int>()

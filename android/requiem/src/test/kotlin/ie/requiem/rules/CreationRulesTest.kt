@@ -4,7 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class CreationRulesTest {
-    private val catalog = Catalog.bundled()
+    private val catalog = rulesTestCatalog()
     private val codec = CharacterCodec(catalog)
     private fun guided(clan: String = "Daeva") = CharacterSave(creation = CreationState()).edit(SheetEdit.Detail(CharacterDetail.Clan, clan), catalog)
     private fun CharacterSave.change(action: SheetEdit) = edit(action, catalog, 800_000_000.25)

@@ -2,6 +2,7 @@ package ie.requiem.sheet
 
 import ie.requiem.rules.*
 import java.io.File
+import kotlinx.serialization.json.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.rules.TemporaryFolder
@@ -12,6 +13,53 @@ class CharacterTransferTest {
     private val codec = CharacterCodec(catalog)
     private fun repo() = CharacterFiles(temp.root, catalog)
     private fun fixture(name: String = "v10-advanced") = javaClass.getResource("/characters/$name.json")!!.readBytes()
+
+    @Test fun foreignGamesAreRefusedByImportAndLibraryWithoutChangingAnyFiles() {
+        val store = repo()
+        val original = store.importCharacter(store.prepareImport(fixture()))
+        val message = "This character is from another game. Open it in that game's app."
+        val forsaken = listOf("play", "creation").map {
+            javaClass.getResource("/forsaken-v1-$it.json")!!.readBytes()
+        }
+        val unknown = """{"game":"unreleased-game","schemaVersion":999,"name":"Other game"}""".toByteArray()
+        for (bytes in forsaken + listOf(unknown)) {
+            // A colliding identity must not even offer Replace/Keep Both.
+            val fields = Json.parseToJsonElement(bytes.decodeToString()).jsonObject.toMutableMap()
+            fields["id"] = JsonPrimitive(original.saved.id.toString())
+            val colliding = JsonObject(fields).toString().toByteArray()
+            assertEquals(message, assertThrows(CharacterDocumentError::class.java) { store.prepareImport(colliding) }.message)
+            assertEquals(1, store.library().size)
+            assertArrayEquals(fixture(), original.file.readBytes())
+
+            // Also protect a foreign file already present in the app's private library.
+            val id = java.util.UUID.randomUUID()
+            fields["id"] = JsonPrimitive(id.toString())
+            val stored = JsonObject(fields).toString().toByteArray()
+            val file = File(temp.root, "$id.json").apply { writeBytes(stored) }
+            val reopened = repo()
+            assertEquals(message, reopened.library().single { it.id == id }.problem)
+            assertEquals(message, assertThrows(UnsupportedGame::class.java) { reopened.open(id) }.message)
+            assertThrows(UnsupportedGame::class.java) { reopened.export(id) }
+            assertArrayEquals(stored, file.readBytes())
+            assertArrayEquals(fixture(), reopened.export(original.saved.id).bytes)
+            assertTrue(file.delete())
+        }
+    }
+
+    @Test fun explicitlyTaggedRequiemImportsAndCopiesKeepBytesUntilEdited() {
+        val store = repo()
+        val fields = Json.parseToJsonElement(fixture().decodeToString()).jsonObject.toMutableMap()
+        fields["game"] = JsonPrimitive("requiem")
+        val bytes = JsonObject(fields).toString().toByteArray()
+        val original = store.importCharacter(store.prepareImport(bytes))
+        assertArrayEquals(bytes, store.export(original.saved.id).bytes)
+        assertSame(original, store.persist(original, original.saved))
+        val copy = store.importCharacter(store.keepBoth(store.prepareImport(bytes)))
+        val copied = Json.parseToJsonElement(copy.text).jsonObject
+        assertEquals(fields - setOf("id", "name"), copied - setOf("id", "name"))
+        val changed = store.persist(original, original.saved.copy(name = "Edited Requiem"))
+        assertFalse(Json.parseToJsonElement(changed.text).jsonObject.containsKey("game"))
+    }
 
     @Test fun exchangesActualStoredFilesAndCopiesWithSwift() {
         for (name in ContractFixtures.names("transfer")) {
