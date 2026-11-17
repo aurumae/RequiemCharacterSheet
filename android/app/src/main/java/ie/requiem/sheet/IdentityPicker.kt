@@ -1,29 +1,20 @@
 package ie.requiem.sheet
 
-import ie.chronicles.ui.*
-
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.*
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import ie.chronicles.ui.*
 import ie.requiem.rules.*
 import kotlinx.coroutines.launch
 
@@ -81,36 +72,30 @@ private fun IdentityPicker(field: CharacterDetail, c: CharacterSave, catalog: Ca
         focus.clearFocus()
         scope.launch { state.hide(); action() }
     }
-    ModalBottomSheet(onDismissRequest = dismiss, sheetState = state, containerColor = Color.White) {
-        Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).imePadding()) {
-            ModalHeading("Choose ${field.label}", "Cancel", dismiss)
-            OutlinedTextField(search, onValueChange = { search = it }, singleLine = true, label = { SheetText("Search ${field.label}s") },
-                modifier = Modifier.fillMaxWidth().testTag("identity-search"), keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done))
-            LazyColumn(Modifier.weight(1f, fill = false).testTag("identity-options"), contentPadding = PaddingValues(bottom = 24.dp)) {
-                item { TextButton(onClick = { finish(onCustom) }, enabled = !closing) { SheetText("Custom ${field.label}") } }
-                if (field in listOf(CharacterDetail.Bloodline, CharacterDetail.Covenant)) item {
-                    TextButton(onClick = { finish { onChoose("") } }, enabled = !closing) { SheetText(if (field == CharacterDetail.Bloodline) "No Bloodline" else "Unaligned") }
-                }
-                if (options.isEmpty()) item { SheetText("No matching entries", Modifier.padding(12.dp)) }
-                catalog.bookSections(options, { it.entry }, { it.group }).forEach { section ->
-                    item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
-                    items(section.entries, key = { "${section.id}/${it.entry.id}" }) { option ->
-                        val selected = option.entry.name == field.value(c, catalog)
-                        Column(Modifier.fillMaxWidth().clickable(enabled = !closing, role = Role.Button) { finish { onChoose(option.entry.name) } }
-                            .testTag("identity-option-${option.entry.id}").padding(vertical = 12.dp)
-                            .semantics(mergeDescendants = true) { this.selected = selected }) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                SheetText(option.entry.name, Modifier.weight(1f), style = LocalSheetType.current.trait)
-                                if (selected) SheetText("✓", Modifier.clearAndSetSemantics {}, color = SheetColors.accent)
-                            }
-                            SheetText(option.entry.summary, style = MaterialTheme.typography.bodySmall)
-                            option.details.forEach { SheetText(it, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted) }
-                            option.warning?.let { WarningText(it) }
-                            SheetText(option.entry.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-                        }
-                        SheetRule()
+    CatalogPicker("Choose ${field.label}", "Search ${field.label}s", search, { search = it },
+        "identity", dismiss, state) {
+        item { TextButton(onClick = { finish(onCustom) }, enabled = !closing) { SheetText("Custom ${field.label}") } }
+        if (field in listOf(CharacterDetail.Bloodline, CharacterDetail.Covenant)) item {
+            TextButton(onClick = { finish { onChoose("") } }, enabled = !closing) { SheetText(if (field == CharacterDetail.Bloodline) "No Bloodline" else "Unaligned") }
+        }
+        if (options.isEmpty()) item { SheetText("No matching entries", Modifier.padding(12.dp)) }
+        catalog.bookSections(options, { it.entry }, { it.group }).forEach { section ->
+            item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
+            items(section.entries, key = { "${section.id}/${it.entry.id}" }) { option ->
+                val selected = option.entry.name == field.value(c, catalog)
+                Column(Modifier.fillMaxWidth().clickable(enabled = !closing, role = Role.Button) { finish { onChoose(option.entry.name) } }
+                    .testTag("identity-option-${option.entry.id}").padding(vertical = 12.dp)
+                    .semantics(mergeDescendants = true) { this.selected = selected }) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        SheetText(option.entry.name, Modifier.weight(1f), style = LocalSheetType.current.trait)
+                        if (selected) SheetText("✓", Modifier.clearAndSetSemantics {}, color = SheetColors.accent)
                     }
+                    SheetText(option.entry.summary, style = MaterialTheme.typography.bodySmall)
+                    option.details.forEach { SheetText(it, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted) }
+                    option.warning?.let { WarningText(it) }
+                    SheetText(option.entry.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                 }
+                SheetRule()
             }
         }
     }

@@ -21,7 +21,8 @@ as **Question:** in the handoff; do not change them or add Android workarounds.
 Android has JVM `:core` and `:requiem`, with the Requiem Compose app in `:app`.
 Beta 3 is version code 11 and its release acceptance is unfinished. Requiem now
 uses the shared Compose controls in `:sheet-ui`.
-Prerequisites, Conditions, XP recording and file storage still depend on Requiem.
+The JVM core now owns shared prerequisites, Condition events, XP recording and
+file storage. Requiem supplies its codec, rules and library summary.
 There is no Android Forsaken module or app yet.
 
 The save contract currently covers **Requiem only**. A green supported-mode run
@@ -79,11 +80,14 @@ advisory fallback has named evidence in [the CI policy](ci-contract-policy.md).
 The phase-0 handoff records validation and publishing status. No Forsaken fixtures
 have moved and no Forsaken module is built in this phase.
 
-**Phase 1 in progress.** Requiem consumes `:sheet-ui` for themed controls and editing
-layout. The first change covers search across all three catalog pickers and the
-optional limit on counted dots. The next interface work is the sheet watermark,
-keyboard positioning and section navigation. Shared storage and rules extraction
-remain part of this phase.
+**Phase 1 implementation (17 November).** Requiem uses the shared library, sheet
+frame, editing rows, catalog picker and store. The skull stays fixed as the list
+scrolls or the keyboard covers its lower portion. The section menu opens at the
+current section, and XP and Save keep their space at large text sizes. Core rules
+accept per-game costs, refunds and Willpower bonuses. Health folding is available
+for Forsaken. Requiem keeps its existing visible-track behavior. The phase 1
+candidate is the Requiem app. Physical-device TalkBack and keyboard acceptance
+remain on the device checklist.
 
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |

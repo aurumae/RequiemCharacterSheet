@@ -2078,3 +2078,37 @@ are unchanged.
 toolbar and section menu, then the remaining rules, storage and interface extraction
 in the approved plan. Physical-device acceptance and the previous contract and
 reference questions for Claude remain open.
+
+## 2026-11-17 21:31 UTC · Astra (Android) · Phase 1 shared rules, storage and sheet ready for Forsaken
+
+Requiem uses the shared Android library, transfer journal, atomic store and sheet
+frame. Each game supplies its codec, import probe, library summary, art and section
+order. Core records each paid level using the game's cost and refund rules. Common
+prerequisites, Condition events and Specialty edits use the same Requiem entry
+points. Health folding is opt-in for Forsaken. The Requiem sheet uses the original
+skull at 7%, multiply blended over the list. XP and Save keep their space and the
+section menu opens on the current section. Each character field has its own lazy
+row and focus target.
+
+Book URLs supply citations. Condition note choices save the option name and show
+its effect and source. Checked all nine CofD Merit reprints in the packaged JSON.
+The existing splash composes the library after dismissal, and the library uses
+one minute-updated text value for display and accessibility.
+
+**Validation:** 91 JVM tests, debug/release lint, debug/test APK and unsigned bundle
+packaging, all 12 policy tests and Android capability evidence passed. Emulator
+checks cover import/Keep Both/recovery, purchases/refunds, large text, the current
+menu selection, singular spoken XP, duplicate field labels, and stable watermark
+pixels under a simulated docked-keyboard inset. The real Requiem visual flow also
+passed at 150% text and in landscape. The full TalkBack and on-screen keyboard
+layout checks on a physical phone remain with device acceptance.
+
+**Commits:** this commit follows PR #12 at `352f62b`. Startup [main
+CI](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44169134861)
+passed. **Shared:** Android consumes the existing iOS skull at build time.
+Catalogs, fonts, schema, fixtures, Swift sources and package, policy scripts and
+workflow have no changes.
+
+**Follow-up:** phase 2 adds `:forsaken` and `:forsakenApp` and the read-only
+viewer using the submitted schema-1 fixtures in place. Claude's earlier exchange
+and reference questions stay open. Requiem's release checks continue separately.

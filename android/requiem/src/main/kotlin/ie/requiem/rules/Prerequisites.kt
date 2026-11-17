@@ -1,36 +1,31 @@
 package ie.requiem.rules
 
+import ie.chronicles.core.commonPrerequisite
+import ie.chronicles.core.prerequisiteChecks
+import ie.chronicles.core.prerequisiteWarning
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 
-data class PrerequisiteCheck(val description: String, val met: Boolean?)
-fun List<PrerequisiteCheck>.warningText(): String {
-    val unmet = filter { it.met == false }
-    return buildList {
-        if (unmet.any { it.description == "Not available to Kindred" }) add("Not available to Kindred")
-        val others = unmet.filter { it.description != "Not available to Kindred" }
-        if (others.isNotEmpty()) add("Requires " + others.joinToString("; ") { it.description })
-    }.joinToString(". ")
-}
+typealias PrerequisiteCheck = ie.chronicles.core.PrerequisiteCheck
+fun List<PrerequisiteCheck>.warningText() = prerequisiteWarning()
+
 fun CharacterSave.prerequisites(entry: BookEntry, catalog: Catalog): List<PrerequisiteCheck> = buildList {
-    if (entry.raw.flag("unavailableToKindred")) add(PrerequisiteCheck("Not available to Kindred", false))
+    if (entry.raw.flag("unavailableToKindred")) add(PrerequisiteCheck("Not available to Kindred", false, unavailable = true))
     val merit = entry.takeIf { it.kind == CatalogKind.merits }
-    addAll(entry.raw.objects("prerequisites").map { check(it, catalog, merit) })
-    val alternatives = entry.raw.array("prerequisitesAnyOf").map { group -> group.jsonArray.map { check(it.jsonObject, catalog, merit) } }
-    if (alternatives.isNotEmpty()) add(PrerequisiteCheck("One of: " + alternatives.joinToString(", or ") { group -> group.joinToString(" and ") { it.description } },
-        alternatives.any { group -> group.all { it.met != false } }))
+    addAll(prerequisiteChecks(entry.raw.objects("prerequisites"), entry.raw.array("prerequisitesAnyOf").map { group ->
+        group.jsonArray.map { it.jsonObject }
+    }) { check(it, catalog, merit) })
 }
 private fun CharacterSave.check(rule: JsonObject, catalog: Catalog, merit: BookEntry?): PrerequisiteCheck {
     val id = rule.str("id").orEmpty(); val minimum = rule.int("minimum", 1)
     fun named(kind: CatalogKind) = catalog.name(kind, TraitSource(catalog = id))
-    return when (rule.str("kind")) {
-        "attribute" -> if (attributeDefinitions.any { it.id == id }) PrerequisiteCheck("${traitName(id)} $minimum", attributeRating(id) >= minimum) else PrerequisiteCheck(rule.str("text") ?: id, null)
-        "skill" -> PrerequisiteCheck("${traitName(id)} $minimum", skillRating(id) >= minimum)
-        "merit" -> PrerequisiteCheck(named(CatalogKind.merits) + if (minimum > 1) " $minimum" else "", merits.any { it.source.catalog == id && it.rating >= minimum })
+    val kind = rule.str("kind")
+    val shared = commonPrerequisite(kind, id, minimum, rule.str("text"), willpower, ::traitName) { named(CatalogKind.merits) }
+    if (shared != null) return shared
+    return when (kind) {
         "discipline" -> PrerequisiteCheck("${named(CatalogKind.disciplines)} $minimum", disciplineRating(id) >= minimum)
         "bloodPotency" -> PrerequisiteCheck("Blood Potency $minimum", bloodPotency >= minimum)
-        "willpower" -> PrerequisiteCheck("Willpower $minimum", willpower >= minimum)
         "notCovenant" -> PrerequisiteCheck("Not a member of the ${named(CatalogKind.covenants)}", covenant.catalog != id)
         "bloodline" -> PrerequisiteCheck("Bloodline: ${named(CatalogKind.bloodlines)}", bloodline.catalog == id)
         "clan" -> {

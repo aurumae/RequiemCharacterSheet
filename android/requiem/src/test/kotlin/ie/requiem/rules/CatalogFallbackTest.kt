@@ -38,7 +38,7 @@ class CatalogFallbackTest {
         val detail = blank.bookDetail(entry, catalog, rating = 2)
         assertEquals("Future Merit", detail.title)
         assertEquals("Discuss the unimplemented benefit with the Storyteller.", detail.summary)
-        assertEquals("Future Examples, p. 42", detail.citation)
+        assertEquals("https://example.invalid/book", detail.citation)
         assertTrue(detail.facts.contains(DetailFact("Prerequisite", "Storyteller approval · Check yourself")))
         assertEquals(listOf(DetailFact("On your sheet", "Adds 2 to Speed")), detail.facts.filter { it.label == "On your sheet" })
 
@@ -59,5 +59,31 @@ class CatalogFallbackTest {
         assertEquals(owned.merits, restored.merits)
         assertEquals(owned.disciplines, restored.disciplines)
         assertEquals(detail.summary, restored.bookDetail(entry, catalog).summary)
+    }
+
+    @Test fun conditionNotesUseSavedNamesAndTheirOwnBookCitation() {
+        val catalog = Catalog(mapOf("first.json" to """{
+            "format":"requiem-catalog","version":1,"book":{"id":"core","name":"Core"},
+            "conditions":[{"id":"outlaw","name":"Outlaw","summary":"An example","source":{"book":"core","page":42},
+                "noteOptions":[{"id":"lesser","name":"Lesser","summary":"First effect"},
+                {"id":"full","name":"Full","group":"lodge","summary":"Second effect","source":{"book":"article"}}]}]
+        }""", "second.json" to """{
+            "format":"requiem-catalog","version":1,"book":{"id":"article","name":"Article","official":false,"url":"https://example.invalid/article"}
+        }"""))
+        assertTrue(catalog.bookMetadata.getValue("core").official)
+        assertFalse(catalog.bookMetadata.getValue("article").official)
+        val source = TraitSource(catalog = "outlaw")
+        val condition = CharacterCondition(source)
+        val c = CharacterSave(conditions = listOf(condition))
+        val notes = condition.info(catalog).noteOptions
+        assertNull(notes.first().group)
+        assertEquals("lodge", notes.last().group)
+        assertEquals("https://example.invalid/article", notes.last().source!!.citation(catalog.bookMetadata))
+        assertEquals("Core, p. 42", condition.info(catalog).citation)
+        val edited = c.edit(SheetEdit.ConditionText(condition.id, ConditionField.Note, notes.last().name), catalog)
+        val codec = CharacterCodec(catalog)
+        val restored = codec.decode(codec.encode(edited)).conditions.single()
+        assertEquals("Full", restored.note)
+        assertEquals("Second effect", restored.info(catalog).noteOptions.single { it.name == restored.note }.summary)
     }
 }

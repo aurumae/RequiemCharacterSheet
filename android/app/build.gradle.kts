@@ -125,10 +125,15 @@ dependencies {
 abstract class SheetResourcesTask : DefaultTask() {
     @get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val fontDirectory: DirectoryProperty
+    @get:InputFile @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val watermark: RegularFileProperty
     @get:OutputDirectory abstract val outputDirectory: DirectoryProperty
     @TaskAction fun generate() {
         val output = outputDirectory.get().asFile
         output.deleteRecursively()
+        val skull = output.resolve("drawable-nodpi/sheet_watermark.png")
+        skull.parentFile.mkdirs()
+        watermark.get().asFile.copyTo(skull)
         val files = mapOf("IMFellEnglish-Regular.ttf" to "font/im_fell_english.ttf",
             "Cinzel-Medium.ttf" to "font/cinzel_medium.ttf", "IMFellEnglish-OFL.txt" to "raw/im_fell_english_ofl.txt",
             "Cinzel-OFL.txt" to "raw/cinzel_ofl.txt")
@@ -140,6 +145,7 @@ abstract class SheetResourcesTask : DefaultTask() {
     }
 }
 val sheetResources = tasks.register<SheetResourcesTask>("sheetResources") {
+    watermark.set(layout.projectDirectory.file("../../RequiemCharacterSheet/Assets.xcassets/VtR Skull Watermark.imageset/VtR Skull Watermark.png"))
     fontDirectory.set(layout.projectDirectory.dir("../../RequiemCharacterSheet/Fonts"))
     outputDirectory.set(layout.buildDirectory.dir("generated/sheetResources"))
 }

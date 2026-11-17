@@ -1,6 +1,9 @@
 package ie.requiem.rules
 
 import kotlinx.serialization.json.*
+import ie.chronicles.core.BookSource
+import ie.chronicles.core.CatalogBook
+import ie.chronicles.core.ConditionNoteOption
 
 internal fun JsonObject.str(key: String): String? = (get(key) as? JsonPrimitive)?.contentOrNull
 internal fun JsonObject.int(key: String, default: Int = 0): Int = (get(key) as? JsonPrimitive)?.intOrNull ?: default
@@ -12,7 +15,7 @@ internal fun JsonObject.strings(key: String): List<String> = array(key).mapNotNu
 internal fun JsonObject.ints(key: String): List<Int> = array(key).mapNotNull { (it as? JsonPrimitive)?.intOrNull }
 
 /** Typed presentation boundary: Compose doesn't need to know the book JSON structure. */
-class BookEntry internal constructor(val kind: CatalogKind, internal val raw: JsonObject, private val books: Map<String, String>) {
+class BookEntry internal constructor(val kind: CatalogKind, internal val raw: JsonObject, private val books: Map<String, CatalogBook>) {
     val id: String get() = raw.str("id").orEmpty()
     val name: String get() = raw.str("name").orEmpty()
     val summary: String get() = raw.str("summary").orEmpty()
@@ -25,23 +28,21 @@ class BookEntry internal constructor(val kind: CatalogKind, internal val raw: Js
     val qualifierFromCovenants: Boolean get() = raw.obj("qualifier")?.flag("fromCovenants") == true
     val coilOnly: Boolean get() = raw.flag("coilOnly")
     val bookId: String get() = raw.obj("source")?.str("book").orEmpty()
-    val bookName: String get() = books[bookId] ?: bookId
+    val bookName: String get() = books[bookId]?.name ?: bookId
     val isRitualDiscipline: Boolean get() = raw.str("kind") == "ritual"
     val coilName: String get() = raw.obj("coil")?.str("name") ?: name
     val dots: Int get() = raw.int("dots", 1)
     val discipline: String get() = raw.str("discipline").orEmpty()
     val experienceCost: Int get() = raw.int("experienceCost", 1)
-    val citation: String get() {
-        val source = raw.obj("source") ?: return ""
-        val book = source.str("book").orEmpty()
-        return (books[book] ?: book) + (source.str("page")?.let { ", p. $it" } ?: "")
-    }
+    val sourceReference get() = raw.obj("source")?.let(BookSource::read)
+    val citation: String get() = sourceReference?.citation(books).orEmpty()
+    val noteOptions get() = raw.objects("noteOptions").map(ConditionNoteOption::read)
     fun allowedRating(value: Int): Int = if (value <= 0) 0 else ratings.firstOrNull { it >= value } ?: ratings.lastOrNull() ?: value.coerceIn(0, 5)
 }
 
-fun Catalog.entry(kind: CatalogKind, id: String?): BookEntry? = entries(kind)[id]?.let { BookEntry(kind, it, books) }
+fun Catalog.entry(kind: CatalogKind, id: String?): BookEntry? = entries(kind)[id]?.let { BookEntry(kind, it, bookMetadata) }
 fun Catalog.entry(kind: CatalogKind, source: TraitSource): BookEntry? = entry(kind, source.catalog)
-fun Catalog.bookEntries(kind: CatalogKind): List<BookEntry> = entries(kind).values.map { BookEntry(kind, it, books) }
+fun Catalog.bookEntries(kind: CatalogKind): List<BookEntry> = entries(kind).values.map { BookEntry(kind, it, bookMetadata) }
 
 fun Catalog.parseMerit(name: String): Pair<TraitSource, String?> {
     val direct = source(CatalogKind.merits, name)

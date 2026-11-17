@@ -1,5 +1,6 @@
 package ie.requiem.rules
 
+import ie.chronicles.core.CatalogBook
 import ie.chronicles.core.CatalogIndex
 import kotlinx.serialization.json.*
 
@@ -11,8 +12,9 @@ enum class CatalogKind {
 class Catalog(files: Map<String, String>) {
     private val indexes: Map<CatalogKind, CatalogIndex<JsonObject>>
 
-    private val bookNames = mutableMapOf<String, String>()
-    val books: Map<String, String> get() = bookNames
+    private val loadedBooks = linkedMapOf<String, CatalogBook>()
+    val bookMetadata: Map<String, CatalogBook> get() = loadedBooks
+    val books: Map<String, String>
 
     init {
         val rows = CatalogKind.entries.associateWith { mutableListOf<JsonObject>() }
@@ -21,8 +23,8 @@ class Catalog(files: Map<String, String>) {
             val file = Json.parseToJsonElement(contents).jsonObject
             if (file["format"]?.jsonPrimitive?.content != "requiem-catalog" ||
                 file.getValue("version").jsonPrimitive.int > 1) continue
-            val book = file.getValue("book").jsonObject
-            bookNames.putIfAbsent(book.getValue("id").jsonPrimitive.content, book.getValue("name").jsonPrimitive.content)
+            val book = CatalogBook.read(file.getValue("book").jsonObject)
+            loadedBooks.putIfAbsent(book.id, book)
             for (kind in CatalogKind.entries) {
                 for (element in file[kind.name]?.jsonArray.orEmpty()) {
                     val entry = element.jsonObject
@@ -30,6 +32,7 @@ class Catalog(files: Map<String, String>) {
                 }
             }
         }
+        books = loadedBooks.mapValues { it.value.name }
         indexes = rows.mapValues { (_, entries) -> CatalogIndex(entries, { it.getValue("id").jsonPrimitive.content }, { it.getValue("name").jsonPrimitive.content }) }
     }
 

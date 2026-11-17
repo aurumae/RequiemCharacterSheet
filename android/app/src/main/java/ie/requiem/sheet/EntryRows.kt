@@ -1,17 +1,15 @@
 package ie.requiem.sheet
 
-import ie.chronicles.ui.*
-
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
+import ie.chronicles.ui.*
 import ie.requiem.rules.*
 
 @Composable
@@ -56,30 +54,4 @@ internal fun PowerEntryRow(kind: EntryKind, row: SheetEntry, editable: Boolean, 
         }
         SheetRule()
     }
-}
-
-@Composable
-internal fun AddSheetRow(title: String, enabled: Boolean, click: () -> Unit) {
-    Row(Modifier.fillMaxWidth().background(Color.White).clickable(enabled = enabled, onClick = click).heightIn(min = 52.dp).padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        SheetIcon(SheetSymbol.Add, if (enabled) SheetColors.accent else SheetColors.muted)
-        SheetText(title, color = if (enabled) SheetColors.accent else SheetColors.muted)
-    }
-}
-
-@Composable
-internal fun WrittenRow(text: String, placeholder: String, editable: Boolean, description: String, open: () -> Unit, remove: () -> Unit) {
-    var menu by remember { mutableStateOf(false) }
-    Row(Modifier.fillMaxWidth().background(Color.White), verticalAlignment = Alignment.Top) {
-        SheetText(text.ifBlank { placeholder }, Modifier.weight(1f).clickable(enabled = editable, onClick = open).heightIn(min = 56.dp).padding(8.dp)
-            .semantics { contentDescription = description }, style = LocalSheetType.current.trait)
-        if (editable) Box {
-            IconButton(onClick = { menu = true }, modifier = Modifier.semantics { contentDescription = "Options for $description" }) { SheetIcon(SheetSymbol.More, SheetColors.muted) }
-            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                DropdownMenuItem(text = { SheetText("Edit") }, onClick = { menu = false; open() })
-                DropdownMenuItem(text = { SheetText("Delete") }, onClick = { menu = false; remove() })
-            }
-        }
-    }
-    SheetRule()
 }

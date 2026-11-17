@@ -1,7 +1,7 @@
 package ie.requiem.rules
 
 // Preserve the existing Requiem API; these models are owned by the JVM core.
-typealias SaveId = ie.chronicles.core.SaveId
+typealias SaveId = @kotlinx.serialization.Serializable(with = ie.chronicles.core.SwiftUuidSerializer::class) java.util.UUID
 typealias SwiftUuidSerializer = ie.chronicles.core.SwiftUuidSerializer
 typealias TraitSource = ie.chronicles.core.TraitSource
 typealias Attribute = ie.chronicles.core.Attribute
