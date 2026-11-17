@@ -32,7 +32,9 @@ doesn't start until the iOS app has been submitted to the App Store. CI must sta
   rules outcomes from the live catalogs. Before changing an entry, search `android/*/src/test` for its id and the
   ids it lists. Update any expectation the change makes wrong in the same commit, and say so in the handoff.
 - Forsaken is outside the contract until Android has a `:forsaken` module. Keep Forsaken fixtures out of
-  `shared/fixtures/` until then.
+  `shared/fixtures/` until then: they are in `ForsakenCharacterSheetTests/Fixtures/`, and CI's `ios` job runs
+  Forsaken's tests. A new key in Forsaken's save goes into a fixture and `docs/forsaken-save-format.md`; once the
+  app has shipped, it also needs the next schema version.
 - The Android tests run on this Mac too. `scripts/check-save-contract` does everything CI's exchange job does: the
   policy check, `swift test`, Android's unit tests (`:core`, `:requiem`, `:app`) and the save exchange both ways.
   Run it before pushing a change to anything shared or to `android/`. To run only Android's tests:

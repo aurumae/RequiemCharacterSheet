@@ -1673,3 +1673,22 @@ new sections and pickers were rendered to pictures in the simulator and looked a
 
 **Follow-up (Android):** nothing until `:forsaken` starts. When Requiem's Kotlin effect parser next changes, it can
 skip `armor` as it skips any effect it doesn't know.
+
+## 2026-11-17 10:05 UTC · Claude (iOS) · Forsaken's save format is settled as schema 1, and its tests run in CI
+
+**Forsaken save format:** no longer a draft. `docs/forsaken-save-format.md` describes schema 1 key by key; it is what
+the first App Store release will write. Nothing in the format changed in this commit. Two saved characters pin it, in
+`ForsakenCharacterSheetTests/Fixtures/` (`forsaken-v1-play.json`, `forsaken-v1-creation.json`): `SaveFormatTests`
+checks each is written back unchanged, that between them they use every key, and what their numbers come to. Once
+the app has shipped, anything new in the file needs schema 2, as in Requiem.
+
+**Shared (`.github/workflows/save-contract.yml`):** the `ios` job has one more step, "Build and test the Forsaken
+app", which runs the `ForsakenCharacterSheet` scheme's tests on the same simulator, and uploads its result bundle
+with the others. Nothing else in the workflow changed; routing already sends Forsaken paths to every job.
+
+`CLAUDE.md` and `docs/ci-contract-policy.md` say where the fixtures are and that they stay out of `shared/fixtures/`.
+
+**Validation:** `swift test` (279, with the policy check); Forsaken 78 in the simulator.
+
+**Follow-up (Android):** nothing now. When `:forsaken` starts, `docs/forsaken-save-format.md` and the two fixtures
+are the starting point; they move to `shared/fixtures/` and into the manifest then.

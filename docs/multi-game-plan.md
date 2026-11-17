@@ -168,7 +168,9 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
    catalog entries were added on 2026-11-17. What the audit still lists as missing is sheet features, not content.
    Of those, the user chose Gift buying, Spirit Rank, Instinctive Defense, Favored Form and Raiment of the Storm's
    armour for before release (done 2026-11-17); the rest wait.
-3. Settle the save format (it is still a draft at schema 1), then the App Store listing and screenshots.
+3. Settle the save format, then the App Store listing and screenshots. The format was settled on 2026-11-17 as
+   schema 1: `docs/forsaken-save-format.md` describes it, two fixtures pin it, and CI runs Forsaken's tests. The
+   listing and screenshots remain.
 
 ### Order of work between the apps (user, 2026-11-16)
 

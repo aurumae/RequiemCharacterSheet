@@ -27,7 +27,8 @@ Android hasn't caught up.
 - A test named in the manifest can be renamed on iOS, with the manifest updated in the same commit. The PR-base
   comparison rejects a renamed capability test, so do it in a push to `main`.
 - Forsaken is outside the contract until Android has a `:forsaken` module. Its catalogs aren't validated here and its
-  fixtures must stay out of `shared/fixtures/`, where every file has to be classified as a Requiem scenario.
+  fixtures must stay out of `shared/fixtures/`, where every file has to be classified as a Requiem scenario. Its
+  own tests, with the fixtures that pin its save format (`docs/forsaken-save-format.md`), run in the `ios` job.
 
 ## Adding an iOS feature before its Android port
 

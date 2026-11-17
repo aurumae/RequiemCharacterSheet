@@ -1,0 +1,333 @@
+{
+  "armor" : 0,
+  "aspirations" : [
+    {
+      "id" : "00000000-0000-4000-8000-000000000211",
+      "text" : ""
+    }
+  ],
+  "attributes" : [
+    {
+      "attribute" : "intelligence",
+      "rating" : 1
+    },
+    {
+      "attribute" : "wits",
+      "rating" : 1
+    },
+    {
+      "attribute" : "resolve",
+      "rating" : 1
+    },
+    {
+      "attribute" : "strength",
+      "rating" : 1
+    },
+    {
+      "attribute" : "dexterity",
+      "rating" : 1
+    },
+    {
+      "attribute" : "stamina",
+      "rating" : 1
+    },
+    {
+      "attribute" : "presence",
+      "rating" : 1
+    },
+    {
+      "attribute" : "manipulation",
+      "rating" : 1
+    },
+    {
+      "attribute" : "composure",
+      "rating" : 1
+    }
+  ],
+  "auspice" : {
+    "custom" : ""
+  },
+  "beats" : 0,
+  "blood" : {
+    "custom" : ""
+  },
+  "bone" : {
+    "custom" : ""
+  },
+  "changeLog" : [
+    {
+      "date" : 800000050,
+      "duringCreation" : true,
+      "experiences" : 0,
+      "from" : 0,
+      "id" : "00000000-0000-4000-8000-000000000911",
+      "name" : "Purity",
+      "to" : 1,
+      "trait" : "renown:purity",
+      "xpMode" : false
+    }
+  ],
+  "chronicle" : "",
+  "concept" : "",
+  "conditions" : [
+
+  ],
+  "createdAt" : 800000000,
+  "creation" : {
+    "attributePriorities" : {
+      "physical" : 0,
+      "social" : 2
+    },
+    "freeSkill" : "survival",
+    "grantedRenown" : [
+      "purity"
+    ],
+    "skillPriorities" : {
+      "physical" : 0
+    }
+  },
+  "essence" : 7,
+  "experiences" : 0,
+  "facets" : [
+
+  ],
+  "fetishes" : [
+
+  ],
+  "fleshTouchstone" : "",
+  "form" : "hishu",
+  "game" : "forsaken",
+  "harmony" : 7,
+  "healthTrack" : [
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+  ],
+  "huntersAspect" : "Primal",
+  "id" : "00000000-0000-4000-8000-000000000002",
+  "kuruthTriggerSet" : {
+    "custom" : "Cages"
+  },
+  "kuruthTriggers" : {
+    "common" : "Being shut in",
+    "passive" : "Seeing an animal caged",
+    "specific" : "Being chained"
+  },
+  "lodge" : {
+    "custom" : ""
+  },
+  "merits" : [
+    {
+      "id" : "00000000-0000-4000-8000-000000000111",
+      "rating" : 2,
+      "source" : {
+        "catalog" : "totem"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000112",
+      "qualifier" : "First Tongue",
+      "rating" : 1,
+      "source" : {
+        "catalog" : "language"
+      }
+    }
+  ],
+  "modifiedAt" : 800086400,
+  "name" : "Ash",
+  "paidDots" : {
+
+  },
+  "player" : "",
+  "primalUrge" : 1,
+  "renown" : {
+    "purity" : 1
+  },
+  "rites" : [
+
+  ],
+  "schemaVersion" : 1,
+  "size" : 5,
+  "skills" : [
+    {
+      "rating" : 0,
+      "skill" : "academics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "computer",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "crafts",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "investigation",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "medicine",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "occult",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "politics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "science",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "athletics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "brawl",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "drive",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "firearms",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "larceny",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "stealth",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 1,
+      "skill" : "survival",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "weaponry",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "animal-ken",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "empathy",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "expression",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "intimidation",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "persuasion",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "socialize",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "streetwise",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "subterfuge",
+      "specialties" : [
+
+      ]
+    }
+  ],
+  "spiritTouchstone" : "",
+  "tribe" : {
+    "catalog" : "predator-kings"
+  },
+  "willpowerTrack" : [
+    "none",
+    "none"
+  ],
+  "xpMode" : false
+}

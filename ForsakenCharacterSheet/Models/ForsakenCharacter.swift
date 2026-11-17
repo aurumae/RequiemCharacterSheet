@@ -11,7 +11,9 @@ import SwiftUI
 
 @Observable
 final class ForsakenCharacter: Codable {
-    /// The version of the save format this app writes.
+    /// The version of the save format this app writes; docs/forsaken-save-format.md describes it key by key, and
+    /// the fixtures in ForsakenCharacterSheetTests/Fixtures pin it. Once a version has shipped, anything new in the
+    /// file needs the next number, so an older app refuses the file instead of dropping what it can't read.
     /// - 1: the first Forsaken format. Every file has `"game": "forsaken"`.
     static let currentSchemaVersion = 1
 
@@ -151,7 +153,7 @@ final class ForsakenCharacter: Codable {
 
     // MARK: - Saving
 
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: CodingKey, CaseIterable {
         case game, schemaVersion, id, createdAt, modifiedAt,
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
@@ -286,7 +288,7 @@ final class ForsakenCharacter: Codable {
         moonGiftSource = try container.decodeIfPresent(TraitSource.self, forKey: .moonGift)
         customMoonFacets = try container.decode(.moonFacets, default: [])
         extraMoonGifts = try container.decode(.extraMoonGifts, default: [])
-        // Early drafts listed Moon Gift Facets with the others; they now come from auspice Renown
+        // Drafts from before the first release listed Moon Gift Facets with the others; they come from auspice Renown
         let savedFacets: [OwnedFacet] = try container.decode(.facets, default: [])
         facets = savedFacets.filter { $0.source.catalogID.flatMap { catalog.facet($0)?.gift.kind } != .moon }
         rites = try container.decode(.rites, default: [])

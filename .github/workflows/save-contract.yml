@@ -140,6 +140,14 @@ jobs:
           -skip-testing:RequiemCharacterSheetUITests
           -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
           -resultBundlePath ios-test-results.xcresult
+      # Forsaken has no Android port yet, so its rules and save fixtures are tested here alone.
+      - name: Build and test the Forsaken app
+        run: >-
+          xcodebuild test -project RequiemCharacterSheet.xcodeproj
+          -scheme ForsakenCharacterSheet
+          -destination "platform=iOS Simulator,id=$REQUIEM_SIMULATOR"
+          -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
+          -resultBundlePath forsaken-test-results.xcresult
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -147,6 +155,7 @@ jobs:
           path: |
             ios-host-tests*.xml
             ios-test-results.xcresult
+            forsaken-test-results.xcresult
 
   result:
     name: CI result
