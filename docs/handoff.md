@@ -1712,3 +1712,60 @@ stands, which is what an Xcode Cloud workflow for it will do.
 **Validation:** `swift test` (279, with the policy check); Forsaken 78.
 
 **Follow-up (Android):** nothing.
+
+## 2026-11-17 13:05 UTC · Claude (iOS) · Forsaken 1.0 is submitted: Android's `:forsaken` can start
+
+**User, 2026-11-17:** Forsaken Character Sheet 1.0 (iOS) has been submitted for App Store review, so the Android
+port starts now. This entry gathers what earlier entries left for "when `:forsaken` starts" and the Requiem
+follow-ups still open. The entries since Astra's last one (15 November 01:27) hold the detail; this is the index.
+
+**What `:forsaken` builds from**
+- **Plan and boundaries:** `docs/multi-game-plan.md`: the shared and game-specific table, "Phase 2 as built" and
+  "Phase 3 as built", and "Android Phase 1 as built". Shared rules belong in `:core`, with each game supplying its
+  trait snapshot, costs and refund rule.
+- **Save format:** `docs/forsaken-save-format.md`. Schema 1 is what the App Store build writes, so it can't change
+  without schema 2. Files are `.wtfcharacter` and carry `"game": "forsaken"`. Two fixtures pin it, in
+  `ForsakenCharacterSheetTests/Fixtures/`; `SaveFormatTests.swift` beside them says what their numbers come to
+  (Strength 7 in Dalu, 10 Experiences spent and so on), which Kotlin can assert too.
+- **Catalogs:** the eight files in `ForsakenCharacterSheet/Catalogs/`, in the format of
+  `docs/forsaken-catalog-format.md`, then `RequiemCharacterSheet/Catalogs/cofd-core.json`, which Forsaken lists
+  after the Werewolf core book.
+- **Rules:** `ForsakenCharacterSheet/Models/` (five files) on `Chronicles/Core/`. The 74 tests in
+  `ForsakenCharacterSheetTests/ForsakenCharacterSheetTests.swift` name the behaviour to match: forms, Health,
+  Renown, Gift prices and free Facets, the second Moon Gift, dice pools, the totem, lodges, guided creation.
+- **Product decisions:** `docs/design-decisions.md`, every section from "Each app's look follows its own official
+  sheet" onwards. Most are the user's rulings where the books disagree, so follow them over the books.
+- **Look:** `ForsakenCharacterSheet/Fonts/` (Comforter and Grechen Fuemen, with their licences),
+  `ForsakenCharacterSheet/Assets.xcassets` (icon, logo, skull watermark, Werewolf Rust) and
+  `shared/forsaken-headings/` (the section headings as ready-made vector drawables, with a README). Flat Earth
+  Scribe must never be bundled or added to the repository, and Trade Winds isn't shipped.
+- **What is left out on purpose:** `docs/forsaken-content-audit.md`, under "Decided" and what waits.
+
+**The contract.** Forsaken is still outside `shared/fixtures/contracts.json` and `shared/catalog-contract.json`.
+Bringing it in means moving the two fixtures to `shared/fixtures/`, classifying Forsaken's catalog fields and
+adding a Forsaken exchange, which touches the policy scripts, the workflow and iOS's tests.
+**Follow-up (Android):** propose how in your plan before moving anything. Until then Kotlin tests can read the
+fixtures and catalogs where they are. I'll change the iOS side in step with yours. From this entry on, iOS treats
+Forsaken's catalogs, fonts and save format as shared, and flags changes to them here.
+
+**Requiem follow-ups still open.** Android's code on `main` hasn't changed since 13 November, apart from my edit
+to `Beta3RulesTest` on the 16th, so I take all of these as outstanding:
+- **Other games' files** (15 November 08:31): refuse a file whose `game` is present and isn't Requiem's, with
+  iOS's message, and keep writing no `game` key. This matters more now that Forsaken files exist.
+- **Keeping `main` green** (16 November 22:00): the two CI rules in `AGENTS.md`; rules-outcome tests on synthetic
+  catalogs; one general `advisory-text` fallback test for iOS to cite; PR #9's handoff entry; a look at the
+  `Beta3RulesTest` edit.
+- **Shared UI, which Forsaken needs as well:** the sheet watermark (15 November 07:35) and its place with the
+  keyboard open; search folding apostrophes and quotes; toolbar room and the section menu; faded dots above the
+  counted rating; unique row ids (all 16 November).
+- **Smaller:** the splash tap-through (15 November 17:10); the two accessibility checks (13 November); decoders
+  accepting `Book.official` and `url`, `ConditionEntry.noteOptions` and effect types they don't know, such as
+  `armor`; nine more Merits in `cofd-core.json` (16 November).
+
+**Changed in this commit:** `docs/multi-game-plan.md` records the submission. No code, catalog, save-format,
+fixture, script or workflow change.
+
+**Validation:** `scripts/check-policy`.
+
+**Question (Android):** what do you need from iOS that these files don't give you? Tests that pin a rule more
+exactly, a worked character, or a note on how a screen behaves are all quick for me to add.

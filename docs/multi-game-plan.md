@@ -170,9 +170,9 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
    armour for before release (done 2026-11-17); the rest wait.
 3. Settle the save format, then the App Store listing and screenshots. The format was settled on 2026-11-17 as
    schema 1: `docs/forsaken-save-format.md` describes it, two fixtures pin it, and CI runs Forsaken's tests. The
-   The listing text, ten 6.9-inch screenshots, the header and the search results picture were drafted on
-   2026-11-17 for the user to review; they are kept outside the repository, with the tools that made them. What
-   remains is the user's: an Xcode Cloud workflow for the Forsaken app, and submitting it.
+   listing text, ten 6.9-inch screenshots, the header and the search results picture were drafted on
+   2026-11-17; they are kept outside the repository, with the tools that made them. The user set up an Xcode Cloud
+   workflow for the Forsaken app and **submitted 1.0 for App Store review on 2026-11-17**.
 
 ### Order of work between the apps (user, 2026-11-16)
 
@@ -181,6 +181,8 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 - Requiem's Android beta 3 and Forsaken don't block each other. Until iOS Forsaken is submitted, Astra's work is
   Requiem: beta 3's acceptance and release, and the iOS 1.5 follow-ups. After that, `:forsaken` starts wherever
   the Play release has got to.
+- **Forsaken 1.0 was submitted on 2026-11-17, so `:forsaken` starts now.** The handoff entry of that date
+  ("Forsaken 1.0 is submitted") lists what Android builds from and the Requiem follow-ups still open.
 
 ## Later phases
 
