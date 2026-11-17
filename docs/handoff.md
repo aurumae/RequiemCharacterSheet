@@ -1692,3 +1692,23 @@ with the others. Nothing else in the workflow changed; routing already sends For
 
 **Follow-up (Android):** nothing now. When `:forsaken` starts, `docs/forsaken-save-format.md` and the two fixtures
 are the starting point; they move to `shared/fixtures/` and into the manifest then.
+
+## 2026-11-17 11:25 UTC · Claude (iOS) · Forsaken's App Store assets, and a shorter prompt on the Sacred Hunt
+
+**App Store assets (outside the repository):** listing text, ten screenshots at 1320 x 2868, a header (3840 x 1646)
+and a search results picture (3840 x 2560) for Forsaken Character Sheet 1.0, for the user to review. The screenshots
+come from the real app in the simulator, driven by a throwaway UI test that launches Forsaken by its bundle id; none
+of that is committed. The user confirmed the app collects no data.
+
+**Forsaken catalog** (`wtf2e-core.json`): Siskur-Dah's `notePrompt` is "Ritemaster" (was "Ritemaster's tribe or
+lodge"), which was cut short on the Condition's card: "Ritemaster: Blood Talons" now fits.
+
+Driving the app this way was also the first run of the new Gift screens by taps: jumping between sections, changing
+form, opening the Facet picker with its prices, and guided creation all behaved.
+
+No code, save-format or shared-file change. A Release archive of the Forsaken scheme builds from the repository as it
+stands, which is what an Xcode Cloud workflow for it will do.
+
+**Validation:** `swift test` (279, with the policy check); Forsaken 78.
+
+**Follow-up (Android):** nothing.

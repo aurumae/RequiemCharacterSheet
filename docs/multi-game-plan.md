@@ -170,7 +170,9 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
    armour for before release (done 2026-11-17); the rest wait.
 3. Settle the save format, then the App Store listing and screenshots. The format was settled on 2026-11-17 as
    schema 1: `docs/forsaken-save-format.md` describes it, two fixtures pin it, and CI runs Forsaken's tests. The
-   listing and screenshots remain.
+   The listing text, ten 6.9-inch screenshots, the header and the search results picture were drafted on
+   2026-11-17 for the user to review; they are kept outside the repository, with the tools that made them. What
+   remains is the user's: an Xcode Cloud workflow for the Forsaken app, and submitting it.
 
 ### Order of work between the apps (user, 2026-11-16)
 

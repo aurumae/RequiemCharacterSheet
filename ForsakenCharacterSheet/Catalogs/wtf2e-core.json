@@ -4601,7 +4601,7 @@
       "resolution": "The prey is brought down (it needn't die), or the pack turns its efforts away from the hunt.",
       "beat": "You get an exceptional success on an action involving the prey.",
       "possibleSources": "The Sacred Hunt rite, a Firstborn's personal blessing",
-      "notePrompt": "Ritemaster's tribe or lodge",
+      "notePrompt": "Ritemaster",
       "noteOptions": [
         {
           "id": "blood-talons",
