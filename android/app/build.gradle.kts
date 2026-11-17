@@ -53,6 +53,8 @@ android {
     }
     buildFeatures { compose = true; buildConfig = true }
     sourceSets["test"].resources.srcDir("../../shared/fixtures")
+    // Refusal tests read the submitted Forsaken fixtures in place; they are not app assets.
+    sourceSets["test"].resources.srcDir("../../ForsakenCharacterSheetTests/Fixtures")
     sourceSets["test"].kotlin.srcDir("../test-support")
     sourceSets["androidTest"].assets.srcDir("../../shared/fixtures")
     testOptions.unitTests.all {

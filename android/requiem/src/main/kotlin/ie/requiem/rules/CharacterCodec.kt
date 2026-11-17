@@ -5,12 +5,23 @@ import ie.chronicles.core.mergeTraits as merge
 import ie.chronicles.core.visibleTrack
 
 class UnsupportedSchema(val version: Int) : IllegalArgumentException("Unsupported character schema $version")
+class UnsupportedGame(val game: String) : IllegalArgumentException(
+    "This character is from another game. Open it in that game's app."
+)
+
+/** Only Requiem's original files omitted the game. Check before decoding or migrating traits. */
+internal fun requireRequiemGame(input: JsonObject) {
+    val value = input["game"]?.takeUnless { it == JsonNull } ?: return
+    require(value is JsonPrimitive && value.isString) { "game must be a string" }
+    if (value.content != "requiem") throw UnsupportedGame(value.content)
+}
 
 class CharacterCodec(private val catalog: Catalog) {
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false }
 
     fun decode(text: String, fileId: java.util.UUID? = null): CharacterSave {
         val input = json.parseToJsonElement(text).jsonObject
+        requireRequiemGame(input)
         val version = input["schemaVersion"]?.takeUnless { it == JsonNull }?.let {
             require(!it.jsonPrimitive.isString) { "schemaVersion must be a number" }
             it.jsonPrimitive.int

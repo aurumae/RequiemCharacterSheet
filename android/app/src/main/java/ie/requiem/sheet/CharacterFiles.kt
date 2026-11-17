@@ -37,6 +37,8 @@ internal class CharacterFiles(private val directory: File, val catalog: Catalog)
             val details = listOf(lineage, catalog.name(CatalogKind.covenants, c.covenant))
                 .filter { it.isNotBlank() }.joinToString(" · ")
             LibraryRow(id, c.name, c.modifiedAt, c.creation != null, details = details)
+        } catch (e: UnsupportedGame) {
+            LibraryRow(id, problem = e.message)
         } catch (e: UnsupportedSchema) {
             LibraryRow(id, problem = "Unsupported save version ${e.version}")
         } catch (_: Exception) {

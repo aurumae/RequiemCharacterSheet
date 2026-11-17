@@ -72,6 +72,13 @@ do not impose Requiem's rating clamps on Forsaken's saved or effective ratings.
 Each phase can use several small PRs. Each PR includes a handoff and passes its
 selected CI jobs before merging. Phase numbers are dependency order, not dates.
 
+**Phase 0 implementation (17 November):** Requiem checks game identity before
+migration/import/open, preserves unchanged exports, and still omits `game` on
+canonical writes. Rule-engine tests now use fixed synthetic inputs; the general
+advisory fallback has named evidence in [the CI policy](ci-contract-policy.md).
+The phase-0 handoff records validation and publishing status. No Forsaken fixtures
+have moved and no Forsaken module is built in this phase. Phase 1 is next.
+
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |
 | **0. Protect saves and stabilize tests** | Refuse foreign-game files in Requiem's real import/open boundary before any migration or write. Move rules-outcome tests onto synthetic catalogs, retaining live checks for declared contracts. Add the general tested `advisory-text` fallback and review the Gallows Post test change. | A Requiem candidate that accepts existing files and refuses Forsaken/unknown games without changing the library. Forsaken implementation has not started in this phase. |

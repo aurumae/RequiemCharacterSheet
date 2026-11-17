@@ -9,6 +9,29 @@ class CharacterDocumentTest {
     private val documents = CharacterDocuments(Catalog.bundled())
     private fun fixture() = javaClass.getResource("/characters/v10-advanced.json")!!.readBytes()
 
+    @Test fun gameBoundaryPrecedesMigrationAndRequiemWritersKeepTheirExistingFormat() {
+        val codec = CharacterCodec(Catalog.bundled())
+        val message = "This character is from another game. Open it in that game's app."
+        for (game in listOf("forsaken", "unknown-game", "Requiem", "")) {
+            val text = """{"game":"$game","schemaVersion":999,"name":"Other","attributes":"not Requiem traits"}"""
+            assertEquals(message, assertThrows(UnsupportedGame::class.java) { codec.decode(text) }.message)
+            assertEquals(message, assertThrows(CharacterDocumentError::class.java) { documents.read(text.toByteArray()) }.message)
+        }
+        for (game in listOf(null, JsonNull, JsonPrimitive("requiem"))) {
+            val fields = Json.parseToJsonElement(fixture().decodeToString()).jsonObject.toMutableMap()
+            if (game != null) fields["game"] = game
+            val text = JsonObject(fields).toString()
+            val document = documents.read(text.toByteArray())
+            assertArrayEquals(text.toByteArray(), document.bytes)
+            assertFalse(Json.parseToJsonElement(codec.encode(document.character)).jsonObject.containsKey("game"))
+        }
+        for (game in listOf(JsonPrimitive(1), JsonPrimitive(true), JsonObject(emptyMap()), JsonArray(emptyList()))) {
+            val text = buildJsonObject { put("name", "Damaged"); put("game", game) }.toString()
+            assertEquals("The file isn't a character file, or it's damaged.",
+                assertThrows(CharacterDocumentError::class.java) { documents.read(text.toByteArray()) }.message)
+        }
+    }
+
     @Test fun filesRequireACharacterNameAndRejectNewerFormatsBeforeAnyMigration() {
         for (text in listOf("{}", "[]", "null", "{", "{\"name\":3}", "{\"name\":\"Bad\",\"id\":\"no\"}",
             "{\"name\":\"Bad\",\"schemaVersion\":\"10\"}")) {
