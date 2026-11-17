@@ -15,9 +15,13 @@ or release task, even when continuing an existing conversation:
 1. Inspect the branch and working tree. Preserve unrelated tracked and untracked work.
 2. Fetch the latest `origin/main` and integrate it before proceeding. On `main`, use a
    fast-forward pull; on a working branch, merge `origin/main` without discarding local work.
-3. Read the rules in `docs/handoff.md` and every entry since the last Android entry. On
+3. Check the latest run on `main` (`gh run list --branch main --limit 1`). Wait for an
+   in-progress run to finish and verify `CI result` passed. If it failed, tell the
+   user and address the failure before starting other work. A red `main` means
+   something is broken, never that Android has not caught up with iOS.
+4. Read the rules in `docs/handoff.md` and every entry since the last Android entry. On
    first use, read the whole file. Read all intervening entries, including amendments.
-4. Address or explicitly record any **Question:** or **Follow-up:** for Android within
+5. Address or explicitly record any **Question:** or **Follow-up:** for Android within
    the user's current scope. A handoff follow-up does not override a user request to
    inspect or plan only. Do not rely on conversation memory instead of the handoff.
 
@@ -37,6 +41,11 @@ or release task, even when continuing an existing conversation:
   append a clarification rather than rearranging history.
 - Use short-lived branches and pull requests into `main`. Include the handoff in the
   published work so Claude receives it when pulling `main`; an unpushed note is not delivered.
+- After every push, watch the run (`gh run watch`) until `CI result` passes. Check the
+  main run after a merge too. Diagnose and fix a failed selected check within scope,
+  or report the failure and what is needed; do not leave a red main unreported or
+  start the next piece of work on it. Declared pending ports belong in the supported
+  contract policy, not in failing main checks.
 
 ## Shared implementation and checks
 
