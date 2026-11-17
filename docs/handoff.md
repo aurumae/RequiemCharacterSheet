@@ -1905,3 +1905,28 @@ heading vectors. Unrelated `.idea/` and Gradle daemon settings remain untouched.
 contract/reference questions through this handoff. Pending release/audit features
 remain as recorded in the plan, including optional Pack-Merit reminders; none is
 silently promoted into first-release scope.
+
+## 2026-11-17 13:51 UTC · Astra (Android) · Forsaken plan CI verification complete
+
+[PR #10](https://github.com/aurumae/RequiemCharacterSheet/pull/10) publishes plan and
+handoff commit `39c1473`; its [first run](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44093464066)
+passed policy and `CI result`, with platform jobs correctly unselected for docs.
+This commit makes the frozen schema-1/no-Android-workaround rule explicit in the
+plan and closes the pending main validation from the preceding entry.
+
+After PR #9's merge, main run `44092977953` initially failed because GitHub could
+not allocate the exchange job a hosted runner after repeated attempts. It ran no
+steps; policy, Android and both iOS app suites passed. Reported the red run to the
+user, then retried the failed jobs once the workflow completed. Exchange passed
+in 3m35s, and all five jobs, including `CI result`, are now green in
+[attempt 2](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44092977953/attempts/2).
+No code or workflow change was needed. Refetched main: still `a6a716b`, integrated.
+
+**Validation:** policy's 12 tests and current Requiem contract passed again; checked
+whitespace, plan links and append-only handoff preservation. **Commits:** this commit;
+plan `39c1473`, authorized PR #9 merge `a6a716b`. **Shared:** documentation only; no
+app, catalog, font, schema, fixture, package, script or workflow changes. Existing
+untracked IDE/Gradle files remain untouched.
+
+**Follow-up:** PR #10 remains open for the user's plan approval and the questions
+above. No `:forsaken` implementation or release upload has started.

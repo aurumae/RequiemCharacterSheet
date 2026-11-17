@@ -14,6 +14,9 @@ The five model files, three view files, shared `Chronicles/Core` and `Chronicles
 74 Forsaken rules tests and `SaveFormatTests.swift` are the implementation reference.
 The two fixtures exercise every top-level save key. The newer handoff entries and
 [design decisions](design-decisions.md) supersede earlier sketches and book conflicts.
+Schema 1 is frozen for the submitted build; changes to that format require schema 2
+coordinated with iOS. Raise apparent catalog, fixture or behavior mistakes
+as **Question:** in the handoff; do not change them or add Android workarounds.
 
 Android has JVM `:core` and `:requiem`, with the Requiem Compose app in `:app`.
 Beta 3 is version code 11; its release acceptance is unfinished. Reusable controls
