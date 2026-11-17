@@ -1,5 +1,7 @@
 package ie.requiem.rules
 
+import ie.chronicles.core.editBox
+
 import java.util.UUID
 
 /** Committed player actions. Loading, rendering and saving never replay an edit. */
@@ -91,10 +93,12 @@ internal fun CharacterSave.applyEdit(action: SheetEdit, catalog: Catalog, at: Do
     is SheetEdit.Stamina -> applyEdit(SheetEdit.AttributeRating("stamina", stamina + action.delta), catalog)
     is SheetEdit.AttributeRating -> copy(attributes = attributes.map { if (it.attribute == action.id) it.copy(rating = action.rating.coerceIn(legalRatings(RatingKind.Attribute, bloodPotency))) else it })
     is SheetEdit.SkillRating -> copy(skills = skills.map { if (it.skill == action.id) it.copy(rating = action.rating.coerceIn(legalRatings(RatingKind.Skill, bloodPotency))) else it })
-    is SheetEdit.Mark -> if (action.index !in 0 until health(catalog)) this else copy(healthTrack = List(health(catalog)) { i ->
-        val old = healthTrack.getOrElse(i) { Damage.none }; if (i == action.index) Damage.entries[(old.ordinal + 1) % Damage.entries.size] else old })
-    is SheetEdit.Willpower -> if (action.index !in 0 until willpower) this else copy(willpowerTrack = List(willpower) { i ->
-        val old = willpowerTrack.getOrElse(i) { WillpowerMark.none }; if (i == action.index) if (old == WillpowerMark.none) WillpowerMark.spent else WillpowerMark.none else old })
+    is SheetEdit.Mark -> copy(healthTrack = healthTrack.editBox(health(catalog), action.index, Damage.none) {
+        Damage.entries[(it.ordinal + 1) % Damage.entries.size]
+    })
+    is SheetEdit.Willpower -> copy(willpowerTrack = willpowerTrack.editBox(willpower, action.index, WillpowerMark.none) {
+        if (it == WillpowerMark.none) WillpowerMark.spent else WillpowerMark.none
+    })
     is SheetEdit.AddSpecialty -> if (action.text.isBlank()) this else copy(skills = skills.map { if (it.skill == action.skill) it.copy(specialties = it.specialties + action.text.trim()) else it })
     is SheetEdit.ReplaceSpecialty -> replaceSpecialty(action, catalog)
     is SheetEdit.Number -> setNumber(action.field, action.value, catalog)

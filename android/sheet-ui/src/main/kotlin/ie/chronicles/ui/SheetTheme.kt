@@ -8,17 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 // Shared sheet styling. The app injects its fonts, artwork and accessible identity.
 object SheetColors {
@@ -77,7 +77,7 @@ fun PageBackground(content: @Composable BoxScope.() -> Unit) {
 fun LogoHeader() {
     val density = LocalDensity.current
     val window = LocalWindowInfo.current.containerSize
-    val compact = with(density) { window.height.toDp() < 500.dp } || WindowInsets.ime.getBottom(density) > 0
+    val compact = with(density) { window.height.toDp() < 500.dp }
     Box(Modifier.fillMaxWidth().height(if (compact) 72.dp else 140.dp), contentAlignment = androidx.compose.ui.Alignment.Center) {
         Image(painterResource(LocalSheetIdentity.current.logo), LocalSheetIdentity.current.logoDescription,
             Modifier.width(if (compact) 110.dp else 184.dp).height(if (compact) 64.dp else 108.dp))
@@ -109,6 +109,7 @@ data class SheetIdentity(
     val logo: Int,
     val logoDescription: String,
     val background: Int? = null,
+    val watermark: Int? = null,
 )
 
-private val LocalSheetIdentity = staticCompositionLocalOf<SheetIdentity> { error("The app must supply its sheet identity") }
+internal val LocalSheetIdentity = staticCompositionLocalOf<SheetIdentity> { error("The app must supply its sheet identity") }

@@ -54,4 +54,27 @@ class CoreTest {
         assertEquals("1 Experience", experiencesText(1))
         assertEquals("3 dots to 1 dot", "●●● → ●".spokenForScreenReader())
     }
+
+    @Test fun lostHealthFillsEmptyBoxesThenUpgradesTheLeftmostLeastSevereWound() {
+        val track = listOf(Damage.lethal, Damage.none, Damage.bashing, Damage.aggravated, Damage.bashing)
+        assertEquals(listOf(Damage.lethal, Damage.aggravated, Damage.lethal), track.foldedHealth(3))
+        assertEquals(listOf(Damage.aggravated, Damage.lethal), track.foldedHealth(2))
+        assertEquals(emptyList<Damage>(), track.foldedHealth(0))
+        assertEquals(track + Damage.none, track.foldedHealth(track.size + 1))
+        assertEquals(listOf(Damage.lethal, Damage.none), track.visibleTrack(2, Damage.none))
+    }
+
+    @Test fun ledgerUsesTheCostOfEachLevelAndRefundsItsOriginalPrice() {
+        val key = "gift:example"
+        val empty = ExperienceLedger(emptyMap(), emptyList())
+        val two = mapOf(key to TraitLevel(2, "Second Gift"))
+        val bought = empty.record(emptyMap(), two, listOf("gift"), true, false, 1.0,
+            costPerDot = { _, level -> if (level == 1) 5 else 2 }, refunds = { true })
+        assertEquals(mapOf(1 to 5, 2 to 2), bought.paidDots[key])
+        assertEquals(7, bought.changeLog.single().experiences)
+        val refunded = bought.record(two, emptyMap(), listOf("gift"), true, false, 2.0,
+            costPerDot = { _, _ -> error("A refund must use the ledger") }, refunds = { true })
+        assertEquals(-7, refunded.changeLog.last().experiences)
+        assertTrue(refunded.paidDots.isEmpty())
+    }
 }

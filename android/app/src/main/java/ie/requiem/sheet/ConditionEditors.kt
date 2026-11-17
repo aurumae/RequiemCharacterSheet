@@ -1,19 +1,7 @@
 package ie.requiem.sheet
 
-import androidx.compose.ui.platform.LocalFocusManager
-
-import androidx.compose.ui.text.input.ImeAction
-
-import androidx.compose.foundation.text.KeyboardOptions
-
-import androidx.compose.foundation.text.KeyboardActions
-
-import ie.chronicles.ui.*
-import ie.chronicles.core.CatalogSearch
-
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -32,6 +20,8 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ie.chronicles.core.CatalogSearch
+import ie.chronicles.ui.*
 import ie.requiem.rules.*
 import java.util.UUID
 
@@ -54,6 +44,8 @@ internal fun ConditionsSection(c: CharacterSave, catalog: Catalog, editable: Boo
                     ConditionTitle(info)
                     Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (condition.note.isNotBlank()) Text("${info.notePrompt}: ${condition.note}", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        if (info.noteOptions.isNotEmpty()) ConditionNoteEffect(info.notePrompt, condition.note,
+                            listOf(NoteGroup("", info.noteOptions)), info.source, catalog.bookMetadata)
                         Text(info.effect, style = MaterialTheme.typography.bodySmall, maxLines = 4, overflow = TextOverflow.Ellipsis)
                         Text("Resolution: ${info.resolution}", style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
                         Text("Beat: ${info.beat ?: "n/a"}", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -105,7 +97,14 @@ internal fun ConditionDialogs(route: String, c: CharacterSave, catalog: Catalog,
                                     OutlinedTextField(value, { edit(SheetEdit.ConditionText(condition.id, key, it)) }, label = { SheetText(label) }, singleLine = !multiline,
                                         minLines = if (multiline) 2 else 1, modifier = Modifier.fillMaxWidth().revealWhileEditing(value).testTag("condition-${key.name}"))
                                 }
-                                field(info.notePrompt, condition.note, ConditionField.Note)
+                                if (info.noteOptions.isEmpty()) field(info.notePrompt, condition.note, ConditionField.Note)
+                                else {
+                                    val groups = listOf(NoteGroup("", info.noteOptions))
+                                    ConditionNoteMenu(info.notePrompt, condition.note, groups) {
+                                        edit(SheetEdit.ConditionText(condition.id, ConditionField.Note, it))
+                                    }
+                                    ConditionNoteEffect(info.notePrompt, condition.note, groups, info.source, catalog.bookMetadata)
+                                }
                                 if (info.hasCounter) Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                                     SheetText("Penalty: −${condition.counter}", Modifier.weight(1f), style = LocalSheetType.current.label)
                                     TextButton(onClick = { edit(SheetEdit.ConditionCounter(condition.id, condition.counter - 1)) }, enabled = condition.counter > 1,
@@ -164,41 +163,35 @@ internal fun ConditionDialogs(route: String, c: CharacterSave, catalog: Catalog,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable private fun ConditionPicker(c: CharacterSave, catalog: Catalog, choose: (TraitSource) -> Unit, dismiss: () -> Unit) {
-    val focus = LocalFocusManager.current
     var search by rememberSaveable { mutableStateOf("") }
     val options = remember(catalog, search) {
         val query = CatalogSearch(search)
         catalog.bookEntries(CatalogKind.conditions).filter { query.matches("${it.name} ${it.summary} ${it.citation}") }
     }
     val recent = c.recentConditionIDs(catalog).mapNotNull { id -> options.firstOrNull { it.id == id } }
-    ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
-        Column(Modifier.padding(horizontal = 16.dp).imePadding()) {
-            ModalHeading("Add Condition", "Cancel", dismiss)
-            OutlinedTextField(search, { search = it }, label = { SheetText("Search Conditions") }, singleLine = true, keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }), modifier = Modifier.fillMaxWidth().testTag("condition-search"))
-            LazyColumn(Modifier.weight(1f, fill = false).testTag("condition-options"), contentPadding = PaddingValues(bottom = 24.dp)) {
-                val groups = (if (recent.isEmpty()) emptyList() else listOf(CatalogSection("recent", null, "Recently used", recent))) + catalog.bookSections(options.sortedBy { it.name }, { it })
-                groups.forEach { section ->
-                    item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
-                    items(section.entries, key = { "${section.id}/${it.id}" }) { entry ->
-                        val info = CharacterCondition(entry.source()).info(catalog)
-                        val allowed = c.canAddCondition(entry)
-                        Column(Modifier.fillMaxWidth().clickable(enabled = allowed, role = Role.Button) { choose(entry.source()) }.padding(vertical = 12.dp)
-                            .semantics(mergeDescendants = true) { stateDescription = if (allowed) "" else "Already on the sheet" }) {
-                            Row {
-                                SheetText(entry.name, Modifier.weight(1f), style = LocalSheetType.current.trait)
-                                if (!allowed) SheetText("✓", color = SheetColors.accent)
-                            }
-                            SheetText(info.effect, style = MaterialTheme.typography.bodySmall)
-                            if (info.persistent) SheetText("Persistent", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-                            SheetText("Beat: ${info.beat ?: "n/a"}", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-                            SheetText(entry.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
-                        }
-                        SheetRule()
+    CatalogPicker("Add Condition", "Search Conditions", search, { search = it },
+        "condition", dismiss) {
+        val groups = (if (recent.isEmpty()) emptyList() else listOf(CatalogSection("recent", null, "Recently used", recent))) + catalog.bookSections(options.sortedBy { it.name }, { it })
+        groups.forEach { section ->
+            item("group-${section.id}") { CatalogSectionHeading(section.book, section.title) }
+            items(section.entries, key = { "${section.id}/${it.id}" }) { entry ->
+                val info = CharacterCondition(entry.source()).info(catalog)
+                val allowed = c.canAddCondition(entry)
+                Column(Modifier.fillMaxWidth().clickable(enabled = allowed, role = Role.Button) { choose(entry.source()) }.padding(vertical = 12.dp)
+                    .semantics(mergeDescendants = true) { stateDescription = if (allowed) "" else "Already on the sheet" }) {
+                    Row {
+                        SheetText(entry.name, Modifier.weight(1f), style = LocalSheetType.current.trait)
+                        if (!allowed) SheetText("✓", color = SheetColors.accent)
                     }
+                    SheetText(info.effect, style = MaterialTheme.typography.bodySmall)
+                    if (info.persistent) SheetText("Persistent", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    SheetText("Beat: ${info.beat ?: "n/a"}", style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
+                    SheetText(entry.citation, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                 }
-                if (options.isEmpty()) item { SheetText("No matching Conditions", Modifier.padding(12.dp)) }
-                item { AddSheetRow("Custom Condition", true) { choose(TraitSource(custom = "")) } }
+                SheetRule()
             }
         }
+        if (options.isEmpty()) item { SheetText("No matching Conditions", Modifier.padding(12.dp)) }
+        item { AddSheetRow("Custom Condition", true) { choose(TraitSource(custom = "")) } }
     }
 }

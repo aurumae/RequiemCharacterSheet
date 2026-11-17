@@ -11,6 +11,7 @@ private val requiemIdentity = SheetIdentity(
     numeralFont = R.font.cinzel_medium,
     logo = R.drawable.requiem_logo,
     logoDescription = "Vampire: The Requiem, Second Edition",
+    watermark = R.drawable.sheet_watermark,
     background = R.drawable.page_border,
 )
 @Composable internal fun SheetTheme(content: @Composable () -> Unit) = ChroniclesTheme(requiemIdentity, content)

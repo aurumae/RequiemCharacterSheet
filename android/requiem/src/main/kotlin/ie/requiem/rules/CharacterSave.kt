@@ -47,9 +47,9 @@ internal fun foundationNow(): Double = ie.chronicles.core.foundationNow()
 @Serializable
 data class CharacterSave(
     val schemaVersion: Int = CURRENT_SCHEMA,
-    val id: SaveId = UUID.randomUUID(),
+    override val id: SaveId = UUID.randomUUID(),
     val createdAt: Double = foundationNow(),
-    val modifiedAt: Double = createdAt,
+    override val modifiedAt: Double = createdAt,
     override val name: String = "",
     override val player: String = "",
     override val chronicle: String = "",
@@ -88,7 +88,7 @@ data class CharacterSave(
     val paidDots: Map<String, Map<Int, Int>> = emptyMap(),
     val creation: CreationState? = null,
     override val conditions: List<CharacterCondition> = emptyList(),
-) : ie.chronicles.core.ChroniclesCharacter {
+) : ie.chronicles.core.ChroniclesCharacter, ie.chronicles.core.StoredCharacter {
     init {
         require(paidDots.keys.all(::validTraitKey)) { "Invalid paid-dot trait" }
         require(changeLog.all { validTraitKey(it.trait) }) { "Invalid log trait" }

@@ -1,12 +1,16 @@
 package ie.requiem.rules
 
+import ie.chronicles.core.ConditionNoteOption
+import ie.chronicles.core.BookSource
+import ie.chronicles.core.applyConditionEvent
 import java.util.UUID
 
 enum class ConditionField { Name, Note, Effect, Resolution, Beat }
 
 data class ConditionInfo(val name: String, val persistent: Boolean, val effect: String,
     val resolution: String, val beat: String?, val possibleSources: String?, val citation: String,
-    val beatOnResolve: Boolean, val hasCounter: Boolean, val notePrompt: String, val custom: Boolean)
+    val beatOnResolve: Boolean, val hasCounter: Boolean, val notePrompt: String, val custom: Boolean,
+    val noteOptions: List<ConditionNoteOption>, val source: BookSource?)
 
 fun CharacterCondition.info(catalog: Catalog): ConditionInfo {
     val entry = catalog.entry(CatalogKind.conditions, source)
@@ -18,11 +22,10 @@ fun CharacterCondition.info(catalog: Catalog): ConditionInfo {
         raw?.str("resolution") ?: customResolution,
         if (entry != null) raw?.str("beat") else customBeat.trim().ifEmpty { null },
         raw?.str("possibleSources"), entry?.citation.orEmpty(), raw?.str("beatOnResolve") != "false",
-        hasCounter, raw?.str("notePrompt") ?: "Note", source.catalog == null)
+        hasCounter, raw?.str("notePrompt") ?: "Note", source.catalog == null, entry?.noteOptions.orEmpty(), entry?.sourceReference)
 }
 
 fun CharacterCondition.logName(catalog: Catalog): String = info(catalog).name + if (note.isEmpty()) "" else " ($note)"
-private val CharacterCondition.logKey: String get() = "condition:${source.catalog ?: "custom"}/${id.swiftKey()}"
 fun CharacterSave.canAddCondition(entry: BookEntry): Boolean = entry.repeatable || conditions.none { it.source.catalog == entry.id }
 fun CharacterSave.recentConditionIDs(catalog: Catalog): List<String> = changeLog.asReversed()
     .filter { it.trait.startsWith("condition:") && it.event == ConditionEvent.added }
@@ -46,12 +49,12 @@ private fun knownConditionTarget(target: String): Boolean = when (target.substri
 }
 
 internal fun CharacterSave.editCondition(action: SheetEdit, catalog: Catalog, at: Double): CharacterSave {
-    fun log(c: CharacterCondition, event: ConditionEvent, gained: Int = 0): CharacterSave {
-        val awarded = if (gained == 0) this else applyEdit(SheetEdit.Counter(NumberField.Beats, gained), catalog, at)
-        return awarded.copy(changeLog = awarded.changeLog + TraitChange(UUID.randomUUID(), at, c.logKey,
-            c.logName(catalog), if (event == ConditionEvent.added) 0 else 1,
-            if (event == ConditionEvent.added || event == ConditionEvent.beat) 1 else 0, 0, xpMode,
-            if (creation != null) true else null, event, gained.takeIf { it > 0 }))
+    fun apply(c: CharacterCondition, event: ConditionEvent): CharacterSave {
+        val info = c.info(catalog)
+        val change = applyConditionEvent(c, event, c.logName(catalog), info.beat != null, info.beatOnResolve,
+            creation != null, at) ?: return this
+        return copy(conditions = change.conditions, changeLog = changeLog + change.log,
+            beats = change.total.beats, experiences = change.total.experiences)
     }
     return when (action) {
         is SheetEdit.AddCondition -> {
@@ -60,18 +63,13 @@ internal fun CharacterSave.editCondition(action: SheetEdit, catalog: Catalog, at
                     (entry == null || !canAddCondition(entry)))) this
             else {
                 val c = CharacterCondition(action.source, action.id, counter = if (entry?.raw?.flag("counter") == true) 1 else 0, addedAt = at)
-                log(c, ConditionEvent.added).copy(conditions = conditions + c)
+                apply(c, ConditionEvent.added)
             }
         }
         is SheetEdit.ConditionAction -> {
             val c = conditions.firstOrNull { it.id == action.id } ?: return this
             if (action.event == ConditionEvent.added) return this
-            val info = c.info(catalog)
-            if (action.event == ConditionEvent.beat && info.beat == null) return this
-            val gained = if (action.event == ConditionEvent.beat || (action.event == ConditionEvent.resolved && info.beatOnResolve)) 1 else 0
-            log(c, action.event, gained).let { next ->
-                if (action.event == ConditionEvent.beat) next else next.copy(conditions = next.conditions.filterNot { it.id == c.id })
-            }
+            apply(c, action.event)
         }
         is SheetEdit.ConditionText -> copy(conditions = conditions.map { c ->
             if (c.id != action.id || (action.field != ConditionField.Note && c.source.catalog != null)) c

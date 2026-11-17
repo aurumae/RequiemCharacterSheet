@@ -4,11 +4,6 @@ import kotlinx.serialization.json.*
 import ie.chronicles.core.mergeTraits as merge
 import ie.chronicles.core.visibleTrack
 
-class UnsupportedSchema(val version: Int) : IllegalArgumentException("Unsupported character schema $version")
-class UnsupportedGame(val game: String) : IllegalArgumentException(
-    "This character is from another game. Open it in that game's app."
-)
-
 /** Only Requiem's original files omitted the game. Check before decoding or migrating traits. */
 internal fun requireRequiemGame(input: JsonObject) {
     val value = input["game"]?.takeUnless { it == JsonNull } ?: return
@@ -16,10 +11,12 @@ internal fun requireRequiemGame(input: JsonObject) {
     if (value.content != "requiem") throw UnsupportedGame(value.content)
 }
 
-class CharacterCodec(private val catalog: Catalog) {
+class CharacterCodec(private val catalog: Catalog) : ie.chronicles.core.SheetCodec<CharacterSave> {
+    override val currentSchema get() = CURRENT_SCHEMA
+    override fun requireGame(fields: JsonObject) = requireRequiemGame(fields)
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false }
 
-    fun decode(text: String, fileId: java.util.UUID? = null): CharacterSave {
+    override fun decode(text: String, fileId: java.util.UUID?): CharacterSave {
         val input = json.parseToJsonElement(text).jsonObject
         requireRequiemGame(input)
         val version = input["schemaVersion"]?.takeUnless { it == JsonNull }?.let {
@@ -62,7 +59,7 @@ class CharacterCodec(private val catalog: Catalog) {
         )
     }
 
-    fun encode(character: CharacterSave): String {
+    override fun encode(character: CharacterSave): String {
         require(character.schemaVersion == CURRENT_SCHEMA)
         // Swift writes exactly the visible Health and Willpower boxes, including unmarked boxes.
         val encoded = json.encodeToJsonElement(character.copy(
@@ -82,7 +79,7 @@ class CharacterCodec(private val catalog: Catalog) {
     }
 
     /** Compare to the originally loaded state. Re-decoding a sparse legacy save would generate new IDs. */
-    fun encodeEdit(original: CharacterSave, edited: CharacterSave, at: Double): String? {
+    override fun encodeEdit(original: CharacterSave, edited: CharacterSave, at: Double): String? {
         require(original.id == edited.id)
         if (original == edited.copy(modifiedAt = original.modifiedAt)) return null
         return encode(edited.copy(modifiedAt = at))
