@@ -1119,6 +1119,65 @@ then verify the main push run. This involves the full beta-3 parity/core/CI work
 not just the two test corrections. Physical-device and Play release gates remain
 as previously recorded.
 
+## 2026-11-15 01:37 UTC · Astra (Android) · Current status and outstanding decisions reconciled
+
+The user requested a project overview, not implementation of the remaining work.
+This entry closes the preceding CI follow-up: the user authorized merging PR #7;
+it merged as `a9675dd`, including status note `3ccb540`, and PR #8 was automatically
+marked merged because its commits were included. All five jobs in the main push
+[run 43663271226](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/43663271226)
+passed: policy, Android, exchange, iOS and `CI result`. The earlier red runs are
+historical. Both local checkouts were synced; unrelated IDE/Gradle files remain.
+
+**Implemented:** Android beta 3 (11), current eight-book Requiem rules and schema
+12 parity, book-grouped pickers, shared Kotlin core and staged iOS-first CI are on
+main. There are no declared pending Requiem capabilities. The signed beta-3 archive
+still identifies production source `39503de`; subsequent integration/status changes
+did not change its app sources. iOS source is 1.5 with its core extraction. The last
+recorded App Store status is iOS 1.4 submitted; live store approval was not checked.
+
+**Outstanding acceptance:** beta-3 S24 FE use, full TalkBack traversal, current
+real-device iOS exchange, a Play-delivered data-preserving update and actual 16 KB
+runtime testing. Automated/emulator tests and static alignment passed, but do not
+close these checks. The latest user-confirmed Play version code is 10; local beta-3
+metadata says no upload was performed. Subsequent Console actions are unverified.
+
+**Outstanding release work/decisions:** choose and implement explicit Android
+backup/device-transfer behavior; publish Android privacy wording and expose it in
+About; finish/reconcile Data safety, listing and public-release preparation. The
+current manifest still lacks explicit backup rules and About has no privacy link.
+Account verification, publisher/market/audience choices, key-backup confirmation,
+closed-testing and production-access status need Console/user evidence rather than
+assuming the older unchecked release guide is current. No public release is claimed.
+
+PR #5 (beta-1 store screenshots/feature graphic) and PR #6 (beta-1 Advertising ID
+audit) remain open and now report merge conflicts. Reconcile them with main and
+review their beta-1 evidence against beta 3 before treating them as current release
+sign-off. GitHub has no open issues; main is still unprotected. Requiring `CI result`
+through branch protection is an optional repository decision, not an app-code fix.
+
+**Deliberately deferred:** B6 catalog import/full descriptions, Export Template and
+catalog settings; Forsaken's second app/catalog/rules and later shared-core work;
+PDF export (shelved indefinitely); Tilts/possible combat-screen work. Separate apps
+on shared cores, book grouping without toggles, a permanently free app and Wolf Gift
+Facets at 1 Experience are settled decisions. Some situational/book-specific rules
+remain descriptive by design. Kotlin Multiplatform is only a possible future revisit
+if maintaining the two native rule implementations becomes a recurring problem.
+
+**Documentation follow-up:** parts of `android/README.md` and older release/port
+plans still describe four books, schema 10/11 or the pre-Play beta-1 position. Use
+current code, beta-3 validation and later handoffs for present status; refresh those
+summaries when resuming release work. Do not rewrite historical handoff entries.
+
+**Validation:** refreshed main, inspected current GitHub runs/PRs/issues/protection,
+source versions, About/manifest, release metadata and tracked plans. No app tests
+rerun for this documentation-only review. **Commits:** this documentation commit;
+preceding integration `a9675dd`, status note `3ccb540`, implementation `39503de` and
+its predecessors recorded above. **Shared:** no catalog, font, save-format, fixture,
+`Package.swift`, script or workflow change. No release upload or account setting
+was changed. **Follow-up:** prioritize physical beta-3/Play acceptance and the
+privacy/backup work before expanding into Forsaken; outstanding work remains
+subject to the user's next requested scope.
 ## 2026-11-15 02:25 UTC · Claude (iOS) · Gallows Post Status covers every Carthian Merit
 
 The user reported that Gallows Post Status didn't qualify a character for Jack-Booted Thug during guided
