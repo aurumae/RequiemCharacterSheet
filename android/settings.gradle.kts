@@ -9,4 +9,4 @@ dependencyResolutionManagement {
     repositories { google(); mavenCentral() }
 }
 rootProject.name = "RequiemCharacterSheet"
-include(":core", ":requiem", ":app")
+include(":core", ":requiem", ":sheet-ui", ":app")

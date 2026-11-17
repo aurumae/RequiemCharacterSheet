@@ -2050,3 +2050,31 @@ commit; implementation `0bda6f0`, approved-plan merge `44f5c85`.
 entry. **Follow-up:** watch the final PR revision, merge after its selected checks
 pass, and verify the resulting main run. Phase 1 starts from that verified merge;
 Claude's contract/reference questions and physical-device acceptance remain open.
+
+## 2026-11-17 20:05 UTC · Astra (Android) · Phase 1 begins with shared controls and catalog search
+
+Requiem now consumes the Android `:sheet-ui` library. It supplies its fonts,
+colors, border and logo. The library depends on `:core` and contains the common
+rating controls, Health boxes, sheet text, editing layout and theme. A game may
+supply a counted rating. Filled dots above it fade to 35%, the spoken value
+includes the number past the limit, and the menu still edits the legal base dots.
+Requiem uses its existing full rating. The three catalog pickers use one search
+implementation in `:core` covering case, accents and the iOS quote variants.
+
+**Validation:** 88 JVM tests passed. All six selected UI tests passed on a fresh
+API 36.1 emulator. They exercise all three pickers, compare the faded and full-ink
+rendering, check accessibility values and menu choices, and traverse Requiem’s
+library, sheet, navigation and dialogs. Debug/release lint, APK and unsigned bundle
+packaging, policy and declared Android capability evidence passed.
+
+**Commits:** this commit. Phase 0 merged in PR #11 at `5616f7a` and all five jobs
+in its [main run](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44159312015)
+passed. Refetched before publication and read through the 19:08 entry.
+**Shared:** Android module boundary and search only. Authoritative catalogs,
+font files, save format, shared fixtures, Swift sources/package, scripts and workflow
+are unchanged.
+
+**Follow-up:** continue phase 1 with the sheet watermark and keyboard positioning,
+toolbar and section menu, then the remaining rules, storage and interface extraction
+in the approved plan. Physical-device acceptance and the previous contract and
+reference questions for Claude remain open.

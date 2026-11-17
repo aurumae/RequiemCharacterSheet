@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 /** Re-evaluate after IME/layout changes, including multiline growth. */
 @Composable
-internal fun Modifier.revealWhileEditing(value: String): Modifier {
+fun Modifier.revealWhileEditing(value: String): Modifier {
     val requester = remember { BringIntoViewRequester() }
     var focused by remember { mutableStateOf(false) }
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -30,7 +30,7 @@ internal fun Modifier.revealWhileEditing(value: String): Modifier {
 }
 
 /** Fade only the list edges; scroll padding lets every row move clear of the mask. */
-internal fun Modifier.pageEdges(): Modifier = graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+fun Modifier.pageEdges(): Modifier = graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
     .drawWithContent {
         drawContent()
         if (size.height <= 0f) return@drawWithContent

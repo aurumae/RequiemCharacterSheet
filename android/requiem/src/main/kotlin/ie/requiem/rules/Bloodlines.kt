@@ -1,5 +1,7 @@
 package ie.requiem.rules
 
+import ie.chronicles.core.CatalogSearch
+
 fun CharacterSave.inClanGroupName(catalog: Catalog): String =
     catalog.entry(CatalogKind.bloodlines, bloodline)?.name ?: catalog.name(CatalogKind.clans, clan)
 
@@ -47,6 +49,10 @@ fun CharacterSave.identityOptions(field: CharacterDetail, catalog: Catalog, quer
         }
         IdentityOption(entry, group, details, warnings.joinToString(". ").ifEmpty { null })
     }
+    val search = CatalogSearch(query)
     return options.sortedWith(compareBy<IdentityOption> { it.group == "Other Bloodlines" }.thenBy { it.entry.name })
-        .filter { query.isBlank() || (it.entry.name + " " + it.entry.summary + " " + it.entry.bookName + " " + it.details.joinToString(" ")).contains(query.trim(), ignoreCase = true) }
+        .filter { option ->
+            val entry = option.entry
+            search.isEmpty || search.matches("${entry.name} ${entry.summary} ${entry.bookName} ${option.details.joinToString(" ")}")
+        }
 }
