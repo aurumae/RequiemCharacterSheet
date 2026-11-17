@@ -22,12 +22,62 @@ package protocol CatalogEntry: Identifiable, Decodable where ID == CatalogEntryI
 package struct Book: Codable, Hashable {
     package let id: String
     package let name: String
+    /// `false` for fan-made or preview material, e.g. a design article on a publisher's blog. Each character chooses
+    /// whether to see unofficial books; official ones are always shown.
+    package let official: Bool
+    /// Where an unofficial source can be read online.
+    package let url: String?
+
+    package init(id: String, name: String, official: Bool = true, url: String? = nil) {
+        self.id = id
+        self.name = name
+        self.official = official
+        self.url = url
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, official, url
+    }
+
+    package init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        official = try container.decodeIfPresent(Bool.self, forKey: .official) ?? true
+        url = try container.decodeIfPresent(String.self, forKey: .url)
+    }
+
+    package func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        if !official {
+            try container.encode(official, forKey: .official)
+        }
+        try container.encodeIfPresent(url, forKey: .url)
+    }
+}
+
+extension Array where Element == Book {
+    /// The books a character sees: all the official ones, and the unofficial ones if they've chosen to.
+    package func visible(includingUnofficial: Bool) -> [Book] {
+        includingUnofficial ? self : filter(\.official)
+    }
+
+    package var hasUnofficial: Bool {
+        contains { !$0.official }
+    }
 }
 
 /// Where an entry is described: a book, and the page if known.
 package struct SourceReference: Codable, Hashable {
     package let book: String
     package let page: Int?
+
+    package init(book: String, page: Int?) {
+        self.book = book
+        self.page = page
+    }
 }
 
 /// The entries of one kind, looked up by id or by name.
@@ -210,10 +260,18 @@ package struct ConditionEntry: CatalogEntry {
     package let counter: Bool
     /// The traits it clearly affects, marked on the sheet. Situational effects aren't listed.
     package let affects: [ConditionEffect]
+    /// Set choices for the note, each with its own effect, e.g. Siskur-Dah's by the ritemaster's tribe. Empty when
+    /// the note is free text.
+    package let noteOptions: [ConditionNoteOption]
 
     package enum CodingKeys: CodingKey {
         case id, name, source, persistent, summary, resolution, beat, possibleSources, beatOnResolve, repeatable
-        case notePrompt, counter, affects
+        case notePrompt, counter, affects, noteOptions
+    }
+
+    /// The choice the note names, if it's one of the set choices.
+    package func noteOption(named note: String) -> ConditionNoteOption? {
+        noteOptions.first { $0.name == note }
     }
 
     package init(from decoder: Decoder) throws {
@@ -231,7 +289,19 @@ package struct ConditionEntry: CatalogEntry {
         notePrompt = try container.decodeIfPresent(String.self, forKey: .notePrompt)
         counter = try container.decode(.counter, default: false)
         affects = try container.decode(.affects, default: [])
+        noteOptions = try container.decode(.noteOptions, default: [])
     }
+}
+
+/// One of a Condition's set choices for its note, and what it does. The note saves its name.
+package struct ConditionNoteOption: Decodable, Hashable, Identifiable {
+    package let id: String
+    package let name: String
+    /// What the game groups it under, e.g. "forsaken" or "pure"; each game decides how to show the groups.
+    package let group: String?
+    /// Where it's described, if not with the Condition.
+    package let source: SourceReference?
+    package let summary: String
 }
 
 /// Traits a Condition affects, and how, e.g. Deprived: "−1 to dice pools using Stamina, Resolve or Composure".
@@ -304,9 +374,19 @@ package enum Effect: Decodable, Equatable {
     case defenseSkillFromQualifier
     /// Adds dots to another Merit, which may go above five. Flock (Herd).
     case merit(CatalogEntryID, Amount)
+    /// Adds dots to a Skill. Werewolf Gifts and rites.
+    case skill(SkillID, Amount)
+    /// Adds to Health. Warrior's Hide.
+    case health(Amount)
+    /// Adds to Willpower, which may then pass 10. Zeal.
+    case willpower(Amount)
+    /// Adds to the most Essence the character can hold. Primeval Echo.
+    case essenceMaximum(Amount)
+    /// Adds general armor. Raiment of the Storm.
+    case armor(Amount)
 
     private enum CodingKeys: CodingKey {
-        case type, attribute, merit, amount
+        case type, attribute, merit, skill, amount
     }
 
     /// Saved as e.g. {"type": "attribute", "attribute": "strength", "amount": "rating"}.
@@ -330,6 +410,16 @@ package enum Effect: Decodable, Equatable {
             self = .defenseSkillFromQualifier
         case "merit":
             self = .merit(try container.decode(String.self, forKey: .merit), try container.decode(Amount.self, forKey: .amount))
+        case "skill":
+            self = .skill(try container.decode(SkillID.self, forKey: .skill), try container.decode(Amount.self, forKey: .amount))
+        case "health":
+            self = .health(try container.decode(Amount.self, forKey: .amount))
+        case "willpower":
+            self = .willpower(try container.decode(Amount.self, forKey: .amount))
+        case "essenceMaximum":
+            self = .essenceMaximum(try container.decode(Amount.self, forKey: .amount))
+        case "armor":
+            self = .armor(try container.decode(Amount.self, forKey: .amount))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown effect \(type)")
         }
@@ -422,3 +512,29 @@ package struct CatalogPickerGroup<Entry: CatalogEntry> {
     }
 }
 
+
+// MARK: - Search
+
+extension String {
+    /// Whether a search finds this text, ignoring case and accents, and treating curly and straight quotes and
+    /// apostrophes alike, so "Predator's" typed on the keyboard finds "Predator’s Unmatched Pursuit".
+    package func matchesSearch(_ search: String) -> Bool {
+        Self.foldingQuotes(self).localizedStandardContains(Self.foldingQuotes(search))
+    }
+
+    private static func foldingQuotes(_ text: String) -> String {
+        var folded = ""
+        folded.reserveCapacity(text.count)
+        for character in text {
+            switch character {
+            case "\u{2018}", "\u{2019}", "\u{201A}", "\u{201B}", "\u{2032}", "\u{02BC}", "`", "\u{00B4}":
+                folded.append("'")
+            case "\u{201C}", "\u{201D}", "\u{201E}", "\u{201F}", "\u{2033}":
+                folded.append("\"")
+            default:
+                folded.append(character)
+            }
+        }
+        return folded
+    }
+}

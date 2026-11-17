@@ -9,6 +9,7 @@ import SwiftUI
 struct BanePickerView: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.showsUnofficialContent) private var showsUnofficialContent
     let character: Character
     /// Called with the chosen catalog entry, or `nil` for a custom Bane.
     let onChoose: (BaneEntry?) -> Void
@@ -19,9 +20,9 @@ struct BanePickerView: View {
     private var matchingEntries: [BaneEntry] {
         let entries = Catalog.bundled.banes.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
-        let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
+        let nameMatches = entries.filter { $0.name.matchesSearch(searchText) }
         let summaryMatches = entries.filter {
-            !$0.name.localizedStandardContains(searchText) && $0.summary.localizedStandardContains(searchText)
+            !$0.name.matchesSearch(searchText) && $0.summary.matchesSearch(searchText)
         }
         return nameMatches + summaryMatches
     }
@@ -34,7 +35,7 @@ struct BanePickerView: View {
         NavigationStack {
             List {
                 // By book, so it's clear where each Bane comes from
-                let sections = CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)])
+                let sections = CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)], includingUnofficial: showsUnofficialContent)
                 ForEach(sections) { section in
                     Section(header: section.header) {
                         ForEach(section.entries) { entry in

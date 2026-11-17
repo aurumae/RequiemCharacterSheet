@@ -23,7 +23,11 @@ package protocol ChroniclesCharacter: AnyObject {
     var conditions: [CharacterCondition] { get set }
 
     var healthTrack: [HealthBoxFillType] { get set }
+    /// Health dots, worked out by each game, e.g. Stamina + Size and any bonuses.
+    var health: Int { get }
     var willpowerTrack: [WillpowerBoxFillType] { get set }
+    /// Willpower dots beyond Resolve + Composure, e.g. from a Werewolf Gift.
+    var willpowerBonus: Int { get }
 
     var beats: Int { get set }
     var experiences: Int { get set }
@@ -69,9 +73,41 @@ extension ChroniclesCharacter {
         skill(id)?.rating ?? 0
     }
 
-    /// Willpower dots: Resolve + Composure.
+    /// Willpower dots: Resolve + Composure, plus any bonus.
+    package var willpowerBonus: Int { 0 }
+
     package var willpower: Int {
-        rating(of: .resolve) + rating(of: .composure)
+        rating(of: .resolve) + rating(of: .composure) + willpowerBonus
+    }
+
+    /// The health boxes on the sheet, one per point of Health.
+    package var healthBoxes: [HealthBoxFillType] {
+        (0..<max(health, 0)).map { healthTrack.indices.contains($0) ? healthTrack[$0] : .none }
+    }
+
+    /// The willpower boxes on the sheet, one per point of Willpower.
+    package var willpowerBoxes: [WillpowerBoxFillType] {
+        (0..<max(willpower, 0)).map { willpowerTrack.indices.contains($0) ? willpowerTrack[$0] : .none }
+    }
+
+    package func setHealthBox(at index: Int, to damage: HealthBoxFillType) {
+        if healthTrack.count <= index {
+            healthTrack += Array(repeating: .none, count: index - healthTrack.count + 1)
+        }
+        healthTrack[index] = damage
+    }
+
+    /// Keeps the wounds from Health boxes the character no longer has, e.g. after a shift to a smaller form.
+    package func foldLostHealth() {
+        guard healthTrack.dropFirst(max(health, 0)).contains(where: { $0 != .none }) else { return }
+        healthTrack = healthTrack.folded(into: health)
+    }
+
+    package func setWillpowerBox(at index: Int, to state: WillpowerBoxFillType) {
+        if willpowerTrack.count <= index {
+            willpowerTrack += Array(repeating: .none, count: index - willpowerTrack.count + 1)
+        }
+        willpowerTrack[index] = state
     }
 
     /// Five Beats make an Experience.

@@ -1,0 +1,59 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras-2",
+    "name": "Dark Eras 2"
+  },
+  "conditions": [
+    {
+      "id": "futuristic-visionary",
+      "name": "Futuristic Visionary",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 450
+      },
+      "persistent": false,
+      "summary": "New technology and tales of scientific marvels have you inventing furiously.",
+      "resolution": "Before rolling a Build Equipment action for something that would help Enigmas or Science actions, resolve this Condition to gain 8-again on the roll. If it succeeds, gain a Willpower point.",
+      "beat": null,
+      "possibleSources": "An exceptional success"
+    },
+    {
+      "id": "radiation-poisoning",
+      "name": "Radiation Poisoning",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 450
+      },
+      "persistent": true,
+      "summary": "Exposure to atomic radiation has poisoned you. It's a poison whose Toxicity depends on how bad and how long the exposure was, doing its damage once a scene, or the grave Poisoned Tilt in action scenes. Without supernatural healing your damage takes twice as long to heal, and Mental actions take −2. The Storyteller may make it temporary, ending after a scene of medical treatment and a full chapter.",
+      "resolution": "Significant, ongoing medical treatment, and either a full story passes, or a full chapter passes and you raise your Stamina.",
+      "beat": "Your wound penalty increases, or you fall unconscious from this Condition's damage.",
+      "possibleSources": "Exposure to atomic radiation",
+      "affects": [
+        {
+          "targets": [
+            "attributeCategory:mental",
+            "skillCategory:mental"
+          ],
+          "text": "Radiation Poisoning: −2 to Mental actions"
+        }
+      ]
+    }
+  ],
+  "tilts": [
+    {
+      "id": "iterus-black-blood",
+      "name": "Iteru's Black Blood",
+      "source": {
+        "book": "dark-eras-2",
+        "page": 45
+      },
+      "kind": "environmental",
+      "summary": "Foul ichor covers the ground. Anyone with open wounds has the moderate Poisoned Tilt for the scene, and swallowing it brings the grave one. Failing a breaking point roll near it brings the Madness Condition. Humans who touch it gain Gluttonous as a second Vice for the rest of the story.",
+      "cause": "The rotting flesh of Crocodile seeps into the waters, and stains Iteru's banks when they fall.",
+      "ending": "When Iteru's waters next rise and carry it away."
+    }
+  ]
+}

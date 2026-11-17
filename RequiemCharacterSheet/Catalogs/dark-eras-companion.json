@@ -89,8 +89,18 @@
       "name": "Gallows Post",
       "nickname": "Brigands",
       "source": { "book": "dark-eras-companion", "page": 92 },
-      "summary": "Messengers, guides and highwaymen who keep Kindred society connected by carrying word and travellers along the dangerous roads and seas between cities. Its members may take Carthian Law Merits, using their Gallows Post Status.",
-      "meritGroups": [{ "group": "carthian-law", "inPlaceOf": "carthian-movement" }]
+      "summary": "Messengers, guides and highwaymen who keep Kindred society connected by carrying word and travellers along the dangerous roads and seas between cities. Its members may take Carthian Merits, including the Carthian Laws, using their Gallows Post Status.",
+      "meritGroups": [
+        { "group": "carthian-law", "inPlaceOf": "carthian-movement" },
+        {
+          "merits": [
+            "carthian-pull", "i-know-a-guy", "night-doctor-surgery", "alley-cat", "army-of-one", "court-jester",
+            "devotion-experimenter", "fucking-thief", "jack-booted-thug", "mobilize-outrage", "sell-out",
+            "smooth-criminal", "toss-that-shit-right-back"
+          ],
+          "inPlaceOf": "carthian-movement"
+        }
+      ]
     }
   ]
 }

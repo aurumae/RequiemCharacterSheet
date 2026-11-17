@@ -9,6 +9,7 @@ import SwiftUI
 struct DisciplinePickerView: View {
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.showsUnofficialContent) private var showsUnofficialContent
     let character: Character
     /// Called with the chosen catalog entry, or `nil` for a custom Discipline.
     let onChoose: (DisciplineEntry?) -> Void
@@ -19,9 +20,9 @@ struct DisciplinePickerView: View {
     private var matchingEntries: [DisciplineEntry] {
         let entries = Catalog.bundled.disciplines.all.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         guard !searchText.isEmpty else { return entries }
-        let nameMatches = entries.filter { $0.name.localizedStandardContains(searchText) }
+        let nameMatches = entries.filter { $0.name.matchesSearch(searchText) }
         let summaryMatches = entries.filter {
-            !$0.name.localizedStandardContains(searchText) && $0.summary.localizedStandardContains(searchText)
+            !$0.name.matchesSearch(searchText) && $0.summary.matchesSearch(searchText)
         }
         return nameMatches + summaryMatches
     }
@@ -44,7 +45,7 @@ struct DisciplinePickerView: View {
                     }
                 }
 
-                ForEach(CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)])) { section in
+                ForEach(CatalogBookSection.sections([CatalogPickerGroup("", matchingEntries)], includingUnofficial: showsUnofficialContent)) { section in
                     Section(header: section.header) {
                         ForEach(section.entries) { entry in
                             row(for: entry)

@@ -12,6 +12,8 @@ struct DotsRowView: View {
     @Environment(\.theme) private var theme
     @Binding var rating: Int
     var totalRating: Int
+    /// Filled dots above this are faded: they don't count.
+    var countedRating: Int = .max
     var rowIndex: Int
     var maxRating: Int
     var maxEditableRating: Int
@@ -32,8 +34,10 @@ struct DotsRowView: View {
                     // Dots below the minimum can't be tapped, as tapping one would take dots away
                     action: isInteractive && index <= maxEditableRating && index >= minEditableRating ? { tap(index) } : nil
                 )
-                // Empty dots that can't be bought now (e.g. past the starting dots in guided creation) are faded
-                .opacity(isInteractive && index > maxEditableRating && index > totalRating ? 0.35 : 1)
+                // Empty dots that can't be bought now (e.g. past the starting dots in guided creation), and filled ones
+                // that don't count (e.g. past a limit), are faded
+                .opacity((isInteractive && index > maxEditableRating && index > totalRating)
+                         || (index <= totalRating && index > countedRating) ? 0.35 : 1)
                 // The whole rating is one accessibility element (see DotsRatingView), not each dot
                 .accessibilityHidden(true)
             }

@@ -99,4 +99,11 @@ struct CatalogFormattingTests {
         #expect("1 → 3".spokenForVoiceOver == "1 to 3")
         #expect("Beast's Hunger (Mystery of the Wyrm ••)".spokenForVoiceOver == "Beast's Hunger (Mystery of the Wyrm 2 dots)")
     }
+
+    @Test func searchTreatsApostrophesAndQuotesAlike() {
+        #expect("Predator\u{2019}s Unmatched Pursuit".matchesSearch("Predator's"))
+        #expect("Predator's Unmatched Pursuit".matchesSearch("predator\u{2019}s"))
+        #expect("The \u{201C}Ghost\u{201D}".matchesSearch("\"ghost\""))
+        #expect(!"Predators".matchesSearch("Predator's"))
+    }
 }

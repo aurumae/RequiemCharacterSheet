@@ -205,6 +205,14 @@ Catalogs/vtr2e-core.json
 }
 ```
 
+`book` may also have `"official": false` (absent means official) for unofficial sources such as fan-made content or
+design articles, and `"url"` where the source can be read online; an entry from such a book is cited by its URL in
+place of "Book, p. N". Added 2026-11-16; Forsaken's catalogs use the same `book` object.
+
+A Condition entry may have `noteOptions`, set choices for its note, each `{ "id", "name", "summary" }` with optional
+`group` and `source`. The note saves the chosen option's name, and the card shows that option's `summary`. Added
+2026-11-16 for Werewolf's Siskur-Dah; no Requiem Condition uses it yet.
+
 A `CatalogStore` loads the bundled files and any imported ones, and looks entries up by ID.
 
 ## 5. Importing full descriptions

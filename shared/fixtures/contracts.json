@@ -215,7 +215,7 @@
       "tests": {
         "ios": {
           "file": "RequiemCharacterSheetTests/CatalogTests.swift",
-          "name": "gallowsPostTakesCarthianLawsWithItsOwnStatus"
+          "name": "gallowsPostTakesCarthianMeritsWithItsOwnStatus"
         },
         "android": {
           "file": "android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt",

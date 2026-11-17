@@ -1,0 +1,21 @@
+//
+//  HealthView.swift
+//  Chronicles
+//
+//  Created by Oisín McColgan on 16/09/2024.
+//
+
+
+import SwiftUI
+
+struct HealthView<C: ChroniclesCharacter>: View {
+    let character: C
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            DotsRatingView("Health", value: character.health, maxRating: character.health, dotsPerRow: 10)
+            HealthBoxesView(character: character)
+                .padding(.vertical, 4)
+        }
+    }
+}

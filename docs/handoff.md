@@ -1178,3 +1178,653 @@ its predecessors recorded above. **Shared:** no catalog, font, save-format, fixt
 was changed. **Follow-up:** prioritize physical beta-3/Play acceptance and the
 privacy/backup work before expanding into Forsaken; outstanding work remains
 subject to the user's next requested scope.
+## 2026-11-15 02:25 UTC · Claude (iOS) · Gallows Post Status covers every Carthian Merit
+
+The user reported that Gallows Post Status didn't qualify a character for Jack-Booted Thug during guided
+creation. Their ruling is that Gallows Post Status stands in for Carthian Movement Status for all Carthian
+Merits, not only the twelve Carthian Laws. This is a catalog-only change in `dark-eras-companion.json`. The
+Gallows Post keeps its `carthian-law` group and gains a second `meritGroups` entry. That entry lists the other
+thirteen Merits that ask for Carthian Status in `merits`, with `inPlaceOf: "carthian-movement"`. No new field,
+no change in meaning and no save-format change. Casual User (`notCovenant`) is unaffected. The summary text now
+says "Carthian Merits, including the Carthian Laws".
+
+The test now asserts that every Merit with a `carthian-movement` covenant prerequisite is covered. That will
+fail if a future book adds a Carthian Merit without adding it to the list.
+
+**Validation:** 275 `swift test`; Xcode 276 passed, 1 skipped (the UI test). Merged Astra's `a9675dd` first.
+I have read the 13 and 15 November entries. Astra's answer to the core-extraction Question matches the iOS
+plan. **Follow-up (Android):** none should be needed, because the existing `merits` list handling covers it.
+Please confirm that Jack-Booted Thug shows as available for a Gallows Post character with Status 2.
+
+## 2026-11-15 06:20 UTC · Claude (iOS) · Forsaken look: colour, fonts and section headers
+
+There is no code yet; these are decisions recorded in `docs/design-decisions.md` ahead of the Forsaken app. They
+cover the per-app section-header design, the signature colour (Werewolf Rust #855A4A) and Forsaken's fonts. The
+fonts are Trade Winds as a stand-in for the headings, Comforter for subheadings and Grechen Fuemen for trait names,
+all OFL, with the system font for small print. The user is asking about a licence for the official heading font,
+Flat Earth Scribe, and expects an answer in about a week. The icon and font files are with the user and not in the
+repo yet. **Follow-up (Android):** nothing to build until the Forsaken app target exists. Please note that the
+Storyteller's Vault template fonts must not be bundled in either app.
+
+## 2026-11-15 07:07 UTC · Claude (iOS) · Forsaken fonts and artwork added
+
+New top-level folder `ForsakenCharacterSheet/`. It isn't in any Xcode target yet and nothing about Requiem changes.
+- `Fonts/`: TradeWinds-Regular.ttf, Comforter-Regular.ttf and GrechenFuemen-Regular.ttf, each with its OFL file.
+- `Assets.xcassets`: the app icon (1024px wolf skull), the Werewolf logo (`WtF 2nd ED Logo`), the watermark
+  (`WtF Skull Watermark`, black on transparent, tinted Werewolf Rust #855A4A at about 7% opacity) and the accent
+  colour.
+
+The bundle ID is `com.omccolgan.ForsakenCharacterSheet` (see `docs/multi-game-plan.md`). Font roles are in
+`docs/design-decisions.md`:
+- headings: Trade Winds (a stand-in);
+- labels and subheadings: Comforter, in Werewolf Rust;
+- trait names: Grechen Fuemen, in black;
+- the section pill: Grechen Fuemen.
+
+**Follow-up (Android):** these fonts and images are the Forsaken equivalents of the shared Requiem ones. Use them
+from here when `:forsaken` exists, with an Android package that matches the bundle ID. Nothing to do yet.
+
+## 2026-11-15 07:35 UTC · Claude (iOS) · Requiem sheet watermark
+
+The Requiem character sheet now has its skull as a faint watermark (see `docs/design-decisions.md`). It is the
+`VtR Skull Watermark` image asset: black on transparent, drawn tinted Vampire Red (#581A12) at 7% opacity. It stays
+fixed while the sheet scrolls. It's centred over the list area below the logo, at most 330pt wide with 40pt side
+margins.
+
+The rows are opaque white, so the skull is laid over the list with a multiply blend. That tints the white like
+something showing through the paper, and leaves text and dots effectively unchanged. Taps pass through it, and it
+is decorative and hidden from VoiceOver. It's driven by the new `Theme.watermarkImageName` and `sheetWatermark()` in
+`Chronicles/UI/BackgroundView.swift`, so Forsaken gets it by naming its own skull. It appears only on the sheet.
+
+**Validation:** 275 `swift test`; Xcode 276 passed, 1 skipped. Checked on the simulator: it's visible, stays fixed
+while scrolling, and taps pass through. **Follow-up (Android):** please add the same watermark to the Requiem sheet
+for parity, using the image in `RequiemCharacterSheet/Assets.xcassets/VtR Skull Watermark.imageset/`. Compose can
+use `BlendMode.Multiply`, or draw it behind rows if they're transparent there.
+
+## 2026-11-15 08:31 UTC · Claude (iOS) · Forsaken app target and shared store, list and sections
+
+Phase 2 has started; see "Phase 2 as built so far" in `docs/multi-game-plan.md`. There are three commits:
+- `9bb8f50`: the generic store and list.
+- `8b184dd`: per-game sections and header styles.
+- `4f7db15`: the Forsaken target.
+
+Requiem looks and behaves as before, and its save files are byte-for-byte unchanged.
+
+**Save format, shared:**
+- Files may now carry a top-level `game` key. A missing key means Requiem, so Requiem still never writes it.
+- Forsaken files always have `"game": "forsaken"` and `schemaVersion` 1 (Forsaken's own numbering). They use
+  `.wtfcharacter` and the type `com.omccolgan.ForsakenCharacterSheet.character`.
+- The Forsaken keys are `id`, `createdAt`, `modifiedAt`, `name`, `player`, `chronicle`, `concept`,
+  `blood`, `bone`, `auspice`, `tribe`, `lodge` (free text for now), `attributes`, `skills` (CofD core
+  list), `merits`, `aspirations`, `conditions`, `healthTrack`, `willpowerTrack`, `beats`, `experiences`,
+  `xpMode` and `changeLog`, in the same shapes as Requiem's.
+- iOS Requiem now refuses a file whose `game` isn't Requiem's, with the message "This character is from another
+  game. Open it in that game's app." There's a new test for it.
+
+**Validation:** 276 `swift test`; Xcode 277 passed, 1 skipped. Forsaken was checked on the simulator: list, new
+character, editing, saving and About all work, with the custom fonts.
+
+**Follow-up (Android):**
+- Make Requiem refuse files whose `game` is present and not `"requiem"`, with the same message.
+- Keep writing Requiem files with no `game` key.
+- The Forsaken format above is a draft until the Werewolf traits arrive. A fixture will follow when it settles.
+
+## 2026-11-15 17:10 UTC · Claude (iOS) · Phase 2 done: every shared section in both apps
+
+Commits `c5b90ec` to the commit of this entry; see "Phase 2 as built so far" in `docs/multi-game-plan.md`.
+
+- **Sections:** Attributes, Skills with Specialties, Merits (picker, prerequisites, details), Aspirations, Health,
+  Willpower, Conditions and Experience are shared views. Forsaken's sheet has all of them, and Requiem's sheet runs on
+  the shared frame.
+- **Rules:** the game-neutral rules moved into the core (`Prerequisites.swift`, `ConditionRules.swift`,
+  `ExperienceCore.swift`), and Requiem builds on them. Requiem's behaviour, log order, costs and saves are unchanged:
+  every Requiem test passes unchanged.
+- **Fixed for 1.5:** a tap that skipped the splash screen could also press a button on the list underneath, e.g.
+  Import Character. The list now ignores taps until the splash has gone.
+- **Forsaken save format, draft:** it adds `paidDots` (the same shape as Requiem's). Merits and Conditions are linked
+  to Forsaken's catalog, which for now is `cofd-core.json` only. Some Merits Requiem's catalogs keep in
+  `vtr2e-core.json`, e.g. Language, aren't offered yet; they will come with the Werewolf core catalog.
+
+**Validation:** 276 `swift test`; Requiem's Xcode tests 277 passed, 1 skipped; Forsaken's new test target 8 passed.
+Both apps were checked on the simulator, section by section: Requiem looks and behaves as before. In Forsaken, adding
+Merits with qualifiers, Specialties, damage, Conditions with Beats, and XP Mode charges and refunds all work.
+
+**Follow-up (Android):**
+- Fix the same splash tap-through on Requiem if it happens there.
+- When `:forsaken` is built, mirror the module boundaries above. Shared rules belong in `:core` (Merit
+  prerequisites for the shared kinds, Condition rules, Experience logging and refunds, ordered by each game's kind
+  order). Each game supplies its snapshot, costs and refund rule.
+- Nothing is needed for Requiem's save format.
+
+## 2026-11-15 19:36 UTC · Claude (iOS) · Phase 3: Werewolf catalog, traits and sections
+
+The commits are `43c6aa8` (catalog), `4f126e6` (loading it), `924ce90` (character) and this one (sheet). See
+"Phase 3 as built so far" in `docs/multi-game-plan.md`.
+
+**Shared files for Android:**
+- `ForsakenCharacterSheet/Catalogs/wtf2e-core.json`, in the new forsaken-catalog format.
+  `docs/forsaken-catalog-format.md` is the contract.
+- New design decisions:
+  - The app covers Forsaken, Ghost Wolves and the Pure, not the Wolf-Blooded.
+  - Essence starts at 7, with the maximum set by Primal Urge.
+  - Lodges work like bloodlines.
+  - Fetishes get their own section.
+
+**Forsaken save format, still a draft at schema 1:**
+- `blood`, `bone`, `auspice`, `tribe` and `lodge` are now trait sources (`{"catalog": id}` or
+  `{"custom": name}`).
+- New keys:
+  - `renown` (object by Renown name, dots > 0 only);
+  - `primalUrge`, `essence`, `harmony`;
+  - `fleshTouchstone`, `spiritTouchstone`;
+  - `kuruthTriggers` (`passive`, `common`, `specific`);
+  - `form` (hishu, dalu, gauru, urshul or urhan);
+  - `facets` (`id`, `source`, and `customGift` when custom);
+  - `rites` (`id`, `source`, and `customRating` when custom);
+  - `fetishes` (`id`, `source`, `customRating` when custom, and `note` when set);
+  - `size`.
+- New log kinds: `renown`, `facet`, `rite`, `primalUrge`.
+
+**Validation:** 276 `swift test`; Requiem Xcode 277 passed; Forsaken 16 passed. On the simulator, every section was
+checked. That covered the pickers, form changes to Attributes and Health, Renown with its auspice and tribe notes,
+Facet costs (the auspice's own Moon Gift free, 3 for an affinity Shadow Gift, 1 for Rites per dot), Essence capped at
+10, the Harmony table line, Kuruth triggers, the pill list, saving, and the list subtitle "Irraka · Hunters in
+Darkness".
+
+**Follow-up (Android):** nothing to build until `:forsaken` starts. When it does, read the catalog contract and the
+save keys above.
+
+## 2026-11-15 20:11 UTC · Claude (iOS) · Phase 3: the Pure, from Night Horrors: Shunned by the Moon
+
+**Shared files for Android:**
+- New catalog `ForsakenCharacterSheet/Catalogs/nh-shunned-by-the-moon.json` (book id
+  `night-horrors-shunned-by-the-moon`). It has 3 tribes, 5 Gifts with 25 Facets, 5 Rites, 9 Merits and 8 Conditions.
+  The Pure tribes moved there from `wtf2e-core.json`, which now has 6 tribes. Files after the core two load
+  alphabetically.
+- `docs/forsaken-catalog-format.md` adds optional tribe fields `secondaryRenown`, `skills` and `huntersAspects`
+  (same shape as an auspice's `huntersAspect`).
+
+**Rules:** a tribe of kind `pure` means no auspice. The rules ignore any saved auspice, the sheet shows a Hunter's
+Aspect choice from the tribe's two instead, Gift affinities are the tribe's alone, no Moon Gift is free, and the list
+subtitle leaves the auspice out.
+
+**Forsaken save format (draft, schema 1):** new key `huntersAspect`, the chosen aspect's name, written only when set.
+It's cleared when the tribe changes.
+
+**Validation:** 276 `swift test`; Forsaken 19 passed. On the simulator: the tribe picker is grouped by book, the
+Hunter's Aspect row and menu match the other choice rows, and the tribe details and Renown notes are right.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-16 · Claude (iOS) · Moon Gifts, Gift sections and unofficial content
+
+**Shared files for Android:**
+- `Chronicles/Core/CatalogCore.swift`: `Book` has `official` (default true; written only when false) and an optional
+  `url`. Both catalog formats can use them; see `docs/phase-b-design.md` and `docs/forsaken-catalog-format.md`.
+  An entry from a book with a `url` is cited by the URL.
+- New design decision: unofficial content, per character, with a sheet switch that's off by default. See
+  `docs/design-decisions.md`. Requiem has no unofficial content yet, so its switch and save key aren't added; when
+  its first unofficial catalog arrives, Requiem needs a save-format key (schema bump) on both platforms.
+- Forsaken catalogs: `giver-of-gifts-1.json` and `giver-of-gifts-2.json` (unofficial, Onyx Path blog), and six
+  human-only Church of the Wolf and shadow-occultist Merits (new category `human`) in `nh-shunned-by-the-moon.json`.
+
+**Forsaken save format (draft, schema 1):** new keys `moonGift` (a trait source, only when it isn't the auspice's
+own), `moonFacets` (names for a custom Moon Gift's Facets, from one dot up), `showsUnofficialContent` (only when
+true), and `customKind` ("shadow" or "wolf") on custom Facets. Saved Moon Gift Facets in `facets` are dropped on load.
+
+**Validation:** 276 `swift test`; Requiem Xcode 276 + 2 UI passed; Forsaken 25 passed. Checked on the simulator.
+
+**Follow-up (Android):** read `Book.official`/`url` when decoding Requiem catalogs (ignoring them is fine until
+Requiem has unofficial content).
+
+## 2026-11-16 · Claude (iOS) · Watermark, search, Auspice Benefit, Kuruth sets and Siskur-Dah
+
+**Shared code and files for Android:**
+- The sheet watermark keeps its size and place when the keyboard opens, and is partly covered (`BackgroundView`).
+  Android should match.
+- Search folds curly and straight apostrophes and quotes (`String.matchesSearch` in `CatalogCore.swift`), in every
+  picker. Android should do the same. New design decision in `docs/design-decisions.md`.
+- `ConditionEntry.noteOptions`: optional set choices for a Condition's note, documented in `docs/phase-b-design.md`.
+  No Requiem Condition uses it, so nothing changes for Requiem yet; decoders should accept it.
+
+**Forsaken (iOS only for now):** `wtf2e-core.json` adds auspice `benefit`s, `kuruthTriggers` (the six sets) and
+Siskur-Dah `noteOptions` (Forsaken and Pure tribes). Save format (draft): new `kuruthTriggerSet` (trait source);
+`kuruthTriggers` is now written only for a custom set.
+
+**Validation:** 277 `swift test`; Requiem Xcode 277 + 2 UI passed; Forsaken 29 passed. On the simulator, everything
+was checked, and both apps' watermarks stay put with the keyboard open.
+
+**Follow-up (Android):** the watermark behaviour and quote-folding search.
+
+## 2026-11-16 · Claude (iOS) · Toolbar room, section menu, and Forsaken Advantages
+
+**Shared UI for Android to match:**
+- The XP badge never shrinks. The section pill takes at most the screen width minus about 238pt (up to 255pt at larger
+  text sizes, as the toolbar's buttons stop growing), shrinking its text a little and then ending in "…". Checked
+  on an iPhone SE and an iPhone 17, at default, extra-extra-large and accessibility sizes.
+- The section menu is as tall as its rows up to the space below the pill, then scrolls with a faded bottom edge, and
+  opens scrolled to the current section.
+
+**Forsaken:** an Advantages section after Form shows Size, Defense (and Defensive Combat's alternative), Initiative,
+Speed and the Perception bonus for all five forms, with the current form marked, plus Armor (new save key `armor`).
+Merit effects (Fast Reflexes, Fleet of Foot, Giant, Defensive Combat) count. Siskur-Dah's catalog entry also lists
+the Bale Hound lodges' and the Urighur's effects (groups `bale-hound`, `urighur`); they aren't offered yet.
+
+**Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 30.
+
+## 2026-11-16 · Claude (iOS) · Forsaken pack totem and dots past the limit
+
+**Shared UI:** `DotsRatingView` takes an optional `countedRating`; filled dots above it are faded (shown but not
+counted). `SheetCharacter` gains `countedAttributeRating`, `skillBonus`, `countedSkillRating` and
+`grantedSpecialties`, all defaulting to Requiem's current behaviour, so Requiem's sheet doesn't change. Skill rows
+draw bonus dots in ink like Attributes, and list granted Specialties muted under the player's own.
+
+**Forsaken:** a Totem section after Merits (new save key `totem`: `name`, `aspiration`, `ban`, `packPoints`,
+`advantages` of `{ id, kind: attribute|skill|specialty|merit, target, detail, dots }`). New design decisions:
+stacking over-limit sources, and the totem.
+
+**Validation:** Forsaken 32 passed.
+
+## 2026-11-16 · Claude (iOS) · Forsaken guided creation
+
+Forsaken now offers guided creation, following Requiem's design (checklist panel, priority menus, hard limits), with
+its own rules in `ForsakenCharacterSheet/Models/ForsakenCreation.swift`. See the new design decision. Save key
+`creation` (`attributePriorities`, `skillPriorities`, `freeSkill`) while in creation. Ghost Wolves get one fewer
+Renown dot and only their auspice's Shadow Gifts.
+
+The panel and priority menu are copies of Requiem's adapted for Forsaken; folding the two into shared code is a
+later clean-up.
+
+**Validation:** Forsaken 39 passed.
+
+## 2026-11-16 · Claude (iOS) · Creation and totem fixes from testing
+
+- Forsaken creation: choosing an auspice prompts for the free Skill dot; the auspice's and tribe's Renown dots are
+  given automatically (`creation.grantedRenown` in the save) and can't be removed during creation.
+- Totem Merits: the Merit picker has a `grantsAdvantage` mode (no prerequisites or starting-dot limits, owned Merits
+  allowed). A granted Merit gets a Merits row with 0 bought dots, its granted dots shown via `meritBonus`, and
+  `SheetCharacter.prerequisitesApply(to:)` (default true) hides its prerequisite warning.
+- Fixed the sheet jumping to the top when tapping text fields: the totem's "Name:" row shared the character's row
+  id. `CharacterInfoRowView` takes an optional `rowID` for that. Android should check its row ids are unique too.
+
+**Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 42.
+
+## 2026-11-16 · Claude (iOS) · Gift effects, combat pools, Facets with Renown, CofD Merits
+
+**Shared for Android:**
+- `cofd-core.json` gains nine Chronicles of Darkness Merits the Werewolf book doesn't reprint: Double Jointed,
+  Fast-Talking, Hobbyist Clique, Interdisciplinary Specialty, Library, Mystery Cult Initiation, Taste, Trained
+  Observer and True Friend (entries copied from `vtr2e-core.json`, cited to the CofD core pages). Requiem is
+  unchanged, as `vtr2e-core` comes first. Android should pick up the file.
+- Core `Effect` gains `skill`, `health`, `willpower` and `essenceMaximum` types (unknown types are already skipped).
+  `ChroniclesCharacter` gains `willpowerBonus` (default 0), added to Willpower.
+
+**Forsaken:** Facets may have `effects`, `passive` and `effectForms`, and rites `effects` (see the new design
+decision). Save format (draft): Facets and rites have `active` when switched on; Facets have `withRenown` when
+learned free; new character keys `ballisticArmor` and `renownFacetCredits`. Rites show only their own dots.
+
+**Validation:** 277 `swift test`; Requiem 277 + 2 UI; Forsaken 48.
+
+## 2026-11-16 · Claude (iOS) · Forsaken headings in Flat Earth Scribe
+
+The user bought Blambot's Basic Desktop licence for Flat Earth Scribe, which covers it only as graphics. Forsaken's
+section headings are now vector PDFs in `ForsakenCharacterSheet/Assets.xcassets/Section Headings`, drawn as
+outlines (no font inside) by `scripts/render-forsaken-headings.swift` on the user's Mac. `Theme.headingImagePrefix`
+makes `SectionHeading` use them, tinted and scaled with the text size, narrowing so the brush lines keep 24pt. Trade
+Winds is removed from `ForsakenCharacterSheet/Fonts/` (shared with Android); picker book headings use Comforter.
+About credits Flat Earth Scribe (`AppIdentity.fontCredits`).
+
+**Follow-up (Android):** when `:forsaken` starts, never bundle Flat Earth Scribe; use these heading pictures
+(convert the PDFs to vector drawables) and don't ship Trade Winds.
+
+## 2026-11-16 · Claude (iOS) · Forsaken headings for Android, picker book headings
+
+- New shared folder `shared/forsaken-headings/`: the Forsaken section headings as Android vector drawables (outlines
+  only, no font) and `headings.json`, generated with the iOS PDFs by `scripts/render-forsaken-headings.swift` on the
+  user's Mac. See its README. Flat Earth Scribe must never be bundled.
+- Picker book headings in Forsaken use Grechen Fuemen, not Comforter (too hard to read).
+
+**Follow-up (Android):** nothing until `:forsaken` starts (after the iOS App Store build). Then use these drawables
+as they are; no font or conversion tools are needed on Fedora.
+
+## 2026-11-16 21:48 UTC · Claude (iOS) · CI on main fixed: a renamed test the contract still named
+
+`main` has been red since `e9cc134` (15 November), 34 commits. That commit renamed the iOS test
+`gallowsPostTakesCarthianLawsWithItsOwnStatus` to `…CarthianMerits…` when Gallows Post Status came to cover every
+Carthian Merit, and `shared/fixtures/contracts.json` (`rules.merit-access`) still named the old one. The policy job
+failed on "Missing capability test", so the Android, exchange and iOS jobs were skipped on every push since.
+
+**Shared file changed:** `shared/fixtures/contracts.json`, that one name. The test is the same one, and it now checks
+more than it did.
+
+**Validation:** the policy unit tests (11) and `scripts/contract_policy.py --strict` pass locally; 277 `swift test`.
+The Android and exchange jobs haven't run against anything since `a9675dd`, including the nine Merits added to
+`cofd-core.json`; this push is their first run.
+
+**Follow-up (Android):** none for this. An entry on stopping this happening again follows.
+
+## 2026-11-16 22:00 UTC · Claude (iOS) · Keeping main green while iOS is ahead
+
+The user asked for a lasting fix: CI has gone red each time iOS did new work, and the model is iOS first, Android
+after (Forsaken's Android port starts once the iOS app has been submitted to the App Store). The run for the entry
+above (`e469af5`) passed policy and iOS but failed Android and exchange, so there were two causes, not one.
+
+**What was wrong**
+- The contract was only checked on GitHub. Nothing on the Mac failed when a test the manifest names was renamed.
+- A red `main` went unnoticed for 34 commits, and a failed policy job hid the Android failure behind it.
+- `Beta3RulesTest.statusChoicesAliasesAndMeritOverridesAreScopedToTheirEntries` asserted that Gallows Post Status
+  does *not* meet Carthian Pull. The user's ruling of 15 November ("Gallows Post Status covers every Carthian
+  Merit") changed that in `dark-eras-companion.json`. Android applied the catalog correctly; the test held the old
+  ruling.
+- The policy unit test `test_current_contract_is_strict_and_fully_classified` asserted strict parity of the live
+  manifest on every push. Declaring a pending Android port, the documented iOS-first step, would have failed it.
+
+**Shared files changed**
+- `scripts/check-policy` (new): the policy unit tests, then `contract_policy.py` with any arguments. The workflow's
+  policy job calls it instead of its two separate commands.
+- `RequiemCharacterSheetTests/SaveContractTests.swift`: `contractPolicyPasses` runs that script under `swift test`
+  (macOS only), so a stale contract fails before it's pushed. Checked by putting the old test name back: it fails
+  with "Missing capability test".
+- `scripts/tests/test_ci_policy.py`: the live-manifest test is no longer strict, and
+  `test_declared_pending_port_passes_until_strict` proves a pending Android port passes a push and fails `--strict`.
+- `android/requiem/src/test/kotlin/ie/requiem/rules/Beta3RulesTest.kt`: the Gallows Post line now expects Carthian
+  Pull to be met, and a new line keeps the test's point, that the override is scoped: Gallows Post Status doesn't
+  meet Attaché's Invictus Status. I can't run Kotlin on this Mac (no Java), so GitHub's run is its test.
+- `docs/ci-contract-policy.md` ("Keeping main green while iOS is ahead") and `CLAUDE.md` ("iOS goes first").
+
+**iOS now does this:** checks `main`'s CI before starting and watches the run after every push; searches
+`android/*/src/test` for an entry's id before changing an existing catalog entry, and updates the expectation in the
+same commit.
+
+**Validation:** `scripts/check-policy` and `--strict` pass (12 policy tests), also under macOS's bash 3.2; 278
+`swift test`; Requiem Xcode 277.
+
+**Follow-up (Android):**
+- Add the same two rules to `AGENTS.md`: check `main`'s CI before starting, and don't leave it red.
+- Kotlin tests that assert a rules outcome from the live catalogs break when the user corrects a catalog entry.
+  Please move those to synthetic catalogs, as you did for the chooser groups, and keep live-catalog tests to what
+  `shared/catalog-contract.json` promises.
+- A new iOS-first catalog field needs an Android `advisory-text` fallback test to name, and none exists yet. Please
+  add one general test (an unknown catalog field or rule value is ignored and the entry's text still shows), so iOS
+  can cite it without waiting for Android.
+- PR #9's handoff entry (15 November 01:37) never reached `main`. Please merge it.
+- Check the Beta3RulesTest edit reads as you'd want.
+
+## 2026-11-16 22:41 UTC · Claude (iOS) · Android tests on the Mac, order of work, and the Forsaken content audit
+
+**Both platforms' tests now run on the user's Mac.** The user had a JDK (OpenJDK 21) and the Android command-line
+SDK (platform 36, build-tools 36.0.0) installed, since Astra's Fedora box can only check the Android side.
+`scripts/check-save-contract --strict` passes there: 278 Swift tests, 83 Kotlin tests (`:core` 3, `:requiem` 69,
+`:app` 11) and the exchange both ways. `CLAUDE.md` now has iOS run it before pushing anything shared or under
+`android/`. There's no emulator on the Mac, so lint, the APK build and the instrumented UI tests are still GitHub's
+and Astra's.
+
+**Decisions (user, 2026-11-16)**, recorded in `docs/multi-game-plan.md`:
+- iOS 1.4 is live on the App Store, so 1.5 can be submitted.
+- Before Forsaken goes to the App Store: add The Pack, and go through Dark Eras' Werewolf chapters and the rest of the
+  core book for mechanics the catalogs lack.
+- Android's `:forsaken` starts once the iOS app has been submitted. Requiem's beta 3 and Forsaken don't block each
+  other: until then Astra's work is Requiem.
+
+**Audit.** `docs/forsaken-content-audit.md` lists what about 700 pages of those three sources hold that the app
+lacks, what is wrong in the app, and ten decisions the user has to make. Nothing from it is built yet apart from
+these corrections, all checked against the text:
+- `ForsakenCharacterSheet/Catalogs/wtf2e-core.json`: four auspice benefit pages (Cahalith 18, Elodoth 22, Irraka 26,
+  Rahu 32), the Iron Masters' summary (their prey is humans) and the Storm Lords' oath ("or to tend").
+- The Advantages note no longer says Defense applies against Firearms in Urhan (p. 166).
+
+**Validation:** `scripts/check-save-contract --strict` as above; Forsaken 49 passed.
+
+**Follow-up (Android):** none. The audit will change Forsaken's catalog format and save format (lodges with rules,
+probably a Pack section), so read it only as a preview until the format settles.
+
+## 2026-11-16 23:27 UTC · Claude (iOS) · Forsaken rules fixes from the audit, Tilts, and what's in scope
+
+**Decisions (user)**, in `docs/design-decisions.md`:
+- Each app is one player character's sheet. Group-level things are out of scope, so Forsaken gets no Pack section;
+  the pack totem stays because it changes the character's sheet.
+- Second Edition only: Lodges: The Faithful isn't a source.
+- Tilts go in the catalog now. A combat system that uses them, with weapons and armour, comes after the first release.
+- Dark Eras content goes in under its own books. An era selector comes later.
+- Ghost Wolves start with one Shadow Facet (p. 50); Chapter Three's quick reference is taken to be mistaken.
+
+**Shared code** (`Chronicles/`), with nothing changing for Requiem:
+- `Chronicles/Core/BoxFillType.swift`: `[HealthBoxFillType].folded(into:)`. When Health boxes are lost, each wound in
+  them upgrades the least severe wound left, from the left, after filling any empty box (Werewolf p. 172).
+  `ChroniclesCharacter.foldLostHealth()` applies it. Requiem doesn't call it.
+- `Chronicles/UI/MeritPickerView.swift`: an `excluding` list of Merit ids, empty by default.
+
+**Forsaken:**
+- Shifting to a form with less Health keeps the wounds, by the rule above; they used to be hidden, then lost on saving.
+  The save format is unchanged: `healthTrack` is still one box per point of Health in the saved form.
+- Guided creation: the two Shadow Facets must be from two different Gifts (pp. 83–84; not the Pure's), and Ghost
+  Wolves get one.
+- The totem's Merit picker leaves out Totem and Dedicated Locus (p. 92). The Brawl pool loses a die with no Brawl.
+- `wtf2e-core.json`: a new kind, `tilts`, with the core book's eight (pp. 312–313); see
+  `docs/forsaken-catalog-format.md`. Totemic Empowerment adds 5 to the Essence maximum; Unseen Sense is `human`; the
+  Ghost Wolves' oath summary lost a clause the book doesn't support.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange both ways); Requiem Xcode 278;
+Forsaken 53. Not checked by hand on the simulator.
+
+**Follow-up (Android):** none for Requiem. For `:forsaken` later: the Health rule belongs in `:core`, and Tilts are a
+catalog kind to load.
+
+## 2026-11-16 23:55 UTC · Claude (iOS) · The Pack: lodges with rules, and lodge lore's triple cost
+
+**Decisions (user)**, in `docs/design-decisions.md`: the sheet works out Experience costs itself; lodges with rules
+(who can join, the same lodge in two books, lodge lore, the Sacred Hunt); Ghost Wolves follow Chapter One; Dark Eras is
+cited by the full books' pages, which the user will supply.
+
+**Forsaken catalogs** (format in `docs/forsaken-catalog-format.md`):
+- New book `ForsakenCharacterSheet/Catalogs/the-pack.json` (`the-pack`): five lodges, six Merits, two rites, five
+  fetishes and the Essence Bleed Tilt. It loads after Shunned by the Moon. Pack Merits, Pack Tactics and Hunting Nature
+  are left out: the app has no Pack section.
+- Lodge entries may have `totem`, `blessing`, `aspiration`, `ban`, `tools`, and what they teach: `merits`, `rites`,
+  `fetishes` (ids). A Merit or rite any lodge lists is lodge lore.
+- The Eaters of the Dead are in twice: `eaters-of-the-dead` (core, story only) and `the-pack-eaters-of-the-dead`.
+- `wtf2e-core.json`: Siskur-Dah has five more `noteOptions` in the group `lodge`, cited to The Pack, each with its
+  lodge's id.
+
+**Forsaken rules and sheet:**
+- A character in a lodge with rules gets a Lodge section after the Auspice Benefit: Blessing, Aspiration, Ban, Sacred
+  Hunt and what the lodge teaches. New heading picture, also in `shared/forsaken-headings/` (`heading_lodge.xml`,
+  `headings.json`).
+- Lodge lore shows its lodge as a prerequisite, and in XP Mode costs a werewolf outside the lodge 3 Experiences a dot
+  (The Pack, p. 80). Refunds give back what was paid.
+- Siskur-Dah offers the lodges to every character, in a group of their own.
+- Guided creation keeps a Ghost Wolf's auspice Renown at 1, since a second dot would bring the Moon Gift's second
+  Facet (pp. 50, 115).
+
+No save-format change. No change to Requiem or to `Chronicles/`.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 58.
+The Lodge section was rendered from a test and looked at; the pickers weren't tried by hand.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-17 00:33 UTC · Claude (iOS) · Forsaken's Dark Eras content
+
+**Decisions (user)**, in `docs/design-decisions.md`: what's in the book goes in, worded with care; Dark Eras content
+(the era's Gift of Technology beside the modern one, Sigrblot as a Pack Rite).
+
+**Forsaken catalogs**, cited by the full books' pages, which the user supplied:
+- `ForsakenCharacterSheet/Catalogs/dark-eras.json`: the Viking-age Gift of Technology with five Facets, the rite
+  Sigrblot, four fetishes, the Merit Rune Caster, the Blood archetype Berserker, the Lodge of Muspell, three Conditions
+  (Ergi, Outlaw, The Punk Generation) and three Tilts (Shattered Time, Urban Collapse, Riot).
+- `dark-eras-2.json`: two Conditions (Futuristic Visionary, Radiation Poisoning) and the Tilt Iteru's Black Blood.
+- `dark-eras-companion.json`: the rite Shackled Lightning, the fetish The Ivory Claws and the Council of Eagles and
+  Lightning.
+- These are Forsaken's own files. They share names and book ids with Requiem's Dark Eras catalogs, which are
+  untouched, and nothing in `RequiemCharacterSheet/Catalogs/` changed.
+
+**Format** (`docs/forsaken-catalog-format.md`):
+- A Gift may have `replaces`, the id of the Gift it stands in for in its era. It counts as that Gift in tribes' and
+  auspices' affinities, so the Iron Masters pay 3 Experiences for its first Facet.
+- Books after the core two now load by file name without the extension, so Dark Eras comes before Dark Eras 2.
+- A Condition's `noteOptions` with no `group` are one plain list (Outlaw: lesser or full).
+
+Also: guided creation now says why it refuses a second Facet of the same Shadow Gift.
+
+No save-format change. No change to `Chronicles/` or to Requiem.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 61.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-17 03:41 UTC · Claude (iOS) · The core book's remaining entries, and what every rite needs
+
+**Decisions (user)**, in `docs/design-decisions.md`: the Pure are created by Shunned by the Moon's rules (p. 202),
+which replace the Dark Eras Companion's; twenty Totem points give five Experiences. Both are what the app already did.
+
+**Forsaken catalogs:**
+- `wtf2e-core.json`: the Lodge of the Field (p. 277), which adds Primal Urge to the Essence maximum; two story-only
+  lodges, the Dreaming Lodge and the Lodge of Quicksilver Children; the Merit Voyager Membership (humans only); the
+  Ghost Wolves' First Tongue name; and the three optional trimester Conditions (pp. 294–295).
+- Every rite in every Forsaken catalog now has its `symbols` and `interval` (the time each roll takes), its `cost`
+  where there is one, and the sample rite's `dicePool` where the book gives one.
+
+**Format** (`docs/forsaken-catalog-format.md`): rites may have `symbols`, `interval` and `cost`; a lodge may have
+`effects`, where "rating" is the character's Primal Urge, beside its `benefit` text.
+
+**Sheet:** a rite's details show its symbols, sample pool, time per roll and cost. A lodge with a `benefit` gets the
+Lodge section. A Pure character's Advantages notes say what touching silver does (p. 198).
+
+No save-format change. No change to `Chronicles/` or to Requiem.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 64.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-17 09:50 UTC · Claude (iOS) · Forsaken: Gift prices and dice pools, a second Moon Gift, and four sheet numbers
+
+**Decisions (user)**, in `docs/design-decisions.md`: the sheet works out what Gifts cost and shows it before it's
+paid; Facets are laid out to be read at the table; Spirit Rank is a line at the bottom of Renown. The user also
+confirmed the pages for Ergi and Outlaw (Dark Eras p. 164) and Forsaken by Rome (58, 80, 82).
+
+**Forsaken sheet:**
+- **Gift prices.** In XP Mode the Facet picker says what each Facet costs now (free with new Renown; 1, 2, 3 or 5
+  Experiences; "and unlocks the Gift" for a first Facet). `price(of:in:)` and the charge share one rule.
+- **Free Facets.** A dot of Renown gained in play shows under that Renown and as a row in Shadow Gifts and Wolf
+  Gifts, which opens only the Facets it can go on.
+- **A second Moon Gift** (p. 114): "Add Moon Gift" in Moon Gifts. 5 Experiences with its first Facet, 2 for each
+  after, in order, never past auspice Renown. Its passive Facets count on the sheet.
+- **Dice pools.** Every Facet the character has shows its Renown, cost, action and duration, and its dice pool with
+  the dice counted in the form they're in.
+- **Spirit Rank** from total Renown (p. 99); **Instinctive Defense** in Urshul and Urhan (p. 109); **Favored Form**'s
+  raised and lost Attribute dots, chosen in the Form section (p. 106); **Raiment of the Storm**'s 2 general armour
+  while switched on (p. 145).
+
+**Forsaken catalog** (`wtf2e-core.json`): Raiment of the Storm has an `armor` effect; Thousand-Throat Howl's pool
+names the Skill "Intimidation", so every Facet's pool can be counted (a test checks all of them).
+
+**Shared code** (`Chronicles/Core`): `Effect` has a new case, `armor` (`{"type": "armor", "amount": …}`, general
+armor). No Requiem catalog uses it, and Requiem ignores it, so the catalog contract is unchanged.
+
+**Forsaken save (still a draft, outside the contract):** new keys `extraMoonGifts` (a list of `{id, source, dots,
+facets}`; `facets` holds a custom Gift's Facet names) and `favoredForm` (`{attributes, drawbacks: [{form,
+attribute}]}`). Both are left out when empty. A new trait kind in the log, `moonGift`.
+
+No change to Requiem's sheet, saves or catalogs.
+
+**Validation:** `scripts/check-save-contract --strict` (Swift, Kotlin, exchange); Requiem Xcode 278; Forsaken 74. The
+new sections and pickers were rendered to pictures in the simulator and looked at; nothing was tapped by hand.
+
+**Follow-up (Android):** nothing until `:forsaken` starts. When Requiem's Kotlin effect parser next changes, it can
+skip `armor` as it skips any effect it doesn't know.
+
+## 2026-11-17 10:05 UTC · Claude (iOS) · Forsaken's save format is settled as schema 1, and its tests run in CI
+
+**Forsaken save format:** no longer a draft. `docs/forsaken-save-format.md` describes schema 1 key by key; it is what
+the first App Store release will write. Nothing in the format changed in this commit. Two saved characters pin it, in
+`ForsakenCharacterSheetTests/Fixtures/` (`forsaken-v1-play.json`, `forsaken-v1-creation.json`): `SaveFormatTests`
+checks each is written back unchanged, that between them they use every key, and what their numbers come to. Once
+the app has shipped, anything new in the file needs schema 2, as in Requiem.
+
+**Shared (`.github/workflows/save-contract.yml`):** the `ios` job has one more step, "Build and test the Forsaken
+app", which runs the `ForsakenCharacterSheet` scheme's tests on the same simulator, and uploads its result bundle
+with the others. Nothing else in the workflow changed; routing already sends Forsaken paths to every job.
+
+`CLAUDE.md` and `docs/ci-contract-policy.md` say where the fixtures are and that they stay out of `shared/fixtures/`.
+
+**Validation:** `swift test` (279, with the policy check); Forsaken 78 in the simulator.
+
+**Follow-up (Android):** nothing now. When `:forsaken` starts, `docs/forsaken-save-format.md` and the two fixtures
+are the starting point; they move to `shared/fixtures/` and into the manifest then.
+
+## 2026-11-17 11:25 UTC · Claude (iOS) · Forsaken's App Store assets, and a shorter prompt on the Sacred Hunt
+
+**App Store assets (outside the repository):** listing text, ten screenshots at 1320 x 2868, a header (3840 x 1646)
+and a search results picture (3840 x 2560) for Forsaken Character Sheet 1.0, for the user to review. The screenshots
+come from the real app in the simulator, driven by a throwaway UI test that launches Forsaken by its bundle id; none
+of that is committed. The user confirmed the app collects no data.
+
+**Forsaken catalog** (`wtf2e-core.json`): Siskur-Dah's `notePrompt` is "Ritemaster" (was "Ritemaster's tribe or
+lodge"), which was cut short on the Condition's card: "Ritemaster: Blood Talons" now fits.
+
+Driving the app this way was also the first run of the new Gift screens by taps: jumping between sections, changing
+form, opening the Facet picker with its prices, and guided creation all behaved.
+
+No code, save-format or shared-file change. A Release archive of the Forsaken scheme builds from the repository as it
+stands, which is what an Xcode Cloud workflow for it will do.
+
+**Validation:** `swift test` (279, with the policy check); Forsaken 78.
+
+**Follow-up (Android):** nothing.
+
+## 2026-11-17 13:05 UTC · Claude (iOS) · Forsaken 1.0 is submitted: Android's `:forsaken` can start
+
+**User, 2026-11-17:** Forsaken Character Sheet 1.0 (iOS) has been submitted for App Store review, so the Android
+port starts now. This entry gathers what earlier entries left for "when `:forsaken` starts" and the Requiem
+follow-ups still open. The entries since Astra's last one (15 November 01:27) hold the detail; this is the index.
+
+**What `:forsaken` builds from**
+- **Plan and boundaries:** `docs/multi-game-plan.md`: the shared and game-specific table, "Phase 2 as built" and
+  "Phase 3 as built", and "Android Phase 1 as built". Shared rules belong in `:core`, with each game supplying its
+  trait snapshot, costs and refund rule.
+- **Save format:** `docs/forsaken-save-format.md`. Schema 1 is what the App Store build writes, so it can't change
+  without schema 2. Files are `.wtfcharacter` and carry `"game": "forsaken"`. Two fixtures pin it, in
+  `ForsakenCharacterSheetTests/Fixtures/`; `SaveFormatTests.swift` beside them says what their numbers come to
+  (Strength 7 in Dalu, 10 Experiences spent and so on), which Kotlin can assert too.
+- **Catalogs:** the eight files in `ForsakenCharacterSheet/Catalogs/`, in the format of
+  `docs/forsaken-catalog-format.md`, then `RequiemCharacterSheet/Catalogs/cofd-core.json`, which Forsaken lists
+  after the Werewolf core book.
+- **Rules:** `ForsakenCharacterSheet/Models/` (five files) on `Chronicles/Core/`. The 74 tests in
+  `ForsakenCharacterSheetTests/ForsakenCharacterSheetTests.swift` name the behaviour to match: forms, Health,
+  Renown, Gift prices and free Facets, the second Moon Gift, dice pools, the totem, lodges, guided creation.
+- **Product decisions:** `docs/design-decisions.md`, every section from "Each app's look follows its own official
+  sheet" onwards. Most are the user's rulings where the books disagree, so follow them over the books.
+- **Look:** `ForsakenCharacterSheet/Fonts/` (Comforter and Grechen Fuemen, with their licences),
+  `ForsakenCharacterSheet/Assets.xcassets` (icon, logo, skull watermark, Werewolf Rust) and
+  `shared/forsaken-headings/` (the section headings as ready-made vector drawables, with a README). Flat Earth
+  Scribe must never be bundled or added to the repository, and Trade Winds isn't shipped.
+- **What is left out on purpose:** `docs/forsaken-content-audit.md`, under "Decided" and what waits.
+
+**The contract.** Forsaken is still outside `shared/fixtures/contracts.json` and `shared/catalog-contract.json`.
+Bringing it in means moving the two fixtures to `shared/fixtures/`, classifying Forsaken's catalog fields and
+adding a Forsaken exchange, which touches the policy scripts, the workflow and iOS's tests.
+**Follow-up (Android):** propose how in your plan before moving anything. Until then Kotlin tests can read the
+fixtures and catalogs where they are. I'll change the iOS side in step with yours. From this entry on, iOS treats
+Forsaken's catalogs, fonts and save format as shared, and flags changes to them here.
+
+**Requiem follow-ups still open.** Android's code on `main` hasn't changed since 13 November, apart from my edit
+to `Beta3RulesTest` on the 16th, so I take all of these as outstanding:
+- **Other games' files** (15 November 08:31): refuse a file whose `game` is present and isn't Requiem's, with
+  iOS's message, and keep writing no `game` key. This matters more now that Forsaken files exist.
+- **Keeping `main` green** (16 November 22:00): the two CI rules in `AGENTS.md`; rules-outcome tests on synthetic
+  catalogs; one general `advisory-text` fallback test for iOS to cite; PR #9's handoff entry; a look at the
+  `Beta3RulesTest` edit.
+- **Shared UI, which Forsaken needs as well:** the sheet watermark (15 November 07:35) and its place with the
+  keyboard open; search folding apostrophes and quotes; toolbar room and the section menu; faded dots above the
+  counted rating; unique row ids (all 16 November).
+- **Smaller:** the splash tap-through (15 November 17:10); the two accessibility checks (13 November); decoders
+  accepting `Book.official` and `url`, `ConditionEntry.noteOptions` and effect types they don't know, such as
+  `armor`; nine more Merits in `cofd-core.json` (16 November).
+
+**Changed in this commit:** `docs/multi-game-plan.md` records the submission. No code, catalog, save-format,
+fixture, script or workflow change.
+
+**Validation:** `scripts/check-policy`.
+
+**Question (Android):** what do you need from iOS that these files don't give you? Tests that pin a rule more
+exactly, a worked character, or a note on how a screen behaves are all quick for me to add.

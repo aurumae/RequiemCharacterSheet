@@ -373,7 +373,7 @@ struct CovenantEntry: CatalogEntry {
     let nickname: String?
     let source: SourceReference
     let summary: String
-    /// Families of another covenant's Merits its members may take, e.g. the Gallows Post's use of Carthian Laws.
+    /// Families of another covenant's Merits its members may take, e.g. the Gallows Post's use of Carthian Merits.
     let meritGroups: [CovenantMeritGroup]
     /// Another covenant whose Status this covenant's Status counts as, for everything that asks for it, e.g. the
     /// Legion of the Green's for the Invictus (Dark Eras 2 p. 108).
@@ -400,8 +400,8 @@ struct CovenantEntry: CatalogEntry {
 }
 
 /// Members may take the Merits in `group`, or those listed in `merits`, with their own Covenant Status standing in
-/// for Status in `inPlaceOf`, e.g. Gallows Post Status for the Carthian Laws' Carthian Status (Dark Eras Companion
-/// p. 93), or the Fir'awn's for Altar (Dark Eras 2 p. 142).
+/// for Status in `inPlaceOf`, e.g. Gallows Post Status for the Carthian Status of the Carthian Laws (Dark Eras
+/// Companion p. 93) and other Carthian Merits, or the Fir'awn's for Altar (Dark Eras 2 p. 142).
 struct CovenantMeritGroup: Decodable, Equatable {
     let group: String?
     let merits: [CatalogEntryID]

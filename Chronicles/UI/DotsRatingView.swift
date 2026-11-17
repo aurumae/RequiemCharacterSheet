@@ -15,6 +15,8 @@ struct DotsRatingView: View {
     @Binding var rating: Int
     /// The rating including bonuses, e.g. Strength plus Vigor. Dots above `rating` are drawn in ink.
     var totalRating: Int
+    /// Dots of the total above this are drawn faded: shown, but they don't count, e.g. past a limit.
+    var countedRating: Int
     var maxRating: Int
     var maxEditableRating: Int
     /// Dots at or below this can't be taken away, e.g. the clan's dot during guided creation.
@@ -30,6 +32,7 @@ struct DotsRatingView: View {
         _ label: String,
         rating: Binding<Int>,
         totalRating: Int? = nil,
+        countedRating: Int? = nil,
         maxRating: Int,
         maxEditableRating: Int? = nil,
         minEditableRating: Int = 0,
@@ -42,6 +45,7 @@ struct DotsRatingView: View {
         self.label = label
         self._rating = rating
         self.totalRating = totalRating ?? rating.wrappedValue
+        self.countedRating = countedRating ?? self.totalRating
         self.maxRating = maxRating
         self.maxEditableRating = maxEditableRating ?? maxRating
         self.minEditableRating = minEditableRating
@@ -93,6 +97,7 @@ struct DotsRatingView: View {
                         DotsRowView(
                             rating: $rating,
                             totalRating: totalRating,
+                            countedRating: countedRating,
                             rowIndex: rowIndex,
                             maxRating: maxRating,
                             maxEditableRating: maxEditableRating,
@@ -123,7 +128,9 @@ struct DotsRatingView: View {
 
     private var accessibilityValue: String {
         if totalRating > rating {
-            return "\(totalRating): \(rating) base plus \(totalRating - rating) bonus"
+            let uncounted = totalRating - countedRating
+            let note = uncounted > 0 ? ", \(uncounted) past the limit, not counted" : ""
+            return "\(min(totalRating, countedRating)): \(rating) base plus \(totalRating - rating) bonus\(note)"
         }
         return "\(rating) of \(maxEditableRating)"
     }

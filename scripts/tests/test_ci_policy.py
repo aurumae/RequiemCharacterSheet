@@ -59,10 +59,21 @@ class ContractTests(unittest.TestCase):
         self.m = policy.read(policy.ROOT, policy.MANIFEST)
         self.catalog = policy.read(policy.ROOT, policy.CATALOG)
 
-    def test_current_contract_is_strict_and_fully_classified(self):
+    def test_current_contract_is_fully_classified(self):
+        # Not strict: main may carry declared pending ports while iOS is ahead. --strict is what claims parity.
         policy.validate_manifest(policy.ROOT, self.m)
         policy.validate_catalogs(policy.ROOT, self.m, self.catalog)
-        self.assertFalse(policy.select(self.m, True)["pending"])
+        policy.select(self.m)
+
+    def test_declared_pending_port_passes_until_strict(self):
+        cap = "rules.example-ios-first"
+        self.m["capabilities"][cap] = {"tests": {"ios": self.m["capabilities"]["rules.core"]["tests"]["ios"]}}
+        self.m["platforms"]["ios"]["capabilities"].append(cap)
+        self.m["platforms"]["android"]["pending"][cap] = {"owner": "Android", "handoff": "docs/handoff.md"}
+        policy.validate_manifest(policy.ROOT, self.m)
+        policy.validate_catalogs(policy.ROOT, self.m, self.catalog)
+        self.assertEqual({"android": {cap: self.m["platforms"]["android"]["pending"][cap]}}, policy.select(self.m)["pending"])
+        with self.assertRaisesRegex(ValueError, "pending capabilities"): policy.select(self.m, True)
 
     def test_ios_first_schema_is_selected_locally_and_refused_by_older_android(self):
         cap = "save.example-13"

@@ -1,0 +1,349 @@
+//
+//  SheetNavigation.swift
+//  Chronicles
+//
+
+import SwiftUI
+
+/// A section of the character sheet, for the section pill in the navigation bar. Each game lists its own;
+/// the ones every game has are below.
+struct SheetSection: Hashable, Identifiable {
+    let id: String
+    /// The name in the pill and its list.
+    let title: String
+    /// The section's heading on the sheet, in mixed case, e.g. "Coils of the Dragon". Each game's header style
+    /// sets it in capitals or small capitals.
+    let heading: String
+
+    init(_ id: String, title: String, heading: String? = nil) {
+        self.id = id
+        self.title = title
+        self.heading = heading ?? title
+    }
+
+    static let character = SheetSection("character", title: "Character")
+    static let attributes = SheetSection("attributes", title: "Attributes")
+    static let skills = SheetSection("skills", title: "Skills")
+    static let merits = SheetSection("merits", title: "Merits")
+    static let aspirations = SheetSection("aspirations", title: "Aspirations")
+    static let health = SheetSection("health", title: "Health")
+    static let willpower = SheetSection("willpower", title: "Willpower")
+    static let advantages = SheetSection("advantages", title: "Advantages")
+    static let experience = SheetSection("experience", title: "Experience")
+    static let conditions = SheetSection("conditions", title: "Conditions")
+}
+
+/// Where each section heading is, so the pill can name the section being read. A plain class rather than
+/// observed state: headings move on every frame of a scroll, and only a change of section should redraw the sheet.
+final class SheetSectionTracker {
+    /// The top of each heading on screen, in screen coordinates. Headings scrolled out of the list are removed.
+    private var headingTops: [SheetSection: CGFloat] = [:]
+    /// The list's visible frame on screen.
+    var listFrame: CGRect = .zero
+
+    func update(_ section: SheetSection, top: CGFloat?) {
+        headingTops[section] = top
+    }
+
+    /// How far below the list's top a heading counts as reached: about a heading's height, so a section
+    /// jumped to (heading at the top) is named even when the next one starts soon after.
+    static let readingLineOffset: CGFloat = 80
+
+    /// The section being read: the last one whose heading is above the reading line near the list's top, or
+    /// the one before the first heading on screen. `nil` when no heading is on screen, e.g. in the middle of a
+    /// long section, so the pill keeps the name it had.
+    func currentSection(in order: [SheetSection]) -> SheetSection? {
+        let readingLine = listFrame.minY + Self.readingLineOffset
+        let visible = order.filter { headingTops[$0] != nil }
+        if let passed = visible.last(where: { headingTops[$0]! <= readingLine }) {
+            return passed
+        }
+        guard let first = visible.first, let index = order.firstIndex(of: first) else { return nil }
+        return index > 0 ? order[index - 1] : first
+    }
+}
+
+/// Reports a section heading's position to the sheet; see `SheetSectionTracker`.
+/// Always compares equal, as closures can't be compared.
+struct ReportSectionHeadingAction: Equatable {
+    private let report: (SheetSection, CGFloat?) -> Void
+
+    init(_ report: @escaping (SheetSection, CGFloat?) -> Void) {
+        self.report = report
+    }
+
+    func callAsFunction(_ section: SheetSection, top: CGFloat?) {
+        report(section, top)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool { true }
+}
+
+extension EnvironmentValues {
+    @Entry var reportSectionHeading = ReportSectionHeadingAction { _, _ in }
+}
+
+/// A section of the sheet that the section pill can jump to and follows while scrolling.
+struct SheetSectionBlock<Content: View>: View {
+    @Environment(\.theme) private var theme
+    let section: SheetSection
+    @ViewBuilder let content: Content
+
+    init(_ section: SheetSection, @ViewBuilder content: () -> Content) {
+        self.section = section
+        self.content = content()
+    }
+
+    var body: some View {
+        Section {
+            // The heading is the section's first row rather than its header: lists scroll to rows, not headers
+            SheetSectionHeader(section)
+                .padding(.top, 13)
+                .padding(.bottom, 7)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                // Without a row's usual top and bottom insets, so it's the height the header was
+                .listRowInsets(.vertical, 0)
+                .listRowBackground(theme.sectionHeaderStyle == .row ? Color(uiColor: .systemGroupedBackground) : nil)
+                // The brush line is the divider, so it has no list line under it
+                .listRowSeparator(.hidden, edges: theme.sectionHeaderStyle == .brushLine ? .all : .top)
+                .id(section)
+            content
+        }
+    }
+}
+
+/// A section's heading, which reports where it is on screen.
+struct SheetSectionHeader: View {
+    @Environment(\.reportSectionHeading) private var reportSectionHeading
+    let section: SheetSection
+
+    init(_ section: SheetSection) {
+        self.section = section
+    }
+
+    var body: some View {
+        SectionHeading(section.heading)
+            // A row now, so it needs telling VoiceOver it's a heading, as list headers do by themselves
+            .accessibilityAddTraits(.isHeader)
+            .onGeometryChange(for: CGFloat.self) { geometry in
+                geometry.frame(in: .global).minY
+            } action: { top in
+                reportSectionHeading(section, top: top)
+            }
+            .onDisappear {
+                reportSectionHeading(section, top: nil)
+            }
+    }
+}
+
+/// A section heading in the game's style: a grey row's capitals, or small capitals between brush strokes.
+struct SectionHeading: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// In mixed case, e.g. "Coils of the Dragon".
+    let text: String
+    /// How much larger a heading image is drawn than its natural size, following the text size as the headings' text
+    /// style, Title 2, does.
+    private var headingScale: CGFloat {
+        // Read through the environment's text size, so the heading redraws when it changes
+        _ = dynamicTypeSize
+        return UIFont.preferredFont(forTextStyle: .title2).pointSize / 22
+    }
+
+    init(_ text: String) {
+        self.text = text
+    }
+
+    /// The theme's picture of this heading, if it has one.
+    private var headingImage: UIImage? {
+        theme.headingImagePrefix.flatMap { UIImage(named: $0 + text) }
+    }
+
+    var body: some View {
+        switch theme.sectionHeaderStyle {
+        case .row:
+            Text(text.uppercased())
+                .themedText(.sectionHeader)
+                // The colour list headers have
+                .foregroundStyle(.secondary)
+        case .brushLine:
+            HStack(spacing: 8) {
+                BrushLine(seed: text + "-leading", solidEnd: .trailing)
+                    .frame(minWidth: 24)
+                Group {
+                    if let image = headingImage {
+                        // Drawn ahead of time in a face licensed only for graphics
+                        Image(uiImage: image)
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            // As large as the text size asks, but narrower if need be, so the brush lines still show
+                            .frame(maxWidth: image.size.width * headingScale, maxHeight: image.size.height * headingScale)
+                    } else {
+                        smallCapitals(text)
+                            .multilineTextAlignment(.center)
+                    }
+                }
+                .foregroundStyle(theme.accent)
+                .layoutPriority(1)
+                BrushLine(seed: text + "-trailing", solidEnd: .leading)
+                    .frame(minWidth: 24)
+            }
+            .textCase(nil)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(text)
+        }
+    }
+
+    /// Capitals stay full size and lower-case letters become small capitals, as the Werewolf sheet sets its
+    /// headings. Drawn with two sizes of the face, as the heading faces have no small capitals of their own.
+    private func smallCapitals(_ text: String) -> Text {
+        var result = AttributedString()
+        for character in text {
+            var run = AttributedString(String(character).uppercased())
+            run.font = character.isLowercase ? theme.smallCapitalHeadingFont : theme.font(.sectionHeader, dynamicTypeSize: dynamicTypeSize)
+            result += run
+        }
+        return Text(result)
+    }
+}
+
+extension View {
+    /// The list's background: the grouped grey within a page border, or none on a plain page, so the page shows.
+    @ViewBuilder
+    func themedListBackground(_ theme: Theme) -> some View {
+        if theme.borderImageName == nil {
+            self.scrollContentBackground(.hidden)
+        } else {
+            self
+        }
+    }
+}
+
+/// The pill in the navigation bar: the section being read, and a chevron. Tapping it opens `SectionMenu`.
+struct SectionPill: View {
+    @Environment(\.theme) private var theme
+    let current: SheetSection?
+    @Binding var isOpen: Bool
+    /// The most the pill may take, leaving room for the toolbar's other buttons.
+    var maxWidth: CGFloat = 170
+
+    var body: some View {
+        Button {
+            withAnimation(.snappy(duration: 0.2)) { isOpen.toggle() }
+        } label: {
+            HStack(spacing: 6) {
+                // A long name shrinks a little, then ends in "…", so the controls beside the pill keep their room
+                Text(current?.title ?? "Sections")
+                    .font(theme.controlFace)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .truncationMode(.tail)
+                Image(systemName: isOpen ? "chevron.up" : "chevron.down")
+                    .font(.caption.weight(.semibold))
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            // The height of the toolbar's glass buttons (back, Save), whatever the face; it only grows for very large text
+            .frame(minHeight: 44)
+            .frame(maxWidth: maxWidth)
+            .background(Capsule().fill(theme.accent))
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        // Its own width, up to the cap above, rather than whatever the toolbar has left
+        .fixedSize()
+        .accessibilityLabel("Section")
+        .accessibilityValue(current?.title ?? "")
+        .accessibilityHint(isOpen ? "Double-tap to close the list of sections" : "Double-tap to jump to another section")
+    }
+}
+
+/// The list of sections under the pill, with the current one highlighted. Tapping outside closes it.
+struct SectionMenu: View {
+    @Environment(\.theme) private var theme
+    let sections: [SheetSection]
+    let current: SheetSection?
+    let choose: (SheetSection) -> Void
+    let close: () -> Void
+    @State private var rowsHeight: CGFloat = 0
+    @State private var scrolledToEnd = false
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            // Taps outside the list close it
+            Color.black.opacity(0.001)
+                .ignoresSafeArea()
+                .onTapGesture(perform: close)
+                .accessibilityHidden(true)
+
+            // As tall as its rows, up to the space below the pill; then it scrolls, opening at the current section,
+            // with the bottom edge faded so it's clear there's more
+            GeometryReader { space in
+                let available = max(space.size.height - 12, 0)
+                let scrolls = rowsHeight > available
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        rows
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { rowsHeight = $0 }
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .mask {
+                        LinearGradient(stops: [.init(color: .black, location: 0),
+                                               .init(color: .black, location: scrolls && !scrolledToEnd ? 0.88 : 1),
+                                               .init(color: .black.opacity(scrolls && !scrolledToEnd ? 0.1 : 1), location: 1)],
+                                       startPoint: .top, endPoint: .bottom)
+                    }
+                    .onScrollGeometryChange(for: Bool.self) { geometry in
+                        geometry.contentOffset.y + geometry.containerSize.height >= geometry.contentSize.height - 2
+                    } action: { _, atEnd in
+                        scrolledToEnd = atEnd
+                    }
+                    .onAppear {
+                        if let current {
+                            proxy.scrollTo(current, anchor: .center)
+                        }
+                    }
+                }
+                .frame(width: 230, height: min(rowsHeight, available))
+                .background(RoundedRectangle(cornerRadius: 14).fill(Color.white))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay(RoundedRectangle(cornerRadius: 14).stroke(theme.accent.opacity(0.5)))
+                .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+                .padding(.leading, 60)
+                .padding(.top, 4)
+            }
+        }
+        .transition(.opacity)
+    }
+
+    private var rows: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(sections) { section in
+                let isCurrent = section == current
+                Button {
+                    choose(section)
+                } label: {
+                    HStack {
+                        Text(section.title)
+                            .font(theme.controlFace)
+                            .foregroundStyle(isCurrent ? Color.white : theme.accent)
+                        Spacer()
+                        if isCurrent {
+                            Image(systemName: "checkmark")
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(isCurrent ? theme.accent : Color.clear)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isCurrent ? .isSelected : [])
+                .id(section)
+            }
+        }
+    }
+}

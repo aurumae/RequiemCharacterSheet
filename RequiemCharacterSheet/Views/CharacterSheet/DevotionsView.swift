@@ -81,11 +81,6 @@ struct DevotionsView: View {
     }
 }
 
-/// "1 Experience" or "3 Experiences".
-func experiencesText(_ count: Int) -> String {
-    "\(count) \(count == 1 ? "Experience" : "Experiences")"
-}
-
 struct DevotionRowView: View {
     @Environment(\.theme) private var theme
     @Bindable var devotion: Devotion

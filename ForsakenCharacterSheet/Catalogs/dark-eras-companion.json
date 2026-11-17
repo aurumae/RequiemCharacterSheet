@@ -1,0 +1,53 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras-companion",
+    "name": "Dark Eras Companion"
+  },
+  "lodges": [
+    {
+      "id": "council-of-eagles-and-lightning",
+      "name": "Council of Eagles and Lightning",
+      "source": {
+        "book": "dark-eras-companion",
+        "page": 58
+      },
+      "summary": "The council that rules the Romulan Protectorate, in which Rome's Ivory Claws and Iron Masters made common cause: twelve respected elders elected from each family. Also called the Council of Jupiter, and in later years the Lodge of Seven Hills."
+    }
+  ],
+  "rites": [
+    {
+      "id": "shackled-lightning",
+      "name": "Shackled Lightning",
+      "kind": "pack",
+      "rating": 2,
+      "source": {
+        "book": "dark-eras-companion",
+        "page": 80
+      },
+      "summary": "Lightning spirits gather around the legion's Aquila to hold the ritemaster's fury. It costs 1 Essence for every 10 soldiers warded. While it lasts the ritemaster can't enter Rage or spend Essence, and soldiers who keep silent and work together have the Indomitable Merit. When the ritemaster lets the spirits go, the soldiers gain the Berserk Condition and the ritemaster falls into Basu-Im.",
+      "action": "extended",
+      "dicePool": "Presence + Occult",
+      "targetSuccesses": 10,
+      "symbols": "Aquilae, Mars, thunder, spears",
+      "interval": "5 minutes",
+      "cost": "1 Essence per 10 soldiers warded"
+    }
+  ],
+  "fetishes": [
+    {
+      "id": "the-ivory-claws",
+      "name": "The Ivory Claws",
+      "source": {
+        "book": "dark-eras-companion",
+        "page": 82
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A pair of engraved sheaths cut from the tusks of King Pyrrhus' war elephants and worn over the forearms; every Saturi family has at least one pair.",
+      "spirit": "War spirit magath",
+      "effect": "While worn, Brawl attacks do +2L damage, and Brawl pools gain +1 for each point of Size the target has over the wearer."
+    }
+  ]
+}

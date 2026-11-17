@@ -1,0 +1,83 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "giver-of-gifts-1",
+    "name": "The Giver of Gifts 1",
+    "official": false,
+    "url": "https://theonyxpath.com/the-giver-of-gifts-1-werewolf-the-forsaken"
+  },
+  "gifts": [
+    {
+      "id": "screaming-moon",
+      "name": "Gift of the Screaming Moon",
+      "source": {
+        "book": "giver-of-gifts-1"
+      },
+      "kind": "moon",
+      "auspice": "cahalith",
+      "summary": "An alternate Cahalith Moon Gift from a design article: the Gibbous Moon as a bringer of fear and madness on the hunt.",
+      "facets": [
+        {
+          "id": "screaming-moon-terrorizing-shriek",
+          "name": "Terrorizing Shriek",
+          "source": {
+            "book": "giver-of-gifts-1"
+          },
+          "summary": "A howl when ambushing or joining a fight: Glory is a penalty to the prey's roll to react to an ambush and to every prey's Initiative for the fight, and prey with lower Initiative than hers are Shaken.",
+          "dots": 1,
+          "cost": "None",
+          "action": "reflexive"
+        },
+        {
+          "id": "screaming-moon-voice-of-fear",
+          "name": "Voice of Fear",
+          "source": {
+            "book": "giver-of-gifts-1"
+          },
+          "summary": "Adds Glory to Intimidation for the scene. Once a scene, intimidating prey can make him Shaken (on an exceptional success), turn Shaken into Fugue or Madness, or set off a Fugue or Madness he already has.",
+          "dots": 2,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "screaming-moon-mad-eyed-hunter",
+          "name": "Mad-Eyed Hunter",
+          "source": {
+            "book": "giver-of-gifts-1"
+          },
+          "summary": "Used on gaining Siskur-Dah: prey near her take Glory as a penalty to breaking points; resisting her Lunacy leaves them Shaken, failing gives Madness or Fugue instead, and spirits and other beings with Composure no higher than her Glory suffer Lunacy too.",
+          "dots": 3,
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "The Siskur-Dah"
+        },
+        {
+          "id": "screaming-moon-nightmare-spiral",
+          "name": "Nightmare Spiral",
+          "source": {
+            "book": "giver-of-gifts-1"
+          },
+          "summary": "Against prey she can perceive: one who failed a breaking point since the last gibbous moon fails another (once a month); Madness can become Amnesia, and a Fugue can be set off so she rides the prey's mind until sunrise.",
+          "dots": 4,
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Empathy + Glory vs Composure + Primal Urge"
+        },
+        {
+          "id": "screaming-moon-soul-shriek",
+          "name": "Soul Shriek",
+          "source": {
+            "book": "giver-of-gifts-1"
+          },
+          "summary": "A banshee howl: werewolves and spirits who are outrolled suffer Essence Overload, and others lose their souls to her (Enervated instead on an exceptional success) until she dies or gives them back.",
+          "dots": 5,
+          "cost": "3 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Intimidation + Glory vs Composure + Primal Urge"
+        }
+      ]
+    }
+  ]
+}

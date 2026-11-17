@@ -1,6 +1,6 @@
 //
 //  Theme.swift
-//  RequiemCharacterSheet
+//  Chronicles
 //
 
 import SwiftUI
@@ -27,17 +27,40 @@ struct Theme {
     var numeralFontName: String?
     /// The small-caps face used for subheadings such as Mental, Physical and Social.
     var subheadingFontName: String
-    var borderImageName: String
+    /// The page border drawn round the screen. `nil` for none, as on the Werewolf sheet.
+    var borderImageName: String?
     var logoImageName: String
+    /// The skull drawn faintly behind the sheet, as on the official sheet: a template image tinted with `accent`.
+    /// `nil` for none.
+    var watermarkImageName: String? = nil
+    /// How section headings are drawn, following the game's official sheet.
+    var sectionHeaderStyle: SectionHeaderStyle = .row
+    /// Faces for particular text styles, in place of the display and subheading faces, e.g. Forsaken's labels in
+    /// Comforter. Styles not listed use the usual faces.
+    var fonts: [ThemeTextStyle: ThemeFont] = [:]
+    /// Whether trait names are drawn in the accent colour, as on the Vampire sheet, or in ink, as on the Werewolf one.
+    var traitNamesInAccent = true
+    /// The face for controls such as the section pill, which must be easy to read. `nil` for the subheading face at
+    /// 15 points.
+    var controlFont: ThemeFont? = nil
+    /// Whether About is set in the system font, for a theme whose faces are hard to read in paragraphs and lists.
+    var systemFontInAbout = false
+    /// Section headings drawn as images named this plus the heading, e.g. "Heading Moon Gifts", for a face that can
+    /// only be used for graphics, not shipped in the app. Headings without an image use the section header style.
+    /// `nil` to set every heading as text.
+    var headingImagePrefix: String? = nil
 
     /// Each style scales with the user's preferred text size, relative to the given system style.
     func font(_ style: ThemeTextStyle, dynamicTypeSize: DynamicTypeSize) -> Font {
+        if let custom = fonts[style] {
+            return custom.font
+        }
         switch style {
         case .sectionHeader:
             return displayFont(size: 24, relativeTo: .title2, dynamicTypeSize: dynamicTypeSize)
         case .subsectionHeader:
             return .custom(subheadingFontName, size: 20, relativeTo: .headline)
-        case .label:
+        case .label, .ratedTrait:
             return displayFont(size: 22, relativeTo: .title3, dynamicTypeSize: dynamicTypeSize)
         case .traitName:
             return displayFont(size: 20, relativeTo: .title3, dynamicTypeSize: dynamicTypeSize)
@@ -73,11 +96,38 @@ struct Theme {
         return Font(scaled as CTFont)
     }
 
+    /// The face for controls such as the section pill.
+    var controlFace: Font {
+        controlFont?.font ?? .custom(subheadingFontName, size: 15, relativeTo: .subheadline)
+    }
+
+    /// The theme for About when `systemFontInAbout`: the system font at about the theme's sizes, in its colours.
+    var forAbout: Theme {
+        guard systemFontInAbout else { return self }
+        var theme = self
+        theme.fonts = [
+            .label: ThemeFont(name: nil, size: 20, relativeTo: .title3),
+            .subsectionHeader: ThemeFont(name: nil, size: 17, relativeTo: .headline),
+            .traitName: ThemeFont(name: nil, size: 17, relativeTo: .body),
+            .note: ThemeFont(name: nil, size: 13, relativeTo: .footnote),
+        ]
+        theme.traitNamesInAccent = true
+        return theme
+    }
+
+    /// The small capitals for a heading set with `.smallCapitals`: the heading face, a little smaller.
+    var smallCapitalHeadingFont: Font {
+        let heading = fonts[.sectionHeader]
+        return .custom(heading?.name ?? displayFontName, size: (heading?.size ?? 24) * 0.78, relativeTo: heading?.relativeTo ?? .title2)
+    }
+
     /// The colour a text style is drawn in, or `nil` to keep the surrounding colour.
     func color(_ style: ThemeTextStyle) -> Color? {
         switch style {
-        case .subsectionHeader, .label, .traitName:
+        case .subsectionHeader, .label:
             return accent
+        case .ratedTrait, .traitName:
+            return traitNamesInAccent ? accent : nil
         case .note:
             return muted
         case .sectionHeader, .body, .detail:
@@ -86,14 +136,41 @@ struct Theme {
     }
 }
 
+/// A face and size for one text style, in place of the theme's usual face for it.
+struct ThemeFont {
+    /// `nil` for the system font.
+    let name: String?
+    let size: CGFloat
+    /// The system style it scales with, as the user's text size changes.
+    let relativeTo: Font.TextStyle
+
+    var font: Font {
+        if let name {
+            .custom(name, size: size, relativeTo: relativeTo)
+        } else {
+            .system(relativeTo)
+        }
+    }
+}
+
+/// How a game's sheet draws its section headings.
+enum SectionHeaderStyle {
+    /// A grey row with the heading in capitals, adapted from the Vampire sheet's dark bars.
+    case row
+    /// The heading in small capitals between two brush strokes, as on the Werewolf sheet.
+    case brushLine
+}
+
 enum ThemeTextStyle {
     /// Top-level sheet sections: CHARACTER, ATTRIBUTES, SKILLS…
     case sectionHeader
     /// Groups within a section: Mental, Physical, Social. Written in mixed case so the
     /// small capitals show, rather than uppercased like section headers.
     case subsectionHeader
-    /// Row labels such as attribute names and "Speed:".
+    /// Row labels such as "Name:" and "Speed:".
     case label
+    /// Names of rated traits with dots beside them, such as Attributes and Skills.
+    case ratedTrait
     /// Names of Disciplines and Merits.
     case traitName
     /// Small annotations such as "(-3 unskilled)".
@@ -114,10 +191,13 @@ struct ThemedTextModifier: ViewModifier {
     let style: ThemeTextStyle
 
     func body(content: Content) -> some View {
-        if style == .subsectionHeader {
+        if style == .subsectionHeader && theme.fonts[.subsectionHeader] == nil {
             // List headers are uppercased by default, which would hide the small capitals
             styled(content)
                 .tracking(1.5)
+                .textCase(nil)
+        } else if style == .subsectionHeader {
+            styled(content)
                 .textCase(nil)
         } else {
             styled(content)

@@ -1,0 +1,380 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "the-pack",
+    "name": "The Pack"
+  },
+  "lodges": [
+    {
+      "id": "garm",
+      "name": "Lodge of Garm",
+      "source": {
+        "book": "the-pack",
+        "page": 82
+      },
+      "summary": "Warriors who make themselves living weapons for the war against the Pure, and take the mightiest werewolves as their sacred prey. Also called Garmir, Carnyx or Fangs of Upuaut; most are Blood Talons.",
+      "totem": "Garm the God-Killer",
+      "blessing": "Spending Willpower on an attack roll against another werewolf adds 5 dice, not 3.",
+      "aspiration": "To be defeated in battle by a superior foe.",
+      "ban": "Be the last of your pack to retreat from a battle or confrontation.",
+      "merits": [
+        "lodge-armory",
+        "uma-suguthkuth"
+      ],
+      "fetishes": [
+        "predators-doom"
+      ]
+    },
+    {
+      "id": "thousand-steel-teeth",
+      "name": "The Thousand Steel Teeth",
+      "source": {
+        "book": "the-pack",
+        "page": 84
+      },
+      "summary": "Road warriors who hunt from vehicles bound with spirits, carry word and goods between the Forsaken, and take those who travel the roads as their sacred prey. Also called Steel Predators, Road Wolves or Gear Dogs; most are Iron Masters.",
+      "totem": "The Smoke Drinker",
+      "blessing": "Spending Willpower on a Drive roll, a Crafts roll to repair or modify a vehicle, or an Athletics roll to move between moving vehicles gives that roll the rote quality.",
+      "aspiration": "To improve and enhance a vehicle you own.",
+      "ban": "Never sleep in the same place two nights running: the next resting place is at least a mile away.",
+      "tools": "Lodge Connections covers only matters of vehicles and travel.",
+      "merits": [
+        "lodge-connections"
+      ],
+      "fetishes": [
+        "iron-leviathan-harpoon",
+        "nomad-chain",
+        "roadkiller"
+      ]
+    },
+    {
+      "id": "screaming-moon",
+      "name": "Lodge of the Screaming Moon",
+      "source": {
+        "book": "the-pack",
+        "page": 86
+      },
+      "summary": "Hunters who purge themselves of fear and take creatures of terror as their sacred prey: fear-spirits and their Claimed, sadistic killers, and things that scare people to death. Also called Hellhounds, Black Cadejos or Banshees; many are Cahalith, and the lodge is known for its prophets and its lore of dreams.",
+      "totem": "Zakinsuzi, the Tyrant Over Fear",
+      "blessing": "Intimidation rolls are exceptional successes on 3 successes, not 5. Killing prey you intimidated earlier in the scene gives 1 Essence.",
+      "aspiration": "To rule through fear.",
+      "ban": "At the moment of the kill, the prey must scream or you must howl.",
+      "tools": "Lodge Sorcery's Influences: Fear, Inspiration or Moonlight.",
+      "merits": [
+        "lodge-lorehouse",
+        "lodge-sorcery"
+      ],
+      "rites": [
+        "banshee-howl"
+      ]
+    },
+    {
+      "id": "temple-of-apollo",
+      "name": "The Temple of Apollo",
+      "source": {
+        "book": "the-pack",
+        "page": 88
+      },
+      "summary": "A secret society of decadence among the rich and powerful, which rejects the creeds of both Forsaken and Pure and serves Apollo, Wolf of the Sun, at shrines it guards closely. Also called Apollonians, Thebans or Children of Helios; it takes Ghost Wolves and converts from the tribes.",
+      "totem": "Apollo the Sun Wolf",
+      "blessing": "No penalties on a Social roll to force Doors when what you ask for fits the target's Vice (or Blood).",
+      "aspiration": "To slake any hunger or desire you feel strongly.",
+      "ban": "Let no outsider enter a shrine of Apollo and live.",
+      "tools": "Lodge Sorcery's Influences: Fire, Hunger or Light.",
+      "merits": [
+        "lodge-connections",
+        "lodge-sorcery",
+        "lodge-stronghold"
+      ],
+      "fetishes": [
+        "glorious-lyre"
+      ]
+    },
+    {
+      "id": "the-pack-eaters-of-the-dead",
+      "name": "The Eaters of the Dead",
+      "source": {
+        "book": "the-pack",
+        "page": 90
+      },
+      "summary": "A young lodge of Ghost Wolves, strongest in Central Asia, bound since 2004 to Ravening Wolf, whom they hold to be a forgotten Firstborn. They mean to be a tribe for the werewolves the others cast off, and hunt the undead. Also called Carrion Hounds, Ki Anagh or Erboru; every Ghost Wolf is welcome.",
+      "totem": "Isim-Ur, Ravening Wolf",
+      "blessing": "Spend a Willpower point to purge the Sick and Poisoned Tilts, or to throw off a similar supernatural effect, such as a vampire's blood bond or the taint of eating a Wound-touched creature.",
+      "aspiration": "To have a family, and to protect and provide for them.",
+      "ban": "Leave no kill to rot: eat it, or make something from its remains.",
+      "tools": "Lodge Sorcery's Influences: Hunger or Death.",
+      "merits": [
+        "lodge-sorcery"
+      ],
+      "rites": [
+        "carrion-feast"
+      ]
+    }
+  ],
+  "rites": [
+    {
+      "id": "banshee-howl",
+      "name": "Banshee Howl",
+      "kind": "pack",
+      "rating": 3,
+      "source": {
+        "book": "the-pack",
+        "page": 87
+      },
+      "summary": "Claims every death within a mile of the ritemaster, both corpses already there and any killing while the rite lasts. No supernatural creature gains strength from them: a killer regains no Willpower, a fear spirit draws no Essence. The ritemaster and their pack are exempt.",
+      "action": "extended",
+      "dicePool": "Presence + Expression",
+      "targetSuccesses": 5,
+      "duration": "Until sunrise",
+      "symbols": "Death, earth, screaming, water",
+      "interval": "1 round"
+    },
+    {
+      "id": "carrion-feast",
+      "name": "Carrion Feast",
+      "kind": "wolf",
+      "rating": 3,
+      "source": {
+        "book": "the-pack",
+        "page": 91
+      },
+      "summary": "The subject eats most of a carcass of Size 2 or more that neither their pack nor the ritemaster's killed, and that wasn't a gift. The meat can't sicken them, they gain 1 Essence, and three times before the next full moon they add 3 dice to a roll using the Attribute that suits the creature. Only one Carrion Feast at a time. A human carcass gives no dice, but restores all Willpower.",
+      "action": "extended",
+      "dicePool": "Intelligence + Occult",
+      "targetSuccesses": 5,
+      "duration": "Until the next full moon",
+      "symbols": "Hunger, wisdom, drums, horses",
+      "interval": "5 minutes"
+    }
+  ],
+  "merits": [
+    {
+      "id": "lodge-armory",
+      "name": "Lodge Armory",
+      "category": "werewolf",
+      "source": {
+        "book": "the-pack",
+        "page": 81
+      },
+      "ratings": [
+        3,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [],
+      "summary": "Use of the lodge's armoury. At 3 dots it holds legal weapons, a few that aren't, and weapons of rare materials, at least one of them silver. At 5, choose three fetish weapons of up to 3 dots each, and borrow one at a time."
+    },
+    {
+      "id": "lodge-connections",
+      "name": "Lodge Connections",
+      "category": "werewolf",
+      "source": {
+        "book": "the-pack",
+        "page": 81
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [],
+      "summary": "Once per session, use Allies, Mentor, Resources or Retainer at a rating up to this Merit's."
+    },
+    {
+      "id": "lodge-lorehouse",
+      "name": "Lodge Lorehouse",
+      "category": "werewolf",
+      "source": {
+        "book": "the-pack",
+        "page": 81
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Topics",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [],
+      "summary": "Choose a narrow topic for each dot. Research on one in the lorehouse has the rote quality and takes half the time, and Sift the Sands used there needs only 5 successes, at a turn a roll."
+    },
+    {
+      "id": "lodge-sorcery",
+      "name": "Lodge Sorcery",
+      "category": "werewolf",
+      "source": {
+        "book": "the-pack",
+        "page": 81
+      },
+      "ratings": [
+        3,
+        5
+      ],
+      "qualifier": {
+        "prompt": "Influences",
+        "options": null
+      },
+      "repeatable": false,
+      "prerequisites": [],
+      "summary": "Wield the lodge totem's Influences as your own. At 3 dots, one Influence at 2 dots. At 5, a second at 2 dots, and once per story you can use one of them at 4. It costs Essence as it would a spirit; roll Presence + Wits."
+    },
+    {
+      "id": "lodge-stronghold",
+      "name": "Lodge Stronghold",
+      "category": "werewolf",
+      "source": {
+        "book": "the-pack",
+        "page": 81
+      },
+      "ratings": [
+        2,
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [],
+      "summary": "A well-defended lodge outpost nearby, which gives an adherent sheltering there the benefits of Safe Place 5. At 4 dots it also has supernatural defences suited to the lodge. Misusing it brings the lodge's censure and can cost you its benefits, and you may be called on to defend it."
+    },
+    {
+      "id": "uma-suguthkuth",
+      "name": "Uma Suguthkuth",
+      "category": "fighting",
+      "source": {
+        "book": "the-pack",
+        "page": 83
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "attribute",
+          "id": "strength",
+          "minimum": 3
+        },
+        {
+          "kind": "skill",
+          "id": "brawl",
+          "minimum": 4
+        }
+      ],
+      "styleManeuvers": [
+        {
+          "dots": 1,
+          "name": "Essence Spasm",
+          "summary": "Spend 1 Essence when you damage a werewolf: for the scene it loses 10-again on pools that include its Primal Urge, and takes its Primal Urge as a penalty to Initiative."
+        },
+        {
+          "dots": 2,
+          "name": "Primal Wound",
+          "summary": "Spend 1 Essence when you damage a werewolf: for the next turn it regenerates lethal damage as if its Primal Urge were 1."
+        },
+        {
+          "dots": 3,
+          "name": "Flense Shape",
+          "summary": "Spend 1 Essence when you damage a werewolf: on its next turn it rolls Stamina + Resolve − its Primal Urge or must change to another form of its choice. In Gauru it needn't change, but loses its Primal Urge from the turns it can hold the form. No effect on prey in Death Rage."
+        },
+        {
+          "dots": 4,
+          "name": "Essence Bleed",
+          "summary": "A Brawl attack to the head, or Urshul's Weaken the Prey, can inflict the Essence Bleed Tilt: for three turns the prey spends all the Essence it can at the end of each turn, and it's lost."
+        },
+        {
+          "dots": 5,
+          "name": "Jaws of Garm",
+          "summary": "When you damage grappled prey that has already taken aggravated damage, spend 1 Essence to add half its Primal Urge to the damage that turn."
+        }
+      ],
+      "summary": "The Lodge of Garm's art of killing werewolves, used unarmed, with natural weapons or with a Predator's Doom fetish weapon."
+    }
+  ],
+  "fetishes": [
+    {
+      "id": "predators-doom",
+      "name": "Predator's Doom",
+      "source": {
+        "book": "the-pack",
+        "page": 83
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A weapon made by the Lodge of Garm, usually an axe, glaive or spear.",
+      "effect": "Its wielder can use the Uma Suguthkuth style with it."
+    },
+    {
+      "id": "iron-leviathan-harpoon",
+      "name": "Iron Leviathan Harpoon",
+      "source": {
+        "book": "the-pack",
+        "page": 85
+      },
+      "kind": "fetish",
+      "rating": 2,
+      "summary": "A barbed harpoon for prey on the road.",
+      "effect": "Thrown at a moving vehicle, it ignores the vehicle's Durability. A vehicle with one stuck in it takes −2 to all Drive rolls."
+    },
+    {
+      "id": "nomad-chain",
+      "name": "Nomad Chain",
+      "source": {
+        "book": "the-pack",
+        "page": 85
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A small talisman that marks a vehicle as owned.",
+      "effect": "A werewolf with Ward the Wolf's Den can use that Facet on the vehicle from its driver's seat. For the rest of the month the fetish adds their Glory to pools and values that contest, resist or withstand supernatural effects on the vehicle from anyone but the wielder. If an effect would destroy or disable the vehicle, the wielder may spend 1 Essence and take 1 aggravated damage to cancel it."
+    },
+    {
+      "id": "roadkiller",
+      "name": "Roadkiller",
+      "source": {
+        "book": "the-pack",
+        "page": 85
+      },
+      "kind": "fetish",
+      "rating": 4,
+      "summary": "A hungry, angry vehicle that is itself a fetish.",
+      "effect": "It does twice the usual damage when it hits characters or objects, and regains all the Structure it has lost when it wrecks another vehicle by ramming it."
+    },
+    {
+      "id": "glorious-lyre",
+      "name": "Glorious Lyre",
+      "source": {
+        "book": "the-pack",
+        "page": 89
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A lyre of the Temple of Apollo, whose strings always seem to quiver.",
+      "effect": "While it's played, everyone but the player and the lodge's adherents has one fewer Door against social maneuvering for the scene. The player may reflexively Clash of Wills against mind-influencing powers on anyone who hears it, rolling Primal Urge + Glory + Expression."
+    }
+  ],
+  "tilts": [
+    {
+      "id": "essence-bleed",
+      "name": "Essence Bleed",
+      "source": {
+        "book": "the-pack",
+        "page": 83
+      },
+      "kind": "personal",
+      "summary": "At the end of each of its turns, the prey spends as much Essence as it can in a turn, and it's lost.",
+      "cause": "Uma Suguthkuth's fourth manoeuvre: a Brawl attack to the head, or Urshul's Weaken the Prey.",
+      "ending": "After three turns."
+    }
+  ]
+}

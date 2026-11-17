@@ -376,6 +376,17 @@ final class CharacterStoreTests {
         #expect(store.summaries.isEmpty)
     }
 
+    @Test func characterFromAnotherGameIsRefused() throws {
+        let store = makeStore()
+        let data = Data(#"{"game": "forsaken", "schemaVersion": 1, "id": "\#(UUID().uuidString)", "name": "Mara Greyfoot"}"#.utf8)
+
+        #expect(throws: CharacterStoreError.otherGame("forsaken")) { try store.prepareImport(of: data) }
+        #expect(store.summaries.isEmpty)
+        // A file saying it's Requiem's is read like one without a game
+        let requiem = Data(#"{"game": "requiem", "name": "Marcus Vale"}"#.utf8)
+        #expect(try store.prepareImport(of: requiem).character.name == "Marcus Vale")
+    }
+
     @Test func importOfSomethingElseIsRefused() throws {
         let store = makeStore()
 

@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: python3 -m unittest discover -s scripts/tests -v
+      # scripts/check-policy is also what `swift test` runs, so this step and a local run can't drift apart.
       - name: Validate shared contracts and prevent coverage regressions
         env:
           PR_BASE: ${{ github.event.pull_request.base.sha }}
@@ -38,7 +38,7 @@ jobs:
           args=()
           if [[ -n "$PR_BASE" ]]; then args+=(--base "$PR_BASE"); fi
           if [[ "$STRICT" == true ]]; then args+=(--strict); fi
-          python3 scripts/contract_policy.py "${args[@]}" --output .contract-reports/policy
+          scripts/check-policy "${args[@]}" --output .contract-reports/policy
       - name: Select dependent jobs
         id: route
         env:
@@ -140,6 +140,14 @@ jobs:
           -skip-testing:RequiemCharacterSheetUITests
           -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
           -resultBundlePath ios-test-results.xcresult
+      # Forsaken has no Android port yet, so its rules and save fixtures are tested here alone.
+      - name: Build and test the Forsaken app
+        run: >-
+          xcodebuild test -project RequiemCharacterSheet.xcodeproj
+          -scheme ForsakenCharacterSheet
+          -destination "platform=iOS Simulator,id=$REQUIEM_SIMULATOR"
+          -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
+          -resultBundlePath forsaken-test-results.xcresult
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -147,6 +155,7 @@ jobs:
           path: |
             ios-host-tests*.xml
             ios-test-results.xcresult
+            forsaken-test-results.xcresult
 
   result:
     name: CI result

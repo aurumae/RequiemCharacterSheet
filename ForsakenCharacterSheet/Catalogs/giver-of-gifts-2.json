@@ -1,0 +1,156 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "giver-of-gifts-2",
+    "name": "The Giver of Gifts 2",
+    "official": false,
+    "url": "https://theonyxpath.com/the-giver-of-gifts-2-werewolf-the-forsaken"
+  },
+  "gifts": [
+    {
+      "id": "cities",
+      "name": "Gift of Cities",
+      "source": {
+        "book": "giver-of-gifts-2"
+      },
+      "kind": "shadow",
+      "summary": "A design article's update of the first edition's City Gift: the city's streets, structures and crowds.",
+      "facets": [
+        {
+          "id": "cities-city-eyes",
+          "name": "City Eyes",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Touching a building, she looks out of or into up to Cunning of its windows, knows inhabitants from intruders, and adds Cunning to Empathy on inhabitants and to Perception on intruders.",
+          "renown": "cunning",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "cities-riot",
+          "name": "Riot",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Her howl starts a riot within 100 yards if enough people are about. It spreads and wrecks for its duration, though she has no say in where it goes.",
+          "renown": "glory",
+          "cost": "5 Essence",
+          "action": "instant",
+          "duration": "Glory hours"
+        },
+        {
+          "id": "cities-faceless-crowd",
+          "name": "Faceless Crowd",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Prey in a crowd she can perceive dramatically fails to get anything from crowds, passers-by or strangers for the scene, being simply ignored. On an exceptional success, Honor is also a penalty to his Allies, Contacts and Retainers.",
+          "renown": "honor",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Subterfuge + Cunning − Composure"
+        },
+        {
+          "id": "cities-urban-predator",
+          "name": "Urban Predator",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Damage from city hazards such as falling masonry, traffic, falls onto pavement and live wires is reduced by her Purity, and a collapsing building never takes her last Health box. No help against weapons.",
+          "renown": "purity",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "cities-carve-the-citys-flesh",
+          "name": "Carve the City's Flesh",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Touching a wall in a built-up area, she opens a new street or alley up to 30 yards per Wisdom. No one notices it, it has no Shadow, and when it goes, people are pushed out and things left behind turn up nearby.",
+          "renown": "wisdom",
+          "cost": "2 Essence",
+          "action": "instant",
+          "duration": "Until the next sunrise or sunset"
+        }
+      ]
+    },
+    {
+      "id": "essence",
+      "name": "Gift of Essence",
+      "source": {
+        "book": "giver-of-gifts-2"
+      },
+      "kind": "wolf",
+      "summary": "A design article's Wolf Gift of the Essence at the heart of the werewolf.",
+      "facets": [
+        {
+          "id": "essence-marrow-eater",
+          "name": "Marrow Eater",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "She gains twice the usual Essence from eating human or wolf flesh.",
+          "renown": "cunning",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "essence-essence-surge",
+          "name": "Essence Surge",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "When Reaching across the Gauntlet, she adds Glory and crosses at once if she succeeds; an exceptional success refunds the Essence.",
+          "renown": "glory",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "essence-river-of-essence",
+          "name": "River of Essence",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Touching a packmate with an Essence pool, she passes him 1 Essence a turn, up to her Honor each day.",
+          "renown": "honor",
+          "cost": "None",
+          "action": "instant"
+        },
+        {
+          "id": "essence-primeval-echo",
+          "name": "Primeval Echo",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "Her Essence maximum rises by her Purity.",
+          "renown": "purity",
+          "cost": "None",
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "essenceMaximum",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
+        },
+        {
+          "id": "essence-essence-sight",
+          "name": "Essence Sight",
+          "source": {
+            "book": "giver-of-gifts-2"
+          },
+          "summary": "She learns how much Essence a being she can see holds. On a dramatic failure she bleeds another Essence; an exceptional success refunds it.",
+          "renown": "wisdom",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "dicePool": "Wits + Occult + Wisdom − Composure"
+        }
+      ]
+    }
+  ]
+}

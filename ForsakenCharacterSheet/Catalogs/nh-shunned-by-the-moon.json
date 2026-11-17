@@ -1,0 +1,1072 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "night-horrors-shunned-by-the-moon",
+    "name": "Night Horrors: Shunned by the Moon"
+  },
+  "tribes": [
+    {
+      "id": "fire-touched",
+      "name": "Fire-Touched",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 14
+      },
+      "kind": "pure",
+      "summary": "Rabid Wolf's zealots, who hoard occult lore and hunt anyone who harms or disrespects the Shadow (Luna's servants excepted). Like all Pure, they have no auspice: they flay away the Moon's brand and take a hunter's aspect from their Firstborn instead.",
+      "renown": "wisdom",
+      "secondaryRenown": [
+        "cunning",
+        "glory"
+      ],
+      "skills": [
+        "expression",
+        "occult",
+        "subterfuge"
+      ],
+      "huntersAspects": [
+        {
+          "name": "Fanatical",
+          "condition": "euphoric"
+        },
+        {
+          "name": "Frenzied",
+          "condition": "frantic"
+        }
+      ],
+      "giftAffinities": [
+        "disease",
+        "fervor",
+        "insight",
+        "inspiration"
+      ],
+      "oath": {
+        "name": "Let no falsehood lay unchallenged",
+        "summary": "Gab Aldh' Nunglu: faith demands honesty, so a Fire-Touched must keep to the truth and confront the lies around her."
+      },
+      "firstTongueName": "Izidakh"
+    },
+    {
+      "id": "ivory-claws",
+      "name": "Ivory Claws",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 14
+      },
+      "kind": "pure",
+      "summary": "Silver Wolf's followers, obsessed with bloodline and pain, who hunt those who dishonour their lineage, which to them includes every Forsaken. Like all Pure, they have no auspice: they flay away the Moon's brand and take a hunter's aspect from their Firstborn instead.",
+      "renown": "purity",
+      "secondaryRenown": [
+        "glory",
+        "honor"
+      ],
+      "skills": [
+        "intimidation",
+        "persuasion",
+        "politics"
+      ],
+      "huntersAspects": [
+        {
+          "name": "Agonized",
+          "condition": "wracked"
+        },
+        {
+          "name": "Insidious",
+          "condition": "surrounded"
+        }
+      ],
+      "giftAffinities": [
+        "agony",
+        "blood",
+        "dominance",
+        "warding"
+      ],
+      "oath": {
+        "name": "Accept nothing impure",
+        "summary": "Nu-ghima Zigh'esh has no single translation. Most read it as never calling an impure werewolf family; others as refusing any impurity or anything lesser. Silver Wolf accepts the Ivory Claw's own reading if she holds herself to it."
+      },
+      "firstTongueName": "Tzuumfin"
+    },
+    {
+      "id": "predator-kings",
+      "name": "Predator Kings",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 14
+      },
+      "kind": "pure",
+      "summary": "Dire Wolf's savage hunters, who seek to bring back Pangaea and hunt anyone who fails to honour the hunt. Like all Pure, they have no auspice: they flay away the Moon's brand and take a hunter's aspect from their Firstborn instead.",
+      "renown": "glory",
+      "secondaryRenown": [
+        "purity",
+        "wisdom"
+      ],
+      "skills": [
+        "animal-ken",
+        "brawl",
+        "crafts"
+      ],
+      "huntersAspects": [
+        {
+          "name": "Implacable",
+          "condition": "despondent"
+        },
+        {
+          "name": "Primal",
+          "condition": "instinctive"
+        }
+      ],
+      "giftAffinities": [
+        "hunger",
+        "nature",
+        "rage",
+        "strength"
+      ],
+      "oath": {
+        "name": "Honor nothing of human craft",
+        "summary": "Sehe Nu Lu'u Thim: humans are prey, and their works deserve no respect. Defiling or wrecking human-made things never strains Harmony."
+      },
+      "firstTongueName": "Ninna Farakh"
+    }
+  ],
+  "gifts": [
+    {
+      "id": "agony",
+      "name": "Gift of Agony",
+      "kind": "shadow",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 15
+      },
+      "summary": "Powers of pain: inflicting it, shrugging it off, passing it to others and turning it into strength.",
+      "facets": [
+        {
+          "id": "agony-wrack",
+          "name": "Wrack",
+          "renown": "cunning",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 15
+          },
+          "summary": "After a Brawl hit, or a touch on unaware or unresisting prey, the victim takes a penalty equal to her Cunning on chase and tracking rolls and on rolls to resist pain or torture.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 day"
+        },
+        {
+          "id": "agony-stoicism",
+          "name": "Stoicism",
+          "renown": "glory",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 15
+          },
+          "summary": "She ignores every dice penalty from wounds, pain, distraction and similar physical causes while it lasts.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 + Glory turns"
+        },
+        {
+          "id": "agony-pain-mirror",
+          "name": "Pain Mirror",
+          "renown": "honor",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 15
+          },
+          "summary": "Links her to up to Honor visible victims whose Composure is no higher than her successes; each takes 1 bashing whenever she takes lethal or aggravated damage, and she can copy a physical Tilt she suffers onto one of them.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "dicePool": "Empathy + Composure + Honor",
+          "duration": "1 scene"
+        },
+        {
+          "id": "agony-catharsis",
+          "name": "Catharsis",
+          "renown": "purity",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 15
+          },
+          "summary": "When she spends Willpower in a turn in which she took lethal or aggravated damage, the Willpower bonus grows by her Purity.",
+          "cost": "None",
+          "duration": "Permanent"
+        },
+        {
+          "id": "agony-scourge",
+          "name": "Scourge",
+          "renown": "wisdom",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 15
+          },
+          "summary": "Holds back one Condition or Tilt affecting her mind or soul for Wisdom days, while still letting her resolve it in that time.",
+          "cost": "2 Essence",
+          "action": "instant"
+        }
+      ]
+    },
+    {
+      "id": "blood",
+      "name": "Gift of Blood",
+      "kind": "shadow",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 16
+      },
+      "summary": "Powers of blood: drowning places in gore, purging the body, bleeding prey out and reaching them through their blood.",
+      "facets": [
+        {
+          "id": "blood-seep",
+          "name": "Seep",
+          "renown": "cunning",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 16
+          },
+          "summary": "An area up to Cunning x 25 yards around her oozes blood, penalising Athletics by her Cunning, making handling objects take extra actions and drowning out every other scent.",
+          "cost": "2 Essence",
+          "action": "instant",
+          "duration": "1 scene"
+        },
+        {
+          "id": "blood-purge",
+          "name": "Purge",
+          "renown": "glory",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 16
+          },
+          "summary": "Bleeds poisons, drugs, addictions, parasites and sickness out of herself or someone she touches, cutting Toxicity by Glory; if someone eats her flesh or drinks her blood she can roll Strength + Empathy + Glory against Stamina + Primal Urge to push one affliction into them.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "blood-bind",
+          "name": "Bind",
+          "renown": "honor",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 16
+          },
+          "summary": "Drinking the prey's blood, or a close blood relative's, lets another Facet that needs sight, touch or a hit reach the prey at any distance.",
+          "cost": "5 Essence",
+          "action": "reflexive"
+        },
+        {
+          "id": "blood-bleed",
+          "name": "Bleed",
+          "renown": "purity",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 16
+          },
+          "summary": "When she deals damage in Gauru, Urshul or Urhan, the victim's wounds pour blood: an extra lethal at the end of each turn they take lethal or aggravated damage, and Medicine to treat them is penalised by her Purity.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "dicePool": "Strength + Brawl + Purity vs Stamina + Primal Urge",
+          "duration": "1 day"
+        },
+        {
+          "id": "blood-clot",
+          "name": "Clot",
+          "renown": "wisdom",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 16
+          },
+          "summary": "Adds her Wisdom to the lethal and aggravated damage her slow healing restores in each interval; turn-by-turn regeneration is unchanged.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "duration": "1 day"
+        }
+      ]
+    },
+    {
+      "id": "disease",
+      "name": "Gift of Disease",
+      "kind": "shadow",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 16
+      },
+      "summary": "Powers of sickness: festering wounds, plague-breath, curses of contagion and diseases brewed in her own body.",
+      "facets": [
+        {
+          "id": "disease-festering-bite",
+          "name": "Festering Bite",
+          "renown": "cunning",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 16
+          },
+          "summary": "After a damaging bite, the prey heals at half speed, werewolf regeneration slows to every other turn outside Gauru, and supernatural healing must win a Clash of Wills.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "dicePool": "Strength + Survival + Cunning vs Stamina + Primal Urge",
+          "duration": "1 week"
+        },
+        {
+          "id": "disease-rancid-maw",
+          "name": "Rancid Maw",
+          "renown": "glory",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 17
+          },
+          "summary": "She spews a 20-yard autofire spray of ichor (damage 1, Dexterity + Athletics, ignoring Defense) that can leave targets moderately Poisoned, and the cloud of flies penalises ranged attacks on her for a turn.",
+          "cost": "2 Essence",
+          "action": "instant"
+        },
+        {
+          "id": "disease-lepers-bell",
+          "name": "Leper's Bell",
+          "renown": "honor",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 17
+          },
+          "summary": "Curses a visible target so that any disease they have worsens by her Honor and in-person Presence or Manipulation rolls, except Intimidation, suffer her Honor as a penalty; Striking Looks stops working.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Medicine + Honor vs Stamina + Primal Urge",
+          "duration": "1 week"
+        },
+        {
+          "id": "disease-rabid-fever",
+          "name": "Rabid Fever",
+          "renown": "purity",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 18
+          },
+          "summary": "Adds her Purity to rolls to resist disease and to her Initiative.",
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "initiative",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
+        },
+        {
+          "id": "disease-pox-cauldron",
+          "name": "Pox Cauldron",
+          "renown": "wisdom",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 18
+          },
+          "summary": "Brews a custom disease inside her, spread by her bite, with severity and weekly damage based on Wisdom that she can trade down for nastier traits; once it spreads she no longer controls it.",
+          "cost": "1 Essence",
+          "action": "instant"
+        }
+      ]
+    },
+    {
+      "id": "fervor",
+      "name": "Gift of Fervor",
+      "kind": "shadow",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 18
+      },
+      "summary": "Powers of zealous faith: shaking beliefs, turning communities inward, sharing devotion and planting obsessive missions.",
+      "facets": [
+        {
+          "id": "fervor-crisis-of-faith",
+          "name": "Crisis of Faith",
+          "renown": "cunning",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 18
+          },
+          "summary": "A spoken challenge to someone's beliefs stops rest from restoring their Willpower; she gains Cunning to Social rolls undermining those beliefs and they lose it from rituals and ceremonies of their creed.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Manipulation + Subterfuge + Cunning vs Resolve + Primal Urge",
+          "duration": "1 day per success"
+        },
+        {
+          "id": "fervor-fanaticism",
+          "name": "Fanaticism",
+          "renown": "glory",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 18
+          },
+          "summary": "A gathered community of up to 100 x Glory people turns against outsiders: they gain Doors against outsiders, take a penalty on Integrity breaking points, and regain Willpower for harming outsiders.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Socialize + Glory - highest Resolve",
+          "duration": "1 day per success"
+        },
+        {
+          "id": "fervor-affirmation",
+          "name": "Affirmation",
+          "renown": "honor",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 18
+          },
+          "summary": "By touch she gives up to Honor Willpower a scene to others, regains one if they indulge Blood or Bone that scene, and gains Honor to comfort them.",
+          "action": "reflexive",
+          "duration": "Permanent"
+        },
+        {
+          "id": "fervor-zeal",
+          "name": "Zeal",
+          "renown": "purity",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 19
+          },
+          "summary": "Adds her Purity to her Willpower, which may then exceed 10.",
+          "duration": "Permanent",
+          "effects": [
+            {
+              "type": "willpower",
+              "amount": "rating"
+            }
+          ],
+          "passive": true
+        },
+        {
+          "id": "fervor-fervid-mission",
+          "name": "Fervid Mission",
+          "renown": "wisdom",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 19
+          },
+          "summary": "A human or Wolf-Blooded she touches or speaks to sees a vision of a task she chooses and gains a persistent Obsession to carry it out.",
+          "cost": "5 Essence",
+          "action": "instant",
+          "dicePool": "Persuasion + Manipulation + Wisdom - Resolve",
+          "duration": "1 month or until the Obsession resolves"
+        }
+      ]
+    },
+    {
+      "id": "hunger",
+      "name": "Gift of Hunger",
+      "kind": "shadow",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 19
+      },
+      "summary": "Powers of predatory appetite: devouring names, spreading famine, cursing things with gluttony and feeding on the hunt.",
+      "facets": [
+        {
+          "id": "hunger-eater-of-names",
+          "name": "Eater of Names",
+          "renown": "cunning",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 19
+          },
+          "summary": "Eating the prey's flesh denies them up to Cunning dots of Social Merits or rites; eating a corpse makes humans struggle to remember or investigate the dead and hinders supernatural searches about them.",
+          "cost": "1 Essence",
+          "action": "reflexive",
+          "duration": "1 day, or 1 year for dead prey"
+        },
+        {
+          "id": "hunger-famine-howl",
+          "name": "Famine Howl",
+          "renown": "glory",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 19
+          },
+          "summary": "Famine spreads over Glory miles: food and water spoil, livestock die, and anyone there loses the first Glory points of Essence or similar power they gain each day (spirits are spared).",
+          "cost": "5 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Survival + Glory",
+          "duration": "1 week"
+        },
+        {
+          "id": "hunger-gluttony",
+          "name": "Gluttony",
+          "renown": "honor",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 19
+          },
+          "summary": "Makes a visible person or object consume many times more than normal, multiplied by her Honor, from food for a human to ammunition for a gun or fuel for a car.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Strength + Persuasion + Honor - Composure",
+          "duration": "1 day"
+        },
+        {
+          "id": "hunger-wolf-hunger",
+          "name": "Wolf-Hunger",
+          "renown": "purity",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 20
+          },
+          "summary": "In any scene where she gains Essence from eating flesh or from a spirit taken in the Sacred Hunt, she gains extra Essence equal to her Purity.",
+          "duration": "Permanent"
+        },
+        {
+          "id": "hunger-ravenous-maw",
+          "name": "Ravenous Maw",
+          "renown": "wisdom",
+          "source": {
+            "book": "night-horrors-shunned-by-the-moon",
+            "page": 20
+          },
+          "summary": "In Dalu, Gauru or Urshul her jaws can grapple from 5 x Wisdom yards away and drag the target up beside her.",
+          "cost": "1 Essence",
+          "action": "reflexive"
+        }
+      ]
+    }
+  ],
+  "rites": [
+    {
+      "id": "flay-auspice",
+      "name": "Flay Auspice",
+      "kind": "wolf",
+      "rating": 3,
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 20
+      },
+      "summary": "Taught only to the Pure. Tears the auspice permanently from a willing werewolf's spirit, losing its benefits and leaving the Pure's greater weakness to silver.",
+      "action": "extended",
+      "targetSuccesses": 10,
+      "symbols": "Silver, blood, cutting or excision, purification",
+      "interval": "5 minutes"
+    },
+    {
+      "id": "infest-locus",
+      "name": "Infest Locus",
+      "kind": "wolf",
+      "rating": 2,
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 20
+      },
+      "summary": "Only Fire-Touched may lead it. Fouls a Locus with Rabid Wolf's Essence: anyone drawing Essence from it gets the grave Sick Tilt until their Essence runs out. Needs 3 successes per dot of the Locus.",
+      "action": "extended",
+      "duration": "1 month",
+      "symbols": "Disease, fire, envy, hunger",
+      "interval": "half an hour"
+    },
+    {
+      "id": "shadow-bridge",
+      "name": "Shadow Bridge",
+      "kind": "wolf",
+      "rating": 4,
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 20
+      },
+      "summary": "Only Fire-Touched may lead it. With a human sacrifice at a Locus, placing the head at a second Locus within the first's rating in miles links them: anyone entering the first can step to the second instead of crossing over, while the head stays. Needs 3 successes per dot of the Locus.",
+      "action": "extended",
+      "duration": "1 week",
+      "symbols": "Blood, air, travel, mazes",
+      "interval": "half an hour"
+    },
+    {
+      "id": "shadow-distortion",
+      "name": "Shadow Distortion",
+      "kind": "pack",
+      "rating": 5,
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 20
+      },
+      "summary": "Only Fire-Touched may lead it; costs 10 Essence. Warps the Shadow of the pack's territory: outsiders take −3 to Initiative, Speed and perception, ranged attacks on the pack count double range, and powers beyond touch against them take −3. Pack members choose which way is down.",
+      "action": "extended",
+      "targetSuccesses": 15,
+      "duration": "1 month",
+      "symbols": "Dominance, servitude, deception, truth",
+      "interval": "1 minute",
+      "cost": "10 Essence"
+    },
+    {
+      "id": "unleash-shadow",
+      "name": "Unleash Shadow",
+      "kind": "pack",
+      "rating": 5,
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 20
+      },
+      "summary": "Only Fire-Touched may lead it. In the pack's territory, Manifestations cost 1 Essence and spirits lose Essence at half rate in the Flesh; outsiders' powers to bind or control spirits take twice the spirit's Rank as a penalty, and failures become dramatic.",
+      "action": "extended",
+      "targetSuccesses": 15,
+      "duration": "1 month",
+      "symbols": "Chains, doors, water, revelation",
+      "interval": "half an hour"
+    }
+  ],
+  "merits": [
+    {
+      "id": "refinement-of-flesh",
+      "name": "Refinement of Flesh",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "ivory-claws"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 2
+        }
+      ],
+      "summary": "Choose each turn whether regeneration heals bashing or lethal damage, without spending Essence."
+    },
+    {
+      "id": "silver-scoured",
+      "name": "Silver-Scoured",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "ivory-claws"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 3
+        }
+      ],
+      "summary": "Silver no longer triggers Death Rage in general. Silver still deals aggravated damage, but you get 1 armour against it."
+    },
+    {
+      "id": "legacy-of-the-hunt",
+      "name": "Legacy of the Hunt",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "ivory-claws"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 5
+        }
+      ],
+      "summary": "Reflexively contest any supernatural effect that would slow, bind or stop you chasing prey with a Clash of Wills, using your highest Renown."
+    },
+    {
+      "id": "refinement-of-spirit",
+      "name": "Refinement of Spirit",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "ivory-claws"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 3
+        }
+      ],
+      "summary": "Your effective spirit Rank goes up by 1."
+    },
+    {
+      "id": "distillation-of-form",
+      "name": "Distillation of Form",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "ivory-claws"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 3
+        }
+      ],
+      "summary": "+1 Size and +1 Strength in Gauru and Urshul."
+    },
+    {
+      "id": "echoes-of-pangaea",
+      "name": "Echoes of Pangaea",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "predator-kings"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 2
+        }
+      ],
+      "summary": "After killing the prey of a Sacred Hunt on your territory, for Primal Urge days you get +2 and 9-again to hunt anyone and to shape materials. You can spend the mantle to make someone's interaction with an animal a dramatic failure."
+    },
+    {
+      "id": "hunters-sacrifice",
+      "name": "Hunter's Sacrifice",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "predator-kings"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 3
+        }
+      ],
+      "summary": "Offer the kill of a Sacred Hunt on your territory to the Shadow: up to your honorary Rank in spirits present don't bleed Essence in the Flesh for Primal Urge days."
+    },
+    {
+      "id": "blood-of-pangaea",
+      "name": "Blood of Pangaea",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "predator-kings"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 4
+        }
+      ],
+      "summary": "On the Sacred Hunt, the first time each scene you take lethal damage you may reflexively use Awe, Dement or Emotional Aura for free, rolling Presence + Wits."
+    },
+    {
+      "id": "witch-stride",
+      "name": "Witch Stride",
+      "category": "werewolf",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 21
+      },
+      "ratings": [
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "tribe",
+          "id": "predator-kings"
+        },
+        {
+          "kind": "primalUrge",
+          "minimum": 5
+        }
+      ],
+      "summary": "On the Sacred Hunt, spend 1 Willpower to cross the Gauntlet either way without a Locus, whatever your Harmony."
+    },
+    {
+      "id": "apocalypsis-fidei",
+      "name": "Apocalypsis Fidei",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        1
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Must be a true believer of the Church of the Wolf"
+        }
+      ],
+      "summary": "A Merit for humans of the Church of the Wolf: when Lunacy forces a breaking point, the believer gains the Enraptured Condition on a success or Awestruck on a failure, and may pick Enraptured on an exceptional success. A dramatic failure breaks her faith, making her Wolf-Blooded and costing her this Merit and every Merit that needs it; it also unlocks the Church's other Merits and its rites."
+    },
+    {
+      "id": "invenire-venandi",
+      "name": "Invenire Venandi",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "apocalypsis-fidei",
+          "minimum": 1
+        }
+      ],
+      "summary": "A Church of the Wolf Merit for humans: the believer automatically senses when she is within Wits x 10 miles of a werewolf, and can roll Perception to find one within Empathy x 10 yards. A werewolf in Hishu form applies its usual Primal Urge penalty to that roll."
+    },
+    {
+      "id": "manticae",
+      "name": "Manticae",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "invenire-venandi",
+          "minimum": 2
+        }
+      ],
+      "summary": "A Church of the Wolf Merit for humans: werewolves in Basu-im Death Rage treat the believer as a packmate in Gauru Kuruth and won't attack her."
+    },
+    {
+      "id": "ligulae",
+      "name": "Ligulae",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 134
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "manticae",
+          "minimum": 3
+        }
+      ],
+      "summary": "A Church of the Wolf Merit for humans: the believer's presence acts as a general Kuruth trigger for any werewolf that comes within its Primal Urge in yards of her, even if it doesn't know who or what she is."
+    },
+    {
+      "id": "shadow-occultism",
+      "name": "Shadow Occultism",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 138
+      },
+      "ratings": [
+        4
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "other",
+          "text": "Has been possessed, Ridden or Claimed by a spirit and fed its Essence as a transgression"
+        },
+        {
+          "kind": "other",
+          "text": "Has suffered at least one breaking point in pursuit of this Merit"
+        }
+      ],
+      "summary": "A Supernatural Merit for humans: the occultist perceives her spirit patrons in Twilight, gains an Essence pool equal to Stamina + Resolve, can learn and lead Pack Rites without a pack, and starts with 3 dots in one Influence of her patron, rolled with Presence + Wits. She regains Essence from her Influence's resonance, from kept taboos (bought for 1 XP each, up to Composure) and from loci, but takes on her patron's Bane and a taboo, gains the Madness Condition while her Essence exceeds her Resolve, and gains the Sick Tilt in combat while it exceeds her Stamina."
+    },
+    {
+      "id": "shadow-perception",
+      "name": "Shadow Perception",
+      "category": "human",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 138
+      },
+      "ratings": [
+        3
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "merit",
+          "id": "shadow-occultism",
+          "minimum": 4
+        },
+        {
+          "kind": "other",
+          "text": "Has suffered a further breaking point in pursuit of this Merit"
+        }
+      ],
+      "summary": "A Supernatural Merit for humans: the occultist sees spirits in Twilight, understands the First Tongue, senses whether a place, person or object resonates with any of her Influences, and can sense a locus within its area, though a willing spirit has to carry her through it. She can't stop seeing spirits in Twilight, and they notice her easily and may bother her."
+    }
+  ],
+  "conditions": [
+    {
+      "id": "despondent",
+      "name": "Despondent",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 200
+      },
+      "persistent": false,
+      "summary": "You feel the hunter coming and know you can't stop it. Direct action against the hunter, attacks included, takes a penalty equal to its Glory.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or a lethal wound in your last Health box.",
+      "beat": null,
+      "possibleSources": "The Predator Kings' Implacable hunter's aspect",
+      "notePrompt": "Hunter"
+    },
+    {
+      "id": "enraptured",
+      "name": "Enraptured",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 200
+      },
+      "persistent": false,
+      "summary": "Lost in mad faith before divinity, you can only celebrate it and stay as close as you can, and you remember events as your faith expects. +5 Defense against ranged, melee and environmental attacks, and Defense can't drop below 5.",
+      "resolution": "The source of the Lunacy is gone for more than a few minutes, or the scene ends.",
+      "beat": null,
+      "possibleSources": "Suffering Lunacy with the Apocalypsis Fidei Merit"
+    },
+    {
+      "id": "euphoric",
+      "name": "Euphoric",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 200
+      },
+      "persistent": false,
+      "summary": "Rabid Wolf's madness shows you your place as prey. You won't spend Willpower for extra dice on actions against the werewolf or those on its Siskur-Dah, though you can still spend it to defend or resist, and act in ways that don't target the hunters.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or a lethal wound in your last Health box.",
+      "beat": null,
+      "possibleSources": "The Fire-Touched Fanatical hunter's aspect",
+      "notePrompt": "Hunter"
+    },
+    {
+      "id": "frantic",
+      "name": "Frantic",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 200
+      },
+      "persistent": false,
+      "summary": "Rabid Wolf's passion drives you to hold nothing back: you must spend Willpower on every action until you have none, including any you regain.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or a lethal wound in your last Health box.",
+      "beat": null,
+      "possibleSources": "The Fire-Touched Frenzied hunter's aspect",
+      "notePrompt": "Hunter"
+    },
+    {
+      "id": "instinctive",
+      "name": "Instinctive",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 200
+      },
+      "persistent": false,
+      "summary": "The hunter's primal nature leaves you relying on instinct alone: −2 to all Mental and Social dice pools except Intimidation.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or a lethal wound in your last Health box.",
+      "beat": null,
+      "possibleSources": "The Predator Kings' Primal hunter's aspect",
+      "notePrompt": "Hunter"
+    },
+    {
+      "id": "monstrous-servant",
+      "name": "Monstrous Servant",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 201
+      },
+      "persistent": false,
+      "summary": "You command a Geryo that must obey within your bargain and can't harm you, though it twists your words. You're immune to its powers, but each week and after each task it completes you roll Resolve + Composure at −its Rank: failure swaps your Virtue or Vice for its own, dramatic failure costs a Willpower dot.",
+      "resolution": "You release the Geryo, or your Willpower falls to zero.",
+      "beat": "You get an exceptional success or a dramatic failure on a roll to keep your sanity.",
+      "possibleSources": "Becoming a Geryo's master",
+      "notePrompt": "Geryo"
+    },
+    {
+      "id": "surrounded",
+      "name": "Surrounded",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 202
+      },
+      "persistent": false,
+      "summary": "Nowhere is safe and no one can be trusted; you can't hide from the hunter. Rolls to notice, find or track you get an exceptional success on three successes.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or a lethal wound in your last Health box.",
+      "beat": null,
+      "possibleSources": "The Ivory Claws' Insidious hunter's aspect",
+      "notePrompt": "Hunter"
+    },
+    {
+      "id": "wracked",
+      "name": "Wracked",
+      "source": {
+        "book": "night-horrors-shunned-by-the-moon",
+        "page": 202
+      },
+      "persistent": false,
+      "summary": "Spiritual pain fills your whole body, untouched by painkillers: −1 to all dice pools, on top of any wound penalties.",
+      "resolution": "Take a wound penalty from lethal or aggravated damage, or a lethal wound in your last Health box.",
+      "beat": null,
+      "possibleSources": "The Ivory Claws' Agonized hunter's aspect",
+      "notePrompt": "Hunter"
+    }
+  ]
+}

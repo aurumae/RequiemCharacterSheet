@@ -1,0 +1,562 @@
+{
+  "armor" : 1,
+  "aspirations" : [
+    {
+      "id" : "00000000-0000-4000-8000-000000000201",
+      "text" : "Sing a rival pack into retreat"
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000202",
+      "text" : ""
+    }
+  ],
+  "attributes" : [
+    {
+      "attribute" : "intelligence",
+      "rating" : 2
+    },
+    {
+      "attribute" : "wits",
+      "rating" : 3
+    },
+    {
+      "attribute" : "resolve",
+      "rating" : 2
+    },
+    {
+      "attribute" : "strength",
+      "rating" : 3
+    },
+    {
+      "attribute" : "dexterity",
+      "rating" : 2
+    },
+    {
+      "attribute" : "stamina",
+      "rating" : 3
+    },
+    {
+      "attribute" : "presence",
+      "rating" : 4
+    },
+    {
+      "attribute" : "manipulation",
+      "rating" : 2
+    },
+    {
+      "attribute" : "composure",
+      "rating" : 2
+    }
+  ],
+  "auspice" : {
+    "catalog" : "cahalith"
+  },
+  "ballisticArmor" : 2,
+  "beats" : 3,
+  "blood" : {
+    "catalog" : "challenger"
+  },
+  "bone" : {
+    "custom" : "Stray"
+  },
+  "changeLog" : [
+    {
+      "date" : 800000100,
+      "duringCreation" : true,
+      "experiences" : 0,
+      "from" : 3,
+      "id" : "00000000-0000-4000-8000-000000000901",
+      "name" : "Presence",
+      "to" : 4,
+      "trait" : "attribute:presence",
+      "xpMode" : false
+    },
+    {
+      "date" : 800000200,
+      "experiences" : 3,
+      "from" : 2,
+      "id" : "00000000-0000-4000-8000-000000000902",
+      "name" : "Glory",
+      "to" : 3,
+      "trait" : "renown:glory",
+      "xpMode" : true
+    },
+    {
+      "date" : 800000300,
+      "experiences" : 7,
+      "from" : 0,
+      "id" : "00000000-0000-4000-8000-000000000903",
+      "name" : "Gift of the Screaming Moon",
+      "to" : 2,
+      "trait" : "moonGift:00000000-0000-4000-8000-000000000401",
+      "xpMode" : true
+    },
+    {
+      "date" : 800000400,
+      "experiences" : 0,
+      "from" : 0,
+      "id" : "00000000-0000-4000-8000-000000000904",
+      "name" : "Primal Strength",
+      "to" : 1,
+      "trait" : "facet:00000000-0000-4000-8000-000000000503",
+      "xpMode" : true
+    },
+    {
+      "beats" : 1,
+      "date" : 800000500,
+      "event" : "resolved",
+      "experiences" : 0,
+      "from" : 1,
+      "id" : "00000000-0000-4000-8000-000000000905",
+      "name" : "Shaken",
+      "to" : 0,
+      "trait" : "condition:00000000-0000-4000-8000-000000000399",
+      "xpMode" : true
+    }
+  ],
+  "chronicle" : "Rust Belt Howl",
+  "concept" : "Punk singer turned war-crier",
+  "conditions" : [
+    {
+      "addedAt" : 800003600,
+      "counter" : 0,
+      "id" : "00000000-0000-4000-8000-000000000301",
+      "note" : "Blood Talons",
+      "source" : {
+        "catalog" : "siskur-dah"
+      }
+    },
+    {
+      "addedAt" : 800007200,
+      "counter" : 2,
+      "customBeat" : "When her voice gives out mid-howl.",
+      "customEffect" : "−1 to rolls that need her voice.",
+      "customPersistent" : false,
+      "customResolution" : "A day of rest.",
+      "id" : "00000000-0000-4000-8000-000000000302",
+      "note" : "",
+      "source" : {
+        "custom" : "Hoarse"
+      }
+    }
+  ],
+  "createdAt" : 800000000,
+  "essence" : 6,
+  "experiences" : 14,
+  "extraMoonGifts" : [
+    {
+      "dots" : 2,
+      "id" : "00000000-0000-4000-8000-000000000401",
+      "source" : {
+        "catalog" : "screaming-moon"
+      }
+    },
+    {
+      "dots" : 1,
+      "facets" : [
+        "Reaping Song"
+      ],
+      "id" : "00000000-0000-4000-8000-000000000402",
+      "source" : {
+        "custom" : "Gift of the Harvest Moon"
+      }
+    }
+  ],
+  "facets" : [
+    {
+      "id" : "00000000-0000-4000-8000-000000000501",
+      "source" : {
+        "catalog" : "rage-berserkers-might"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000502",
+      "source" : {
+        "catalog" : "inspiration-fearless-hunter"
+      }
+    },
+    {
+      "active" : true,
+      "id" : "00000000-0000-4000-8000-000000000503",
+      "source" : {
+        "catalog" : "strength-primal-strength"
+      },
+      "withRenown" : true
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000504",
+      "source" : {
+        "catalog" : "hunting-cow-the-prey"
+      }
+    },
+    {
+      "customGift" : "Gift of Noise",
+      "customKind" : "shadow",
+      "id" : "00000000-0000-4000-8000-000000000505",
+      "source" : {
+        "custom" : "Feedback Shriek"
+      }
+    }
+  ],
+  "favoredForm" : {
+    "attributes" : [
+      "strength"
+    ],
+    "drawbacks" : [
+      {
+        "attribute" : "strength",
+        "form" : "hishu"
+      },
+      {
+        "form" : "urhan"
+      }
+    ]
+  },
+  "fetishes" : [
+    {
+      "id" : "00000000-0000-4000-8000-000000000701",
+      "note" : "Two uses left",
+      "source" : {
+        "catalog" : "witch-poppet"
+      }
+    },
+    {
+      "customRating" : 2,
+      "id" : "00000000-0000-4000-8000-000000000702",
+      "note" : "A spirit of feedback",
+      "source" : {
+        "custom" : "Screaming Microphone"
+      }
+    }
+  ],
+  "fleshTouchstone" : "Her old bandmates",
+  "form" : "dalu",
+  "game" : "forsaken",
+  "harmony" : 6,
+  "healthTrack" : [
+    "lethal",
+    "bashing",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+  ],
+  "id" : "00000000-0000-4000-8000-000000000001",
+  "kuruthTriggerSet" : {
+    "catalog" : "blood"
+  },
+  "lodge" : {
+    "catalog" : "garm"
+  },
+  "merits" : [
+    {
+      "id" : "00000000-0000-4000-8000-000000000101",
+      "rating" : 2,
+      "source" : {
+        "catalog" : "totem"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "qualifier" : "First Tongue",
+      "rating" : 1,
+      "source" : {
+        "catalog" : "language"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000103",
+      "qualifier" : "Gauru",
+      "rating" : 2,
+      "source" : {
+        "catalog" : "favored-form"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000104",
+      "qualifier" : "Gauru",
+      "rating" : 3,
+      "source" : {
+        "catalog" : "fortified-form"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000105",
+      "rating" : 1,
+      "source" : {
+        "custom" : "Band Van"
+      }
+    },
+    {
+      "id" : "00000000-0000-4000-8000-000000000106",
+      "rating" : 0,
+      "source" : {
+        "catalog" : "fast-reflexes"
+      }
+    }
+  ],
+  "modifiedAt" : 800086400,
+  "moonFacets" : [
+    "Red Howl",
+    "Tide of Blood",
+    "Hunter's Eclipse"
+  ],
+  "moonGift" : {
+    "custom" : "Gift of the Blood Moon"
+  },
+  "name" : "Mara Voss",
+  "paidDots" : {
+    "moonGift:00000000-0000-4000-8000-000000000401" : {
+      "1" : 5,
+      "2" : 2
+    },
+    "renown:glory" : {
+      "3" : 3
+    }
+  },
+  "player" : "Sam",
+  "primalUrge" : 2,
+  "renown" : {
+    "cunning" : 1,
+    "glory" : 3,
+    "purity" : 1
+  },
+  "renownFacetCredits" : {
+    "honor" : 1
+  },
+  "rites" : [
+    {
+      "active" : true,
+      "id" : "00000000-0000-4000-8000-000000000601",
+      "source" : {
+        "catalog" : "totemic-empowerment"
+      }
+    },
+    {
+      "customRating" : 2,
+      "id" : "00000000-0000-4000-8000-000000000602",
+      "source" : {
+        "custom" : "Rite of the Last Encore"
+      }
+    }
+  ],
+  "schemaVersion" : 1,
+  "showsUnofficialContent" : true,
+  "size" : 5,
+  "skills" : [
+    {
+      "rating" : 0,
+      "skill" : "academics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "computer",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "crafts",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "investigation",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "medicine",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 1,
+      "skill" : "occult",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "politics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "science",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 2,
+      "skill" : "athletics",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 3,
+      "skill" : "brawl",
+      "specialties" : [
+        "Claws"
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "drive",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "firearms",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "larceny",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "stealth",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 2,
+      "skill" : "survival",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "weaponry",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "animal-ken",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "empathy",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 4,
+      "skill" : "expression",
+      "specialties" : [
+        "Howls",
+        "Punk Rock"
+      ]
+    },
+    {
+      "rating" : 2,
+      "skill" : "intimidation",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 1,
+      "skill" : "persuasion",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "socialize",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 2,
+      "skill" : "streetwise",
+      "specialties" : [
+
+      ]
+    },
+    {
+      "rating" : 0,
+      "skill" : "subterfuge",
+      "specialties" : [
+
+      ]
+    }
+  ],
+  "spiritTouchstone" : "The howl at Garm's cairn",
+  "totem" : {
+    "advantages" : [
+      {
+        "detail" : "",
+        "dots" : 1,
+        "id" : "00000000-0000-4000-8000-000000000801",
+        "kind" : "attribute",
+        "target" : "strength"
+      },
+      {
+        "detail" : "Grappling",
+        "dots" : 1,
+        "id" : "00000000-0000-4000-8000-000000000802",
+        "kind" : "specialty",
+        "target" : "brawl"
+      },
+      {
+        "detail" : "",
+        "dots" : 1,
+        "id" : "00000000-0000-4000-8000-000000000803",
+        "kind" : "merit",
+        "target" : "fast-reflexes"
+      }
+    ],
+    "aspiration" : "See every factory fall",
+    "ban" : "Never repair a machine",
+    "name" : "Rust-on-the-Wind",
+    "packPoints" : 9
+  },
+  "tribe" : {
+    "catalog" : "blood-talons"
+  },
+  "willpowerTrack" : [
+    "spent",
+    "none",
+    "none",
+    "none"
+  ],
+  "xpMode" : true
+}

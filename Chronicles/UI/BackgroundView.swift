@@ -22,14 +22,64 @@ struct BackgroundView<Content: View>: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 GeometryReader { geometry in
-                    Image(theme.borderImageName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .clipped()
+                    if let border = theme.borderImageName {
+                        Image(border)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    } else {
+                        Color.white
+                    }
                 }
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
+            }
+    }
+}
+
+extension View {
+    /// The theme's skull, faint and fixed behind the sheet as it scrolls. The rows are opaque white, so it's laid
+    /// over them and multiplied: it tints the white like ink showing through paper, and barely changes text and dots.
+    func sheetWatermark() -> some View {
+        modifier(SheetWatermark())
+    }
+}
+
+private struct SheetWatermark: ViewModifier {
+    @Environment(\.theme) private var theme
+    /// The list's size without the keyboard, so the watermark stays put and is partly covered when the keyboard
+    /// shows, rather than shrinking to fit the space left.
+    @State private var fullSize = CGSize.zero
+
+    func body(content: Content) -> some View {
+        content
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { size in
+                // A new width (e.g. rotating) starts again; otherwise only growing counts, as the keyboard shrinks it
+                if size.width != fullSize.width || size.height > fullSize.height {
+                    fullSize = size
+                }
+            }
+            .overlay {
+                if let name = theme.watermarkImageName {
+                    // Laid out at the full size and cut off at the list's edge
+                    Color.clear
+                        .overlay(alignment: .top) {
+                            // Decorative, so VoiceOver skips it
+                            Image(decorative: name)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(theme.accent.opacity(0.07))
+                                .frame(maxWidth: 330)
+                                .padding(.horizontal, 40)
+                                .frame(width: fullSize.width, height: fullSize.height)
+                        }
+                        .clipped()
+                        .blendMode(.multiply)
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                }
             }
     }
 }

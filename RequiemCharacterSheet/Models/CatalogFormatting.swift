@@ -72,6 +72,10 @@ extension DicePool {
 extension SourceReference {
     /// e.g. "Vampire: The Requiem Second Edition, p. 131".
     func citation(in catalog: Catalog = .bundled) -> String {
+        // An article online is cited by its address
+        if let url = catalog.book(book)?.url {
+            return url
+        }
         let book = catalog.book(book)?.name ?? book
         return page.map { "\(book), p. \($0)" } ?? book
     }
@@ -134,8 +138,9 @@ extension BloodlineEntry {
 }
 
 extension CatalogBookSection {
-    /// Every book in the bundled catalogs, in catalog order, and within each the groups that have entries from it.
-    static func sections(_ groups: [CatalogPickerGroup<Entry>]) -> [CatalogBookSection] {
-        sections(groups, books: Catalog.bundled.books)
+    /// Every book in the bundled catalogs the character sees, in catalog order, and within each the groups that
+    /// have entries from it.
+    static func sections(_ groups: [CatalogPickerGroup<Entry>], includingUnofficial: Bool = false) -> [CatalogBookSection] {
+        sections(groups, books: Catalog.bundled.books.visible(includingUnofficial: includingUnofficial))
     }
 }
