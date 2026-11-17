@@ -439,6 +439,11 @@ extension ForsakenCharacter {
         Set((effectiveAuspice?.giftAffinities ?? []) + (tribeEntry?.giftAffinities ?? []))
     }
 
+    /// Whether a Gift is one the tribe or auspice favours, counting an era's Gift as the one it stands in for.
+    func hasAffinity(for gift: GiftEntry) -> Bool {
+        affinityGifts.contains(gift.id) || gift.replaces.map(affinityGifts.contains) == true
+    }
+
     /// The Gift a known Facet belongs to.
     func gift(of facet: OwnedFacet) -> GiftEntry? {
         facet.source.catalogID.flatMap { Catalog.bundled.facet($0)?.gift }
@@ -549,6 +554,10 @@ extension ForsakenCharacter: SheetCharacter {
     /// the other side's apart, as Pure and Forsaken only rarely hunt together.
     func noteOptionGroups(for entry: ConditionEntry) -> [ConditionNoteOptionGroup] {
         guard !entry.noteOptions.isEmpty else { return [] }
+        // Choices that aren't grouped, e.g. the kinds of Outlaw, are one plain list
+        guard entry.noteOptions.contains(where: { $0.group != nil }) else {
+            return [ConditionNoteOptionGroup(title: "", options: entry.noteOptions)]
+        }
         let ownGroup = isPure ? "pure" : "forsaken"
         let otherGroup = isPure ? "forsaken" : "pure"
         // Others in the catalog, e.g. Bale Hound lodges and the Urighur, aren't offered to player characters yet
@@ -692,7 +701,7 @@ extension ForsakenCharacter: ExperienceCharacter {
         if gift.kind == .moon, let auspice = effectiveAuspice, gift.auspice == auspice.id { return 0 }
         let knowsGift = facets.contains { $0.id != facet.id && self.gift(of: $0)?.id == gift.id }
         if knowsGift { return 2 }
-        return gift.kind == .shadow && affinityGifts.contains(gift.id) ? 3 : 5
+        return gift.kind == .shadow && hasAffinity(for: gift) ? 3 : 5
     }
 
     func refundsWhenLowered(_ kind: TraitKind) -> Bool {

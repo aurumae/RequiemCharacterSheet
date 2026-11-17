@@ -36,6 +36,11 @@ Fixed afterwards, on the user's say (all ✔):
 - **Ghost Wolves can't start with the Moon Gift's second Facet** (p. 50): guided creation keeps their auspice Renown
   at 1.
 
+**Dark Eras is in** (`dark-eras.json`, `dark-eras-2.json`, `dark-eras-companion.json`), with the full books' pages
+from the user: the Viking-age Gift of Technology and its five Facets, two rites, five fetishes, Rune Caster, the
+Berserker archetype, five Conditions, four Tilts and two story-only lodges. Era creation rules, weapons and armour are
+left for the era selector and the combat tools.
+
 **The Pack is in** (`the-pack.json`), as far as it reaches one character: its five lodges with their Blessing,
 Aspiration, Ban and Sacred Hunt, six Merits, two rites, five fetishes and the Essence Bleed Tilt. The sheet has a
 Lodge section, and XP Mode charges a werewolf outside a lodge three times the cost of its Merits and rites.
@@ -143,15 +148,14 @@ Recorded in `docs/design-decisions.md`.
 - **Lodges:** the Eaters of the Dead are listed under both books; no lodge is limited by tribe; the triple cost for
   outsiders is charged by the sheet.
 - **Dark Eras is cited by the full books' pages**, which the user supplies.
+- **What's in the book goes in**, optional-rule Conditions and story-only lodges included (2026-11-17).
 
 ## Decisions still needed (user)
 
-1. **Dark Eras pages.** The full books' page for each Dark Eras item to be added.
-2. **Pure creation.** Forsaken by Rome (p. 78) gives the Pure three Renown dots and a free dot in two tribe Skills.
+1. **Pure creation.** Forsaken by Rome (p. 78) gives the Pure three Renown dots and a free dot in two tribe Skills.
    The app gives two and one, from Shunned by the Moon's quick reference (p. 202), which says it updates those
    rules but is silent on both points.
-3. **Totem points of exactly 20:** five Experiences or ten?
-4. **Optional rules** (the trimester Conditions, the Punk Generation and others): in the pickers or not?
-5. **Pack Merits that change the character.** Den adds to Defense in the den and Directed Rage changes the Kuruth
+2. **Totem points of exactly 20:** five Experiences or ten?
+3. **Pack Merits that change the character.** Den adds to Defense in the den and Directed Rage changes the Kuruth
    control time. They are the pack's Merits, so they are out with the Pack section unless the user wants them as
    reminders.

@@ -272,3 +272,23 @@ dot goes elsewhere.
 As in Requiem, Dark Eras content is cited to the collected books (Dark Eras, Dark Eras Companion, Dark Eras 2) with
 their page numbers, not to the chapters sold on their own, whose pages differ. The user supplies the pages.
 
+## What's in the book goes in, worded with care (2026-11-17)
+
+If a Second Edition book the app covers prints a trait a player character can have, the app includes it. That holds
+for Conditions that belong to optional rules, or that sit in pages shared with another game, and for lodges with no
+rules, which are listed with a summary as the core book's are.
+
+Where a book's own wording is harsh, ours is brief and plain: enough to use the trait, with the page for anyone who
+wants the full context. Example: the Viking-age Ergi Condition is described as an accusation of unmanliness, and
+leaves the rest to Dark Eras, p. 164.
+
+## Werewolf: Dark Eras content (2026-11-17)
+
+- Dark Eras content is in three books of Forsaken's own: Dark Eras, Dark Eras 2 and Dark Eras Companion, cited by
+  the full books' pages.
+- **The Viking-age Gift of Technology** is its own Gift, listed under Dark Eras, with the same name as the modern one
+  it stands in for. A tribe's or auspice's affinity for Technology covers both. Nothing stops a character learning
+  from either: the player chooses by book until there's an era selector.
+- **Sigrblot is a Pack Rite.** The book doesn't say; it's performed for the pack's territory before a raid.
+- Era creation rules, weapons and armour wait for the era selector and the combat tools.
+

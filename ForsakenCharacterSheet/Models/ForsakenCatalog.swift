@@ -68,13 +68,15 @@ struct Catalog {
     static let bundled = Catalog(files: bundledFiles())
 
     /// Every catalog file in the app bundle: the Werewolf core book first, then the Chronicles of Darkness core, then
-    /// the other books by file name, with unofficial sources after all the books.
+    /// the other books by file name (without ".json", so "dark-eras" comes before "dark-eras-2"), with unofficial
+    /// sources after all the books.
     private static func bundledFiles() -> [File] {
         let order = ["wtf2e-core", "cofd-core"]
         let urls = (Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
             .sorted { lhs, rhs in
-                let rank = { (url: URL) in order.firstIndex(of: url.deletingPathExtension().lastPathComponent) ?? order.count }
-                return rank(lhs) != rank(rhs) ? rank(lhs) < rank(rhs) : lhs.lastPathComponent < rhs.lastPathComponent
+                let name = { (url: URL) in url.deletingPathExtension().lastPathComponent }
+                let rank = { (url: URL) in order.firstIndex(of: name(url)) ?? order.count }
+                return rank(lhs) != rank(rhs) ? rank(lhs) < rank(rhs) : name(lhs) < name(rhs)
             }
         let files: [File] = urls.compactMap { url in
             guard let data = try? Data(contentsOf: url) else { return nil }

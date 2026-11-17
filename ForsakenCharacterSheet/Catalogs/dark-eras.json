@@ -1,0 +1,308 @@
+{
+  "format": "forsaken-catalog",
+  "version": 1,
+  "book": {
+    "id": "dark-eras",
+    "name": "Dark Eras"
+  },
+  "lodges": [
+    {
+      "id": "muspell",
+      "name": "Lodge of Muspell",
+      "source": {
+        "book": "dark-eras",
+        "page": 166
+      },
+      "summary": "Fire-Touched of the Viking age sworn to the fire giants of Múspellheim, and to fight the gods of humanity at Ragnarök; the giant Surtr is said to be their totem. Initiates are branded with runes, and in the week after grow broader and up to a foot taller."
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "berserker",
+      "name": "Berserker",
+      "source": {
+        "book": "dark-eras",
+        "page": 163
+      },
+      "kind": "blood",
+      "summary": "Scorns armour and shield, trusting the gods to see his deeds. Regains one Willpower for surviving a fight wearing neither (natural armour from Merits or shapeshifting is allowed; armour from Gifts, rites or fetishes isn't), and all of it for coming through such a fight unhurt after being attacked at least once."
+    }
+  ],
+  "gifts": [
+    {
+      "id": "technology-viking-age",
+      "name": "Gift of Technology",
+      "kind": "shadow",
+      "replaces": "technology",
+      "source": {
+        "book": "dark-eras",
+        "page": 165
+      },
+      "summary": "The Viking age's Gift of Technology, which stands in for the modern one in that era: silencing alarms, unmaking and mending what craftsmen build, and following the money.",
+      "facets": [
+        {
+          "id": "technology-viking-age-hush",
+          "name": "Hush",
+          "renown": "cunning",
+          "source": {
+            "book": "dark-eras",
+            "page": 165
+          },
+          "summary": "Every warning signal in a settlement of fewer than 200 people that she can perceive fails: bells fall dumb, horns wheeze and signal fires smoulder. Shouts and runners still carry word, more slowly.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Composure + Stealth + Cunning",
+          "duration": "1 scene"
+        },
+        {
+          "id": "technology-viking-age-unmake",
+          "name": "Unmake",
+          "renown": "glory",
+          "source": {
+            "book": "dark-eras",
+            "page": 165
+          },
+          "summary": "A perceived item of several parts that takes a skilled crafter to make, up to Size 5 × Glory, falls apart into its pieces: a ship into planks, rigging and sail.",
+          "cost": "1 Essence",
+          "action": "instant (contested if the item is in use)",
+          "dicePool": "Wits + Crafts + Glory versus Resolve + Primal Urge"
+        },
+        {
+          "id": "technology-viking-age-balance-the-scales",
+          "name": "Balance the Scales",
+          "renown": "honor",
+          "source": {
+            "book": "dark-eras",
+            "page": 166
+          },
+          "summary": "A broken or failing device works as if new for hours equal to her Honor; one rigged to deceive, such as false scales, works as an onlooker would expect.",
+          "cost": "1 Essence",
+          "action": "instant (contested if the item is rigged)",
+          "dicePool": "Resolve + Crafts + Honor versus Resolve + Primal Urge",
+          "duration": "Hours equal to Honor"
+        },
+        {
+          "id": "technology-viking-age-gutter",
+          "name": "Gutter",
+          "renown": "purity",
+          "source": {
+            "book": "dark-eras",
+            "page": 166
+          },
+          "summary": "Every flame in the building she is in, or within Purity × 100 yards if that is larger, sinks to embers: the heat stays but the light all but goes. She can narrow it to a room or a street.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Presence + Survival + Purity",
+          "duration": "1 scene"
+        },
+        {
+          "id": "technology-viking-age-iron-minions",
+          "name": "Iron Minions",
+          "renown": "wisdom",
+          "source": {
+            "book": "dark-eras",
+            "page": 166
+          },
+          "summary": "Binds her to as many coins, ingots or pieces of precious metal she can see as her Wisdom. She knows when they move, are divided or change hands, and roughly how, and with a turn's concentration can perceive where they are in place of her own surroundings.",
+          "cost": "1 Essence",
+          "action": "instant",
+          "dicePool": "Wits + Politics + Wisdom",
+          "duration": "1 week"
+        }
+      ]
+    }
+  ],
+  "rites": [
+    {
+      "id": "sigrblot",
+      "name": "Sigrblot",
+      "kind": "pack",
+      "rating": 2,
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "summary": "Performed with the human sacrifice of the same name before a summer's raiding, it buys the peace of the territory's spirit courts while the pack is away. It costs 1 Essence per court for each month. That Essence, and more equal to the Health of the largest animal sacrificed (10 for a horse or cow), is shared among the courts that answer. Their spirits take −5 to cross the Gauntlet or use Reaching, and the ritemaster learns of any breach on returning.",
+      "action": "extended",
+      "dicePool": "Manipulation + Politics",
+      "targetSuccesses": 10,
+      "duration": "1 to 3 months, by the Essence spent"
+    }
+  ],
+  "merits": [
+    {
+      "id": "rune-caster",
+      "name": "Rune Caster",
+      "category": "mental",
+      "source": {
+        "book": "dark-eras",
+        "page": 163
+      },
+      "ratings": [
+        2
+      ],
+      "repeatable": false,
+      "prerequisites": [
+        {
+          "kind": "skill",
+          "id": "occult",
+          "minimum": 2
+        }
+      ],
+      "summary": "Casting runestones gives +2 to rolls for the Clairvoyance, Medium and Omen Sensitivity Merits, to reading a Cahalith's Prophetic Dreams, her own or another's, and to using the Gift of Insight. After a reading, onlookers' impression of her is a step better while she convinces them of the prophecy. It can draw suspicion of seidr and, among Christians, accusations of sorcery."
+    }
+  ],
+  "conditions": [
+    {
+      "id": "ergi",
+      "name": "Ergi",
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "persistent": false,
+      "summary": "You've been accused of being unmanly, a grave insult among the Norse. You have until the next Thing meets to kill your accuser or face them in a duel, or you become a full outlaw (see Outlaw); an accuser who refuses the duel is outlawed in your place. If you kill your accuser their family is owed no weregild, and if you die you're worth half of yours. Men who practise seidr risk the accusation.",
+      "resolution": "Defeat your accuser in a hólmgang, a formal duel.",
+      "beat": null,
+      "possibleSources": "An accusation made before the community"
+    },
+    {
+      "id": "outlaw",
+      "name": "Outlaw",
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "persistent": false,
+      "summary": "The Thing has declared you an outlaw and banished you, perhaps for an unpaid weregild or a duel refused. A lesser outlaw who breaks the terms of exile becomes a full one.",
+      "resolution": "A lesser outlaw serves three years in exile; a full outlaw kills three other outlaws.",
+      "beat": "You flee, or give up something important, to avoid being lawfully killed.",
+      "possibleSources": "The judgement of a Thing",
+      "notePrompt": "Kind of outlaw",
+      "noteOptions": [
+        {
+          "id": "lesser",
+          "name": "Lesser outlaw",
+          "summary": "Exiled for three years, with your property still protected by law. Sheltering or feeding you is a crime, so Social attempts to get help take −3, and you're barred from holy sites."
+        },
+        {
+          "id": "full",
+          "name": "Full outlaw",
+          "summary": "Your property is seized and anyone may kill you. You lose any dots of Resources or Safe Place that could be confiscated."
+        }
+      ]
+    },
+    {
+      "id": "punk-generation",
+      "name": "The Punk Generation",
+      "source": {
+        "book": "dark-eras",
+        "page": 581
+      },
+      "persistent": false,
+      "summary": "Someone more privileged has wronged you. While you're under the weight of it, −2 to all Resolve and Composure rolls.",
+      "resolution": "When you spend Willpower to lash out at whoever wronged you, take the rote quality on the roll in place of the usual +3.",
+      "beat": null,
+      "possibleSources": "An optional rule: being wronged by someone with more dots than you in the Social Merit that fits the wrong, such as Resources or Status",
+      "affects": [
+        {
+          "targets": [
+            "attribute:resolve",
+            "attribute:composure"
+          ],
+          "text": "The Punk Generation: −2 to Resolve and Composure rolls"
+        }
+      ]
+    }
+  ],
+  "fetishes": [
+    {
+      "id": "hearthglass-beads",
+      "name": "Hearthglass Beads",
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "kind": "fetish",
+      "rating": 1,
+      "summary": "Glass beads on a necklace, given to close kin to keep off the cold.",
+      "spirit": "Fire or the hearth",
+      "effect": "In extreme cold, lowers the exposure by two levels for the rest of the scene. The bead must be warmed by a fire for an hour between uses."
+    },
+    {
+      "id": "hacksilver",
+      "name": "Hacksilver",
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "kind": "fetish",
+      "rating": 2,
+      "summary": "A knife that cuts precious metal with ease, named for the silver hacked up after a raid.",
+      "spirit": "Greed",
+      "effect": "Once activated, ignores 2 Durability when cutting silver or gold, or alloys and things heavily decorated with them, for the rest of the scene."
+    },
+    {
+      "id": "lokis-knuckles",
+      "name": "Loki's Knuckles",
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "kind": "fetish",
+      "rating": 2,
+      "summary": "Dice for Mia, or Liar's Dice, carved from the knuckles of a thief or adulterer.",
+      "effect": "+3 to Manipulation rolls while playing: lies about your rolls, and the boasts, wagers and intrigue over the game. Lasts an hour, or until the game ends."
+    },
+    {
+      "id": "shieldbiter",
+      "name": "Shieldbiter",
+      "source": {
+        "book": "dark-eras",
+        "page": 164
+      },
+      "kind": "fetish",
+      "rating": 3,
+      "summary": "A weapon, usually a hatchet, that makes nothing of shields.",
+      "effect": "Once activated, its attacks ignore the Durability of mostly wooden objects, reinforced shields included, and the Defense bonus of an opponent's wooden shield."
+    }
+  ],
+  "tilts": [
+    {
+      "id": "shattered-time",
+      "name": "Shattered Time",
+      "source": {
+        "book": "dark-eras",
+        "page": 46
+      },
+      "kind": "environmental",
+      "summary": "Each turn, roll a die and add it to your Defense, Initiative, Speed or Perception pool for the turn, then roll another and take it from a different one of the four. Each 10 rolled brings a small change to your past, or 1 bashing damage from an injury you didn't have until now. Five or more 10s in one such place bring a great one: your history is rewritten, you gain a destiny, you leave before you arrived, or your timeline splits.",
+      "cause": "Being in a region where time is shattered.",
+      "ending": "The book gives none: it lasts as long as you're in the region."
+    },
+    {
+      "id": "urban-collapse",
+      "name": "Urban Collapse",
+      "source": {
+        "book": "dark-eras",
+        "page": 573
+      },
+      "kind": "environmental",
+      "summary": "The ground, walls and ceilings are unstable. Anyone moving more than half their Speed in a turn rolls Dexterity + Athletics − 3 reflexively, or takes 3 bashing damage and is Knocked Down; an attacker can take −2 to force that roll on a victim. A dramatic failure brings a full collapse: 5 bashing damage, and trapped under rubble that takes Strength + Stamina − 5 to shift, with 1 more bashing for each failed roll. Each helper removes a point of that penalty.",
+      "cause": "In decaying 1970s New York, the first dramatic failure or exceptional success on a physical action in an action scene, if the Storyteller agrees; always a risk when Gauru form comes into play.",
+      "ending": "With the scene, though the place suffers the Tilt again in any later action scene until it's properly repaired."
+    },
+    {
+      "id": "riot",
+      "name": "Riot",
+      "source": {
+        "book": "dark-eras",
+        "page": 576
+      },
+      "kind": "environmental",
+      "summary": "Everyone in the riot rolls Stamina + Athletics reflexively each turn, or takes 2 bashing damage from the crowd. What else is wrecked is up to the Storyteller.",
+      "cause": "Mostly the story. Something high-profile in a tense crowd, such as taking Gauru form before a panicky mob, can start one, as might Gifts such as Rage and Inspiration.",
+      "ending": "Few characters can stop one. It runs from a couple of hours to a few weeks, by the size of the mob, what set it off and how the authorities respond."
+    }
+  ]
+}

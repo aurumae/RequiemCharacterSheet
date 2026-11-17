@@ -63,7 +63,8 @@ struct ForsakenRulesTests {
     @Test func catalogHasTheChroniclesCoreMeritsAndConditions() {
         #expect(Catalog.bundled.merits.entry("fast-reflexes") != nil)
         #expect(!Catalog.bundled.conditions.all.isEmpty)
-        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core", "night-horrors-shunned-by-the-moon", "the-pack", "giver-of-gifts-1", "giver-of-gifts-2"])
+        #expect(Catalog.bundled.books.map(\.id) == ["wtf2e-core", "cofd-core", "dark-eras", "dark-eras-2", "dark-eras-companion", "night-horrors-shunned-by-the-moon",
+                                                    "the-pack", "giver-of-gifts-1", "giver-of-gifts-2"])
     }
 
     @Test func werewolfCoreBookIsLoaded() {
@@ -72,15 +73,15 @@ struct ForsakenRulesTests {
         #expect(catalog.auspices.all.count == 5)
         #expect(catalog.tribes.all.filter { fromCore($0.source) }.count == 6)
         #expect(catalog.lodges.all.filter { fromCore($0.source) }.count == 8)
-        #expect(catalog.archetypes.all.filter { $0.kind == .blood }.count == 6)
-        #expect(catalog.archetypes.all.filter { $0.kind == .bone }.count == 6)
+        #expect(catalog.archetypes.all.filter { fromCore($0.source) && $0.kind == .blood }.count == 6)
+        #expect(catalog.archetypes.all.filter { fromCore($0.source) && $0.kind == .bone }.count == 6)
         #expect(catalog.gifts.all.filter { fromCore($0.source) }.count == 23)
         #expect(catalog.gifts.all.filter { fromCore($0.source) }.flatMap(\.facets).count == 115)
         #expect(catalog.rites.all.filter { fromCore($0.source) }.count == 23)
         #expect(catalog.fetishes.all.filter { fromCore($0.source) }.count == 18)
         #expect(catalog.tilts.all.filter { fromCore($0.source) }.map(\.name)
                 == ["Arm Wrack", "Blinded", "Earthquake", "Heavy Winds", "Knocked Down", "Leg Wrack", "Poisoned", "Stunned"])
-        #expect(catalog.tilts.all.filter { $0.kind == .environmental }.map(\.id) == ["earthquake", "heavy-winds"])
+        #expect(catalog.tilts.all.filter { fromCore($0.source) && $0.kind == .environmental }.map(\.id) == ["earthquake", "heavy-winds"])
         // The human Merits the Werewolf book reprints, e.g. Language, are offered
         #expect(catalog.merits.entry("language")?.source.book == "wtf2e-core")
         #expect(catalog.merits.all.filter { $0.category == .werewolf && fromCore($0.source) }.count == 24)
@@ -902,6 +903,66 @@ struct ThePackTests {
         character.merits.append(Merit(source: .catalog("fast-reflexes"), rating: 2))
         character.recordChanges(since: before)
         #expect(character.changeLog.last?.experiences == 2)
+    }
+}
+
+@MainActor
+struct DarkErasTests {
+    private let catalog = Catalog.bundled
+
+    @Test func darkErasBooksAreLoaded() throws {
+        let from = { (book: String) in { (source: SourceReference) in source.book == book } }
+        #expect(catalog.fetishes.all.filter { from("dark-eras")($0.source) }.count == 4)
+        #expect(catalog.conditions.all.filter { from("dark-eras")($0.source) }.map(\.name) == ["Ergi", "Outlaw", "The Punk Generation"])
+        #expect(catalog.tilts.all.filter { from("dark-eras")($0.source) }.map(\.name) == ["Shattered Time", "Urban Collapse", "Riot"])
+        #expect(catalog.conditions.all.filter { from("dark-eras-2")($0.source) }.count == 2)
+        #expect(catalog.tilts.entry("iterus-black-blood")?.kind == .environmental)
+        #expect(catalog.rites.entry("sigrblot")?.kind == .pack && catalog.rites.entry("shackled-lightning")?.rating == 2)
+        #expect(catalog.fetishes.entry("the-ivory-claws")?.source.book == "dark-eras-companion")
+        #expect(catalog.archetypes.entry("berserker")?.kind == .blood)
+        #expect(catalog.merits.entry("rune-caster")?.ratings == [2])
+        // Story-only lodges, like the core book's
+        for id in ["muspell", "council-of-eagles-and-lightning"] {
+            #expect(try #require(catalog.lodges.entry(id)).hasRules == false)
+        }
+        // The pages are the full books', not the chapters' own
+        #expect(catalog.merits.entry("rune-caster")?.source.citation() == "Dark Eras, p. 163")
+    }
+
+    @Test func theVikingGiftOfTechnologyStandsInForTheModernOne() throws {
+        let viking = try #require(catalog.gifts.entry("technology-viking-age"))
+        let modern = try #require(catalog.gifts.entry("technology"))
+        #expect(viking.replaces == modern.id && viking.name == modern.name)
+        #expect(viking.facets.map(\.name) == ["Hush", "Unmake", "Balance the Scales", "Gutter", "Iron Minions"])
+        #expect(Set(viking.facets.compactMap(\.renown)).count == 5)
+        // Both have an Unmake, each its own Facet
+        #expect(catalog.facet("technology-viking-age-unmake")?.gift.id == viking.id)
+        #expect(catalog.facet("technology-unmake")?.gift.id == modern.id)
+
+        // The Iron Masters' affinity for Technology covers it: 3 Experiences for its first Facet, not 5
+        let character = ForsakenCharacter()
+        character.tribe = "Iron Masters"
+        #expect(character.hasAffinity(for: viking) && character.hasAffinity(for: modern))
+        character.xpMode = true
+        var before = character.traitSnapshot
+        character.facets.append(OwnedFacet(source: .catalog("technology-viking-age-hush")))
+        character.recordChanges(since: before)
+        #expect(character.changeLog.last?.experiences == 3)
+        let other = ForsakenCharacter()
+        other.tribe = "Blood Talons"
+        #expect(!other.hasAffinity(for: viking))
+        other.xpMode = true
+        before = other.traitSnapshot
+        other.facets.append(OwnedFacet(source: .catalog("technology-viking-age-hush")))
+        other.recordChanges(since: before)
+        #expect(other.changeLog.last?.experiences == 5)
+    }
+
+    @Test func ungroupedNoteChoicesAreOneList() throws {
+        let outlaw = try #require(catalog.conditions.entry("outlaw"))
+        let groups = ForsakenCharacter().noteOptionGroups(for: outlaw)
+        #expect(groups.map(\.title) == [""])
+        #expect(groups.first?.options.map(\.name) == ["Lesser outlaw", "Full outlaw"])
     }
 }
 

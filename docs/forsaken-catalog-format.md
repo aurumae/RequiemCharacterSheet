@@ -20,6 +20,10 @@ Every entry has `id`, `name`, `source: { "book", "page" }` and `summary` (one or
 articles (`giver-of-gifts-1.json`, `giver-of-gifts-2.json`); their entries have no `page` and are cited by the URL.
 Unofficial files load after all the books.
 
+Files load in this order: `wtf2e-core`, `cofd-core`, then the other books by file name without its extension, so
+`dark-eras`, `dark-eras-2`, `dark-eras-companion`, `nh-shunned-by-the-moon`, `the-pack`. Forsaken's Dark Eras files
+are its own, in `ForsakenCharacterSheet/Catalogs/`; they share only their names and book ids with Requiem's.
+
 - **auspices**: `moon` ("crescent", "full", "gibbous", "half", "new"), `renown` (one of "cunning", "glory", "honor",
   "purity", "wisdom"), `skills` (three Skill ids, e.g. "animal-ken"), `huntersAspect` (`{ "name", "condition" }`,
   the condition's id), `moonGift` (a gift id), `giftAffinities` (Shadow Gift ids), `benefit` (`{ "name", "summary",
@@ -39,7 +43,9 @@ Unofficial files load after all the books.
   Siskur-Dah `noteOptions` entry with the lodge's `id` and `group` "lodge".
 - **archetypes**: `kind` ("blood" or "bone"); `summary` says how it regains Willpower.
 - **gifts**: `kind` ("moon", "shadow" or "wolf"), `auspice` (for a Moon Gift; an auspice may have several, e.g.
-  alternates, and its `moonGift` names the core one), and `facets`, each with `id`,
+  alternates, and its `moonGift` names the core one), `replaces` (the id of the Gift an era's version stands in for,
+  e.g. the Viking age's Gift of Technology in `dark-eras.json`; it has its own id and Facet ids, and counts as the
+  replaced Gift in `giftAffinities`), and `facets`, each with `id`,
   `name`, `source`, `summary`, and either `renown` (Shadow and Wolf Gifts) or `dots` (1–5, Moon Gifts), plus optional
   `cost` (e.g. "1 Essence"), `action` ("instant", "reflexive", "contested", "extended"…), `dicePool` (e.g.
   "Wits + Investigation + Cunning") and `duration`, and `effects` (Requiem's effect objects; `"amount": "rating"`
@@ -54,7 +60,8 @@ Unofficial files load after all the books.
   `notTribe` (id = tribe).
 - **conditions**: Requiem's Condition entry, which may have `noteOptions` (see `docs/phase-b-design.md`). Siskur-Dah
   uses them for the ritemaster's tribe, with `group` "forsaken" or "pure", or their lodge, with `group` "lodge"; each
-  option has its own `source`, which may be another book.
+  option has its own `source`, which may be another book. Options with no `group`, such as Outlaw's two kinds, are
+  shown as one plain list.
 - **kuruthTriggers**: the book's trigger sets (p. 103), each with `passive`, `common` and `specific` text.
 - **tilts**: `kind` ("personal" for one character, "environmental" for the whole scene), `summary` (what the Tilt
   does), `cause` (how it's inflicted) and `ending` (how it ends). The sheet doesn't track Tilts yet.

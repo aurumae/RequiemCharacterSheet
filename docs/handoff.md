@@ -1583,3 +1583,32 @@ No save-format change. No change to Requiem or to `Chronicles/`.
 The Lodge section was rendered from a test and looked at; the pickers weren't tried by hand.
 
 **Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-17 00:33 UTC · Claude (iOS) · Forsaken's Dark Eras content
+
+**Decisions (user)**, in `docs/design-decisions.md`: what's in the book goes in, worded with care; Dark Eras content
+(the era's Gift of Technology beside the modern one, Sigrblot as a Pack Rite).
+
+**Forsaken catalogs**, cited by the full books' pages, which the user supplied:
+- `ForsakenCharacterSheet/Catalogs/dark-eras.json`: the Viking-age Gift of Technology with five Facets, the rite
+  Sigrblot, four fetishes, the Merit Rune Caster, the Blood archetype Berserker, the Lodge of Muspell, three Conditions
+  (Ergi, Outlaw, The Punk Generation) and three Tilts (Shattered Time, Urban Collapse, Riot).
+- `dark-eras-2.json`: two Conditions (Futuristic Visionary, Radiation Poisoning) and the Tilt Iteru's Black Blood.
+- `dark-eras-companion.json`: the rite Shackled Lightning, the fetish The Ivory Claws and the Council of Eagles and
+  Lightning.
+- These are Forsaken's own files. They share names and book ids with Requiem's Dark Eras catalogs, which are
+  untouched, and nothing in `RequiemCharacterSheet/Catalogs/` changed.
+
+**Format** (`docs/forsaken-catalog-format.md`):
+- A Gift may have `replaces`, the id of the Gift it stands in for in its era. It counts as that Gift in tribes' and
+  auspices' affinities, so the Iron Masters pay 3 Experiences for its first Facet.
+- Books after the core two now load by file name without the extension, so Dark Eras comes before Dark Eras 2.
+- A Condition's `noteOptions` with no `group` are one plain list (Outlaw: lesser or full).
+
+Also: guided creation now says why it refuses a second Facet of the same Shadow Gift.
+
+No save-format change. No change to `Chronicles/` or to Requiem.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 61.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.

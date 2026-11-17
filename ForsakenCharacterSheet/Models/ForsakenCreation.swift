@@ -292,7 +292,7 @@ extension ForsakenCharacter {
         if case .facet(let facet, let gift) = pending { gifts.append((gift, facet, facet.name, gift.kind)) }
         let shadow = gifts.filter { $0.kind == .shadow }
         // A custom Gift can't be checked, so it counts as one of the character's own
-        let outsideAffinities = shadow.filter { $0.gift.map { !affinityGifts.contains($0.id) } ?? false }.count
+        let outsideAffinities = shadow.filter { $0.gift.map { !hasAffinity(for: $0) } ?? false }.count
         let shadowAllowed = isPure ? 3 : tribeEntry?.kind == .ghostWolf ? 1 : 2
         report.shadowFacets = CreationBudget(used: shadow.count, allowed: shadowAllowed)
         if shadow.count > shadowAllowed { report.problems.insert(.tooManyShadowFacets(allowed: shadowAllowed)) }

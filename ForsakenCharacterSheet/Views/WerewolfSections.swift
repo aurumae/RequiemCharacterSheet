@@ -799,8 +799,8 @@ struct GiftsView: View {
     /// The Gifts by book, each a section: for Shadow Gifts, the tribe's and auspice's first, then the others.
     private func facetSections() -> [CatalogPickerSection] {
         let gifts = Catalog.bundled.gifts.all.filter { $0.kind == kind }
-        let ordered = gifts.filter { character.affinityGifts.contains($0.id) }
-            + gifts.filter { !character.affinityGifts.contains($0.id) }
+        let ordered = gifts.filter { character.hasAffinity(for: $0) }
+            + gifts.filter { !character.hasAffinity(for: $0) }
         let owned = Set(character.facets.compactMap(\.source.catalogID))
         return ordered.flatMap { gift in
             pickerSections([CatalogPickerGroup(sectionTitle(gift), gift.facets)]) { facet in
@@ -825,14 +825,18 @@ struct GiftsView: View {
         if let renown = facet.renown, character.renown(renown) == 0 {
             return "Needs a dot of \(renown.name) first"
         }
-        if gift.kind == .shadow, !character.affinityGifts.contains(gift.id) {
+        if gift.kind == .shadow, !character.hasAffinity(for: gift) {
             return character.isPure ? "Only one Facet may be from outside your tribe's Gifts" : "Not one of your tribe's or auspice's Gifts"
+        }
+        if gift.kind == .shadow, !character.isPure, character.creationReport.shadowFacets.remaining > 0,
+           character.facets.contains(where: { character.gift(of: $0)?.id == gift.id }) {
+            return "Your two Shadow Facets come from two different Gifts"
         }
         return "No more \(kindName) Facets at creation"
     }
 
     private func sectionTitle(_ gift: GiftEntry) -> String {
-        character.affinityGifts.contains(gift.id) ? "\(gift.name) (Affinity)" : gift.name
+        character.hasAffinity(for: gift) ? "\(gift.name) (Affinity)" : gift.name
     }
 
     private func addCustomIfChosen() {

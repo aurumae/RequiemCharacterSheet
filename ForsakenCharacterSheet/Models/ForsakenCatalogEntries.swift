@@ -151,6 +151,9 @@ struct GiftEntry: CatalogEntry {
     let kind: Kind
     /// The auspice whose Moon Gift it is.
     let auspice: CatalogEntryID?
+    /// The Gift it stands in for in its era, e.g. the Viking age's Gift of Technology for the modern one. It takes
+    /// that Gift's place in tribes' and auspices' affinities.
+    let replaces: CatalogEntryID?
     let facets: [Facet]
 }
 
