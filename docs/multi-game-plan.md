@@ -166,6 +166,8 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 2. Go through the Werewolf chapters of **Dark Eras** and the rest of the **core book**, and add any mechanics the
    catalogs lack. `docs/forsaken-content-audit.md` lists what was found. Dark Eras and the core book's remaining
    catalog entries were added on 2026-11-17. What the audit still lists as missing is sheet features, not content.
+   Of those, the user chose Gift buying, Spirit Rank, Instinctive Defense, Favored Form and Raiment of the Storm's
+   armour for before release (done 2026-11-17); the rest wait.
 3. Settle the save format (it is still a draft at schema 1), then the App Store listing and screenshots.
 
 ### Order of work between the apps (user, 2026-11-16)

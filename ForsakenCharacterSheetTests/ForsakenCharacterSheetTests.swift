@@ -286,11 +286,10 @@ struct WerewolfRulesTests {
         let character = ForsakenCharacter()
         character.auspice = "Irraka"
         character.tribe = "Blood Talons"
-        let own = facet("new-moon-eviscerate"), wolf = facet("hunting-honed-senses")
+        let wolf = facet("hunting-honed-senses")
         let affinity = facet("rage-incite-fury"), other = facet("death-cold-embrace")
-        character.facets = [own, wolf, affinity, other]
+        character.facets = [wolf, affinity, other]
         let cost = { (facet: OwnedFacet) in character.experienceCost(of: TraitKey(.facet, facet.id.uuidString), level: 1) }
-        #expect(cost(own) == 0)
         #expect(cost(wolf) == 1)
         #expect(cost(affinity) == 3)
         #expect(cost(other) == 5)
@@ -307,11 +306,9 @@ struct WerewolfRulesTests {
         character.tribe = "Predator Kings"
         #expect(character.isPure)
         #expect(character.effectiveAuspice == nil)
-        // Their affinities are the tribe's alone, and no Moon Gift comes free
+        // Their affinities are the tribe's alone, and they have no Moon Gift
         #expect(character.affinityGifts == ["hunger", "nature", "rage", "strength"])
-        let moon = facet("new-moon-eviscerate")
-        character.facets = [moon]
-        #expect(character.experienceCost(of: TraitKey(.facet, moon.id.uuidString), level: 1) == 5)
+        #expect(character.moonGift == nil)
         #expect(character.huntersAspect == nil)
         character.pureHuntersAspect = "Primal"
         #expect(character.huntersAspect?.condition == "instinctive")
@@ -1004,6 +1001,218 @@ struct DarkErasTests {
         let groups = ForsakenCharacter().noteOptionGroups(for: outlaw)
         #expect(groups.map(\.title) == [""])
         #expect(groups.first?.options.map(\.name) == ["Lesser outlaw", "Full outlaw"])
+    }
+}
+
+@MainActor
+struct SheetNumbersTests {
+    @Test func spiritRankFollowsAllRenown() {
+        let character = ForsakenCharacter()
+        #expect(character.spiritRank == 1)
+        character.setRenown(.glory, to: 3)
+        character.setRenown(.honor, to: 1)
+        #expect(character.spiritRank == 2)
+        character.setRenown(.wisdom, to: 4)
+        #expect(character.spiritRank == 3)
+        character.setRenown(.purity, to: 5)
+        #expect(character.spiritRank == 4)
+        for kind in Renown.allCases { character.setRenown(kind, to: 4) }
+        #expect(character.spiritRank == 5)
+    }
+
+    @Test func instinctiveDefenseTakesTheHigherAttributeInTheWolfForms() throws {
+        let character = ForsakenCharacter()
+        try #require(character.attribute(.wits)).rating = 4
+        // Dexterity 1, +2 in Urshul and Urhan
+        #expect(character.defense(in: .urhan) == 3)
+        character.merits = [Merit(source: .catalog("instinctive-defense"), rating: 2)]
+        #expect(character.defense(in: .urhan) == 4)
+        #expect(character.defense(in: .urshul) == 4)
+        #expect(character.defense(in: .hishu) == 1)
+        #expect(character.defense(in: .gauru) == 2)
+    }
+
+    @Test func favoredFormRaisesItsFormAndLowersTheOthers() throws {
+        let character = ForsakenCharacter()
+        character.merits = [Merit(source: .catalog("favored-form"), qualifier: "Gauru", rating: 4)]
+        character.favoredFormChoices.attributes = [.strength, .stamina]
+        character.favoredFormChoices.drawbacks = [
+            .init(form: .hishu, attribute: .strength), .init(form: .urhan, attribute: .wits),
+            .init(form: .urhan, attribute: .wits), .init(form: .dalu, attribute: nil),
+        ]
+        // Strength 1: +3 for Gauru and the Merit's dot
+        #expect(character.rating(.strength, in: .gauru) == 5)
+        #expect(character.rating(.stamina, in: .gauru) == 4)
+        #expect(character.rating(.strength, in: .hishu) == 0)
+        #expect(character.rating(.wits, in: .urhan) == 0)
+        #expect(character.rating(.strength, in: .dalu) == 2)
+        // And what's worked out from them: Speed in Hishu loses the Strength dot
+        #expect(character.speed(in: .hishu) == 6)
+        let strength = try #require(character.attribute(.strength))
+        character.form = .gauru
+        #expect(character.totalAttributeRating(for: strength) == 5)
+        #expect(character.attributeNote(for: .strength) == "+3 in Gauru · +1 from Favored Form")
+        // Only as many as the Merit has dots: the fourth dot's Attribute and drawback go with it
+        try #require(character.merits.first).rating = 3
+        #expect(character.rating(.stamina, in: .gauru) == 3)
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.favoredFormChoices == character.favoredFormChoices)
+        // Without a form chosen, nothing changes
+        character.merits.first?.qualifier = nil
+        #expect(character.favoredForm == nil)
+        #expect(character.rating(.strength, in: .gauru) == 4)
+    }
+
+    @Test func raimentOfTheStormAddsArmorWhileItLasts() {
+        let character = ForsakenCharacter()
+        let rite = OwnedRite(source: .catalog("raiment-of-the-storm"))
+        character.rites = [rite]
+        #expect(character.armor(in: .hishu) == (0, 0))
+        rite.isActive = true
+        #expect(character.armor(in: .hishu) == (2, 0))
+        #expect(character.armor(in: .gauru) == (2, 0))
+    }
+}
+
+@MainActor
+struct GiftBuyingTests {
+    private let catalog = Catalog.bundled
+
+    /// An Irraka of the Blood Talons in XP Mode, with a dot of each Renown that came before play.
+    private func hunter() -> ForsakenCharacter {
+        let character = ForsakenCharacter()
+        character.auspice = "Irraka"
+        character.tribe = "Blood Talons"
+        for kind in Renown.allCases { character.setRenown(kind, to: 1) }
+        character.xpMode = true
+        character.experiences = 30
+        return character
+    }
+
+    /// Learns a Facet as the sheet does, and gives the Experiences the log charged for it.
+    private func learn(_ id: String, _ character: ForsakenCharacter) throws -> Int {
+        let found = try #require(catalog.facet(id))
+        let before = character.traitSnapshot
+        character.learn(found.facet, of: found.gift)
+        character.recordChanges(since: before)
+        return try #require(character.changeLog.last).experiences
+    }
+
+    private func price(_ id: String, _ character: ForsakenCharacter) throws -> FacetPrice {
+        let found = try #require(catalog.facet(id))
+        return character.price(of: found.facet, in: found.gift)
+    }
+
+    @Test func thePriceShownIsThePriceCharged() throws {
+        let character = hunter()
+        // Rage is the Blood Talons'; its first Facet unlocks it, and the next costs less
+        #expect(try price("rage-incite-fury", character) == .experiences(3, unlocksGift: true))
+        #expect(try learn("rage-incite-fury", character) == 3)
+        #expect(try price("rage-berserkers-might", character) == .experiences(2, unlocksGift: false))
+        #expect(try learn("rage-berserkers-might", character) == 2)
+        // Death is neither the tribe's nor the auspice's
+        #expect(try price("death-cold-embrace", character) == .experiences(5, unlocksGift: true))
+        #expect(try learn("death-cold-embrace", character) == 5)
+        // Wolf Gifts are always unlocked
+        #expect(try price("hunting-honed-senses", character) == .experiences(1, unlocksGift: false))
+        #expect(try learn("hunting-honed-senses", character) == 1)
+        // A new dot of Renown brings a Facet of that Renown in a Gift already unlocked, and no other
+        character.setRenown(.purity, to: 2)
+        #expect(try price("rage-slaughterer", character) == .renown(.purity))
+        #expect(try price("death-bone-gnaw", character) == .renown(.purity))
+        #expect(try price("dominance-snarl-of-the-predator", character) == .experiences(5, unlocksGift: true))
+        #expect(try price("rage-perfected-rage", character) == .experiences(2, unlocksGift: false))
+        #expect(try learn("rage-slaughterer", character) == 0)
+        #expect(try price("death-bone-gnaw", character) == .experiences(2, unlocksGift: false))
+        #expect(character.experiencesSpent == 11)
+    }
+
+    @Test func aNewDotOfRenownOffersItsFacetsInUnlockedGifts() throws {
+        let character = hunter()
+        character.facets = [OwnedFacet(source: .catalog("rage-incite-fury")), OwnedFacet(source: .catalog("hunting-tireless-hunter"))]
+        #expect(character.renownsWithFreeFacets.isEmpty)
+        character.setRenown(.purity, to: 2)
+        #expect(character.renownsWithFreeFacets == [.purity])
+        let choices = character.freeFacetChoices(for: .purity)
+        // Rage's, and every Wolf Gift's but the one already known
+        #expect(choices.contains { $0.facet.id == "rage-slaughterer" })
+        #expect(choices.contains { $0.facet.id == "change-the-fathers-form" })
+        #expect(!choices.contains { $0.facet.id == "hunting-tireless-hunter" })
+        #expect(!choices.contains { $0.gift.id == "death" || $0.gift.kind == .moon })
+        #expect(choices.allSatisfy { $0.facet.renown == .purity })
+        // Not while XP Mode is off, when the sheet leaves costs to the player
+        character.xpMode = false
+        #expect(character.renownsWithFreeFacets.isEmpty)
+    }
+
+    @Test func aSecondMoonGiftCostsFiveThenTwoAFacet() throws {
+        let character = ForsakenCharacter()
+        character.auspice = "Cahalith"
+        character.setRenown(.glory, to: 3)
+        character.xpMode = true
+        var before = character.traitSnapshot
+        let screaming = OwnedMoonGift(source: .catalog("screaming-moon"))
+        character.extraMoonGifts = [screaming]
+        character.recordChanges(since: before)
+        #expect(character.changeLog.last?.experiences == 5)
+        #expect(character.changeLog.last?.name == "Gift of the Screaming Moon")
+        before = character.traitSnapshot
+        screaming.dots = 3
+        character.recordChanges(since: before)
+        #expect(character.changeLog.last?.experiences == 4)
+        // Never more of it than auspice Renown (p. 114)
+        character.setRenown(.glory, to: 2)
+        #expect(character.dots(of: screaming) == 2)
+        let loaded = try JSONDecoder().decode(ForsakenCharacter.self, from: JSONEncoder().encode(character))
+        #expect(loaded.extraMoonGifts.map(\.dots) == [3])
+        #expect(loaded.gift(of: try #require(loaded.extraMoonGifts.first))?.id == "screaming-moon")
+        // Taking it off the sheet gives back what it cost
+        before = character.traitSnapshot
+        character.extraMoonGifts = []
+        character.recordChanges(since: before)
+        #expect(character.changeLog.last?.experiences == -9)
+    }
+
+    @Test func aBoughtMoonGiftsPassiveFacetsCount() throws {
+        let character = ForsakenCharacter()
+        character.auspice = "Cahalith"
+        character.setRenown(.glory, to: 2)
+        let health = character.health
+        // Warrior's Hide, the Full Moon's second Facet, adds auspice Renown to Health
+        let fullMoon = OwnedMoonGift(source: .catalog("full-moon"))
+        character.extraMoonGifts = [fullMoon]
+        #expect(character.health == health)
+        fullMoon.dots = 2
+        #expect(character.health == health + 2)
+    }
+
+    @Test func dicePoolsAreWorkedOutInTheFormWorn() throws {
+        let character = ForsakenCharacter()
+        character.setRenown(.wisdom, to: 2)
+        // Wits 1, no Occult (three dice off for a Mental Skill), Wisdom 2
+        let pool = try #require(character.worked("Wits + Occult + Wisdom vs Resistance", in: .hishu))
+        #expect(pool.dice == 0 && pool.diceText == "Chance die")
+        #expect(pool.traits == "Wits + Occult + Wisdom" && pool.against == "vs Resistance")
+        try #require(character.skill(.occult)).rating = 2
+        #expect(character.worked("Wits + Occult + Wisdom vs Resistance", in: .hishu)?.dice == 5)
+        // Urhan adds two dots of Dexterity
+        try #require(character.skill(.stealth)).rating = 1
+        #expect(character.worked("Dexterity + Stealth + Purity versus Composure + Primal Urge", in: .hishu)?.dice == 2)
+        let urhan = try #require(character.worked("Dexterity + Stealth + Purity versus Composure + Primal Urge", in: .urhan))
+        #expect(urhan.dice == 4 && urhan.against == "vs Composure + Primal Urge")
+        #expect(character.worked("Wits + Animal Ken + Wisdom - animal's Resolve", in: .hishu)?.against == "− animal's Resolve")
+        #expect(character.worked("Varies", in: .hishu) == nil)
+    }
+
+    @Test func everyFacetsDicePoolCanBeWorkedOut() {
+        let character = ForsakenCharacter()
+        for gift in catalog.gifts.all {
+            for facet in gift.facets {
+                if let pool = facet.dicePool {
+                    #expect(character.worked(pool, in: .hishu) != nil, "\(facet.name): \(pool)")
+                }
+            }
+        }
     }
 }
 

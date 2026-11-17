@@ -14,6 +14,8 @@ import Observation
 extension TraitKind {
     static let renown = TraitKind("renown")
     static let facet = TraitKind("facet")
+    /// A Moon Gift unlocked with Experiences, rated by how many of its Facets the character has.
+    static let moonGift = TraitKind("moonGift")
     static let rite = TraitKind("rite")
     static let primalUrge = TraitKind("primalUrge")
 }
@@ -99,6 +101,42 @@ enum Form: String, Codable, CaseIterable, Identifiable {
         case .urhan: 97
         }
     }
+}
+
+/// The choices the Favored Form Merit asks for that change the sheet's numbers (p. 106): the Attributes its second
+/// and fourth dots raise in the favored form, and for each dot of the Merit an Attribute dot lost in another form.
+/// The form itself is the Merit's qualifier.
+struct FavoredFormChoices: Codable, Equatable {
+    /// A Mental or Physical Attribute dot lost in a form other than the favored one.
+    struct Drawback: Codable, Equatable {
+        var form: Form?
+        var attribute: AttributeKind?
+    }
+
+    /// The Attribute raised at the second dot, then the one raised at the fourth.
+    var attributes: [AttributeKind?] = []
+    /// One for each dot of the Merit, in the order the dots were taken.
+    var drawbacks: [Drawback] = []
+
+    init() {}
+
+    enum CodingKeys: CodingKey {
+        case attributes, drawbacks
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        attributes = try container.decode(.attributes, default: [])
+        drawbacks = try container.decode(.drawbacks, default: [])
+    }
+
+    /// The Attributes a dot of the Merit can raise in a form: any the form doesn't lower.
+    static func attributes(raisedIn form: Form) -> [AttributeKind] {
+        AttributeKind.allCases.filter { (form.attributeModifiers[$0] ?? 0) >= 0 }
+    }
+
+    /// The Attributes a drawback can lower: Mental and Physical ones.
+    static let drawbackAttributes = AttributeKind.allCases.filter { $0.category != .social }
 }
 
 // MARK: - Primal Urge
@@ -228,6 +266,69 @@ final class OwnedFacet: Identifiable, Codable {
         isActive = try container.decode(.active, default: false)
         learnedWithRenown = try container.decode(.withRenown, default: false)
     }
+}
+
+/// A Moon Gift the character has unlocked with Experiences, besides the one their auspice gives (p. 114). Its Facets
+/// are bought in order, and never past the character's auspice Renown.
+@Observable
+final class OwnedMoonGift: Identifiable, Codable {
+    let id: UUID
+    var source: TraitSource
+    /// How many of its Facets the character has, from one dot up.
+    var dots: Int
+    /// For a custom Gift, its Facets' names, from one dot up.
+    var customFacets: [String]
+
+    init(id: UUID = UUID(), source: TraitSource, dots: Int = 1) {
+        self.id = id
+        self.source = source
+        self.dots = dots
+        self.customFacets = []
+    }
+
+    enum CodingKeys: CodingKey {
+        case id, source, dots, facets
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(source, forKey: .source)
+        try container.encode(dots, forKey: .dots)
+        if source.catalogID == nil, !customFacets.isEmpty {
+            try container.encode(customFacets, forKey: .facets)
+        }
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(.id, default: UUID())
+        source = try container.decode(TraitSource.self, forKey: .source)
+        dots = try container.decode(.dots, default: 1)
+        customFacets = try container.decode(.facets, default: [])
+    }
+}
+
+/// What learning a Facet would cost the character now (pp. 85, 115).
+enum FacetPrice: Equatable {
+    /// Nothing, with a dot of its Renown gained in play.
+    case renown(Renown)
+    /// Experiences. The first Facet of a Shadow Gift unlocks the Gift, and costs more.
+    case experiences(Int, unlocksGift: Bool)
+
+    /// The Experiences for a Wolf Gift's Facet (the user's ruling, 2026-11-12), for another Facet of a Gift already
+    /// unlocked, and for the Facet that unlocks a Gift: one the tribe or auspice favours, or any other.
+    static let wolfFacet = 1, furtherFacet = 2, affinityGift = 3, otherGift = 5
+}
+
+/// A dice pool worked out for the character, e.g. 7 dice for "Wits + Occult + Wisdom", and whatever follows the
+/// character's own traits, e.g. "vs Resistance".
+struct WorkedDicePool: Equatable {
+    let dice: Int
+    /// The traits added up, as the book writes them.
+    let traits: String
+    /// e.g. "vs Composure + Primal Urge" or "− Stamina"; empty if nothing resists.
+    let against: String
 }
 
 /// A Rite the character knows: a catalog Rite, or the player's own with its rating.

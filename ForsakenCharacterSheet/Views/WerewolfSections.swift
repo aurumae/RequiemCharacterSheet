@@ -267,8 +267,10 @@ struct FormView: View {
                 let form = character.form
                 Text(form.description)
                     .themedText(.ratedTrait)
+                // With Favored Form's dots, if the character has it
                 let changes = AttributeKind.allCases.compactMap { kind -> String? in
-                    guard let change = form.attributeModifiers[kind] else { return nil }
+                    let change = character.formModifier(to: kind, in: form)
+                    guard change != 0 else { return nil }
                     return "\(kind.name) \(change > 0 ? "+" : "−")\(abs(change))"
                 }
                 // Size, Speed and Perception are in Advantages, below
@@ -280,7 +282,107 @@ struct FormView: View {
             }
             .padding(.vertical, 4)
             .accessibilityElement(children: .combine)
+
+            if let favored = character.favoredForm {
+                FavoredFormView(character: character, form: favored.form, dots: favored.dots)
+            }
         }
+    }
+}
+
+/// What the Favored Form Merit raises in its form and lowers in the others (p. 106), chosen here so the Attributes
+/// and everything worked out from them follow.
+private struct FavoredFormView: View {
+    @Environment(\.theme) private var theme
+    @Bindable var character: ForsakenCharacter
+    let form: Form
+    let dots: Int
+
+    var body: some View {
+        Text("Favored Form: \(form.name)")
+            .themedText(.subsectionHeader)
+            .accessibilityAddTraits(.isHeader)
+        if dots >= 2 {
+            raisedRow("Second dot adds:", index: 0)
+        }
+        if dots >= 4 {
+            raisedRow("Fourth dot adds:", index: 1)
+        }
+        ForEach(0..<dots, id: \.self) { index in
+            HStack {
+                Text(dots == 1 ? "Drawback:" : "Drawback \(index + 1):")
+                    .themedText(.label)
+                Spacer()
+                Picker("Form", selection: drawback(index).form) {
+                    Text("Form").tag(Form?.none)
+                    ForEach(Form.allCases.filter { $0 != form }) { other in
+                        Text(other.name).tag(Form?.some(other))
+                    }
+                }
+                Picker("Attribute", selection: drawback(index).attribute) {
+                    Text("Attribute").tag(AttributeKind?.none)
+                    ForEach(FavoredFormChoices.drawbackAttributes, id: \.self) { kind in
+                        Text("−1 \(kind.name)").tag(AttributeKind?.some(kind))
+                    }
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .tint(theme.accent)
+        }
+        Text("Each dot of the Merit takes a Mental or Physical Attribute dot from another form. Its first, third and fifth dots (a Skill, a Facet and a Skill in \(form.name)) aren't counted on the sheet.")
+            .themedText(.detail)
+            .foregroundStyle(theme.muted)
+    }
+
+    /// The Attribute a dot of the Merit raises in the favored form: any the form doesn't lower, and not the other
+    /// dot's.
+    private func raisedRow(_ label: String, index: Int) -> some View {
+        let other = raised(1 - index).wrappedValue
+        return HStack {
+            Text(label)
+                .themedText(.label)
+            Spacer()
+            Picker(label, selection: raised(index)) {
+                Text("Attribute").tag(AttributeKind?.none)
+                ForEach(FavoredFormChoices.attributes(raisedIn: form).filter { $0 != other }, id: \.self) { kind in
+                    Text("+1 \(kind.name)").tag(AttributeKind?.some(kind))
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .tint(theme.accent)
+        }
+    }
+
+    private func raised(_ index: Int) -> Binding<AttributeKind?> {
+        Binding(
+            get: {
+                let attributes = character.favoredFormChoices.attributes
+                return attributes.indices.contains(index) ? attributes[index] : nil
+            },
+            set: { kind in
+                var attributes = character.favoredFormChoices.attributes
+                while attributes.count <= index { attributes.append(nil) }
+                attributes[index] = kind
+                character.favoredFormChoices.attributes = attributes
+            }
+        )
+    }
+
+    private func drawback(_ index: Int) -> Binding<FavoredFormChoices.Drawback> {
+        Binding(
+            get: {
+                let drawbacks = character.favoredFormChoices.drawbacks
+                return drawbacks.indices.contains(index) ? drawbacks[index] : FavoredFormChoices.Drawback()
+            },
+            set: { drawback in
+                var drawbacks = character.favoredFormChoices.drawbacks
+                while drawbacks.count <= index { drawbacks.append(FavoredFormChoices.Drawback()) }
+                drawbacks[index] = drawback
+                character.favoredFormChoices.drawbacks = drawbacks
+            }
+        )
     }
 }
 
@@ -427,6 +529,13 @@ struct RenownView: View {
                                 .themedText(.detail)
                                 .foregroundStyle(theme.muted)
                         }
+                        // A dot gained in play brings a Facet (p. 115), learned in Shadow Gifts or Wolf Gifts
+                        if character.renownsWithFreeFacets.contains(kind) {
+                            let count = character.renownFacetCredits[kind] ?? 0
+                            Text(count == 1 ? "A free Facet to learn" : "\(count) free Facets to learn")
+                                .themedText(.detail)
+                                .foregroundStyle(theme.accent)
+                        }
                     }
                     Spacer()
                     DotsRatingView(
@@ -440,6 +549,8 @@ struct RenownView: View {
                 }
                 .padding(.vertical, 4)
             }
+            // What spirits take the character for, from all their Renown (p. 99)
+            LabeledValueRow("Spirit Rank:", value: character.spiritRank)
         }
     }
 
@@ -549,54 +660,185 @@ struct LodgeView: View {
 
 // MARK: - Gifts
 
-/// The Moon Gift the character uses, and its Facets: one for each dot of auspice Renown, unlocked automatically.
+extension FacetPrice {
+    /// e.g. "Costs 3 Experiences, and unlocks the Gift".
+    var text: String {
+        switch self {
+        case .renown(let renown):
+            "Free with your new dot of \(renown.name)"
+        case .experiences(let cost, let unlocksGift):
+            "Costs \(cost) \(cost == 1 ? "Experience" : "Experiences")" + (unlocksGift ? ", and unlocks the Gift" : "")
+        }
+    }
+}
+
+/// A Facet as a row to scan at the table: its name, what it takes to use, and its dice pool worked out for the
+/// character in the form they're in.
+private struct FacetSummary: View {
+    @Environment(\.theme) private var theme
+    let character: ForsakenCharacter
+    let facet: GiftEntry.Facet
+    /// Said after the Facet's own facts, e.g. "Learned with Renown".
+    var note: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(facet.name)
+                .themedText(.traitName)
+            if !facts.isEmpty {
+                Text(facts.joined(separator: " · "))
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+            if let pool = facet.dicePool {
+                poolText(pool)
+                    .themedText(.detail)
+            }
+            PowerEffectNote(facet: facet)
+        }
+    }
+
+    /// e.g. "Cunning · 1 Essence · Contested · 1 scene".
+    private var facts: [String] {
+        [facet.renown?.name, facet.cost.map { $0 == "None" ? "No cost" : $0 }, facet.action?.capitalizedFirst, facet.duration, note]
+            .compactMap { $0 }
+    }
+
+    /// The pool with its dice counted, e.g. "7 dice · Wits + Occult + Wisdom vs Resistance", or as the book
+    /// writes it if it isn't made of the sheet's traits.
+    private func poolText(_ pool: String) -> Text {
+        guard let worked = character.worked(pool, in: character.form) else { return Text(pool) }
+        let traits = worked.against.isEmpty ? worked.traits : "\(worked.traits) \(worked.against)"
+        return Text("\(Text(worked.diceText).bold().foregroundStyle(theme.accent)) · \(traits)")
+    }
+}
+
+extension WorkedDicePool {
+    /// e.g. "7 dice", or "Chance die" for a pool of none.
+    var diceText: String {
+        dice < 1 ? "Chance die" : dice == 1 ? "1 die" : "\(dice) dice"
+    }
+}
+
+private extension String {
+    /// With its first letter a capital, e.g. "Instant, may be contested".
+    var capitalizedFirst: String {
+        prefix(1).uppercased() + dropFirst()
+    }
+}
+
+/// The Moon Gift the character's auspice gives, whose Facets come one for each dot of auspice Renown, and any other
+/// Moon Gifts unlocked with Experiences.
 struct MoonGiftView: View {
     @Environment(\.theme) private var theme
     @Bindable var character: ForsakenCharacter
     @State private var shownFacet: (gift: GiftEntry, facet: GiftEntry.Facet)?
+    @State private var showingPicker = false
+    /// A custom Moon Gift that was just added, whose name opens for editing.
+    @State private var newCustomGiftID: UUID?
+    @State private var addsCustomOnDismiss = false
 
     var body: some View {
         SheetSectionBlock(.moonGifts) {
             moonGiftRow
             if let gift = character.moonGift {
-                ForEach(gift.facets.sorted { ($0.dots ?? 0) < ($1.dots ?? 0) }) { facet in
-                    let dots = facet.dots ?? 0
-                    Button {
-                        shownFacet = (gift, facet)
-                    } label: {
-                        facetLabel(name: Text(facet.name), dots: dots)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityHint("Shows its details")
+                facetRows(of: gift, known: character.moonGiftDots) { dots in
+                    character.moonGiftRenown.map { "Comes with \($0.name) \(dots)" }
                 }
             } else if case .custom = character.moonGiftSource {
-                ForEach(1...5, id: \.self) { dots in
-                    facetLabel(name: TapToEditText("Facet Name", accessibilityName: "\(dots)-dot Facet",
-                                                   text: customFacetName(dots)), dots: dots)
-                        .editingRow("moon-facet-\(dots)")
+                customFacetRows(id: "moon-facet", known: character.moonGiftDots,
+                                names: Binding(get: { character.customMoonFacets }, set: { character.customMoonFacets = $0 }))
+            }
+
+            ForEach(character.extraMoonGifts) { owned in
+                extraGiftRow(owned)
+                    .swipeActions {
+                        Button("Delete", systemImage: "trash", role: .destructive) {
+                            character.extraMoonGifts.removeAll { $0.id == owned.id }
+                        }
+                    }
+                if let gift = character.gift(of: owned) {
+                    facetRows(of: gift, known: character.dots(of: owned)) { _ in nil }
+                } else {
+                    customFacetRows(id: "moon-facet-\(owned.id)", known: character.dots(of: owned),
+                                    names: Binding(get: { owned.customFacets }, set: { owned.customFacets = $0 }))
+                }
+            }
+
+            // Another Moon Gift is found in play, never at creation (p. 114)
+            if !character.isInCreation {
+                AddRowButton("Add Moon Gift") {
+                    showingPicker = true
+                }
+                .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomIfChosen) {
+                    addPicker
                 }
             }
         }
         .hostedSheet(isPresented: Binding(get: { shownFacet != nil }, set: { if !$0 { shownFacet = nil } })) {
             if let shownFacet {
                 CatalogDetailView(title: shownFacet.facet.name, summary: shownFacet.facet.summary,
-                                  citation: shownFacet.facet.source.citation(), facts: facetFacts(shownFacet.gift, shownFacet.facet))
+                                  citation: shownFacet.facet.source.citation(),
+                                  facts: facetFacts(shownFacet.gift, shownFacet.facet, for: character))
             }
         }
     }
 
-    /// A Facet beside its dots, muted until auspice Renown reaches them.
-    private func facetLabel(name: some View, dots: Int) -> some View {
-        let unlocked = dots <= character.moonGiftDots
-        return HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                name.themedText(.traitName)
-                if !unlocked, let renown = character.moonGiftRenown {
-                    Text("Unlocks at \(renown.name) \(dots)")
-                        .themedText(.detail)
-                        .foregroundStyle(theme.muted)
+    /// A catalog Moon Gift's Facets in order: those the character has, to scan and to open, then the rest muted.
+    private func facetRows(of gift: GiftEntry, known: Int, lockedNote: @escaping (Int) -> String?) -> some View {
+        ForEach(gift.facets.sorted { ($0.dots ?? 0) < ($1.dots ?? 0) }) { facet in
+            let dots = facet.dots ?? 0
+            Button {
+                shownFacet = (gift, facet)
+            } label: {
+                facetLabel(dots: dots, unlocked: dots <= known) {
+                    if dots <= known {
+                        FacetSummary(character: character, facet: facet)
+                    } else {
+                        lockedName(Text(facet.name), note: lockedNote(dots))
+                    }
                 }
             }
+            .buttonStyle(.plain)
+            .accessibilityHint("Shows its details")
+        }
+    }
+
+    /// A custom Moon Gift's five Facets, named by the player.
+    private func customFacetRows(id: String, known: Int, names: Binding<[String]>) -> some View {
+        ForEach(1...5, id: \.self) { dots in
+            facetLabel(dots: dots, unlocked: dots <= known) {
+                TapToEditText("Facet Name", accessibilityName: "\(dots)-dot Facet", text: Binding(
+                    get: { names.wrappedValue.indices.contains(dots - 1) ? names.wrappedValue[dots - 1] : "" },
+                    set: { name in
+                        var all = names.wrappedValue
+                        while all.count < dots { all.append("") }
+                        all[dots - 1] = name
+                        // Trailing empty names aren't kept
+                        while all.last?.isEmpty == true { all.removeLast() }
+                        names.wrappedValue = all
+                    }
+                ), font: .traitName)
+            }
+            .editingRow("\(id)-\(dots)")
+        }
+    }
+
+    private func lockedName(_ name: Text, note: String?) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            name.themedText(.traitName)
+            if let note {
+                Text(note)
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+        }
+    }
+
+    /// A Facet beside its dots, muted until the character has it.
+    private func facetLabel(dots: Int, unlocked: Bool, @ViewBuilder content: () -> some View) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            content()
             Spacer()
             Text(String(repeating: "●", count: dots))
                 .foregroundStyle(theme.accent)
@@ -607,27 +849,72 @@ struct MoonGiftView: View {
         .contentShape(Rectangle())
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
-        .accessibilityValue(unlocked ? "Unlocked" : "Locked")
+        .accessibilityValue(unlocked ? "Known" : "Not known")
     }
 
-    private func customFacetName(_ dots: Int) -> Binding<String> {
-        Binding(
-            get: { character.customMoonFacets.indices.contains(dots - 1) ? character.customMoonFacets[dots - 1] : "" },
-            set: { name in
-                var names = character.customMoonFacets
-                while names.count < dots { names.append("") }
-                names[dots - 1] = name
-                // Trailing empty names aren't kept
-                while names.last?.isEmpty == true { names.removeLast() }
-                character.customMoonFacets = names
+    /// A Moon Gift bought with Experiences: its name, and how many of its Facets the character has. Each dot is the
+    /// next Facet, so tapping them buys the Facets in order, as far as auspice Renown allows.
+    private func extraGiftRow(_ owned: OwnedMoonGift) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                if owned.source.catalogID != nil {
+                    Text(character.moonGiftName(owned))
+                        .themedText(.subsectionHeader)
+                        .accessibilityAddTraits(.isHeader)
+                } else {
+                    TapToEditText(placeholder: "Moon Gift Name", text: Binding(
+                        get: { character.moonGiftName(owned) }, set: { owned.source = .custom($0) }
+                    ), beginsEditing: owned.id == newCustomGiftID) { name in
+                        Text(name).themedText(.subsectionHeader)
+                    }
+                }
+                Spacer()
+                DotsRatingView(
+                    character.moonGiftName(owned),
+                    rating: Binding(get: { owned.dots }, set: { owned.dots = max($0, 1) }),
+                    countedRating: character.dots(of: owned),
+                    maxRating: 5,
+                    maxEditableRating: max(character.moonGiftDots, 1),
+                    minEditableRating: 1
+                )
             }
-        )
+            if let note = nextFacetNote(owned) {
+                Text(note)
+                    .themedText(.detail)
+                    .foregroundStyle(theme.muted)
+            }
+        }
+        .padding(.vertical, 4)
+        .editingRow(owned.id)
+    }
+
+    /// What stands between the character and the Gift's next Facet: auspice Renown, or Experiences.
+    private func nextFacetNote(_ owned: OwnedMoonGift) -> String? {
+        guard owned.dots < 5, let renown = character.moonGiftRenown else { return nil }
+        if owned.dots >= character.moonGiftDots {
+            return "Its next Facet needs \(renown.name) \(owned.dots + 1)"
+        }
+        return character.xpMode ? "Its next Facet costs \(FacetPrice.furtherFacet) Experiences" : nil
+    }
+
+    private var moonGifts: [GiftEntry] {
+        Catalog.bundled.gifts.all.filter { $0.kind == .moon }
     }
 
     /// The auspice's own Moon Gifts first, e.g. the core book's and any alternates, then the rest.
-    private var moonGiftRow: some View {
-        let moonGifts = Catalog.bundled.gifts.all.filter { $0.kind == .moon }
+    private func moonGiftSections(item: (GiftEntry) -> CatalogPickerItem) -> [CatalogPickerSection] {
         let auspice = character.effectiveAuspice?.id
+        return pickerSections([
+            CatalogPickerGroup(auspice == nil ? "" : "Your Auspice", moonGifts.filter { $0.auspice == auspice }),
+            CatalogPickerGroup(auspice == nil ? "" : "Other Auspices", moonGifts.filter { $0.auspice != auspice }),
+        ], item: item)
+    }
+
+    private func auspiceName(of gift: GiftEntry) -> String? {
+        gift.auspice.flatMap { Catalog.bundled.auspices.entry($0)?.name }
+    }
+
+    private var moonGiftRow: some View {
         let isCustom: Bool = if case .custom = character.moonGiftSource { true } else { false }
         return CatalogChoiceRow(
             label: "Moon Gift:",
@@ -637,14 +924,10 @@ struct MoonGiftView: View {
             pickerTitle: "Moon Gift",
             searchPrompt: "Search Moon Gifts",
             sections: {
-                pickerSections([
-                    CatalogPickerGroup(auspice == nil ? "" : "Your Auspice", moonGifts.filter { $0.auspice == auspice }),
-                    CatalogPickerGroup(auspice == nil ? "" : "Other Auspices", moonGifts.filter { $0.auspice != auspice }),
-                ]) { gift in
-                    let auspiceName = gift.auspice.flatMap { Catalog.bundled.auspices.entry($0)?.name }
-                    return CatalogPickerItem(id: gift.id, name: gift.name, summary: gift.summary,
-                                             details: auspiceName.map { ["\($0) only"] } ?? [],
-                                             citation: gift.source.citation())
+                moonGiftSections { gift in
+                    CatalogPickerItem(id: gift.id, name: gift.name, summary: gift.summary,
+                                      details: auspiceName(of: gift).map { ["\($0) only"] } ?? [],
+                                      citation: gift.source.citation())
                 }
             },
             customTitle: "Custom Moon Gift",
@@ -664,15 +947,58 @@ struct MoonGiftView: View {
             }
         )
     }
+
+    /// The Moon Gifts the character could unlock with Experiences: any but the ones they have. Only their own
+    /// auspice's are theirs to find (p. 114), so the others carry a warning.
+    private var addPicker: some View {
+        let owned = Set(character.extraMoonGifts.compactMap(\.source.catalogID) + [character.moonGift?.id].compactMap { $0 })
+        let price = character.xpMode
+            ? "Costs \(FacetPrice.otherGift) Experiences with its first Facet, then \(FacetPrice.furtherFacet) for each Facet after it" : nil
+        return CatalogPickerView(
+            title: "Add Moon Gift",
+            searchPrompt: "Search Moon Gifts",
+            sections: moonGiftSections { gift in
+                let ownAuspice = gift.auspice == character.effectiveAuspice?.id
+                let renown = character.moonGiftRenown
+                return CatalogPickerItem(
+                    id: gift.id, name: gift.name, summary: gift.summary, details: [price].compactMap { $0 },
+                    warning: !ownAuspice ? auspiceName(of: gift).map { "A Moon Gift of the \($0)" }
+                        : character.moonGiftDots == 0 ? renown.map { "Needs \($0.name) 1" } : nil,
+                    citation: gift.source.citation(), isOwned: owned.contains(gift.id))
+            },
+            customOptions: [CatalogPickerCustomOption(id: "custom", title: "Custom Moon Gift")]
+        ) { choice in
+            switch choice {
+            case .entry(let id):
+                character.extraMoonGifts.append(OwnedMoonGift(source: .catalog(id)))
+            case .custom:
+                addsCustomOnDismiss = true
+            }
+        }
+    }
+
+    private func addCustomIfChosen() {
+        guard addsCustomOnDismiss else { return }
+        addsCustomOnDismiss = false
+        let gift = OwnedMoonGift(source: .custom(""))
+        newCustomGiftID = gift.id
+        character.extraMoonGifts.append(gift)
+    }
 }
 
-/// The Shadow or Wolf Gift Facets the character knows, and adding more.
+/// The Shadow or Wolf Gift Facets the character knows, and learning more.
 struct GiftsView: View {
+    /// What the picker offers: every Facet of this kind of Gift, or only those a new dot of Renown brings free.
+    private enum Offer: Equatable {
+        case all
+        case free(Renown)
+    }
+
     @Environment(\.theme) private var theme
     @Bindable var character: ForsakenCharacter
     /// `.shadow` or `.wolf`.
     let kind: GiftEntry.Kind
-    @State private var showingPicker = false
+    @State private var offer: Offer?
     @State private var shownFacet: (gift: GiftEntry, facet: GiftEntry.Facet)?
     /// A custom Facet that was just added, whose name opens for editing.
     @State private var newCustomFacetID: UUID?
@@ -689,8 +1015,8 @@ struct GiftsView: View {
 
     /// The Facets by Gift, in the order the Gifts were first learned, e.g. Primal Allure and Snarl of the Predator
     /// together under the Gift of Dominance.
-    private var facetsByGift: [(name: String, facets: [OwnedFacet])] {
-        var groups: [(key: String, name: String, facets: [OwnedFacet])] = []
+    private var facetsByGift: [(name: String, gift: GiftEntry?, facets: [OwnedFacet])] {
+        var groups: [(key: String, name: String, gift: GiftEntry?, facets: [OwnedFacet])] = []
         for owned in facets {
             let gift = character.gift(of: owned)
             let key = gift?.id ?? "custom:" + owned.customGift
@@ -698,23 +1024,31 @@ struct GiftsView: View {
             if let index = groups.firstIndex(where: { $0.key == key }) {
                 groups[index].facets.append(owned)
             } else {
-                groups.append((key, name, [owned]))
+                groups.append((key, name, gift, [owned]))
             }
         }
-        return groups.map { ($0.name, $0.facets) }
+        return groups.map { ($0.name, $0.gift, $0.facets) }
     }
 
     var body: some View {
         SheetSectionBlock(kind == .wolf ? .wolfGifts : .shadowGifts) {
-            if let credits = freeFacetText {
-                Label(credits, systemImage: "sparkles")
-                    .themedText(.detail)
-                    .foregroundStyle(theme.accent)
+            ForEach(character.renownsWithFreeFacets) { renown in
+                freeFacetRow(renown)
             }
             ForEach(facetsByGift, id: \.name) { group in
-                Text(group.name)
-                    .themedText(.subsectionHeader)
-                    .accessibilityAddTraits(.isHeader)
+                HStack(alignment: .firstTextBaseline) {
+                    Text(group.name)
+                        .themedText(.subsectionHeader)
+                        .accessibilityAddTraits(.isHeader)
+                    Spacer()
+                    // How much of the Gift is learned, e.g. "2 of 5"
+                    if let gift = group.gift {
+                        Text("\(group.facets.count) of \(gift.facets.count)")
+                            .themedText(.detail)
+                            .foregroundStyle(theme.muted)
+                            .accessibilityLabel("\(group.facets.count) of \(gift.facets.count) Facets")
+                    }
+                }
                 ForEach(group.facets) { owned in
                     row(for: owned)
                         .editingRow(owned.id)
@@ -725,42 +1059,71 @@ struct GiftsView: View {
             }
 
             AddRowButton("Add \(kindName) Facet") {
-                showingPicker = true
+                offer = .all
             }
-            .hostedSheet(isPresented: $showingPicker, onDismiss: addCustomIfChosen) {
-                CatalogPickerView(
-                    title: "Add \(kindName) Facet",
-                    searchPrompt: "Search \(kindName) Gifts and Facets",
-                    sections: facetSections(),
-                    customOptions: [CatalogPickerCustomOption(id: "custom", title: "Custom \(kindName) Facet")]
-                ) { choice in
-                    switch choice {
-                    case .entry(let id):
-                        if let found = Catalog.bundled.facet(id) {
-                            character.learn(found.facet, of: found.gift)
-                        }
-                    case .custom:
-                        addsCustomOnDismiss = true
-                    }
+            .hostedSheet(isPresented: Binding(get: { offer != nil }, set: { if !$0 { offer = nil } }), onDismiss: addCustomIfChosen) {
+                if let offer {
+                    picker(offer)
                 }
             }
         }
         .hostedSheet(isPresented: Binding(get: { shownFacet != nil }, set: { if !$0 { shownFacet = nil } })) {
             if let shownFacet {
                 CatalogDetailView(title: shownFacet.facet.name, summary: shownFacet.facet.summary,
-                                  citation: shownFacet.facet.source.citation(), facts: facetFacts(shownFacet.gift, shownFacet.facet))
+                                  citation: shownFacet.facet.source.citation(),
+                                  facts: facetFacts(shownFacet.gift, shownFacet.facet, for: character))
             }
         }
     }
 
-    /// The free Facets new Renown dots have brought, e.g. "Free Facets to learn: Glory 1".
-    private var freeFacetText: String? {
-        guard character.xpMode, !character.isInCreation else { return nil }
-        let credits = Renown.allCases.compactMap { kind in
-            (character.renownFacetCredits[kind] ?? 0) > 0 ? "\(kind.name) \(character.renownFacetCredits[kind] ?? 0)" : nil
+    private func picker(_ offer: Offer) -> some View {
+        let title = switch offer {
+        case .all: "Add \(kindName) Facet"
+        case .free(let renown): "Free \(renown.name) Facet"
         }
-        guard !credits.isEmpty else { return nil }
-        return "Free Facets from new Renown: \(credits.joined(separator: ", ")). Learn one of that Renown in a Gift you know."
+        return CatalogPickerView(
+            title: title,
+            searchPrompt: "Search \(kindName) Gifts and Facets",
+            sections: facetSections(offer),
+            customOptions: offer == .all ? [CatalogPickerCustomOption(id: "custom", title: "Custom \(kindName) Facet")] : []
+        ) { choice in
+            switch choice {
+            case .entry(let id):
+                if let found = Catalog.bundled.facet(id) {
+                    character.learn(found.facet, of: found.gift)
+                }
+            case .custom:
+                addsCustomOnDismiss = true
+            }
+        }
+    }
+
+    /// A free Facet a new dot of Renown has brought (p. 115), which opens the Facets it could be. With none of this
+    /// kind to learn, it's left to the other kind of Gift; with none at all, it waits for a Gift that has one.
+    @ViewBuilder
+    private func freeFacetRow(_ renown: Renown) -> some View {
+        let count = character.renownFacetCredits[renown] ?? 0
+        let choices = character.freeFacetChoices(for: renown)
+        if choices.contains(where: { $0.gift.kind == kind }) {
+            Button {
+                offer = .free(renown)
+            } label: {
+                Label(count == 1 ? "Learn a free \(renown.name) Facet, for your new dot of \(renown.name)"
+                          : "Learn \(count) free \(renown.name) Facets, for your new dots of \(renown.name)",
+                      systemImage: "sparkles")
+                    .themedText(.body)
+                    .foregroundStyle(theme.accent)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Shows the Facets you can learn free")
+        } else if choices.isEmpty, kind == .shadow {
+            Label("A free \(renown.name) Facet is waiting: you know every \(renown.name) Facet of your Gifts, so it's kept for the next Gift you unlock.",
+                  systemImage: "sparkles")
+                .themedText(.detail)
+                .foregroundStyle(theme.accent)
+        }
     }
 
     @ViewBuilder
@@ -769,17 +1132,9 @@ struct GiftsView: View {
             Button {
                 shownFacet = found
             } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(found.facet.name)
-                        .themedText(.traitName)
-                    Text([found.facet.renown?.name, owned.learnedWithRenown ? "Learned with Renown" : nil]
-                        .compactMap { $0 }.joined(separator: " · "))
-                        .themedText(.detail)
-                        .foregroundStyle(theme.muted)
-                    PowerEffectNote(facet: found.facet)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
+                FacetSummary(character: character, facet: found.facet, note: owned.learnedWithRenown ? "Learned with Renown" : nil)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityHint("Shows its details")
@@ -803,20 +1158,28 @@ struct GiftsView: View {
         }
     }
 
-    /// The Gifts by book, each a section: for Shadow Gifts, the tribe's and auspice's first, then the others.
-    private func facetSections() -> [CatalogPickerSection] {
+    /// The Gifts by book, each a section: for Shadow Gifts, the tribe's and auspice's first, then the others. Only
+    /// the Facets a new dot of Renown could bring, if that's what's offered.
+    private func facetSections(_ offer: Offer) -> [CatalogPickerSection] {
         let gifts = Catalog.bundled.gifts.all.filter { $0.kind == kind }
         let ordered = gifts.filter { character.hasAffinity(for: $0) }
             + gifts.filter { !character.hasAffinity(for: $0) }
         let owned = Set(character.facets.compactMap(\.source.catalogID))
+        // Costs are the sheet's to work out only in XP Mode, and creation's Facets are free
+        let showsPrices = character.xpMode && !character.isInCreation
         return ordered.flatMap { gift in
-            pickerSections([CatalogPickerGroup(sectionTitle(gift), gift.facets)]) { facet in
+            let facets = switch offer {
+            case .all: gift.facets
+            case .free(let renown): gift.facets.filter { $0.renown == renown && !owned.contains($0.id) && character.canLearnFree($0, of: gift) }
+            }
+            return pickerSections([CatalogPickerGroup(sectionTitle(gift), facets)]) { facet in
                 CatalogPickerItem(
                     id: facet.id,
                     name: facet.name,
                     summary: facet.summary,
-                    details: [facet.renown?.name, facet.cost, character.canLearnFree(facet, of: gift) ? "Free with your new Renown" : nil]
-                        .compactMap { $0 },
+                    details: [[facet.renown?.name, facet.cost.map { $0 == "None" ? "No cost" : $0 }].compactMap { $0 }.joined(separator: " · "),
+                              showsPrices && !owned.contains(facet.id) ? character.price(of: facet, in: gift).text : nil]
+                        .compactMap { $0 }.filter { !$0.isEmpty },
                     warning: facet.renown.flatMap { character.renown($0) == 0 ? "Needs \($0.name) 1" : nil },
                     citation: facet.source.citation(),
                     isOwned: owned.contains(facet.id),
@@ -886,13 +1249,18 @@ struct PowerToggle: View {
     }
 }
 
-/// A Facet's details: its Gift, Renown or dots, cost, dice pool, action and duration.
-private func facetFacts(_ gift: GiftEntry, _ facet: GiftEntry.Facet) -> [DetailFact] {
+/// A Facet's details: its Gift, Renown or dots, cost, dice pool (with the character's dice in the form they're in),
+/// action and duration.
+@MainActor
+private func facetFacts(_ gift: GiftEntry, _ facet: GiftEntry.Facet, for character: ForsakenCharacter) -> [DetailFact] {
     var facts = [DetailFact(label: "Gift", value: gift.name)]
     if let renown = facet.renown { facts.append(DetailFact(label: "Renown", value: renown.name)) }
     if let dots = facet.dots { facts.append(DetailFact(label: "Dots", value: String(repeating: "●", count: dots))) }
     if let cost = facet.cost { facts.append(DetailFact(label: "Cost", value: cost)) }
-    if let pool = facet.dicePool { facts.append(DetailFact(label: "Dice Pool", value: pool)) }
+    if let pool = facet.dicePool {
+        let worked = character.worked(pool, in: character.form).map { " (\($0.diceText) in \(character.form.name))" } ?? ""
+        facts.append(DetailFact(label: "Dice Pool", value: pool + worked))
+    }
     if let action = facet.action { facts.append(DetailFact(label: "Action", value: action.capitalized)) }
     if let duration = facet.duration { facts.append(DetailFact(label: "Duration", value: duration)) }
     return facts

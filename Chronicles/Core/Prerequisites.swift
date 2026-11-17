@@ -135,6 +135,8 @@ extension Effect {
             return adds(amount.value(forRating: rating), to: "Willpower")
         case .essenceMaximum(let amount):
             return adds(amount.value(forRating: rating), to: "the Essence maximum")
+        case .armor(let amount):
+            return adds(amount.value(forRating: rating), to: "general armor")
         }
     }
 

@@ -304,3 +304,41 @@ book.
 The totem table (p. 92) puts 20 points in both the "15–20" row and the "20+" row. The user's ruling: exactly 20 is
 five Experiences; ten starts at 21.
 
+## Werewolf: the sheet works out what Gifts cost (2026-11-17)
+
+Buying Gifts is the hardest part of Werewolf for a player, so the sheet does the sums (user, 2026-11-17). In XP Mode,
+outside guided creation:
+
+- **The price is shown before it's paid.** In the Facet picker each Facet says what it costs now: free with a new dot
+  of its Renown; 1 Experience in a Wolf Gift; 2 in a Shadow Gift already unlocked; or 3 (a Gift the tribe or auspice
+  favours, marked "Affinity") or 5 to unlock a Gift with its first Facet (pp. 85, 115). The price shown and the
+  price the log charges come from the same rule, and a test holds them together.
+- **A free Facet leads to its choices.** A dot of Renown gained in play shows "A free Facet to learn" under that
+  Renown, and a row at the top of Shadow Gifts and Wolf Gifts that opens only the Facets it can go on: those of that
+  Renown, in Wolf Gifts and unlocked Shadow Gifts. If there are none, the row says the Facet is kept for the next Gift.
+- **Another Moon Gift is bought a Facet at a time** (p. 114): 5 Experiences with its first Facet, 2 for each after,
+  in order, never past auspice Renown. It has a row of dots in Moon Gifts; each dot is the next Facet. Another
+  auspice's Moon Gift can be added, with a warning. The auspice's own Moon Gift still comes with Renown, and can
+  still be swapped.
+- A Facet whose Renown the character has no dots in carries a warning but can be taken, like a Merit whose
+  prerequisites aren't met.
+
+With XP Mode off the sheet shows no prices, as it charges none.
+
+## Werewolf: Facets are laid out to be read at the table (2026-11-17)
+
+Every Facet the character has shows, under its name, its Renown, Essence cost, action and duration on one line, and
+its dice pool on the next with the dice counted for the character in the form they're in, e.g. "5 dice ·
+Manipulation + Subterfuge + Cunning vs Resolve + Primal Urge". A Skill with no dots takes its untrained penalty; a
+pool of none reads "Chance die". Tapping the Facet opens its rules. Shadow and Wolf Gifts show how much of each Gift
+is learned, e.g. "2 of 5".
+
+## Werewolf: Spirit Rank, Instinctive Defense, Favored Form and rite armour (2026-11-17)
+
+- **Spirit Rank** is one line at the bottom of Renown, "Spirit Rank: n", from total Renown (p. 99).
+- **Instinctive Defense** uses the higher of Wits and Dexterity for Defense in Urshul and Urhan (p. 109).
+- **Favored Form** (p. 106): the form is the Merit's qualifier. The Form section asks for what changes the numbers:
+  the Attribute its second and fourth dots raise in that form, and for each dot an Attribute lost in another form.
+  They change the Attributes and everything worked out from them. Its first, third and fifth dots (a Skill, a Facet
+  and a Skill) aren't tracked.
+- **Raiment of the Storm** adds 2 general armour while its switch is on (p. 145).

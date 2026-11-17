@@ -746,7 +746,7 @@
           "dots": 4,
           "cost": "2 Essence",
           "action": "contested",
-          "dicePool": "Presence + Intimidate + Glory vs Resolve + Primal Urge"
+          "dicePool": "Presence + Intimidation + Glory vs Resolve + Primal Urge"
         },
         {
           "id": "gibbous-moon-end-of-story",
@@ -2638,7 +2638,15 @@
       "targetSuccesses": 15,
       "duration": "Until the storm ceases",
       "symbols": "Rain, lightning, blood, sky",
-      "interval": "1 minute"
+      "interval": "1 minute",
+      "effects": [
+        {
+          "type": "armor",
+          "amount": {
+            "fixed": 2
+          }
+        }
+      ]
     },
     {
       "id": "shadowcall",

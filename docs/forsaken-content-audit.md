@@ -108,12 +108,13 @@ Added on 2026-11-17, each read again from the book first:
 
 Still missing:
 
-- **Tables and rules the sheet doesn't show:** effective Spirit Rank from Renown (p. 99) and the bane rule that
-  follows from it (pp. 185–186); wound penalties (p. 171), which Gauru ignores; the Primal Urge table's Basu-Im and
+- **Tables and rules the sheet doesn't show:** the bane rule that follows from Spirit Rank (pp. 185–186); wound
+  penalties (p. 171), which Gauru ignores; the Primal Urge table's Basu-Im and
   hunt-time columns; shapeshifting cost by Harmony; breaking-point lists; the fetish activation pool; the tracking
   bonus, which the code holds but never shows; several form rules (Gauru's Rage, Dalu's crowd-cowing roll).
-- **Can't be bought or applied yet:** a second Moon Gift with Experiences (5, then 2 a Facet); Instinctive Defense
-  and Favored Form on the form table; Raiment of the Storm's armour.
+- Done on 2026-11-17: effective Spirit Rank; a second Moon Gift bought with Experiences; Instinctive Defense and
+  Favored Form on the form table; Raiment of the Storm's armour. The user left the Primal Urge table's other
+  columns, shapeshifting cost by Harmony, the fetish activation pool and the totem's spirit traits for later.
 - **On the printed sheet but not in the app:** the totem's spirit traits (Rank, Attributes, Influences, Numina,
   bane); a weapons table; armour's Defense, Speed and Strength lines; example Touchstones (13, pp. 87–88).
 - **Equipment (pp. 169–177):** 26 weapons, 7 armours, 28 pieces of equipment. The app has no equipment list.
@@ -152,7 +153,8 @@ Recorded in `docs/design-decisions.md`.
   Moon Facet at the start.
 - **Lodges:** the Eaters of the Dead are listed under both books; no lodge is limited by tribe; the triple cost for
   outsiders is charged by the sheet.
-- **Dark Eras is cited by the full books' pages**, which the user supplies.
+- **Dark Eras is cited by the full books' pages**, which the user supplies. The user confirmed Ergi and Outlaw at
+  Dark Eras p. 164, and Forsaken by Rome's pages 58, 80 and 82 (2026-11-17).
 - **What's in the book goes in**, optional-rule Conditions and story-only lodges included (2026-11-17).
 - **Pure creation follows Shunned by the Moon** (p. 202), which replaces the Dark Eras Companion's rules: two Renown
   dots and one free Skill dot, as the app has it (2026-11-17).

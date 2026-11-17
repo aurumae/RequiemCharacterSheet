@@ -60,6 +60,8 @@ final class ForsakenCharacter: Codable {
     var moonGiftSource: TraitSource?
     /// For a custom Moon Gift, its Facets' names, from one dot up.
     var customMoonFacets: [String]
+    /// Other Moon Gifts, unlocked with Experiences and bought a Facet at a time (p. 114).
+    var extraMoonGifts: [OwnedMoonGift]
     /// Shadow and Wolf Gift Facets. Moon Gift Facets come with auspice Renown, so aren't listed.
     var facets: [OwnedFacet]
     var rites: [OwnedRite]
@@ -72,6 +74,8 @@ final class ForsakenCharacter: Codable {
     var ballisticArmor: Int
     /// Facets the character may learn free, one for each Renown dot gained in XP Mode (p. 115).
     var renownFacetCredits: [Renown: Int]
+    /// What the Favored Form Merit raises and lowers, if the character has it.
+    var favoredFormChoices: FavoredFormChoices
 
     var healthTrack: [HealthBoxFillType]
     var willpowerTrack: [WillpowerBoxFillType]
@@ -122,6 +126,7 @@ final class ForsakenCharacter: Codable {
         form = .hishu
         moonGiftSource = nil
         customMoonFacets = []
+        extraMoonGifts = []
         facets = []
         rites = []
         fetishes = []
@@ -130,6 +135,7 @@ final class ForsakenCharacter: Codable {
         armor = 0
         ballisticArmor = 0
         renownFacetCredits = [:]
+        favoredFormChoices = FavoredFormChoices()
 
         healthTrack = []
         willpowerTrack = []
@@ -150,7 +156,8 @@ final class ForsakenCharacter: Codable {
              name, player, chronicle, concept, blood, bone, auspice, tribe, lodge, huntersAspect,
              attributes, skills, merits, aspirations, conditions,
              renown, primalUrge, essence, harmony, fleshTouchstone, spiritTouchstone, kuruthTriggerSet, kuruthTriggers, form,
-             moonGift, moonFacets, facets, rites, fetishes, totem, size, armor, ballisticArmor, renownFacetCredits,
+             moonGift, moonFacets, extraMoonGifts, facets, rites, fetishes, totem, size, armor, ballisticArmor, renownFacetCredits,
+             favoredForm,
              healthTrack, willpowerTrack, beats, experiences, xpMode, creation, changeLog, paidDots, showsUnofficialContent
     }
 
@@ -199,6 +206,9 @@ final class ForsakenCharacter: Codable {
         if !customMoonFacets.isEmpty {
             try container.encode(customMoonFacets, forKey: .moonFacets)
         }
+        if !extraMoonGifts.isEmpty {
+            try container.encode(extraMoonGifts, forKey: .extraMoonGifts)
+        }
         try container.encode(facets, forKey: .facets)
         try container.encode(rites, forKey: .rites)
         try container.encode(fetishes, forKey: .fetishes)
@@ -213,6 +223,9 @@ final class ForsakenCharacter: Codable {
         let credits = Dictionary(uniqueKeysWithValues: renownFacetCredits.filter { $0.value > 0 }.map { ($0.key.rawValue, $0.value) })
         if !credits.isEmpty {
             try container.encode(credits, forKey: .renownFacetCredits)
+        }
+        if favoredFormChoices != FavoredFormChoices() {
+            try container.encode(favoredFormChoices, forKey: .favoredForm)
         }
 
         // Only the boxes on the sheet are saved
@@ -272,6 +285,7 @@ final class ForsakenCharacter: Codable {
         form = try container.decode(.form, default: .hishu)
         moonGiftSource = try container.decodeIfPresent(TraitSource.self, forKey: .moonGift)
         customMoonFacets = try container.decode(.moonFacets, default: [])
+        extraMoonGifts = try container.decode(.extraMoonGifts, default: [])
         // Early drafts listed Moon Gift Facets with the others; they now come from auspice Renown
         let savedFacets: [OwnedFacet] = try container.decode(.facets, default: [])
         facets = savedFacets.filter { $0.source.catalogID.flatMap { catalog.facet($0)?.gift.kind } != .moon }
@@ -283,6 +297,7 @@ final class ForsakenCharacter: Codable {
         ballisticArmor = try container.decode(.ballisticArmor, default: 0)
         let savedCredits: [String: Int] = try container.decode(.renownFacetCredits, default: [:])
         renownFacetCredits = Dictionary(uniqueKeysWithValues: savedCredits.compactMap { key, value in Renown(rawValue: key).map { ($0, value) } })
+        favoredFormChoices = try container.decode(.favoredForm, default: FavoredFormChoices())
 
         healthTrack = try container.decode(.healthTrack, default: [])
         willpowerTrack = try container.decode(.willpowerTrack, default: [])
@@ -385,6 +400,17 @@ extension ForsakenCharacter {
         renown[kind] = rating > 0 ? rating : nil
     }
 
+    /// The Rank spirits take the character to have, from all their Renown (p. 99).
+    var spiritRank: Int {
+        switch Renown.allCases.reduce(0, { $0 + renown($1) }) {
+        case ..<4: 1
+        case 4...7: 2
+        case 8...12: 3
+        case 13...18: 4
+        default: 5
+        }
+    }
+
     /// The row of the Primal Urge table for the character's Primal Urge.
     var primalUrgeLevel: PrimalUrgeLevel {
         .level(primalUrge)
@@ -432,6 +458,20 @@ extension ForsakenCharacter {
     var moonGiftDots: Int {
         guard !isPure, let kind = moonGiftRenown else { return 0 }
         return min(renown(kind), 5)
+    }
+
+    /// The catalog Gift of a Moon Gift bought with Experiences; `nil` for the player's own.
+    func gift(of owned: OwnedMoonGift) -> GiftEntry? {
+        owned.source.catalogID.flatMap { Catalog.bundled.gifts.entry($0) }
+    }
+
+    func moonGiftName(_ owned: OwnedMoonGift) -> String {
+        Catalog.bundled.gifts.name(of: owned.source)
+    }
+
+    /// How many Facets of a bought Moon Gift count: never more than the character's auspice Renown (p. 114).
+    func dots(of owned: OwnedMoonGift) -> Int {
+        min(owned.dots, moonGiftDots)
     }
 
     /// The Shadow Gifts the character's tribe and auspice favour, which cost less to learn.
@@ -501,6 +541,10 @@ extension ForsakenCharacter: SheetCharacter {
         if let change = form.attributeModifiers[kind], change != 0 {
             notes.append("\(change > 0 ? "+" : "−")\(abs(change)) in \(form.name)")
         }
+        let favored = favoredFormModifier(to: kind, in: form)
+        if favored != 0 {
+            notes.append("\(favored > 0 ? "+" : "−")\(abs(favored)) from Favored Form")
+        }
         let totem = totem.dots(for: .attribute, kind.rawValue)
         if totem > 0 { notes.append("+\(totem) from the totem") }
         if attributeBonus(for: kind) > totem { notes.append("+1 from Embodiment of the Firstborn") }
@@ -517,7 +561,7 @@ extension ForsakenCharacter: SheetCharacter {
     /// Every dot on the sheet: those bought, those from the totem and Embodiment of the Firstborn, and the form's.
     func totalAttributeRating(for attribute: Attribute) -> Int {
         max(attribute.rating + attributeBonus(for: attribute.kind) + powerBonus(to: attribute.kind, in: form)
-            + (form.attributeModifiers[attribute.kind] ?? 0), 0)
+            + formModifier(to: attribute.kind, in: form), 0)
     }
 
     /// The dots that count: bonus dots may only go past the Primal Urge maximum as far as their sources allow.
@@ -647,6 +691,11 @@ extension ForsakenCharacter: ExperienceCharacter {
             snapshot.levels[TraitKey(.renown, kind.rawValue)] = renown(kind)
             snapshot.names[TraitKey(.renown, kind.rawValue)] = kind.name
         }
+        for gift in extraMoonGifts {
+            let key = TraitKey(.moonGift, gift.id.uuidString)
+            snapshot.levels[key] = gift.dots
+            snapshot.names[key] = moonGiftName(gift)
+        }
         for facet in facets {
             let key = TraitKey(.facet, facet.id.uuidString)
             snapshot.levels[key] = 1
@@ -684,24 +733,31 @@ extension ForsakenCharacter: ExperienceCharacter {
             return rites.first { $0.id.uuidString == key.id }.map { lodgeLoreCostMultiplier(lodges(teaching: $0)) } ?? 1
         case .primalUrge:
             return 5
+        case .moonGift:
+            // Unlocking another Moon Gift brings its first Facet; the rest are bought one at a time (p. 114)
+            return level == 1 ? FacetPrice.otherGift : FacetPrice.furtherFacet
         case .facet:
-            guard let facet = facets.first(where: { $0.id.uuidString == key.id }) else { return 2 }
+            guard let facet = facets.first(where: { $0.id.uuidString == key.id }) else { return FacetPrice.furtherFacet }
             return facetCost(facet)
         default:
             return 0
         }
     }
 
-    /// A Facet's cost: 1 for a Wolf Gift; free in the auspice's own Moon Gift, which comes with Renown; 2 for another
-    /// Facet of a Gift already known; otherwise the Gift's first Facet, 3 for an affinity Gift and 5 for any other.
+    /// What a Facet on the sheet cost: nothing if learned with Renown, and otherwise what its Gift's Facets cost,
+    /// given the character's other Facets.
     private func facetCost(_ facet: OwnedFacet) -> Int {
         if facet.learnedWithRenown { return 0 }
-        guard let gift = gift(of: facet) else { return 2 }
-        if gift.kind == .wolf { return 1 }
-        if gift.kind == .moon, let auspice = effectiveAuspice, gift.auspice == auspice.id { return 0 }
-        let knowsGift = facets.contains { $0.id != facet.id && self.gift(of: $0)?.id == gift.id }
-        if knowsGift { return 2 }
-        return gift.kind == .shadow && hasAffinity(for: gift) ? 3 : 5
+        guard let gift = gift(of: facet) else { return FacetPrice.furtherFacet }
+        return experienceCost(ofFacetIn: gift, unlocked: facets.contains { $0.id != facet.id && self.gift(of: $0)?.id == gift.id })
+    }
+
+    /// A Facet's cost in Experiences: 1 for a Wolf Gift's; 2 for another Facet of a Gift already unlocked; otherwise
+    /// it unlocks the Gift, for 3 if the tribe or auspice favours it and 5 if not (pp. 85, 115).
+    func experienceCost(ofFacetIn gift: GiftEntry, unlocked: Bool) -> Int {
+        if gift.kind == .wolf { return FacetPrice.wolfFacet }
+        if unlocked { return FacetPrice.furtherFacet }
+        return gift.kind == .shadow && hasAffinity(for: gift) ? FacetPrice.affinityGift : FacetPrice.otherGift
     }
 
     func refundsWhenLowered(_ kind: TraitKind) -> Bool {
@@ -709,7 +765,7 @@ extension ForsakenCharacter: ExperienceCharacter {
     }
 
     var traitKindOrder: [TraitKind] {
-        [.attribute, .skill, .specialty, .merit, .renown, .facet, .rite, .primalUrge, .condition]
+        [.attribute, .skill, .specialty, .merit, .renown, .moonGift, .facet, .rite, .primalUrge, .condition]
     }
 
     func displayName(of kind: TraitKind) -> String {
@@ -719,6 +775,7 @@ extension ForsakenCharacter: ExperienceCharacter {
         case .specialty: "Specialty"
         case .merit: "Merit"
         case .renown: "Renown"
+        case .moonGift: "Moon Gift"
         case .facet: "Facet"
         case .rite: "Rite"
         case .primalUrge: "Primal Urge"
@@ -817,7 +874,37 @@ extension ForsakenCharacter {
 
     /// An Attribute's dots in a form (pp. 96–97).
     func rating(_ kind: AttributeKind, in form: Form) -> Int {
-        max(countedRating(of: kind) + powerBonus(to: kind, in: form) + (form.attributeModifiers[kind] ?? 0), 0)
+        max(countedRating(of: kind) + powerBonus(to: kind, in: form) + formModifier(to: kind, in: form), 0)
+    }
+
+    /// What a form does to an Attribute: the form's own change, and Favored Form's.
+    func formModifier(to kind: AttributeKind, in form: Form) -> Int {
+        (form.attributeModifiers[kind] ?? 0) + favoredFormModifier(to: kind, in: form)
+    }
+
+    /// A catalog Merit's dots: the character's own and any the totem grants.
+    func meritDots(_ id: CatalogEntryID) -> Int {
+        (merits.filter { $0.source == .catalog(id) }.map(\.rating).max() ?? 0) + meritBonus(for: id)
+    }
+
+    /// The form the Favored Form Merit is taken for, and its dots (p. 106).
+    var favoredForm: (form: Form, dots: Int)? {
+        let dots = meritDots("favored-form")
+        guard dots > 0, let name = merits.first(where: { $0.source == .catalog("favored-form") })?.qualifier,
+              let form = Form.allCases.first(where: { $0.name.caseInsensitiveCompare(name) == .orderedSame }), form != .hishu
+        else { return nil }
+        return (form, dots)
+    }
+
+    /// Favored Form's change to an Attribute in a form: a dot more in the favored form for the Attributes chosen at
+    /// its second and fourth dots, and a dot less for each drawback set on another form.
+    func favoredFormModifier(to kind: AttributeKind, in form: Form) -> Int {
+        guard let favored = favoredForm else { return 0 }
+        if form == favored.form {
+            let raised = favoredFormChoices.attributes.prefix(favored.dots >= 4 ? 2 : favored.dots >= 2 ? 1 : 0)
+            return raised.contains(kind) ? 1 : 0
+        }
+        return -favoredFormChoices.drawbacks.prefix(favored.dots).filter { $0.form == form && $0.attribute == kind }.count
     }
 
     /// Dots an Attribute gets beyond those bought: the totem's, and Embodiment of the Firstborn's.
@@ -859,8 +946,11 @@ extension ForsakenCharacter {
     }
 
     /// The lower of Dexterity and Wits, plus Athletics or a Skill a Merit allows, e.g. Defensive Combat (Brawl).
+    /// Instinctive Defense takes the higher of the two in Urshul and Urhan (p. 109).
     func defense(in form: Form, using skill: SkillID = .athletics) -> Int {
-        min(rating(.dexterity, in: form), rating(.wits, in: form)) + skillRating(skill, in: form)
+        let dexterity = rating(.dexterity, in: form), wits = rating(.wits, in: form)
+        let instinctive = (form == .urshul || form == .urhan) && meritDots("instinctive-defense") > 0
+        return (instinctive ? max(dexterity, wits) : min(dexterity, wits)) + skillRating(skill, in: form)
             + meritEffectTotal { if case .defense(let amount) = $0 { amount } else { nil } }
             + powerTotal(in: form) { if case .defense(let amount) = $0 { amount } else { nil } }
     }
@@ -900,6 +990,11 @@ extension ForsakenCharacter {
         var powers: [AppliedPower] = []
         if let gift = moonGift {
             for facet in gift.facets where (facet.dots ?? 0) <= moonGiftDots && facet.passive == true {
+                powers += (facet.effects ?? []).map { AppliedPower(name: facet.name, effect: $0, rating: moonGiftDots, forms: facet.effectForms) }
+            }
+        }
+        for owned in extraMoonGifts where !isPure {
+            for facet in gift(of: owned)?.facets ?? [] where (facet.dots ?? 0) <= dots(of: owned) && facet.passive == true {
                 powers += (facet.effects ?? []).map { AppliedPower(name: facet.name, effect: $0, rating: moonGiftDots, forms: facet.effectForms) }
             }
         }
@@ -956,7 +1051,8 @@ extension ForsakenCharacter {
 
     // MARK: Armor and combat
 
-    /// General and ballistic armor in a form: what the player enters, and Fortified Form's in its form (p. 106).
+    /// General and ballistic armor in a form: what the player enters, Fortified Form's in its form (p. 106), and
+    /// any an active rite gives, e.g. Raiment of the Storm.
     func armor(in form: Form) -> (general: Int, ballistic: Int) {
         let fortified = merits.filter { $0.source == .catalog("fortified-form") && $0.qualifier?.caseInsensitiveCompare(form.name) == .orderedSame }
             .reduce((0, 0)) { total, merit in
@@ -964,7 +1060,8 @@ extension ForsakenCharacter {
                 let armor = rating >= 5 ? (2, 2) : rating >= 4 ? (1, 1) : rating >= 3 ? (1, 0) : (0, 0)
                 return (total.0 + armor.0, total.1 + armor.1)
             }
-        return (armor + fortified.0, ballisticArmor + fortified.1)
+        let powers = powerTotal(in: form) { if case .armor(let amount) = $0 { amount } else { nil } }
+        return (armor + fortified.0 + powers, ballisticArmor + fortified.1)
     }
 
     /// Strength + Brawl, the pool for claws and fists, with a die off when untrained (p. 154).
@@ -982,6 +1079,39 @@ extension ForsakenCharacter {
         form == .hishu || form == .dalu ? rating(.dexterity, in: form) + skillRating(.firearms, in: form) : nil
     }
 
+    // MARK: Dice pools
+
+    /// A dice pool such as "Wits + Occult + Wisdom vs Resistance" worked out in a form: the character's Attributes,
+    /// Skills (with the penalty for one with no dots), Renown and Primal Urge before the "vs" or "−". `nil` if any of
+    /// those traits isn't one the sheet has, e.g. "Varies".
+    func worked(_ pool: String, in form: Form) -> WorkedDicePool? {
+        var traits = pool, against = ""
+        for (separator, mark) in [(" versus ", "vs "), (" vs ", "vs "), (" - ", "− "), (" − ", "− ")] {
+            if let range = pool.range(of: separator) {
+                traits = String(pool[..<range.lowerBound])
+                against = mark + pool[range.upperBound...]
+                break
+            }
+        }
+        var dice = 0
+        for term in traits.components(separatedBy: " + ") {
+            let name = term.trimmingCharacters(in: .whitespaces)
+            if let kind = AttributeKind.allCases.first(where: { $0.name.caseInsensitiveCompare(name) == .orderedSame }) {
+                dice += rating(kind, in: form)
+            } else if let skill = SkillDefinition.named(name) {
+                let dots = skillRating(skill.id, in: form)
+                dice += dots > 0 ? dots : skill.category.unskilledPenalty
+            } else if let kind = Renown.allCases.first(where: { $0.name.caseInsensitiveCompare(name) == .orderedSame }) {
+                dice += renown(kind)
+            } else if name.caseInsensitiveCompare("Primal Urge") == .orderedSame {
+                dice += primalUrge
+            } else {
+                return nil
+            }
+        }
+        return WorkedDicePool(dice: dice, traits: traits, against: against)
+    }
+
     // MARK: Facets from Renown
 
     /// Whether the Gift is unlocked, so a Facet of it can be learned with Renown: one of its Facets is known, or
@@ -994,6 +1124,30 @@ extension ForsakenCharacter {
     func canLearnFree(_ facet: GiftEntry.Facet, of gift: GiftEntry) -> Bool {
         guard let renown = facet.renown, !isInCreation else { return false }
         return (renownFacetCredits[renown] ?? 0) > 0 && hasUnlocked(gift)
+    }
+
+    /// What learning a Facet would cost now: nothing with a new dot of its Renown, or else Experiences.
+    func price(of facet: GiftEntry.Facet, in gift: GiftEntry) -> FacetPrice {
+        if canLearnFree(facet, of: gift), let renown = facet.renown {
+            return .renown(renown)
+        }
+        let unlocked = hasUnlocked(gift)
+        return .experiences(experienceCost(ofFacetIn: gift, unlocked: unlocked), unlocksGift: !unlocked)
+    }
+
+    /// The Renowns with a free Facet waiting to be learned.
+    var renownsWithFreeFacets: [Renown] {
+        guard xpMode, !isInCreation else { return [] }
+        return Renown.allCases.filter { (renownFacetCredits[$0] ?? 0) > 0 }
+    }
+
+    /// The Facets a new dot of Renown could bring free: those of that Renown the character doesn't know, in Wolf
+    /// Gifts and the Shadow Gifts they've unlocked (p. 115). If there are none, the free Facet waits for a new Gift.
+    func freeFacetChoices(for renown: Renown) -> [(gift: GiftEntry, facet: GiftEntry.Facet)] {
+        let known = Set(facets.compactMap(\.source.catalogID))
+        return Catalog.bundled.gifts.all.filter { $0.kind != .moon && hasUnlocked($0) }.flatMap { gift in
+            gift.facets.filter { $0.renown == renown && !known.contains($0.id) }.map { (gift, $0) }
+        }
     }
 
     /// Learns a Facet, free with Renown if it can be.

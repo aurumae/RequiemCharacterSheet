@@ -382,6 +382,8 @@ package enum Effect: Decodable, Equatable {
     case willpower(Amount)
     /// Adds to the most Essence the character can hold. Primeval Echo.
     case essenceMaximum(Amount)
+    /// Adds general armor. Raiment of the Storm.
+    case armor(Amount)
 
     private enum CodingKeys: CodingKey {
         case type, attribute, merit, skill, amount
@@ -416,6 +418,8 @@ package enum Effect: Decodable, Equatable {
             self = .willpower(try container.decode(Amount.self, forKey: .amount))
         case "essenceMaximum":
             self = .essenceMaximum(try container.decode(Amount.self, forKey: .amount))
+        case "armor":
+            self = .armor(try container.decode(Amount.self, forKey: .amount))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown effect \(type)")
         }

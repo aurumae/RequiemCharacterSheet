@@ -50,13 +50,16 @@ are its own, in `ForsakenCharacterSheet/Catalogs/`; they share only their names 
   replaced Gift in `giftAffinities`), and `facets`, each with `id`,
   `name`, `source`, `summary`, and either `renown` (Shadow and Wolf Gifts) or `dots` (1–5, Moon Gifts), plus optional
   `cost` (e.g. "1 Essence"), `action` ("instant", "reflexive", "contested", "extended"…), `dicePool` (e.g.
-  "Wits + Investigation + Cunning") and `duration`, and `effects` (Requiem's effect objects; `"amount": "rating"`
+  "Wits + Investigation + Cunning vs Resolve + Primal Urge": the character's Attributes, Skills, Renown and Primal
+  Urge joined with " + ", written as on the sheet so their dice can be counted, then " vs " or " - " and whatever
+  resists) and `duration`, and `effects` (Requiem's effect objects; `"amount": "rating"`
   means dots of the Facet's Renown, or of auspice Renown for a Moon Gift), `passive` (true if always on) and
   `effectForms` (forms it applies in, if not all).
 - **rites**: `kind` ("wolf" or "pack"), `rating` (1–5), and optional `action`, `dicePool` (the pool of the book's
   sample rite; each pack settles its own), `targetSuccesses`, `interval` (the time each roll takes, e.g.
   "10 minutes"), `symbols` (what the rite must show), `cost` (e.g. "3 Essence"), `duration`, `effects` (while
-  switched on; "rating" is the rite's dots).
+  switched on; "rating" is the rite's dots). The effect `{"type": "armor", "amount": …}` adds general armor, e.g.
+  Raiment of the Storm.
 - **merits**: Requiem's Merit entry. Categories: "werewolf", "human" (only humans can take them, e.g. the Church of
   the Wolf's; listed but unavailable to werewolves), "fighting", "mental", "physical", "social", "other".
   Prerequisite kinds include Requiem's shared ones (attribute, skill, merit, willpower, other) and Forsaken's:

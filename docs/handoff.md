@@ -1636,3 +1636,40 @@ No save-format change. No change to `Chronicles/` or to Requiem.
 **Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 64.
 
 **Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-17 09:50 UTC · Claude (iOS) · Forsaken: Gift prices and dice pools, a second Moon Gift, and four sheet numbers
+
+**Decisions (user)**, in `docs/design-decisions.md`: the sheet works out what Gifts cost and shows it before it's
+paid; Facets are laid out to be read at the table; Spirit Rank is a line at the bottom of Renown. The user also
+confirmed the pages for Ergi and Outlaw (Dark Eras p. 164) and Forsaken by Rome (58, 80, 82).
+
+**Forsaken sheet:**
+- **Gift prices.** In XP Mode the Facet picker says what each Facet costs now (free with new Renown; 1, 2, 3 or 5
+  Experiences; "and unlocks the Gift" for a first Facet). `price(of:in:)` and the charge share one rule.
+- **Free Facets.** A dot of Renown gained in play shows under that Renown and as a row in Shadow Gifts and Wolf
+  Gifts, which opens only the Facets it can go on.
+- **A second Moon Gift** (p. 114): "Add Moon Gift" in Moon Gifts. 5 Experiences with its first Facet, 2 for each
+  after, in order, never past auspice Renown. Its passive Facets count on the sheet.
+- **Dice pools.** Every Facet the character has shows its Renown, cost, action and duration, and its dice pool with
+  the dice counted in the form they're in.
+- **Spirit Rank** from total Renown (p. 99); **Instinctive Defense** in Urshul and Urhan (p. 109); **Favored Form**'s
+  raised and lost Attribute dots, chosen in the Form section (p. 106); **Raiment of the Storm**'s 2 general armour
+  while switched on (p. 145).
+
+**Forsaken catalog** (`wtf2e-core.json`): Raiment of the Storm has an `armor` effect; Thousand-Throat Howl's pool
+names the Skill "Intimidation", so every Facet's pool can be counted (a test checks all of them).
+
+**Shared code** (`Chronicles/Core`): `Effect` has a new case, `armor` (`{"type": "armor", "amount": …}`, general
+armor). No Requiem catalog uses it, and Requiem ignores it, so the catalog contract is unchanged.
+
+**Forsaken save (still a draft, outside the contract):** new keys `extraMoonGifts` (a list of `{id, source, dots,
+facets}`; `facets` holds a custom Gift's Facet names) and `favoredForm` (`{attributes, drawbacks: [{form,
+attribute}]}`). Both are left out when empty. A new trait kind in the log, `moonGift`.
+
+No change to Requiem's sheet, saves or catalogs.
+
+**Validation:** `scripts/check-save-contract --strict` (Swift, Kotlin, exchange); Requiem Xcode 278; Forsaken 74. The
+new sections and pickers were rendered to pictures in the simulator and looked at; nothing was tapped by hand.
+
+**Follow-up (Android):** nothing until `:forsaken` starts. When Requiem's Kotlin effect parser next changes, it can
+skip `armor` as it skips any effect it doesn't know.
