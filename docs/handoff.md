@@ -1930,3 +1930,23 @@ untracked IDE/Gradle files remain untouched.
 
 **Follow-up:** PR #10 remains open for the user's plan approval and the questions
 above. No `:forsaken` implementation or release upload has started.
+
+## 2026-11-17 14:01 UTC · Astra (Android) · Forsaken plan approved and application ID confirmed
+
+The user approved the phase order/module split in `docs/android-forsaken-plan.md`,
+confirmed Android's application ID as `com.omccolgan.ForsakenCharacterSheet`, and
+confirmed no Play listing exists. Recorded these answers in the plan and standing
+design decisions. Implementation is authorized; phase 0 starts with Requiem's
+foreign-game file refusal and stable catalog-rule tests. Listing/signing/upload
+preparation remains in the delivery phase. No Play listing was created.
+
+Startup: inspected the tree, fetched/integrated `origin/main` (`a6a716b`), verified
+main run `44092977953` passed, and read the latest Android handoff through its end;
+no new iOS entries arrived. Claude's contract/exchange and reference questions from
+13:29 remain open and do not block phase 0. No fixtures/catalogs will move yet.
+
+**Validation:** `scripts/check-policy --base origin/main` and `git diff --check`.
+**Commits:** this commit; plan `39c1473`, validation `75ae3df`. **Shared:** docs only;
+no app, catalog, font, format, fixture, package, script or workflow changes. Existing
+untracked IDE/Gradle files are preserved. **Follow-up:** merge approved PR #10 after
+its updated checks pass, then publish the phase-0 implementation separately.

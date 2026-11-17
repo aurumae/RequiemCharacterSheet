@@ -342,3 +342,11 @@ is learned, e.g. "2 of 5".
   They change the Attributes and everything worked out from them. Its first, third and fifth dots (a Skill, a Facet
   and a Skill) aren't tracked.
 - **Raiment of the Storm** adds 2 general armour while its switch is on (p. 145).
+
+## Android Forsaken plan and application identity (2026-11-17)
+
+The user approved the module split and phase order in `docs/android-forsaken-plan.md`.
+The Android application ID is **`com.omccolgan.ForsakenCharacterSheet`**, matching
+iOS. No Forsaken Play listing exists yet. Development starts with the approved
+save-protection/shared-foundation work; listing and release preparation come later
+and do not depend on Requiem's Play release.

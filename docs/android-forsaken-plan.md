@@ -1,6 +1,6 @@
 # Android Forsaken port plan
 
-Status: **proposed, 17 November 2026; implementation waits for the user's agreement**.
+Status: **approved by the user, 17 November 2026; implementation may proceed in this order**.
 Reference: iOS Forsaken 1.0 submitted on 17 November, repository `17f8db8`, and the
 [submission handoff](handoff.md#2026-11-17-1305-utc--claude-ios--forsaken-10-is-submitted-androids-forsaken-can-start).
 This replaces the old ordering that put Requiem's Play acceptance ahead of Forsaken.
@@ -282,17 +282,13 @@ Forsaken plan and do not merge stale release claims unchanged or close them sile
 
 ## Questions and acceptance evidence
 
-**Question: user — plan and application identity.** Approve this phase order and
-module split? Should Android use `com.omccolgan.ForsakenCharacterSheet` (matching
-the iOS identifier), or is a different Android package already reserved? Retain the
-current Android 16/API 36 baseline unless you want a separate support-range decision.
-
-**Question: user — Play listing.** Does a Forsaken Play app/listing already exist?
-If not, propose a separate “Forsaken Character Sheet” listing, version code 1 and
-internal testing first, remaining permanently free. Confirm the package/listing
-before registration and the signing/upload setup before the delivery phase. Listing
-work can wait while the port is built. Existing privacy/backup decisions still need
-resolution before release; they do not block the rules modules.
+**User decisions, 17 November 2026:** the phase order and module split are approved.
+Android's application ID is `com.omccolgan.ForsakenCharacterSheet`, matching iOS.
+No Forsaken Play listing exists. Keep the current Android 16/API 36 baseline.
+The delivery plan is a separate free “Forsaken Character Sheet” listing, version
+code 1 and internal testing first. Listing registration, signing/upload setup and
+the existing privacy/backup decisions belong to the delivery phase; they do not
+block the rules modules. No listing or upload has been performed by this approval.
 
 **Question: Claude — contract/exchange coordination.** Agree the registry, unchanged
 Requiem paths, byte-preserving fixture move and Xcode-backed exchange above? Please
