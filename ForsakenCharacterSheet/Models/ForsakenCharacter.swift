@@ -895,7 +895,7 @@ struct AppliedPower {
 }
 
 extension ForsakenCharacter {
-    /// The effects that apply now: passive Facets, those the player has switched on, and active rites.
+    /// The effects that apply now: passive Facets, those the player has switched on, active rites and the lodge's.
     var appliedPowers: [AppliedPower] {
         var powers: [AppliedPower] = []
         if let gift = moonGift {
@@ -912,6 +912,10 @@ extension ForsakenCharacter {
         for rite in rites where rite.isActive {
             guard let entry = rite.source.catalogID.flatMap({ Catalog.bundled.rites.entry($0) }) else { continue }
             powers += (entry.effects ?? []).map { AppliedPower(name: entry.name, effect: $0, rating: entry.rating, forms: nil) }
+        }
+        // A lodge's own, measured in Primal Urge, e.g. the Lodge of the Field's Essence (p. 277)
+        if let lodge = lodgeEntry {
+            powers += (lodge.effects ?? []).map { AppliedPower(name: lodge.name, effect: $0, rating: primalUrge, forms: nil) }
         }
         return powers
     }
@@ -945,7 +949,7 @@ extension ForsakenCharacter {
         powerTotal(in: form) { if case .willpower(let amount) = $0 { amount } else { nil } }
     }
 
-    /// The most Essence the character can hold: the Primal Urge table's, and any Gift's.
+    /// The most Essence the character can hold: the Primal Urge table's, and any Gift's, rite's or lodge's.
     var essenceMaximum: Int {
         primalUrgeLevel.essenceMaximum + powerTotal(in: form) { if case .essenceMaximum(let amount) = $0 { amount } else { nil } }
     }

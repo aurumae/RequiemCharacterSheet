@@ -72,7 +72,7 @@ struct ForsakenRulesTests {
         let fromCore = { (source: SourceReference) in source.book == "wtf2e-core" }
         #expect(catalog.auspices.all.count == 5)
         #expect(catalog.tribes.all.filter { fromCore($0.source) }.count == 6)
-        #expect(catalog.lodges.all.filter { fromCore($0.source) }.count == 8)
+        #expect(catalog.lodges.all.filter { fromCore($0.source) }.count == 11)
         #expect(catalog.archetypes.all.filter { fromCore($0.source) && $0.kind == .blood }.count == 6)
         #expect(catalog.archetypes.all.filter { fromCore($0.source) && $0.kind == .bone }.count == 6)
         #expect(catalog.gifts.all.filter { fromCore($0.source) }.count == 23)
@@ -818,6 +818,47 @@ struct GiftEffectTests {
         for id in ["mystery-cult-initiation", "library", "true-friend", "trained-observer"] {
             #expect(Catalog.bundled.merits.entry(id)?.source.book == "cofd-core", "\(id)")
         }
+    }
+}
+
+@MainActor
+struct CoreBookRemainderTests {
+    private let catalog = Catalog.bundled
+
+    @Test func theLodgeOfTheFieldAddsPrimalUrgeToEssence() throws {
+        let field = try #require(catalog.lodges.entry("field"))
+        #expect(field.hasRules && field.marks.map(\.label) == ["Benefit"])
+        let character = ForsakenCharacter()
+        character.primalUrge = 3
+        let usual = character.essenceMaximum
+        character.lodgeSource = .catalog("field")
+        #expect(character.essenceMaximum == usual + 3)
+        #expect(character.sheetSections.contains(.lodge))
+        character.primalUrge = 5
+        #expect(character.essenceMaximum == PrimalUrgeLevel.level(5).essenceMaximum + 5)
+        // The core book's other lodges are story only
+        for id in ["dreaming", "quicksilver-children", "eaters-of-the-dead"] {
+            #expect(try #require(catalog.lodges.entry(id)).hasRules == false)
+        }
+    }
+
+    @Test func theRestOfTheCoreBookIsIn() throws {
+        let voyager = try #require(catalog.merits.entry("voyager-membership"))
+        #expect(voyager.ratings == [1, 2, 3, 4, 5])
+        #expect(ForsakenCharacter().meritUnavailableReason(voyager) != nil)
+        #expect(catalog.tribes.entry("ghost-wolves")?.firstTongueName == "Thihirtha Numea")
+        let trimesters = ["first-trimester", "second-trimester", "third-trimester"].compactMap { catalog.conditions.entry($0) }
+        #expect(trimesters.count == 3 && trimesters.allSatisfy { $0.persistent && $0.beat != nil })
+    }
+
+    @Test func everyRiteSaysWhatItNeeds() {
+        // The core book gives each rite its symbols, a sample pool and the time a roll takes (pp. 139–146)
+        for rite in catalog.rites.all where rite.source.book == "wtf2e-core" {
+            #expect(rite.symbols != nil && rite.dicePool != nil && rite.interval != nil, "\(rite.name)")
+        }
+        #expect(catalog.rites.all.allSatisfy { $0.symbols != nil && $0.interval != nil })
+        #expect(catalog.rites.entry("twilight-purge")?.cost == "3 Essence")
+        #expect(catalog.rites.entry("expel")?.dicePool == "Presence + Intimidation")
     }
 }
 

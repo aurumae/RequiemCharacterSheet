@@ -276,7 +276,8 @@
       "oath": {
         "name": "No tribal oath",
         "summary": "Ghost Wolves have sworn no tribal vow and have no tribal Renown or Gift affinities."
-      }
+      },
+      "firstTongueName": "Thihirtha Numea"
     }
   ],
   "lodges": [
@@ -356,6 +357,40 @@
       "summary": "A small New England lodge of Irraka snipers and free-runners, patroned by Black Rat, who strike their prey from high places.",
       "auspices": [
         "irraka"
+      ]
+    },
+    {
+      "id": "quicksilver-children",
+      "name": "Lodge of Quicksilver Children",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 216
+      },
+      "summary": "Forsaken scholars from every tribe who hold that the Uratha descend from an idigam, the child of Wolf and Moon, and a human sorcerer. They believe it sleeps at Gévaudan in France and mean to raise it, some as a totem for all the Forsaken."
+    },
+    {
+      "id": "dreaming",
+      "name": "The Dreaming Lodge",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 266
+      },
+      "summary": "The network that ties the werewolves of Australia's Red Centre together across pack and tribe, older there than the tribes themselves. It has no single totem but several animal spirits, and teaches a rite to call for help and share what is known of prey: call when needed, respond when called."
+    },
+    {
+      "id": "field",
+      "name": "Lodge of the Field",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 277
+      },
+      "summary": "Ghost Wolves around Wrocław who follow Lycaon-Ur, an ancient werewolf grown into something like a Firstborn, and eat human flesh as a sacrament to feed the gods with Essence. They reject the tale of Father Wolf and Luna, and Forsaken and Pure alike despise them. Also called the Hounds of the Field.",
+      "benefit": "Eating human flesh gives twice the usual Essence, and Lycaon-Ur gains a point each time. Your maximum Essence rises by your Primal Urge. Spend 1 Essence as an instant action to inflict gnawing hunger on a human you touch; adherents of very high Primal Urge can force spirits of hunger to Claim victims.",
+      "effects": [
+        {
+          "type": "essenceMaximum",
+          "amount": "rating"
+        }
       ]
     }
   ],
@@ -2286,8 +2321,11 @@
       },
       "summary": "Ties each participant to a focus object that lets them cut a Death Rage short after five turns of lucidity. When the month is up, or if the focus is lost or broken, the werewolf falls straight into Death Rage.",
       "action": "extended",
+      "dicePool": "Stamina + Survival",
       "targetSuccesses": 10,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Rage, calm, binding, dawn",
+      "interval": "1 minute"
     },
     {
       "id": "messenger",
@@ -2300,7 +2338,10 @@
       },
       "summary": "Lunes carry a short spoken message, a few breaths long, to a named werewolf anywhere in the world almost at once. The message can't be detected or intercepted.",
       "action": "extended",
-      "targetSuccesses": 10
+      "dicePool": "Strength + Brawl",
+      "targetSuccesses": 10,
+      "symbols": "The moon, wind or breath, music, connections",
+      "interval": "5 minutes"
     },
     {
       "id": "bottle-spirit",
@@ -2312,7 +2353,10 @@
         "page": 140
       },
       "summary": "Bone Shadows only. Prepares a bottle that pulls in the nearest spirit when opened, up to a Rank set by the rite's successes (5 per Rank); the spirit has a turn per Rank to flee or break the bottle before it's trapped, and can slip free after a day.",
-      "action": "extended"
+      "action": "extended",
+      "dicePool": "Intelligence + Occult",
+      "symbols": "Bottles, stasis, air, death",
+      "interval": "10 minutes"
     },
     {
       "id": "sacred-hunt",
@@ -2325,7 +2369,10 @@
       },
       "summary": "Begins the Siskur-Dah against a named prey, giving every participating werewolf the Siskur-Dah Condition. Hunters who bring down spirit prey can split its Essence, or learn a Gift or rite it knows instead.",
       "action": "extended",
-      "targetSuccesses": 10
+      "dicePool": "Dexterity + Athletics",
+      "targetSuccesses": 10,
+      "symbols": "The hunt, prey, claws or weapons, blood",
+      "interval": "1 minute"
     },
     {
       "id": "kindle-fury",
@@ -2338,8 +2385,11 @@
       },
       "summary": "Blood Talons only. Everyone present gains the Destroyer Blood archetype on top of their own, or doubles its Willpower if they already have it.",
       "action": "extended",
+      "dicePool": "Presence + Expression",
       "targetSuccesses": 10,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Rage, blood, fire or ignition, consumption",
+      "interval": "10 minutes"
     },
     {
       "id": "shadowbind",
@@ -2352,7 +2402,10 @@
       },
       "summary": "Traps one spirit inside a marked space so it can't leave, cross the Gauntlet or use Numina beyond it; the spirit may contest with Resistance. It stays bound until released, the border is broken or a stated condition is met, and at least two others must be told how to free it.",
       "action": "extended",
-      "targetSuccesses": 10
+      "dicePool": "Intelligence + Science",
+      "targetSuccesses": 10,
+      "symbols": "Cage, binding, a key, the spirit's type",
+      "interval": "1 minute"
     },
     {
       "id": "fetish",
@@ -2365,7 +2418,11 @@
       },
       "summary": "Binds a spirit into an object to create a fetish, costing 1 Essence per dot of the fetish.",
       "action": "extended",
-      "targetSuccesses": 20
+      "dicePool": "Strength + Crafts",
+      "targetSuccesses": 20,
+      "symbols": "Craft, purpose, chains, blood, the spirit's type",
+      "interval": "1 minute",
+      "cost": "1 Essence per dot of the fetish"
     },
     {
       "id": "twilight-purge",
@@ -2378,7 +2435,11 @@
       },
       "summary": "For 3 Essence, rips every being in Twilight within about 100 yards (or a chosen target) into physical form, Stunned and unable to return to Twilight for an hour.",
       "action": "extended",
-      "targetSuccesses": 5
+      "dicePool": "Wits + Science",
+      "targetSuccesses": 5,
+      "symbols": "Sight, mirrors, corrosion or acid, the sun",
+      "interval": "1 minute",
+      "cost": "3 Essence"
     },
     {
       "id": "forge-alliance",
@@ -2391,8 +2452,12 @@
       },
       "summary": "Joins every pack with a member present into one alliance that counts as a single pack for Gifts, Death Rage and similar effects, though not rites or totem benefits; costs 1 Essence per pack. If a prey is named, the alliance ends when it falls and all members gain an Aspiration to hunt it.",
       "action": "extended",
+      "dicePool": "Presence + Persuasion",
       "targetSuccesses": 10,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Packs, alliance, shared purpose, blood",
+      "interval": "1 minute",
+      "cost": "1 Essence per pack"
     },
     {
       "id": "urfarahs-bane",
@@ -2405,8 +2470,12 @@
       },
       "summary": "For 5 Essence, lets one werewolf's claws and bite deal aggravated damage to other werewolves. Afterwards she takes a point of aggravated damage and the Guilty Condition, and she counts as cut off from her pack while it lasts.",
       "action": "extended",
+      "dicePool": "Wits + Empathy",
       "targetSuccesses": 15,
-      "duration": "Until sunrise"
+      "duration": "Until sunrise",
+      "symbols": "Betrayal, Father Wolf's death, shattering, echoes",
+      "interval": "10 minutes",
+      "cost": "5 Essence"
     },
     {
       "id": "veil",
@@ -2419,7 +2488,11 @@
       },
       "summary": "Iron Masters only. For 5 Essence, technology and information spirits wipe out every recording of one supernatural event from the past lunar month lasting up to 30 minutes; people's memories are untouched.",
       "action": "extended",
-      "targetSuccesses": 20
+      "dicePool": "Presence + Occult",
+      "targetSuccesses": 20,
+      "symbols": "Blinding, deletion, technology, shadow or veils",
+      "interval": "10 minutes",
+      "cost": "5 Essence"
     },
     {
       "id": "banish",
@@ -2432,7 +2505,10 @@
       },
       "summary": "Drives a spirit out of the physical world into the Shadow, or a non-spirit, non-werewolf creature out of the Shadow into the physical world. Spirits may contest with Resistance; others can't resist.",
       "action": "extended",
-      "targetSuccesses": 5
+      "dicePool": "Manipulation + Subterfuge",
+      "targetSuccesses": 5,
+      "symbols": "Warning, the two worlds, the Wolf's last howl, bitterness",
+      "interval": "1 minute"
     },
     {
       "id": "harness-the-cycle",
@@ -2445,7 +2521,10 @@
       },
       "summary": "Performed at a change of season, it gives participating werewolves Essence (half their maximum, or all of it in the tropics). Humans and Wolf-Blooded regain all Willpower and heal twice as fast for a month, plus a temporary Allies, Contacts or Resources dot in the tropics.",
       "action": "extended",
-      "targetSuccesses": 10
+      "dicePool": "Presence + Socialize",
+      "targetSuccesses": 10,
+      "symbols": "The season, consumption, blood, earth or sky",
+      "interval": "half an hour"
     },
     {
       "id": "totemic-empowerment",
@@ -2458,6 +2537,7 @@
       },
       "summary": "The totem temporarily rides one pack member, who gains +1 Strength, Dexterity and Stamina, +2 to Perception rolls, 5 more Essence and the totem's Influences and Numina, along with its ban and bane. A werewolf in Death Rage is controlled by the totem, and it's a breaking point for the subject.",
       "action": "extended",
+      "dicePool": "Stamina + Medicine",
       "targetSuccesses": 10,
       "duration": "Until the next sunrise",
       "effects": [
@@ -2488,7 +2568,9 @@
             "fixed": 5
           }
         }
-      ]
+      ],
+      "symbols": "The totem, the pack, blood, strength",
+      "interval": "1 minute"
     },
     {
       "id": "hunting-ground",
@@ -2501,8 +2583,11 @@
       },
       "summary": "Consecrates an area as the pack's territory, giving members +2 to chases and tracking there and +2 to Animal Ken, Empathy and Politics with its inhabitants. It ends if the pack goes a month without a hunt.",
       "action": "extended",
+      "dicePool": "Strength + Occult",
       "targetSuccesses": 10,
-      "duration": "1 season"
+      "duration": "1 season",
+      "symbols": "Territory, pack totem, the pack, boundaries",
+      "interval": "half an hour"
     },
     {
       "id": "moons-mad-love",
@@ -2515,8 +2600,11 @@
       },
       "summary": "Night only. Human participants are shielded from Lunacy caused by their werewolf packmates, remember events despite other Lunacy, and become Inspired on first seeing the full moon. At the end each must roll Resolve + Composure or gain the Madness Condition.",
       "action": "extended",
+      "dicePool": "Presence + Academics",
       "targetSuccesses": 15,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Silver, the auspices, love, change",
+      "interval": "1 minute"
     },
     {
       "id": "wellspring",
@@ -2529,8 +2617,11 @@
       },
       "summary": "Amplifies a locus so that spirits and werewolves nearby add its rating to matching Influences, and pack members inside it can wield its Resonance as an Influence. The area takes on that Resonance, and the pack gains a matching ban; breaking it ends the rite.",
       "action": "extended",
+      "dicePool": "Dexterity + Occult",
       "targetSuccesses": 20,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Fountains or ignition, cleansing, energy, the resonance type",
+      "interval": "10 minutes"
     },
     {
       "id": "raiment-of-the-storm",
@@ -2543,8 +2634,11 @@
       },
       "summary": "Storm Lords only, during a thunderstorm. Participants out in the rain get +2 to resist supernatural effects, 2 general armor and immunity to electricity, but can't rest until the storm ends.",
       "action": "extended",
+      "dicePool": "Wits + Occult",
       "targetSuccesses": 15,
-      "duration": "Until the storm ceases"
+      "duration": "Until the storm ceases",
+      "symbols": "Rain, lightning, blood, sky",
+      "interval": "1 minute"
     },
     {
       "id": "shadowcall",
@@ -2557,7 +2651,10 @@
       },
       "summary": "Summons a spirit, named or the nearest of a chosen type, into a prepared spot; it may resist with Resistance or come willingly. Gauntlet strength applies if it starts across the Gauntlet, and in the physical world the spot becomes Open.",
       "action": "extended",
-      "targetSuccesses": 20
+      "dicePool": "Intelligence + Computer",
+      "targetSuccesses": 20,
+      "symbols": "Circles, a call, lights, the spirit's type",
+      "interval": "1 minute"
     },
     {
       "id": "supplication",
@@ -2570,8 +2667,11 @@
       },
       "summary": "Offerings placed around the territory improve the attitude of one type of spirit toward the pack by one impression level, while the ritemaster takes on a related ban. It ends early if half the offerings are disturbed.",
       "action": "extended",
+      "dicePool": "Presence + Crafts",
       "targetSuccesses": 10,
-      "duration": "1 season"
+      "duration": "1 season",
+      "symbols": "Territory, smoke, balance, the spirits' type",
+      "interval": "half an hour"
     },
     {
       "id": "hidden-path",
@@ -2584,7 +2684,10 @@
       },
       "summary": "Hunters in Darkness only. Opens a concealed route between Flesh and Shadow to a chosen destination reachable over land, so the pack travels on foot in a tenth of the time and avoids ordinary obstacles while it stays on the path.",
       "action": "extended",
-      "targetSuccesses": 15
+      "dicePool": "Wits + Survival",
+      "targetSuccesses": 15,
+      "symbols": "Paths, shadow, doorways, the destination",
+      "interval": "10 minutes"
     },
     {
       "id": "expel",
@@ -2597,7 +2700,10 @@
       },
       "summary": "Forces a spirit out of a person or object it is possessing, contested by its Resistance; a freed living host counts as a pack member for an hour. It doesn't work on the Claimed.",
       "action": "extended",
-      "targetSuccesses": 10
+      "dicePool": "Presence + Intimidation",
+      "targetSuccesses": 10,
+      "symbols": "Ownership, dominance, shattering, scourging",
+      "interval": "1 minute"
     },
     {
       "id": "great-hunt",
@@ -2610,8 +2716,11 @@
       },
       "summary": "Turns the pack's human and Wolf-Blooded members into Urhan wolves with werewolf senses and regeneration, compelled to hunt the pack's prey until dawn. It's a breaking point for humans.",
       "action": "extended",
+      "dicePool": "Presence + Occult",
       "targetSuccesses": 20,
-      "duration": "Until the next sunrise"
+      "duration": "Until the next sunrise",
+      "symbols": "Blood, transformation, wolves, silver",
+      "interval": "1 minute"
     }
   ],
   "merits": [
@@ -4041,6 +4150,25 @@
         }
       ],
       "summary": "Senses when one kind of supernatural creature is close; accepting Spooked pinpoints it."
+    },
+    {
+      "id": "voyager-membership",
+      "name": "Voyager Membership",
+      "category": "human",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 272
+      },
+      "ratings": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "repeatable": false,
+      "prerequisites": [],
+      "summary": "Membership of a Voyager cult, humans who deal with spirits. 1 dot: an Occult Specialty in Spirit Tongues, enough for simple ideas in the First Tongue. 2: a dot of Contacts among spirits. 3: feed your blood to spirits, offering 1 Essence for each point of lethal damage you take, and gaining a die on Social actions with that spirit for a month for each Essence given. 4: open the Gauntlet with words and blood, an extended Intelligence + Occult roll at a minute and 1 lethal damage a roll; success lets one traveller through, and each further success keeps it open an hour or passes one more. 5: spend Willpower in place of blood, each point making 2 Essence."
     }
   ],
   "conditions": [
@@ -4862,6 +4990,69 @@
       "beat": null,
       "possibleSources": "A spirit's Claim Manifestation",
       "notePrompt": "Spirit"
+    },
+    {
+      "id": "first-trimester",
+      "name": "First Trimester",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 294
+      },
+      "persistent": true,
+      "summary": "The first three months of a pregnancy, which you may not yet know of. Fatigue gives −1 to Initiative and to Stamina rolls, and vivid dreams give back one more Willpower point when you sleep four hours or more.",
+      "resolution": "The start of the second trimester, or the end of the pregnancy.",
+      "beat": "You realise you're pregnant. Once only.",
+      "possibleSources": "An optional rule for pregnancy",
+      "affects": [
+        {
+          "targets": [
+            "attribute:stamina"
+          ],
+          "text": "First Trimester: −1 to Stamina rolls"
+        }
+      ]
+    },
+    {
+      "id": "second-trimester",
+      "name": "Second Trimester",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 295
+      },
+      "persistent": true,
+      "summary": "You feel energetic and creative: one more dot of Stamina for the trimester, not past your usual maximum, which counts for Health. Dice pools for extended actions take −2, as your thoughts turn to the future.",
+      "resolution": "The start of the third trimester, or the end of the pregnancy.",
+      "beat": "You first feel the baby move. Once only.",
+      "possibleSources": "An optional rule for pregnancy"
+    },
+    {
+      "id": "third-trimester",
+      "name": "Third Trimester",
+      "source": {
+        "book": "wtf2e-core",
+        "page": 295
+      },
+      "persistent": true,
+      "summary": "You turn inwards: one more die on Wits and Composure rolls, and one dot fewer of Dexterity and of Resolve for the trimester, which changes traits such as Willpower.",
+      "resolution": "The birth or, otherwise, the end of the pregnancy.",
+      "beat": "You give birth, in a scene or in downtime. Once only.",
+      "possibleSources": "An optional rule for pregnancy",
+      "affects": [
+        {
+          "targets": [
+            "attribute:wits",
+            "attribute:composure"
+          ],
+          "text": "Third Trimester: +1 die to Wits and Composure rolls"
+        },
+        {
+          "targets": [
+            "attribute:dexterity",
+            "attribute:resolve"
+          ],
+          "text": "Third Trimester: one dot fewer of Dexterity and Resolve"
+        }
+      ]
     }
   ],
   "fetishes": [

@@ -401,6 +401,10 @@ struct AdvantagesView: View {
         if character.form == .gauru {
             notes.append("Initiative +3 when attacking with teeth or claws.")
         }
+        // The Pure have a worse reaction to silver than the Forsaken (p. 198)
+        if character.isPure {
+            notes.append("Touching silver does 1 bashing damage a turn, or 1 lethal on nights of the full moon.")
+        }
         return notes.joined(separator: " ")
     }
 }
@@ -479,9 +483,10 @@ struct AuspiceBenefitView: View {
 // MARK: - Lodge
 
 extension LodgeEntry {
-    /// The three marks of the lodge's totem bond (The Pack, p. 80).
+    /// What the lodge gives every adherent: its benefit, or the three marks of its totem bond (The Pack, p. 80).
     var marks: [DetailFact] {
-        [blessing.map { DetailFact(label: "Blessing", value: $0) },
+        [benefit.map { DetailFact(label: "Benefit", value: $0) },
+         blessing.map { DetailFact(label: "Blessing", value: $0) },
          aspiration.map { DetailFact(label: "Aspiration", value: $0) },
          ban.map { DetailFact(label: "Ban", value: $0) }].compactMap { $0 }
     }
@@ -520,9 +525,11 @@ struct LodgeView: View {
                     }
                     .accessibilityElement(children: .combine)
                 }
-                Text("Breaking the ban brings the Ban Condition; breaking it again under that Condition takes the Blessing away while it lasts. Lodge lore costs a werewolf outside the lodge three times the Experiences.")
-                    .themedText(.detail)
-                    .foregroundStyle(theme.muted)
+                if lodge.ban != nil {
+                    Text("Breaking the ban brings the Ban Condition; breaking it again under that Condition takes the Blessing away while it lasts. Lodge lore costs a werewolf outside the lodge three times the Experiences.")
+                        .themedText(.detail)
+                        .foregroundStyle(theme.muted)
+                }
                 Text(lodge.source.citation())
                     .themedText(.detail)
                     .foregroundStyle(theme.muted)
@@ -1109,8 +1116,11 @@ struct RitesView: View {
             if let rite = shownRite {
                 CatalogDetailView(title: rite.name, summary: rite.summary, citation: rite.source.citation(), facts: [
                     DetailFact(label: "Rite", value: "\(rite.kind == .wolf ? "Wolf" : "Pack") rite, \(String(repeating: "●", count: rite.rating))"),
-                ] + [rite.dicePool.map { DetailFact(label: "Dice Pool", value: $0) },
+                ] + [rite.symbols.map { DetailFact(label: "Symbols", value: $0) },
+                     rite.dicePool.map { DetailFact(label: "Sample Pool", value: $0) },
                      rite.targetSuccesses.map { DetailFact(label: "Target", value: "\($0) successes") },
+                     rite.interval.map { DetailFact(label: "Each Roll", value: $0) },
+                     rite.cost.map { DetailFact(label: "Cost", value: $0) },
                      rite.duration.map { DetailFact(label: "Duration", value: $0) },
                      lodgeFact(for: rite)].compactMap { $0 })
             }

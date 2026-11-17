@@ -29,7 +29,10 @@
       "summary": "Lightning spirits gather around the legion's Aquila to hold the ritemaster's fury. It costs 1 Essence for every 10 soldiers warded. While it lasts the ritemaster can't enter Rage or spend Essence, and soldiers who keep silent and work together have the Indomitable Merit. When the ritemaster lets the spirits go, the soldiers gain the Berserk Condition and the ritemaster falls into Basu-Im.",
       "action": "extended",
       "dicePool": "Presence + Occult",
-      "targetSuccesses": 10
+      "targetSuccesses": 10,
+      "symbols": "Aquilae, Mars, thunder, spears",
+      "interval": "5 minutes",
+      "cost": "1 Essence per 10 soldiers warded"
     }
   ],
   "fetishes": [

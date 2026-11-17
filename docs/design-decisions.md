@@ -292,3 +292,15 @@ leaves the rest to Dark Eras, p. 164.
 - **Sigrblot is a Pack Rite.** The book doesn't say; it's performed for the pack's territory before a raid.
 - Era creation rules, weapons and armour wait for the era selector and the combat tools.
 
+## Werewolf: the Pure are created by Shunned by the Moon (2026-11-17)
+
+Night Horrors: Shunned by the Moon (p. 202) explicitly updates and replaces the Pure's creation rules in the Dark Eras
+Companion (Forsaken by Rome, p. 78). So a Pure character starts with two Renown dots, the tribe's primary and one in
+it or a secondary Renown, and a free dot in one of the tribe's Skills, not the three dots and two Skills of the older
+book.
+
+## Werewolf: twenty Totem points give five Experiences (2026-11-17)
+
+The totem table (p. 92) puts 20 points in both the "15–20" row and the "20+" row. The user's ruling: exactly 20 is
+five Experiences; ten starts at 21.
+

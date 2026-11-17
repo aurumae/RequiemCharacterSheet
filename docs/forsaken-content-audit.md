@@ -93,16 +93,21 @@ Chapter Four (three settings) and the protectorates section have no mechanics.
 
 ## Core book: missing
 
-- **Lodge of the Field** (pp. 274–277): the only core lodge with rules; adds Primal Urge to the Essence maximum.
-  Story-only lodges the app lacks: the Dreaming Lodge (pp. 266–267), the Lodge of Quicksilver Children (p. 216).
+Added on 2026-11-17, each read again from the book first:
+
+- **Lodge of the Field** (p. 277): the only core lodge with rules; adds Primal Urge to the Essence maximum, and has
+  a Lodge section. Story-only lodges: the Dreaming Lodge (p. 266), the Lodge of Quicksilver Children (p. 216).
 - **Voyager Membership** (p. 272): a 1–5 dot Merit for humans.
 - **Ghost Wolves' First Tongue name**, Thihirtha Numea (pp. 250, 252).
-- **The Pure and silver** (p. 198): touching silver does 1 bashing a turn, 1 lethal on full-moon nights. A reminder.
-- **Tilts (8, pp. 312–313):** Arm Wrack, Blinded, Earthquake, Heavy Winds, Knocked Down, Leg Wrack, Poisoned,
-  Stunned. The app has no Tilts, though its own text names several.
+- **The Pure and silver** (p. 198): touching silver does 1 bashing a turn, 1 lethal on full-moon nights. A line in
+  the Advantages notes for a Pure character.
+- **Tilts (8, pp. 312–313).**
 - **Conditions (3, optional, pp. 294–295):** First, Second and Third Trimester.
-- **Rite details:** each rite's symbols, sample dice pool, time per roll and Essence cost (the detail view shows
-  none of them).
+- **Rite details:** each rite's symbols, sample dice pool, time per roll and Essence cost, for every book's rites,
+  shown in the rite's details. Shunned by the Moon's rites give no sample pool.
+
+Still missing:
+
 - **Tables and rules the sheet doesn't show:** effective Spirit Rank from Renown (p. 99) and the bane rule that
   follows from it (pp. 185–186); wound penalties (p. 171), which Gauru ignores; the Primal Urge table's Basu-Im and
   hunt-time columns; shapeshifting cost by Harmony; breaking-point lists; the fetish activation pool; the tracking
@@ -149,13 +154,12 @@ Recorded in `docs/design-decisions.md`.
   outsiders is charged by the sheet.
 - **Dark Eras is cited by the full books' pages**, which the user supplies.
 - **What's in the book goes in**, optional-rule Conditions and story-only lodges included (2026-11-17).
+- **Pure creation follows Shunned by the Moon** (p. 202), which replaces the Dark Eras Companion's rules: two Renown
+  dots and one free Skill dot, as the app has it (2026-11-17).
+- **Totem points of exactly 20 give five Experiences**, as the app has it (2026-11-17).
 
 ## Decisions still needed (user)
 
-1. **Pure creation.** Forsaken by Rome (p. 78) gives the Pure three Renown dots and a free dot in two tribe Skills.
-   The app gives two and one, from Shunned by the Moon's quick reference (p. 202), which says it updates those
-   rules but is silent on both points.
-2. **Totem points of exactly 20:** five Experiences or ten?
-3. **Pack Merits that change the character.** Den adds to Defense in the den and Directed Rage changes the Kuruth
+1. **Pack Merits that change the character.** Den adds to Defense in the den and Directed Rage changes the Kuruth
    control time. They are the pack's Merits, so they are out with the Pack section unless the user wants them as
    reminders.

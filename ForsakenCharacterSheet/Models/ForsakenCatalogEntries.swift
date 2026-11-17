@@ -85,9 +85,12 @@ struct LodgeEntry: CatalogEntry {
     let tribes: [CatalogEntryID]?
     let auspices: [CatalogEntryID]?
     let requirements: String?
+    /// What every adherent gains, for a lodge that doesn't put it as a Blessing, e.g. the Lodge of the Field.
     let benefit: String?
+    /// What adherence does to the sheet's traits; "rating" is the character's Primal Urge.
+    let effects: [Effect]?
     /// A lodge with rules (The Pack, p. 80) marks every adherent three ways: a Blessing, one more Aspiration and a
-    /// Ban. The core book's lodges are story only and have none.
+    /// Ban. Most of the core book's lodges are story only and have none.
     let totem: String?
     let blessing: String?
     let aspiration: String?
@@ -100,7 +103,7 @@ struct LodgeEntry: CatalogEntry {
     let fetishes: [CatalogEntryID]?
 
     var hasRules: Bool {
-        blessing != nil || aspiration != nil || ban != nil
+        benefit != nil || blessing != nil || aspiration != nil || ban != nil
     }
 }
 
@@ -169,8 +172,14 @@ struct RiteEntry: CatalogEntry {
     let kind: Kind
     let rating: Int
     let action: String?
+    /// The pool of the book's sample rite. Each pack settles its own Attribute + Skill for a rite (p. 139).
     let dicePool: String?
     let targetSuccesses: Int?
+    /// The time each roll takes, e.g. "10 minutes".
+    let interval: String?
+    /// What the rite must show; leaving one out is a dramatic failure (p. 139).
+    let symbols: String?
+    let cost: String?
     let duration: String?
     /// What it does to the sheet's traits while it lasts, switched on by the player; "rating" is the rite's dots.
     let effects: [Effect]?

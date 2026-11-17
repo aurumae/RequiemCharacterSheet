@@ -35,7 +35,9 @@ are its own, in `ForsakenCharacterSheet/Catalogs/`; they share only their names 
   Renowns a second creation dot may go to), `skills` (tribe Skills, ids), `huntersAspects` (`[{ "name", "condition" }]`
   to choose from, for tribes without an auspice).
 - **lodges**: as tribes' optional extras: `tribes` and `auspices` (ids it's limited to, empty for any), `requirements`
-  (free text), `benefit` (free text). The core book's lodges have only `summary`. A lodge with rules (The Pack,
+  (free text), `benefit` (free text: what every adherent gains) and `effects` (what adherence does to the sheet's
+  traits; "rating" is the character's Primal Urge), as the Lodge of the Field has. Most of the core book's lodges
+  have only `summary`. A lodge with rules (The Pack,
   p. 80) also has `totem` (its name), the three marks every adherent bears, `blessing`, `aspiration` and `ban`, and
   what it teaches: `merits`, `rites` and `fetishes` (ids), with `tools` (free text) for what is particular to this
   lodge, e.g. the Influences its Lodge Sorcery offers. A Merit or rite listed by any lodge is lodge lore: it asks for
@@ -51,8 +53,10 @@ are its own, in `ForsakenCharacterSheet/Catalogs/`; they share only their names 
   "Wits + Investigation + Cunning") and `duration`, and `effects` (Requiem's effect objects; `"amount": "rating"`
   means dots of the Facet's Renown, or of auspice Renown for a Moon Gift), `passive` (true if always on) and
   `effectForms` (forms it applies in, if not all).
-- **rites**: `kind` ("wolf" or "pack"), `rating` (1–5), and optional `action`, `dicePool`, `targetSuccesses`,
-  `duration`, `effects` (while switched on; "rating" is the rite's dots).
+- **rites**: `kind` ("wolf" or "pack"), `rating` (1–5), and optional `action`, `dicePool` (the pool of the book's
+  sample rite; each pack settles its own), `targetSuccesses`, `interval` (the time each roll takes, e.g.
+  "10 minutes"), `symbols` (what the rite must show), `cost` (e.g. "3 Essence"), `duration`, `effects` (while
+  switched on; "rating" is the rite's dots).
 - **merits**: Requiem's Merit entry. Categories: "werewolf", "human" (only humans can take them, e.g. the Church of
   the Wolf's; listed but unavailable to werewolves), "fighting", "mental", "physical", "social", "other".
   Prerequisite kinds include Requiem's shared ones (attribute, skill, merit, willpower, other) and Forsaken's:

@@ -1612,3 +1612,27 @@ No save-format change. No change to `Chronicles/` or to Requiem.
 **Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 61.
 
 **Follow-up (Android):** nothing until `:forsaken` starts.
+
+## 2026-11-17 03:41 UTC · Claude (iOS) · The core book's remaining entries, and what every rite needs
+
+**Decisions (user)**, in `docs/design-decisions.md`: the Pure are created by Shunned by the Moon's rules (p. 202),
+which replace the Dark Eras Companion's; twenty Totem points give five Experiences. Both are what the app already did.
+
+**Forsaken catalogs:**
+- `wtf2e-core.json`: the Lodge of the Field (p. 277), which adds Primal Urge to the Essence maximum; two story-only
+  lodges, the Dreaming Lodge and the Lodge of Quicksilver Children; the Merit Voyager Membership (humans only); the
+  Ghost Wolves' First Tongue name; and the three optional trimester Conditions (pp. 294–295).
+- Every rite in every Forsaken catalog now has its `symbols` and `interval` (the time each roll takes), its `cost`
+  where there is one, and the sample rite's `dicePool` where the book gives one.
+
+**Format** (`docs/forsaken-catalog-format.md`): rites may have `symbols`, `interval` and `cost`; a lodge may have
+`effects`, where "rating" is the character's Primal Urge, beside its `benefit` text.
+
+**Sheet:** a rite's details show its symbols, sample pool, time per roll and cost. A lodge with a `benefit` gets the
+Lodge section. A Pure character's Advantages notes say what touching silver does (p. 198).
+
+No save-format change. No change to `Chronicles/` or to Requiem.
+
+**Validation:** `scripts/check-save-contract --strict` (279 Swift, 83 Kotlin, exchange); Requiem Xcode 278; Forsaken 64.
+
+**Follow-up (Android):** nothing until `:forsaken` starts.

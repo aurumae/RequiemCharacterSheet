@@ -538,7 +538,9 @@
       },
       "summary": "Taught only to the Pure. Tears the auspice permanently from a willing werewolf's spirit, losing its benefits and leaving the Pure's greater weakness to silver.",
       "action": "extended",
-      "targetSuccesses": 10
+      "targetSuccesses": 10,
+      "symbols": "Silver, blood, cutting or excision, purification",
+      "interval": "5 minutes"
     },
     {
       "id": "infest-locus",
@@ -551,7 +553,9 @@
       },
       "summary": "Only Fire-Touched may lead it. Fouls a Locus with Rabid Wolf's Essence: anyone drawing Essence from it gets the grave Sick Tilt until their Essence runs out. Needs 3 successes per dot of the Locus.",
       "action": "extended",
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Disease, fire, envy, hunger",
+      "interval": "half an hour"
     },
     {
       "id": "shadow-bridge",
@@ -564,7 +568,9 @@
       },
       "summary": "Only Fire-Touched may lead it. With a human sacrifice at a Locus, placing the head at a second Locus within the first's rating in miles links them: anyone entering the first can step to the second instead of crossing over, while the head stays. Needs 3 successes per dot of the Locus.",
       "action": "extended",
-      "duration": "1 week"
+      "duration": "1 week",
+      "symbols": "Blood, air, travel, mazes",
+      "interval": "half an hour"
     },
     {
       "id": "shadow-distortion",
@@ -578,7 +584,10 @@
       "summary": "Only Fire-Touched may lead it; costs 10 Essence. Warps the Shadow of the pack's territory: outsiders take −3 to Initiative, Speed and perception, ranged attacks on the pack count double range, and powers beyond touch against them take −3. Pack members choose which way is down.",
       "action": "extended",
       "targetSuccesses": 15,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Dominance, servitude, deception, truth",
+      "interval": "1 minute",
+      "cost": "10 Essence"
     },
     {
       "id": "unleash-shadow",
@@ -592,7 +601,9 @@
       "summary": "Only Fire-Touched may lead it. In the pack's territory, Manifestations cost 1 Essence and spirits lose Essence at half rate in the Flesh; outsiders' powers to bind or control spirits take twice the spirit's Rank as a penalty, and failures become dramatic.",
       "action": "extended",
       "targetSuccesses": 15,
-      "duration": "1 month"
+      "duration": "1 month",
+      "symbols": "Chains, doors, water, revelation",
+      "interval": "half an hour"
     }
   ],
   "merits": [

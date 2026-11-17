@@ -126,7 +126,9 @@
       "action": "extended",
       "dicePool": "Presence + Expression",
       "targetSuccesses": 5,
-      "duration": "Until sunrise"
+      "duration": "Until sunrise",
+      "symbols": "Death, earth, screaming, water",
+      "interval": "1 round"
     },
     {
       "id": "carrion-feast",
@@ -141,7 +143,9 @@
       "action": "extended",
       "dicePool": "Intelligence + Occult",
       "targetSuccesses": 5,
-      "duration": "Until the next full moon"
+      "duration": "Until the next full moon",
+      "symbols": "Hunger, wisdom, drums, horses",
+      "interval": "5 minutes"
     }
   ],
   "merits": [

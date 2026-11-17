@@ -126,7 +126,10 @@
       "action": "extended",
       "dicePool": "Manipulation + Politics",
       "targetSuccesses": 10,
-      "duration": "1 to 3 months, by the Essence spent"
+      "duration": "1 to 3 months, by the Essence spent",
+      "symbols": "Blood, sacrifice, summer, ale",
+      "interval": "5 minutes",
+      "cost": "1 Essence per spirit court for each month away"
     }
   ],
   "merits": [
