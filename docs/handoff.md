@@ -1828,3 +1828,80 @@ fixture, script or workflow change.
 
 **Question (Android):** what do you need from iOS that these files don't give you? Tests that pin a rule more
 exactly, a worked character, or a note on how a screen behaves are all quick for me to add.
+
+## 2026-11-17 13:29 UTC · Astra (Android) · Forsaken port plan and CI housekeeping
+
+The user made Forsaken the Android priority after iOS 1.0's submission, and asked for
+a plan/PR before implementation. Fetched and integrated `origin/main`, read the final
+submission index first, then every intervening handoff since 15 November 01:27 and
+the requested plans, decisions, formats, fixtures, catalogs, policy, audit, headings,
+Swift models/views/shared code and tests. The submission commit `17f8db8` passed all
+five jobs in [main run 44088469599](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44088469599).
+
+**Changed:** [docs/android-forsaken-plan.md](android-forsaken-plan.md) proposes JVM
+`:forsaken`, a separate `:forsakenApp`, common rules/storage in `:core` and Compose
+`:sheet-ui`. Milestones: Requiem file protection/CI tests; shared extraction/UI;
+Forsaken read-only preview; ordinary play and contract enrollment; guided creation;
+device/release acceptance. Each names an installable outcome and validation gate.
+No Forsaken module or app implementation has begun. The user's agreement is required
+before starting the implementation phases, including phase 0's app changes.
+
+**Housekeeping:** added AGENTS rules to check main CI before work and watch CI after
+pushes/merges, reporting/addressing red main before other work. Reconciled PR #9 with
+main (`1e26494`), checked its complete handoff and passing
+[PR run 44092860670](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44092860670),
+and merged it as `a6a716b`. Its 15 November entry is historical: the release-first
+priority and deferred Forsaken statements are superseded by the user's 17 November
+instruction. The new [main run 44092977953](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44092977953)
+is being watched; its result is not yet claimed here. Earlier entries survived intact.
+
+Reviewed Claude's `Beta3RulesTest` change: Carthian Pull qualifying through Gallows
+Post and Attaché remaining unavailable match the revised catalog rule. Synthetic
+outcome tests and a general `advisory-text` test are scheduled first; the live
+Status-2/Jack-Booted Thug outcome still needs its explicit Android check. Cross-game
+refusal is phase 0; the shared watermark/search/toolbar/menu/counted dots/row IDs and
+smaller parser/splash/accessibility work are phase 1. Requiem Play acceptance,
+privacy/backup/Data safety and remaining parity stay visible but do not block Forsaken.
+PRs #5/#6 still conflict: refresh/supersede #5's beta-1 assets for the real candidate;
+reconcile #6's historical audit and recheck the final package before release sign-off.
+Neither was merged or closed.
+
+**Question:** User: agree the module split and phases? Confirm Forsaken's Android
+application ID (proposal: `com.omccolgan.ForsakenCharacterSheet`) and whether a Play
+listing/package is already reserved. Otherwise propose a separate free listing,
+version code 1 and internal testing first; listing work can wait for the port.
+
+**Question:** Claude: agree the plan's versioned game registry, unchanged Requiem
+contract paths, byte-preserving move of Forsaken fixtures only after policy support,
+and Xcode-backed producer/Kotlin/consumer exchange? Please coordinate iOS resources,
+test-container handoff and executed-test evidence. The model currently imports
+SwiftUI, so the plan does not assume it can join the host Swift package unchanged.
+
+**Question:** Claude: the creation fixture pins Predator King grants as Survival and
+Purity, while the submitted catalog gives Glory and Animal Ken/Brawl/Crafts. Is the
+fixture intentionally preserving older/inconsistent creation state? Please add tests
+pinning open/resume versus an identity/free-Skill edit; `applyCreationGrants()` changes
+the grants but is called on identity changes in the sheet, not on open. Preserve
+the existing fixture; Android will not repair it on load.
+
+**Question:** Claude: please clarify the catalog-format statement that Pure tribes
+lack primary Renown; the catalogs and tests give them one. Also clarify save-log keys:
+the prose's row-UUID rule differs from production `specialty:<skill-id>`,
+`condition:<catalog-or-custom>/<UUID>` and `primalUrge:primalUrge`; the play fixture
+also contains bare `condition:<UUID>` history. Please pin preservation and new
+action-generated keys in tests. No catalogs, fixtures or reference behavior changed.
+
+**Validation:** `scripts/check-policy --base origin/main` passed all 12 policy tests
+and the existing Requiem contract (8 books, 15 scenarios, 0 pending capabilities);
+`git diff --check`, local plan links and handoff preservation/unique-heading checks
+passed. No app tests rerun for this documentation/instruction change; full main CI
+evidence above covers the reference commit. **Commits:** this commit; preceding
+integration `1e26494`, PR #9's original `3d727ca`, merge `a6a716b`, reference `17f8db8`.
+**Shared:** no catalog, font, save-format, fixture, `Package.swift`, script or workflow
+change. Flat Earth Scribe/Trade Winds remain unbundled; the plan uses the provided
+heading vectors. Unrelated `.idea/` and Gradle daemon settings remain untouched.
+
+**Follow-up:** user reviews the plan before implementation; Claude answers the
+contract/reference questions through this handoff. Pending release/audit features
+remain as recorded in the plan, including optional Pack-Merit reminders; none is
+silently promoted into first-release scope.
