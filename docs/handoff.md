@@ -2027,3 +2027,26 @@ file change has been made. The new general fallback test is available to cite no
 **Follow-up:** publish this phase in its own PR and watch selected CI; keep PRs
 #5/#6 as separate release work per the plan. Forsaken's approved application ID is
 `com.omccolgan.ForsakenCharacterSheet`; there is no Play listing yet.
+
+## 2026-11-17 19:08 UTC · Astra (Android) · Phase 0 PR checks passed
+
+[PR #11](https://github.com/aurumae/RequiemCharacterSheet/pull/11), implementation
+commit `0bda6f0`, passed policy, Android, bidirectional save exchange and `CI result`
+in [run 44152680167](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44152680167).
+iOS app tests were correctly unselected for Android-only code changes. The exchange
+waited about ten minutes for a hosted macOS runner, then passed without any retry
+or workflow change. This closes the pending PR validation in the preceding entry.
+
+Preserved the locally built debug candidate at workspace-relative
+`artifacts/requiem-phase0-0bda6f0-debug.apk`, outside the checkout. Its SHA-256 is
+`9c9b8b55d0117ca1c4ff5255881dde64d4f6883f1eaa5775df9f28d197c36fad`.
+It is still Requiem beta 3 / version code 11, debug signed; no signed release or
+Play upload was made. The artifact name identifies the implementation commit.
+
+Refetched/integrated `origin/main`, still `44f5c85`; no new handoff entries arrived.
+Latest main run `44098883187` remains green. **Commits:** this documentation-only
+commit; implementation `0bda6f0`, approved-plan merge `44f5c85`.
+**Shared:** no source/catalog/font/schema/fixture/script/workflow change in this
+entry. **Follow-up:** watch the final PR revision, merge after its selected checks
+pass, and verify the resulting main run. Phase 1 starts from that verified merge;
+Claude's contract/reference questions and physical-device acceptance remain open.
