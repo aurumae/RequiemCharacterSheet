@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.DpSize
 import ie.chronicles.core.Damage
 import androidx.compose.foundation.shape.CircleShape
 
-internal enum class SheetSymbol { Back, More, Add, Chevron, Choose }
+enum class SheetSymbol { Back, More, Add, Chevron, Choose }
 @Composable
-internal fun SheetIcon(symbol: SheetSymbol, color: Color = SheetColors.accent) {
+fun SheetIcon(symbol: SheetSymbol, color: Color = SheetColors.accent) {
     Canvas(Modifier.size(22.dp)) {
         val w = size.width; val h = size.height; val stroke = 1.6.dp.toPx()
         when (symbol) {
@@ -52,10 +52,11 @@ internal fun SheetIcon(symbol: SheetSymbol, color: Color = SheetColors.accent) {
 }
 
 @Composable
-internal fun RatingDot(filled: Boolean, bonus: Boolean = false, diameter: androidx.compose.ui.unit.Dp = 20.dp) {
+fun RatingDot(filled: Boolean, bonus: Boolean = false, diameter: androidx.compose.ui.unit.Dp = 20.dp) {
+    val fill = if (!filled) Color.White else if (bonus) SheetColors.ink else SheetColors.accent
     Canvas(Modifier.size(diameter)) {
         val radius = size.minDimension / 2 - 0.6.dp.toPx()
-        drawCircle(if (!filled) Color.White else if (bonus) SheetColors.ink else SheetColors.accent, radius)
+        drawCircle(fill, radius)
         drawCircle(SheetColors.ink, radius, style = Stroke(1.dp.toPx()))
     }
 }
@@ -63,7 +64,7 @@ internal fun RatingDot(filled: Boolean, bonus: Boolean = false, diameter: androi
 // Preserve the reference's 20 dp marks on a 24 dp pitch. Prevent invisible expanded
 // hit regions from overlapping adjacent marks; the trait-name menu remains full-sized.
 @Composable
-internal fun CompactTargets(content: @Composable () -> Unit) {
+fun CompactTargets(content: @Composable () -> Unit) {
     val original = LocalViewConfiguration.current
     val compact = remember(original) {
         object : ViewConfiguration by original {
@@ -75,11 +76,14 @@ internal fun CompactTargets(content: @Composable () -> Unit) {
 
 /** Shared by attributes and skills, with only legal base ratings in the name menu. */
 @Composable
-internal fun TraitRatingControl(
+fun TraitRatingControl(
     label: String, base: Int, bonus: Int, legal: IntRange, editable: Boolean,
     allowedValues: List<Int> = legal.toList(), reserveFiveDots: Boolean = false,
-    onNameClick: (() -> Unit)? = null, visibleCap: Int = legal.last, note: String? = null, onConditions: (() -> Unit)? = null, onSelect: (Int) -> Unit,
+    onNameClick: (() -> Unit)? = null, visibleCap: Int = legal.last, note: String? = null, onConditions: (() -> Unit)? = null,
+    countedRating: Int = base + bonus, onSelect: (Int) -> Unit,
 ) {
+    val total = (base + bonus).coerceAtLeast(0)
+    val counted = countedRating.coerceIn(0, total)
     var expanded by rememberSaveable(label) { mutableStateOf(false) }
     fun select(value: Int): Boolean {
         if (!editable || value !in legal || value < allowedValues.first()) return false
@@ -93,12 +97,14 @@ internal fun TraitRatingControl(
         @Composable fun dots() {
             CompactTargets {
                 Column(if (reserveFiveDots) Modifier.width(minOf(maxWidth, 120.dp)) else Modifier) {
-                    (1..maxOf(visibleCap, base + bonus).coerceAtMost(10)).chunked(dotsPerRow).forEach { values ->
+                    (1..maxOf(visibleCap, total).coerceAtMost(10)).chunked(dotsPerRow).forEach { values ->
                         Row {
                             values.forEach { value ->
+                                val filled = value <= total
+                                val faded = if (filled) value > counted else editable && value > allowedValues.last()
                                 Box(Modifier.size(24.dp, 24.dp).clickable(enabled = editable && value in allowedValues.first()..allowedValues.last()) {
                                     select(if (legal.first == 0 && base == 1 && value == 1) 0 else value)
-                                }.alpha(if (value > allowedValues.last() && value > base + bonus) .35f else 1f), contentAlignment = Alignment.Center) { RatingDot(value <= base + bonus, value > base) }
+                                }.alpha(if (faded) .35f else 1f), contentAlignment = Alignment.Center) { RatingDot(filled, value > base) }
                             }
                         }
                     }
@@ -119,7 +125,12 @@ internal fun TraitRatingControl(
         }
         Box(Modifier.fillMaxWidth().clearAndSetSemantics {
             contentDescription = label
-            stateDescription = "$base base, $bonus bonus" + (if (onConditions != null) ", affected by Conditions" else "") + (note?.let { ", $it" } ?: "")
+            stateDescription = buildString {
+                append("$base base, $bonus bonus")
+                if (counted < total) append(", $counted counted, ${total - counted} past the limit")
+                if (onConditions != null) append(", affected by Conditions")
+                if (note != null) append(", $note")
+            }
             if (editable || onNameClick != null) onClick(label = if (onNameClick != null) "Open $label" else "Choose $label rating") {
                 if (onNameClick != null) onNameClick() else expanded = true; true
             }
@@ -156,7 +167,7 @@ internal fun TraitRatingControl(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun HealthBoxes(track: List<Damage>, total: Int, editable: Boolean, mark: (Int) -> Unit) {
+fun HealthBoxes(track: List<Damage>, total: Int, editable: Boolean, mark: (Int) -> Unit) {
     val scale = LocalDensity.current.fontScale.coerceAtLeast(1f)
     CompactTargets {
         FlowRow(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp, vertical = 8.dp),
@@ -187,7 +198,7 @@ internal fun HealthBoxes(track: List<Damage>, total: Int, editable: Boolean, mar
 }
 
 /** Small visual mark with a full, non-overlapping 48dp target. */
-@Composable internal fun ConditionIndicator(label: String, open: () -> Unit) {
+@Composable fun ConditionIndicator(label: String, open: () -> Unit) {
     Box(Modifier.size(48.dp).clickable(role = Role.Button, onClick = open)
         .semantics { contentDescription = "Conditions affecting $label" }, contentAlignment = Alignment.Center) {
         Box(Modifier.size(18.dp * LocalDensity.current.fontScale.coerceAtLeast(1f)).background(SheetColors.accent, CircleShape), contentAlignment = Alignment.Center) {

@@ -69,13 +69,14 @@ internal fun CreationPanel(c: CharacterSave, catalog: Catalog, editable: Boolean
 
 @Composable
 private fun CreationStepMark(status: CreationStepStatus) {
+    val accent = SheetColors.accent
     Canvas(Modifier.size(20.dp).clearAndSetSemantics {}) {
         val middle = size.width / 2
         val stroke = 1.5.dp.toPx()
         val radius = middle - stroke / 2
         if (status == CreationStepStatus.InProgress) drawCircle(SheetColors.muted, radius, style = Stroke(stroke))
         else {
-            drawCircle(if (status == CreationStepStatus.Done) SheetColors.accent else SheetColors.caution, radius)
+            drawCircle(if (status == CreationStepStatus.Done) accent else SheetColors.caution, radius)
             if (status == CreationStepStatus.Done) {
                 drawLine(Color.White, Offset(middle * .5f, middle), Offset(middle * .85f, middle * 1.4f), stroke, StrokeCap.Round)
                 drawLine(Color.White, Offset(middle * .85f, middle * 1.4f), Offset(middle * 1.5f, middle * .6f), stroke, StrokeCap.Round)

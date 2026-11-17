@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.KeyboardActions
 
 import ie.chronicles.ui.*
+import ie.chronicles.core.CatalogSearch
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -165,7 +166,10 @@ internal fun ConditionDialogs(route: String, c: CharacterSave, catalog: Catalog,
 @Composable private fun ConditionPicker(c: CharacterSave, catalog: Catalog, choose: (TraitSource) -> Unit, dismiss: () -> Unit) {
     val focus = LocalFocusManager.current
     var search by rememberSaveable { mutableStateOf("") }
-    val options = catalog.bookEntries(CatalogKind.conditions).filter { (it.name + " " + it.summary + " " + it.bookName).contains(search.trim(), true) }
+    val options = remember(catalog, search) {
+        val query = CatalogSearch(search)
+        catalog.bookEntries(CatalogKind.conditions).filter { query.matches("${it.name} ${it.summary} ${it.citation}") }
+    }
     val recent = c.recentConditionIDs(catalog).mapNotNull { id -> options.firstOrNull { it.id == id } }
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = Color.White) {
         Column(Modifier.padding(horizontal = 16.dp).imePadding()) {

@@ -19,6 +19,18 @@ class CoreTest {
         assertEquals(listOf("Core", "Extra"), groups.map { it.book })
         assertEquals(listOf("extra/a", "extra/c"), groups.last().entries)
     }
+    @Test fun searchFoldsTheKeyboardAndPrintedFormsOfQuotesAndAccents() {
+        for (apostrophe in "‘’‚‛′ʼ`´") {
+            assertTrue(CatalogSearch(" predator's ").matches("The Predator${apostrophe}s Pursuit"))
+            assertTrue(CatalogSearch("predator${apostrophe}s").matches("Predator's"))
+        }
+        for (quote in "“”„‟″") {
+            assertTrue(CatalogSearch("\"RENE\"").matches("${quote}René${quote}"))
+        }
+        assertTrue(CatalogSearch("  ").matches("Any entry"))
+        assertFalse(CatalogSearch("predators").matches("Predator’s"))
+    }
+
     @Test fun sharedSerializationRetainsSavedKeysUuidCaseAndOpenLogKinds() {
         val json = Json { encodeDefaults = true; explicitNulls = false }
         val merit = Merit(TraitSource(catalog = "language"), "Irish", 1, UUID.fromString("abcdefab-cdef-abcd-efab-cdefabcdefab"))

@@ -19,7 +19,7 @@ import ie.chronicles.core.spokenForScreenReader
 
 /** Keep the visible notation while speaking dot counts and ranges naturally. */
 @Composable
-internal fun SheetText(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified,
+fun SheetText(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified,
     style: TextStyle = LocalTextStyle.current, textAlign: TextAlign? = null, textDecoration: TextDecoration? = null, maxLines: Int = Int.MAX_VALUE, overflow: TextOverflow = TextOverflow.Clip) {
     val type = LocalSheetType.current
     val display = style.fontFamily == type.display

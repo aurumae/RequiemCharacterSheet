@@ -21,33 +21,33 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 
 // Shared sheet styling. The app injects its fonts, artwork and accessible identity.
-internal object SheetColors {
-    val accent = Color(0xFF581A12)
+object SheetColors {
+    val accent: Color @Composable get() = MaterialTheme.colorScheme.primary
     val ink = Color.Black
     val muted = Color(0xFF6C6C70)
     val band = Color(0xFFF2F2F7)
     val rule = Color(0xFFE7E7EA)
     val caution = Color(0xFF8C6408)
 }
-internal data class SheetType(val display: FontFamily, val smallCaps: FontFamily) {
-    val label get() = TextStyle(fontFamily = display, fontSize = 22.sp, lineHeight = 28.sp, color = SheetColors.accent)
+data class SheetType(val display: FontFamily, val smallCaps: FontFamily, private val accent: Color) {
+    val label get() = TextStyle(fontFamily = display, fontSize = 22.sp, lineHeight = 28.sp, color = accent)
     val trait get() = label.copy(fontSize = 20.sp, lineHeight = 26.sp)
     val section get() = label.copy(fontSize = 24.sp, lineHeight = 30.sp, color = SheetColors.muted)
     val subsection get() = TextStyle(fontFamily = smallCaps, fontSize = 20.sp, lineHeight = 25.sp,
-        letterSpacing = 1.5.sp, color = SheetColors.accent)
+        letterSpacing = 1.5.sp, color = accent)
 }
-internal val LocalSheetType = staticCompositionLocalOf { SheetType(FontFamily.Serif, FontFamily.Serif) }
+val LocalSheetType = staticCompositionLocalOf<SheetType> { error("The app must supply sheet typography") }
 
 @Composable
-internal fun ChroniclesTheme(identity: SheetIdentity, content: @Composable () -> Unit) {
+fun ChroniclesTheme(identity: SheetIdentity, content: @Composable () -> Unit) {
     val resources = LocalResources.current
     val type = remember(resources, identity) {
         SheetType(FontFamily(Font(identity.displayFont)),
-            FontFamily(Font(identity.numeralFont, androidx.compose.ui.text.font.FontWeight.Medium)))
+            FontFamily(Font(identity.numeralFont, androidx.compose.ui.text.font.FontWeight.Medium)), identity.accent)
     }
     CompositionLocalProvider(LocalSheetType provides type, LocalSheetIdentity provides identity) {
         MaterialTheme(colorScheme = lightColorScheme(
-            primary = SheetColors.accent, onPrimary = Color.White, primaryContainer = Color(0xFFF1DDDA),
+            primary = identity.accent, onPrimary = Color.White, primaryContainer = identity.accentContainer,
             surface = Color.White, onSurface = SheetColors.ink, background = Color.White,
             onBackground = SheetColors.ink, surfaceContainer = SheetColors.band,
             onSurfaceVariant = SheetColors.muted, outline = SheetColors.muted, outlineVariant = SheetColors.rule
@@ -60,10 +60,12 @@ internal fun ChroniclesTheme(identity: SheetIdentity, content: @Composable () ->
 }
 
 @Composable
-internal fun PageBackground(content: @Composable BoxScope.() -> Unit) {
+fun PageBackground(content: @Composable BoxScope.() -> Unit) {
     val window = LocalWindowInfo.current.containerSize
     Box(Modifier.fillMaxSize().background(Color.White)) {
-        Image(painterResource(LocalSheetIdentity.current.background), null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
+        LocalSheetIdentity.current.background?.let {
+            Image(painterResource(it), null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
+        }
         if (window.width > window.height) {
             Box(Modifier.fillMaxWidth().windowInsetsTopHeight(WindowInsets.statusBars).background(Color.White.copy(alpha = .85f)))
         }
@@ -72,7 +74,7 @@ internal fun PageBackground(content: @Composable BoxScope.() -> Unit) {
 }
 
 @Composable
-internal fun LogoHeader() {
+fun LogoHeader() {
     val density = LocalDensity.current
     val window = LocalWindowInfo.current.containerSize
     val compact = with(density) { window.height.toDp() < 500.dp } || WindowInsets.ime.getBottom(density) > 0
@@ -83,21 +85,30 @@ internal fun LogoHeader() {
 }
 
 @Composable
-internal fun SectionBand(title: String) {
+fun SectionBand(title: String) {
     SheetText(title, Modifier.fillMaxWidth().background(SheetColors.band).padding(horizontal = 8.dp, vertical = 8.dp)
         .semantics { heading() }, style = LocalSheetType.current.section)
 }
 
 @Composable
-internal fun SubsectionLabel(title: String) {
+fun SubsectionLabel(title: String) {
     SheetText(title, Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp).semantics { heading() },
         style = LocalSheetType.current.subsection)
 }
 
 @Composable
-internal fun SheetRule() {
+fun SheetRule() {
     HorizontalDivider(Modifier.padding(horizontal = 8.dp), color = SheetColors.rule)
 }
 
-internal data class SheetIdentity(val displayFont: Int, val numeralFont: Int, val background: Int, val logo: Int, val logoDescription: String)
-internal val LocalSheetIdentity = staticCompositionLocalOf<SheetIdentity> { error("The app must supply its sheet identity") }
+data class SheetIdentity(
+    val accent: Color,
+    val accentContainer: Color,
+    val displayFont: Int,
+    val numeralFont: Int,
+    val logo: Int,
+    val logoDescription: String,
+    val background: Int? = null,
+)
+
+private val LocalSheetIdentity = staticCompositionLocalOf<SheetIdentity> { error("The app must supply its sheet identity") }

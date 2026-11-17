@@ -19,8 +19,8 @@ coordinated with iOS. Raise apparent catalog, fixture or behavior mistakes
 as **Question:** in the handoff; do not change them or add Android workarounds.
 
 Android has JVM `:core` and `:requiem`, with the Requiem Compose app in `:app`.
-Beta 3 is version code 11; its release acceptance is unfinished. Reusable controls
-already live in `ie.chronicles.ui`, but are still compiled inside `:app`.
+Beta 3 is version code 11 and its release acceptance is unfinished. Requiem now
+uses the shared Compose controls in `:sheet-ui`.
 Prerequisites, Conditions, XP recording and file storage still depend on Requiem.
 There is no Android Forsaken module or app yet.
 
@@ -37,7 +37,7 @@ the 13 November failure log as evidence of the present state.
 | `:core` (JVM) | Existing shared models, trait definitions and catalog indexing; common prerequisite checks, Condition operations, XP snapshot/ledger engine, search folding and track helpers. Generic document/storage operations where they need no Android APIs. |
 | `:requiem` (JVM) | Requiem catalog assembly, character/codec and schema migrations, vampire traits, costs/refund policy, creation and rule-specific prerequisite hooks. |
 | `:forsaken` (new JVM module) | Forsaken schema-1 model/codec, catalog assembly and all werewolf rules, creation, costs and per-game edit operations. No dependency on `:requiem`. |
-| `:sheet-ui` (new Android library) | Compose controls/theme, library and sheet frame, common section editors, picker/search, navigation, lifecycle saving, and Android file/share integration. Depends on `:core`; games supply adapters. |
+| `:sheet-ui` (Android library) | Compose controls/theme, library and sheet frame, common section editors, picker/search, navigation, lifecycle saving, and Android file/share integration. Depends on `:core`; games supply adapters. |
 | `:app` | Existing Requiem application, package `ie.requiem.sheet`, existing storage and release lineage; injects Requiem rules, identity and resources. |
 | `:forsakenApp` (new application) | Separate installable Forsaken app, private library, `.wtfcharacter` import/export, identity, resources and signing/version configuration. Depends on `:forsaken` and `:sheet-ui`. |
 
@@ -77,7 +77,13 @@ migration/import/open, preserves unchanged exports, and still omits `game` on
 canonical writes. Rule-engine tests now use fixed synthetic inputs; the general
 advisory fallback has named evidence in [the CI policy](ci-contract-policy.md).
 The phase-0 handoff records validation and publishing status. No Forsaken fixtures
-have moved and no Forsaken module is built in this phase. Phase 1 is next.
+have moved and no Forsaken module is built in this phase.
+
+**Phase 1 in progress.** Requiem consumes `:sheet-ui` for themed controls and editing
+layout. The first change covers search across all three catalog pickers and the
+optional limit on counted dots. The next interface work is the sheet watermark,
+keyboard positioning and section navigation. Shared storage and rules extraction
+remain part of this phase.
 
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |
