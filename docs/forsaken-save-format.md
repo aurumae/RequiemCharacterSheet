@@ -56,8 +56,33 @@ module; then they move there and join the contract.
 | `showsUnofficialContent` | `true` if pickers offer unofficial content. Left out when false. |
 
 Trait kinds in `changeLog` and `paidDots`: `attribute`, `skill`, `specialty`, `merit`, `condition`, and Forsaken's
-`renown`, `moonGift`, `facet`, `rite` and `primalUrge`. Attributes, Skills and Renown use their names as ids; the
-rest use the row's UUID.
+`renown`, `moonGift`, `facet`, `rite` and `primalUrge`. What follows the kind, with UUIDs in capitals:
+
+| Kind | Key | Example |
+|---|---|---|
+| `attribute`, `renown` | the trait's name | `attribute:strength`, `renown:glory` |
+| `skill` | the Skill's id | `skill:animal-ken` |
+| `specialty` | the Skill's id; the level is how many Specialties it has | `specialty:brawl` |
+| `merit`, `facet`, `rite`, `moonGift` | the row's UUID | `merit:8C0E…` |
+| `primalUrge` | always `primalUrge` | `primalUrge:primalUrge` |
+| `condition` | the catalog id, or `custom`, then `/` and the Condition's UUID. Logged, never in `paidDots`. | `condition:shaken/8C0E…`, `condition:custom/8C0E…` |
+
+`SaveFormatTests.eachKindOfTraitHasItsLogKey` makes each kind of change and pins these. History under any other key is
+kept as it is and shown by the name the entry recorded: the play fixture has a Condition logged as `condition:<UUID>`,
+which no version of the app wrote (`historyUnderOtherKeysIsKept`).
+
+## The fixtures are examples of the format, not of play
+
+Both fixtures were put together by hand to use every key. Two things in them couldn't come from the app:
+
+- The play fixture's last log entry is under `condition:<UUID>` (see above).
+- The creation fixture is a Predator King whose free Skill dot is on Survival and whose granted Renown is Purity. The
+  tribe gives Animal Ken, Brawl or Crafts, and Glory.
+
+Opening a file never puts such things right: a reader keeps `creation` as saved. The creation panel then asks for the
+free Skill dot again, and the grants are brought into line only when the player places that dot or changes the
+auspice or tribe (`openingASavedCreationLeavesItsGrantsAlone`, `editingAResumedCreationMovesItsGrants`). The fixtures
+themselves never change; examples of real creation by each kind of character will be added beside them.
 
 **Werewolf traits**
 

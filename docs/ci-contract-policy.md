@@ -29,7 +29,8 @@ Android hasn't caught up.
 - Forsaken is outside the contract until phase 3's canonical writer/rules and coordinated enrollment. Android's
   phase 2 `:forsaken` module tests decoding and raw transfer only. Its catalogs aren't validated here and its
   fixtures must stay out of `shared/fixtures/`, where every file has to be classified as a Requiem scenario. Its
-  own rules tests, with the fixtures that pin its save format (`docs/forsaken-save-format.md`), run in the `ios` job.
+  own rules tests, with the fixtures that pin its save format (`docs/forsaken-save-format.md`), run in the `ios` job,
+  and since 18 November in `swift test` too, as `Package.swift` builds Forsaken's models on the host.
   Android reads those fixtures in place in its viewer/storage tests. This does not certify Forsaken parity or
   add it to the Requiem exchange. The `android` job builds, tests, lints and packages both Android applications.
 

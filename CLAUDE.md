@@ -31,10 +31,11 @@ doesn't start until the iOS app has been submitted to the App Store. CI must sta
 - Adding catalog entries is safe for Android; changing an existing one may not be, because Kotlin tests assert
   rules outcomes from the live catalogs. Before changing an entry, search `android/*/src/test` for its id and the
   ids it lists. Update any expectation the change makes wrong in the same commit, and say so in the handoff.
-- Forsaken is outside the contract until Android has a `:forsaken` module. Keep Forsaken fixtures out of
-  `shared/fixtures/` until then: they are in `ForsakenCharacterSheetTests/Fixtures/`, and CI's `ios` job runs
-  Forsaken's tests. A new key in Forsaken's save goes into a fixture and `docs/forsaken-save-format.md`; once the
-  app has shipped, it also needs the next schema version.
+- Forsaken is outside the contract until it is enrolled with Android (phase 3 of `docs/android-forsaken-plan.md`).
+  Keep Forsaken fixtures out of `shared/fixtures/` until then: they are in `ForsakenCharacterSheetTests/Fixtures/`,
+  where Android's tests read them too, so never change an existing one. `swift test` and CI's `ios` job run
+  Forsaken's tests. A new key in Forsaken's save goes into a new fixture and `docs/forsaken-save-format.md`; once
+  the app has shipped, it also needs the next schema version.
 - The Android tests run on this Mac too. `scripts/check-save-contract` does everything CI's exchange job does: the
   policy check, `swift test`, Android's unit tests (`:core`, `:requiem`, `:app`) and the save exchange both ways.
   Run it before pushing a change to anything shared or to `android/`. To run only Android's tests:
@@ -44,11 +45,15 @@ doesn't start until the iOS app has been submitted to the App Store. CI must sta
 ## Shared with Android
 
 Catalogs (`RequiemCharacterSheet/Catalogs/`), fonts (`RequiemCharacterSheet/Fonts/`), the character save
-format with `shared/fixtures/`, `Package.swift`, `scripts/` and `.github/workflows/` are used by both apps.
+format with `shared/fixtures/`, `Package.swift`, `scripts/` and `.github/workflows/` are used by both apps. So are
+Forsaken's: `ForsakenCharacterSheet/Catalogs/` and `Fonts/`, its save format and fixtures, and
+`shared/forsaken-headings/`.
 Changes to them need a handoff entry saying what Android must follow up.
 
-`swift test` builds `Models/`, `Persistence/`, `Utilities/` and the unit tests on macOS, so keep UIKit and
-SwiftUI out of those. Run it as well as the Xcode tests.
+`swift test` builds both apps' `Models/`, Requiem's `Persistence/`, `Chronicles/Core/` and the unit tests on macOS, so
+keep UIKit and SwiftUI out of those. Forsaken tests that need the app's views or artwork go in
+`ForsakenCharacterSheetTests/SheetSectionTests.swift`, which the package leaves out and only Xcode runs. Run
+`swift test` as well as the Xcode tests.
 
 ## Design decisions
 

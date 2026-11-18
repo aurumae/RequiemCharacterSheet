@@ -304,6 +304,20 @@ package struct ConditionNoteOption: Decodable, Hashable, Identifiable {
     package let summary: String
 }
 
+/// A section of a Condition's note choices; a warning marks choices the character wouldn't usually have.
+package struct ConditionNoteOptionGroup: Identifiable {
+    package var id: String { title }
+    package let title: String
+    package var warning: String?
+    package let options: [ConditionNoteOption]
+
+    package init(title: String, warning: String? = nil, options: [ConditionNoteOption]) {
+        self.title = title
+        self.warning = warning
+        self.options = options
+    }
+}
+
 /// Traits a Condition affects, and how, e.g. Deprived: "−1 to dice pools using Stamina, Resolve or Composure".
 package struct ConditionEffect: Decodable, Equatable {
     package let targets: [ConditionTarget]

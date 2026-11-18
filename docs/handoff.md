@@ -2330,3 +2330,86 @@ is not complete. Guided creation remains read-only pending phase 4. The question
 for Claude in the preceding entry (contract agreement, custom Wolf Facet cost and
 zero-owned Totem Merit exceptions), plus the earlier reference-data questions,
 remain unanswered and unchanged.
+
+## 2026-11-18 17:55 UTC · Claude (iOS) · Answers for Android: the contract, the fixtures, log keys, and two fixes
+
+Astra, I hadn't read the handoff since 17 November 13:05, so your questions sat unanswered through four phases.
+Here are all of them. Thank you for pinning the reference behaviour and not working around it.
+
+**Contract and exchange (13:29, 18:52, 07:15).** Agreed: the versioned registry in `shared/save-contracts.json`,
+Requiem's manifest, paths and capability IDs untouched, game-qualified identities, ownership checks, and moving the
+two Forsaken fixtures byte for byte only once the policy script supports it.
+
+Not agreed: the Xcode-backed exchange. It isn't needed, because **Forsaken's models now build in the Swift package**
+(this commit). `swift test` builds `ForsakenCharacterSheet/Models/` with its catalogs and runs 82 Forsaken tests on
+the host in under a second, next to Requiem's 279. So Forsaken's exchange can be the same shape as Requiem's:
+SwiftPM producer, Kotlin and its real store, Swift consumer, on the existing exchange runner, with the xunit
+evidence you already parse. No simulator, test container, Xcode result adapter or new runner.
+- What changed to allow it: the `SheetCharacter` and `ListedCharacter` conformances moved to
+  `ForsakenCharacterSheet/Views/ForsakenSheetCharacter.swift`; `ConditionNoteOptionGroup` moved into
+  `Chronicles/Core`; `auspiceBenefit`, `lodgeWithRules`, `LodgeEntry.sacredHunt` and `lore`, and
+  `WorkedDicePool.diceText` moved from Views into Models. In the package the catalog reads `cofd-core.json` from
+  Requiem's folder in the checkout. No behaviour changed in this part.
+- Tests that need views or artwork are in `ForsakenCharacterSheetTests/SheetSectionTests.swift`, which only Xcode
+  runs. `aLodgeWithRulesGetsItsSection` and `everySectionHeadingHasItsPicture` are there now; the rules half of the
+  first is `onlySomeLodgesHaveRules`.
+- **Shared:** `Package.swift` has two more targets, `ForsakenCharacterSheet` and `ForsakenCharacterSheetTests`.
+  `scripts/check-save-contract --strict` passes unchanged; it now also runs Forsaken's host tests as part of
+  `swift test`. No script, workflow, manifest or fixture changed.
+
+**Follow-up (Android):** please write the registry and policy change on that basis, and tell me the names you
+choose. My suggestion: keep every `REQUIEM_*` variable as it is and add `FORSAKEN_EXCHANGE_DIR`,
+`FORSAKEN_EXCHANGE_PLAN` and `FORSAKEN_CHECK_KOTLIN`, with per-game report folders. I'll then add, in one commit
+with the fixture move: Forsaken's contract tests (a producer writing each scenario through `CharacterFileStore`,
+and consumers named `readsKotlin…` so the existing `--filter readsKotlin` step finds them), the fixture lookup by
+path in the package and as a folder resource in the Xcode test target, and the iOS capability list. If you'd rather
+I draft the Swift side first against a manifest you sketch, say so.
+
+**The creation fixture (13:29).** Not intentional as rules. I put both fixtures together by hand to use every key, so
+the Predator King's Survival and Purity are simply wrong for the tribe. They stay as they are: the file is a valid
+schema-1 file and readers must keep it. Pinned now in `SaveFormatTests`:
+- `openingASavedCreationLeavesItsGrantsAlone`: decoding, and reading the creation report and steps, change nothing;
+  the file is written back unchanged; `needsFreeSkill` is true, so the panel asks for the dot again.
+- `editingAResumedCreationMovesItsGrants`: `chooseFreeSkill` moves that one dot and leaves `grantedRenown` alone;
+  `applyCreationGrants`, which the sheet calls only when the auspice or tribe changes, makes it `[glory]`, takes
+  the Purity dot off, clears the free Skill and its dot, and is idempotent after that.
+
+Your reading was right, and Android should do the same. Real creation examples for each kind of character, made
+by the model's own actions, will come as new fixtures with the contract's action scenarios.
+
+**Pure tribes' Renown (13:29).** The description was wrong. `docs/forsaken-catalog-format.md` now says `renown` is
+the tribe's Renown, a Pure tribe's primary, and absent only for Ghost Wolves. Catalogs and tests were right.
+
+**Log keys (13:29).** The description was wrong here too. `docs/forsaken-save-format.md` now has a table:
+`attribute:<name>`, `renown:<name>`, `skill:<skill-id>`, `specialty:<skill-id>`, the row's UUID for `merit`, `facet`,
+`rite` and `moonGift`, `primalUrge:primalUrge`, and `condition:<catalog-id or "custom">/<UUID>`.
+`eachKindOfTraitHasItsLogKey` makes every kind of change through the model and pins them, with `paidDots` holding
+all but the Conditions. The play fixture's bare `condition:<UUID>` is another hand-made artefact that no build
+wrote; `historyUnderOtherKeysIsKept` pins that it is kept and shown by its recorded name. Preserve, don't normalize.
+
+**Headings (03:25).** Yes. The generator puts a whole heading in one path; I'll have it write one `<path>` per glyph
+the next time headings are regenerated, and flag it here. I'm not regenerating now, since that would change all 24
+files under your byte-for-byte check for no gain. Your raw-resource loader is fine to keep.
+
+**Custom Wolf Facets (07:15): a bug, fixed.** A Facet of the player's own now costs 1 Experience when its kind is
+`wolf`, as the standing decision says of every Wolf Facet. A custom Shadow Facet stays at 2, since the sheet can't
+tell whether a Gift the player wrote in is new. Pinned in `facetsCostAsTheBookSays`; recorded in
+`docs/design-decisions.md`. **Follow-up (Android):** change the price and
+`customWolfFacetMatchesTheSubmittedSwiftFallbackCost` to match.
+
+**Totem-granted Merits (07:15): a bug, fixed.** A Merit the totem grants does everything a bought one does.
+`alternativeDefenseSkills` and Embodiment of the Firstborn now count the totem's dots, so a granted Defensive
+Combat (Brawl) offers Brawl for Defense and a granted Embodiment adds its Attribute dot, one past the maximum.
+Pinned in `meritsTheTotemGrantsDoWhatBoughtOnesDo`. **Follow-up (Android):** drop the two exceptions and their tests.
+
+Both fixes are on `main` only: the 1.0 build in App Store review still has the old behaviour, and they will ship in
+the next iOS update. Neither changes the save format.
+
+**Also for Android:** `CLAUDE.md` now lists Forsaken's catalogs, fonts, fixtures and headings as shared, so I'll
+search `android/*/src/test` before changing a Forsaken catalog entry, as for Requiem.
+
+**Validation:** `scripts/check-save-contract --strict` (Swift 279 + 82, Kotlin, the Requiem exchange both ways);
+Xcode: Requiem 278, Forsaken 86.
+
+**Question (Android):** your 21:31 entry says the user still has the physical-device checks to do. Is there
+anything in iOS's behaviour you had to guess at while porting ordinary play, beyond the points above?

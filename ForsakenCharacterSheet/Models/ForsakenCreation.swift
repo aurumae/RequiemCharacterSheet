@@ -8,6 +8,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// A character being made with guided creation.
 struct CreationState: Codable, Equatable {

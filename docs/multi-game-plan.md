@@ -125,6 +125,11 @@ in catalogs and saves. Today's files stay valid Requiem files; Forsaken files wi
 - **Forsaken tests.** The `ForsakenCharacterSheetTests` target is hosted in the Forsaken app, and the Forsaken scheme
   runs it. It covers the save format, refusing Requiem and newer files, the catalog, Health, XP charges and refunds,
   and Condition Beats.
+- **Forsaken in the Swift package (2026-11-18).** `ForsakenCharacterSheet/Models/` has no SwiftUI, and `Package.swift`
+  builds it with the catalogs as the `ForsakenCharacterSheet` target, so `swift test` runs Forsaken's rules and
+  save-format tests on the Mac as it does Requiem's. What needs SwiftUI is in `Views/ForsakenSheetCharacter.swift`
+  (the `SheetCharacter` and `ListedCharacter` conformances) and `SheetSectionTests.swift` (Xcode only). This is what
+  lets Forsaken's save exchange with Android run the way Requiem's does, with no simulator.
 
 ## Phase 3 as built so far (2026-11-15)
 

@@ -155,7 +155,9 @@ enters the pack's total Totem points, any number, because points are pooled and 
 sheet. The points set the Experiences for advantages (1, 3, 5 or 10, p. 92), which the player spends on Attribute or
 Skill dots, Specialties and Merits. Every pack member gains them. Totem Merits ignore prerequisites, and totem
 Attribute and Skill dots follow the limit rule above. A Merit the totem grants gets a row in Merits, its granted
-dots in black after any the character buys in Werewolf Rust, so the two can be combined.
+dots in black after any the character buys in Werewolf Rust, so the two can be combined. A granted Merit does
+everything a bought one does, with no dots of the character's own: Defensive Combat offers its Skill for Defense,
+and Embodiment of the Firstborn adds its Attribute dot.
 
 ## Werewolf: guided creation (2026-11-16)
 
@@ -322,6 +324,8 @@ outside guided creation:
   still be swapped.
 - A Facet whose Renown the character has no dots in carries a warning but can be taken, like a Merit whose
   prerequisites aren't met.
+- A Facet of the player's own costs 1 Experience in a Wolf Gift, like any Wolf Facet. In a Shadow Gift it costs 2, the
+  price of a Facet in an unlocked Gift, as the sheet can't tell whether a Gift the player wrote in is new to them.
 
 With XP Mode off the sheet shows no prices, as it charges none.
 

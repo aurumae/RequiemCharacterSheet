@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// The five Renowns, in the book's order.
 enum Renown: String, Codable, CaseIterable, Identifiable {
@@ -104,6 +107,19 @@ struct LodgeEntry: CatalogEntry {
 
     var hasRules: Bool {
         benefit != nil || blessing != nil || aspiration != nil || ban != nil
+    }
+
+    /// The benefit the lodge's ritemaster can give the Sacred Hunt in place of their tribe's.
+    var sacredHunt: ConditionNoteOption? {
+        Catalog.bundled.conditions.entry("siskur-dah")?.noteOptions.first { $0.group == "lodge" && $0.id == id }
+    }
+
+    /// What the lodge teaches, by name, e.g. "Lodge Armory, Uma Suguthkuth, Predator's Doom".
+    var lore: [String] {
+        let catalog = Catalog.bundled
+        return (merits ?? []).compactMap { catalog.merits.entry($0)?.name }
+            + (rites ?? []).compactMap { catalog.rites.entry($0)?.name }
+            + (fetishes ?? []).compactMap { catalog.fetishes.entry($0)?.name }
     }
 }
 

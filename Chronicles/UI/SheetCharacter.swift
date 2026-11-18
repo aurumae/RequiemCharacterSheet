@@ -78,14 +78,6 @@ protocol SheetCharacter: ExperienceCharacter, Observable {
     var showsUnofficialContent: Bool { get set }
 }
 
-/// A section of a Condition's note choices; a warning marks choices the character wouldn't usually have.
-struct ConditionNoteOptionGroup: Identifiable {
-    var id: String { title }
-    let title: String
-    var warning: String?
-    let options: [ConditionNoteOption]
-}
-
 extension SheetCharacter {
     func noteOptionGroups(for entry: ConditionEntry) -> [ConditionNoteOptionGroup] {
         entry.noteOptions.isEmpty ? [] : [ConditionNoteOptionGroup(title: "", options: entry.noteOptions)]

@@ -28,7 +28,8 @@ are its own, in `ForsakenCharacterSheet/Catalogs/`; they share only their names 
   "purity", "wisdom"), `skills` (three Skill ids, e.g. "animal-ken"), `huntersAspect` (`{ "name", "condition" }`,
   the condition's id), `moonGift` (a gift id), `giftAffinities` (Shadow Gift ids), `benefit` (`{ "name", "summary",
   "page" }`, the Auspice Benefit every member has).
-- **tribes**: `kind` ("forsaken", "ghost-wolf" or "pure"), `renown` (absent for Ghost Wolves and the Pure),
+- **tribes**: `kind` ("forsaken", "ghost-wolf" or "pure"), `renown` (the tribe's Renown, or a Pure tribe's primary
+  Renown; absent only for Ghost Wolves),
   `giftAffinities` (Shadow Gift ids; empty when the book gives none), `oath` (`{ "name", "summary" }`, the tribal
   vow, or the Pure tribe's restriction), `firstTongueName` (optional).
   Optional, where the book gives them (e.g. the Pure in Night Horrors: Shunned by the Moon): `secondaryRenown` (the

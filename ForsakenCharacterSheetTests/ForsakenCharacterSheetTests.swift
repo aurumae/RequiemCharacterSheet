@@ -5,8 +5,10 @@
 
 import Foundation
 import Testing
-import UIKit
 @testable import ForsakenCharacterSheet
+#if SWIFT_PACKAGE
+@testable import ChroniclesCore
+#endif
 
 @MainActor
 struct ForsakenSaveTests {
@@ -298,6 +300,13 @@ struct WerewolfRulesTests {
         #expect(cost(second) == 2)
         #expect(character.experienceCost(of: TraitKey(.renown, "glory"), level: 1) == 3)
         #expect(character.experienceCost(of: TraitKey(.primalUrge, "primalUrge"), level: 2) == 5)
+        // The player's own Facets: a Wolf Gift's costs what any does, and a Shadow Gift's what one of an unlocked
+        // Gift does, as the sheet can't tell whether the Gift is new
+        let ownWolf = OwnedFacet(source: .custom("Scent of Rain"), customKind: .wolf)
+        let ownShadow = OwnedFacet(source: .custom("Ember"), customGift: "Gift of Ash", customKind: .shadow)
+        character.facets += [ownWolf, ownShadow]
+        #expect(cost(ownWolf) == 1)
+        #expect(cost(ownShadow) == 2)
     }
 
     @Test func thePureHaveNoAuspice() {
@@ -332,7 +341,6 @@ struct WerewolfRulesTests {
         character.tribe = "Fire-Touched"
         #expect(character.moonGift == nil)
         #expect(character.moonGiftDots == 0)
-        #expect(!character.sheetSections.contains(.moonGifts))
     }
 
     @Test func customMoonGiftKeepsItsFacetNames() throws {
@@ -405,11 +413,9 @@ struct WerewolfRulesTests {
         #expect(character.auspiceBenefit == nil)
         character.auspice = "Rahu"
         #expect(character.auspiceBenefit?.1.name == "Tenacious")
-        #expect(character.sheetSections.contains(.auspiceBenefit))
         #expect(Catalog.bundled.auspices.all.allSatisfy { $0.benefit != nil })
         character.tribe = "Ivory Claws"
         #expect(character.auspiceBenefit == nil)
-        #expect(!character.sheetSections.contains(.auspiceBenefit))
     }
 
     @Test func siskurDahListsTheOtherFactionApart() throws {
@@ -473,6 +479,26 @@ struct WerewolfRulesTests {
         // The form's changes come on top
         character.form = .gauru
         #expect(character.countedAttributeRating(for: strength) == 11)
+    }
+
+    @Test func meritsTheTotemGrantsDoWhatBoughtOnesDo() throws {
+        // A Merit the totem grants has a row with no dots of the character's own
+        let character = ForsakenCharacter()
+        try #require(character.attribute(.strength)).rating = 5
+        try #require(character.skill(.brawl)).rating = 3
+        character.totem.advantages = [
+            TotemAdvantage(kind: .merit, target: "embodiment-of-the-firstborn", detail: "Strength", dots: 5),
+            TotemAdvantage(kind: .merit, target: "defensive-combat", detail: "Brawl", dots: 1),
+        ]
+        character.syncTotemMerits()
+        #expect(character.merits.map(\.rating) == [0, 0])
+        // Embodiment of the Firstborn's dot, one past the maximum
+        #expect(character.rating(.strength, in: .hishu) == 6)
+        #expect(character.alternativeDefenseSkills == [.brawl])
+        // Without the totem, the rows it leaves behind do nothing
+        character.totem.advantages = []
+        #expect(character.rating(.strength, in: .hishu) == 5)
+        #expect(character.alternativeDefenseSkills.isEmpty)
     }
 
     @Test func totemAdvantagesCostExperiencesFromThePacksPoints() throws {
@@ -824,13 +850,12 @@ struct CoreBookRemainderTests {
 
     @Test func theLodgeOfTheFieldAddsPrimalUrgeToEssence() throws {
         let field = try #require(catalog.lodges.entry("field"))
-        #expect(field.hasRules && field.marks.map(\.label) == ["Benefit"])
+        #expect(field.hasRules && field.benefit != nil && field.blessing == nil)
         let character = ForsakenCharacter()
         character.primalUrge = 3
         let usual = character.essenceMaximum
         character.lodgeSource = .catalog("field")
         #expect(character.essenceMaximum == usual + 3)
-        #expect(character.sheetSections.contains(.lodge))
         character.primalUrge = 5
         #expect(character.essenceMaximum == PrimalUrgeLevel.level(5).essenceMaximum + 5)
         // The core book's other lodges are story only
@@ -870,7 +895,8 @@ struct ThePackTests {
                                        "The Temple of Apollo", "The Eaters of the Dead"])
         // Each marks its adherents three ways, has its own Sacred Hunt, and teaches things that are in the catalog
         for lodge in lodges {
-            #expect(lodge.hasRules && lodge.marks.map(\.label) == ["Blessing", "Aspiration", "Ban"], "\(lodge.name)")
+            #expect(lodge.hasRules && lodge.benefit == nil, "\(lodge.name)")
+            #expect(lodge.blessing != nil && lodge.aspiration != nil && lodge.ban != nil, "\(lodge.name)")
             #expect(lodge.sacredHunt?.name == lodge.name, "\(lodge.name)")
             #expect(lodge.lore.count == (lodge.merits ?? []).count + (lodge.rites ?? []).count + (lodge.fetishes ?? []).count)
             #expect(!lodge.lore.isEmpty, "\(lodge.name)")
@@ -889,13 +915,12 @@ struct ThePackTests {
         #expect(style.styleManeuvers.count == 5 && style.category == .fighting)
     }
 
-    @Test func aLodgeWithRulesGetsItsSection() {
+    @Test func onlySomeLodgesHaveRules() {
         let character = ForsakenCharacter()
-        #expect(!character.sheetSections.contains(.lodge))
         character.lodgeSource = .catalog("eaters-of-the-dead")
-        #expect(character.lodgeWithRules == nil && !character.sheetSections.contains(.lodge))
+        #expect(character.lodgeWithRules == nil)
         character.lodgeSource = .catalog("the-pack-eaters-of-the-dead")
-        #expect(character.lodgeWithRules?.blessing != nil && character.sheetSections.contains(.lodge))
+        #expect(character.lodgeWithRules?.blessing != nil)
     }
 
     @Test func lodgeMeritsAskForTheLodge() throws {
@@ -1212,25 +1237,6 @@ struct GiftBuyingTests {
                     #expect(character.worked(pool, in: .hishu) != nil, "\(facet.name): \(pool)")
                 }
             }
-        }
-    }
-}
-
-@MainActor
-struct SectionHeadingTests {
-    /// Flat Earth Scribe can't ship in the app, so every heading needs its picture from
-    /// scripts/render-forsaken-headings.swift.
-    @Test func everySectionHeadingHasItsPicture() {
-        let blank = ForsakenCharacter()
-        let rahu = ForsakenCharacter.guided()
-        rahu.auspice = "Rahu"
-        let pure = ForsakenCharacter.guided()
-        pure.tribe = "Fire-Touched"
-        let adherent = ForsakenCharacter()
-        adherent.lodgeSource = .catalog("garm")
-        let sections = Set([blank, rahu, pure, adherent].flatMap(\.sheetSections))
-        for section in sections {
-            #expect(UIImage(named: "Heading " + section.heading) != nil, "\(section.heading)")
         }
     }
 }

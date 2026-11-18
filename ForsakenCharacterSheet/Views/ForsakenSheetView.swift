@@ -82,17 +82,6 @@ extension ForsakenSheetView {
 }
 
 extension ForsakenCharacter {
-    /// The auspice's benefit, if the character has an auspice from the book; never for the Pure.
-    var auspiceBenefit: (AuspiceEntry, AuspiceEntry.Benefit)? {
-        guard let auspice = effectiveAuspice, let benefit = auspice.benefit else { return nil }
-        return (auspice, benefit)
-    }
-
-    /// The character's lodge, if it's one that marks its adherents with a Blessing, Aspiration and Ban.
-    var lodgeWithRules: LodgeEntry? {
-        lodgeEntry.flatMap { $0.hasRules ? $0 : nil }
-    }
-
     /// The sections this character's sheet shows, in order.
     var sheetSections: [SheetSection] {
         let gifts: [SheetSection] = isPure ? [.shadowGifts, .wolfGifts] : [.moonGifts, .shadowGifts, .wolfGifts]

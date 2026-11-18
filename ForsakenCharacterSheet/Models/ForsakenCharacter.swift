@@ -7,7 +7,9 @@
 
 import Foundation
 import Observation
-import SwiftUI
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 @Observable
 final class ForsakenCharacter: Codable {
@@ -513,9 +515,26 @@ extension ForsakenCharacter {
     }
 }
 
+// MARK: - Reminders
+
+extension ForsakenCharacter {
+    /// The auspice's benefit, if the character has an auspice from the book; never for the Pure.
+    var auspiceBenefit: (AuspiceEntry, AuspiceEntry.Benefit)? {
+        guard let auspice = effectiveAuspice, let benefit = auspice.benefit else { return nil }
+        return (auspice, benefit)
+    }
+
+    /// The character's lodge, if it's one that marks its adherents with a Blessing, Aspiration and Ban.
+    var lodgeWithRules: LodgeEntry? {
+        lodgeEntry.flatMap { $0.hasRules ? $0 : nil }
+    }
+}
+
 // MARK: - Shared sheet sections
 
-extension ForsakenCharacter: SheetCharacter {
+// What the shared sections ask of a game (`SheetCharacter`). The conformance itself, with the parts that need SwiftUI,
+// is in Views/ForsakenSheetCharacter.swift, so these rules build and are tested without it.
+extension ForsakenCharacter {
     var conditionCatalog: CatalogIndex<ConditionEntry> {
         Catalog.bundled.conditions
     }
@@ -531,11 +550,6 @@ extension ForsakenCharacter: SheetCharacter {
 
     func creationAllowsMerit(_ entry: MeritEntry?, rating: Int) -> Bool {
         creationAllows(.merit(entry, rating: rating))
-    }
-
-    func categoryAccessory(for category: TraitCategory, skills: Bool) -> AnyView? {
-        // During guided creation, the player chooses where the 5/4/3 or 11/7/4 dots go
-        isInCreation ? AnyView(CreationPriorityMenu(character: self, category: category, skills: skills)) : nil
     }
 
     func attributeNote(for kind: AttributeKind) -> String? {
@@ -676,6 +690,11 @@ extension ForsakenCharacter: SheetCharacter {
             }
         }
     }
+
+    /// The requirements the character is known not to meet. Merits can still be taken; these are warnings.
+    func unmetPrerequisites(for entry: MeritEntry) -> [PrerequisiteCheck] {
+        prerequisiteChecks(for: entry).filter { $0.isMet == false }
+    }
 }
 
 // MARK: - Experiences
@@ -750,7 +769,11 @@ extension ForsakenCharacter: ExperienceCharacter {
     /// given the character's other Facets.
     private func facetCost(_ facet: OwnedFacet) -> Int {
         if facet.learnedWithRenown { return 0 }
-        guard let gift = gift(of: facet) else { return FacetPrice.furtherFacet }
+        guard let gift = gift(of: facet) else {
+            // The player's own Facet: a Wolf Gift's costs what any does. The sheet can't tell whether a Shadow Gift
+            // of their own is new, so its Facets cost what one of an unlocked Gift does.
+            return facet.customKind == .wolf ? FacetPrice.wolfFacet : FacetPrice.furtherFacet
+        }
         return experienceCost(ofFacetIn: gift, unlocked: facets.contains { $0.id != facet.id && self.gift(of: $0)?.id == gift.id })
     }
 
@@ -820,14 +843,6 @@ extension ForsakenCharacter: StoredCharacter {
 
     static func unreadableSummary(id: UUID) -> ForsakenCharacterSummary {
         ForsakenCharacterSummary(id: id, name: "", auspice: "", tribe: "", modifiedAt: nil, isReadable: false)
-    }
-}
-
-extension ForsakenCharacter: ListedCharacter {
-    static var offersGuidedCreation: Bool { true }
-
-    static func newCharacter(guided: Bool) -> ForsakenCharacter {
-        guided ? .guided() : ForsakenCharacter()
     }
 }
 
@@ -928,8 +943,8 @@ extension ForsakenCharacter {
 
     /// Embodiment of the Firstborn adds a dot to the Attribute it names, which may go one past the maximum (p. 106).
     private func embodiesFirstborn(in kind: AttributeKind) -> Bool {
-        merits.contains { merit in
-            merit.source == .catalog("embodiment-of-the-firstborn") && merit.rating > 0
+        meritDots("embodiment-of-the-firstborn") > 0 && merits.contains { merit in
+            merit.source == .catalog("embodiment-of-the-firstborn")
                 && merit.qualifier.map { $0.caseInsensitiveCompare(kind.name) == .orderedSame } == true
         }
     }
@@ -966,8 +981,10 @@ extension ForsakenCharacter {
 
     /// Skills Merits let the character use for Defense in place of Athletics, e.g. Defensive Combat (Brawl).
     var alternativeDefenseSkills: [SkillID] {
-        merits.filter { $0.rating > 0 }.flatMap { merit -> [SkillID] in
-            guard merit.entry?.effects.contains(.defenseSkillFromQualifier) == true,
+        merits.flatMap { merit -> [SkillID] in
+            // The Merit's own dots or the totem's
+            guard let entry = merit.entry, merit.rating + meritBonus(for: entry.id) > 0,
+                  entry.effects.contains(.defenseSkillFromQualifier),
                   let qualifier = merit.qualifier, let skill = SkillDefinition.named(qualifier)?.id else { return [] }
             return [skill]
         }

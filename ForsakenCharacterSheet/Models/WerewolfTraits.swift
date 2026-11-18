@@ -8,6 +8,9 @@
 
 import Foundation
 import Observation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// Forsaken's kinds of trait in the change log, alongside the shared Attributes, Skills, Specialties, Merits and
 /// Conditions.
@@ -329,6 +332,11 @@ struct WorkedDicePool: Equatable {
     let traits: String
     /// e.g. "vs Composure + Primal Urge" or "− Stamina"; empty if nothing resists.
     let against: String
+
+    /// e.g. "7 dice", or "Chance die" for a pool of none.
+    var diceText: String {
+        dice < 1 ? "Chance die" : dice == 1 ? "1 die" : "\(dice) dice"
+    }
 }
 
 /// A Rite the character knows: a catalog Rite, or the player's own with its rating.

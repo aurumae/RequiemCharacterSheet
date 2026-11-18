@@ -9,6 +9,9 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import ChroniclesCore
+#endif
 
 /// Reference data for auspices, tribes, lodges, Blood and Bone, Gifts, Rites, Merits, Conditions, fetishes and Tilts,
 /// merged from every catalog file bundled with the app.
@@ -65,14 +68,23 @@ struct Catalog {
         return nil
     }
 
-    static let bundled = Catalog(files: bundledFiles())
+    #if SWIFT_PACKAGE
+    // The host package can't bundle a file from another target's folder, so its tests read the shared Chronicles of
+    // Darkness core where it is in the checkout
+    static let bundled = Catalog(files: bundledFiles(in: .module, with: [
+        URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("RequiemCharacterSheet/Catalogs/cofd-core.json"),
+    ]))
+    #else
+    static let bundled = Catalog(files: bundledFiles(in: .main))
+    #endif
 
     /// Every catalog file in the app bundle: the Werewolf core book first, then the Chronicles of Darkness core, then
     /// the other books by file name (without ".json", so "dark-eras" comes before "dark-eras-2"), with unofficial
     /// sources after all the books.
-    private static func bundledFiles() -> [File] {
+    private static func bundledFiles(in bundle: Bundle, with others: [URL] = []) -> [File] {
         let order = ["wtf2e-core", "cofd-core"]
-        let urls = (Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
+        let urls = ((bundle.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []) + others)
             .sorted { lhs, rhs in
                 let name = { (url: URL) in url.deletingPathExtension().lastPathComponent }
                 let rank = { (url: URL) in order.firstIndex(of: name(url)) ?? order.count }

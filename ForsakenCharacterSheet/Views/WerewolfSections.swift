@@ -601,19 +601,6 @@ extension LodgeEntry {
          aspiration.map { DetailFact(label: "Aspiration", value: $0) },
          ban.map { DetailFact(label: "Ban", value: $0) }].compactMap { $0 }
     }
-
-    /// The benefit the lodge's ritemaster can give the Sacred Hunt in place of their tribe's.
-    var sacredHunt: ConditionNoteOption? {
-        Catalog.bundled.conditions.entry("siskur-dah")?.noteOptions.first { $0.group == "lodge" && $0.id == id }
-    }
-
-    /// What the lodge teaches, by name, e.g. "Lodge Armory, Uma Suguthkuth, Predator's Doom".
-    var lore: [String] {
-        let catalog = Catalog.bundled
-        return (merits ?? []).compactMap { catalog.merits.entry($0)?.name }
-            + (rites ?? []).compactMap { catalog.rites.entry($0)?.name }
-            + (fetishes ?? []).compactMap { catalog.fetishes.entry($0)?.name }
-    }
 }
 
 /// What a lodge with rules gives its adherent, kept in view like the auspice's benefit: the Blessing, the extra
@@ -710,13 +697,6 @@ private struct FacetSummary: View {
         guard let worked = character.worked(pool, in: character.form) else { return Text(pool) }
         let traits = worked.against.isEmpty ? worked.traits : "\(worked.traits) \(worked.against)"
         return Text("\(Text(worked.diceText).bold().foregroundStyle(theme.accent)) · \(traits)")
-    }
-}
-
-extension WorkedDicePool {
-    /// e.g. "7 dice", or "Chance die" for a pool of none.
-    var diceText: String {
-        dice < 1 ? "Chance die" : dice == 1 ? "1 die" : "\(dice) dice"
     }
 }
 
