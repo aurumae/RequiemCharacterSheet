@@ -1,0 +1,3 @@
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <cache-path name="character_exports" path="character-exports/" />
+</paths>

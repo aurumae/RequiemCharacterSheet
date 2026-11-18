@@ -57,6 +57,7 @@ android {
     sourceSets["test"].resources.srcDir("../../ForsakenCharacterSheetTests/Fixtures")
     sourceSets["test"].kotlin.srcDir("../test-support")
     sourceSets["androidTest"].assets.srcDir("../../shared/fixtures")
+    sourceSets["androidTest"].assets.srcDir("../../ForsakenCharacterSheetTests/Fixtures")
     testOptions.unitTests.all {
         providers.gradleProperty("exchangeDir").orNull?.let { directory ->
             it.systemProperty("exchangeDir", directory)

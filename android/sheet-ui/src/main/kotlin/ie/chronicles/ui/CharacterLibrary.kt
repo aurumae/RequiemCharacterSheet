@@ -44,7 +44,8 @@ fun <C : StoredCharacter> ImportConflict(pending: PendingImport<C>, busy: Boolea
 }
 
 @Composable
-fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryModel<C>, importCharacter: () -> Unit, about: () -> Unit) {
+fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryModel<C>, importCharacter: () -> Unit,
+    allowCreation: Boolean = true, notice: String? = null, about: () -> Unit) {
     var exportPicker by rememberSaveable { mutableStateOf(false) }
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -56,7 +57,10 @@ fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryMod
     }
     LazyColumn(Modifier.fillMaxSize().pageEdges().testTag("character-library"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
         item { SectionBand("CHARACTERS") }
-        if (rows.isEmpty()) item {
+        if (notice != null) item {
+            SheetText(notice, Modifier.fillMaxWidth().padding(12.dp), color = SheetColors.muted)
+        }
+        if (rows.isEmpty() && allowCreation) item {
             SheetText("Start with a blank sheet or follow guided character creation.",
                 Modifier.fillMaxWidth().background(Color.White).padding(12.dp), color = SheetColors.muted)
         }
@@ -91,17 +95,17 @@ fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryMod
             }
             SheetRule()
         }
-        item {
+        if (allowCreation) item {
             Row(Modifier.fillMaxWidth().background(Color.White).clickable(onClick = { model.create() }).padding(8.dp).heightIn(min = 48.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SheetIcon(SheetSymbol.Add)
                 SheetText("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
             }
         }
-        item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
+        if (allowCreation) item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
         item { AddSheetRow("Import Character", true, importCharacter) }
         item { AddSheetRow("Export Character", rows.any { it.problem == null }) { exportPicker = true } }
-        item { TextButton(onClick = about) { SheetText("About this app") } }
+        item { TextButton(onClick = about) { SheetText("About this app", style = LocalSheetType.current.libraryAbout) } }
     }
     if (exportPicker) AlertDialog(onDismissRequest = { exportPicker = false }, title = { SheetText("Export Character") }, text = {
         LazyColumn {

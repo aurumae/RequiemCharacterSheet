@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
     model: SheetLibraryModel<C>, activity: Class<*>, sections: (C) -> List<S>, title: (S) -> String,
     xp: @Composable (C, Boolean) -> Unit, aboutSheet: @Composable (() -> Unit) -> Unit,
+    readOnly: Boolean = false, libraryNotice: String? = null,
     editor: @Composable (C, Boolean, S?, (S) -> Unit, () -> Unit) -> Unit,
 ) {
     val state by model.ui.collectAsStateWithLifecycle()
@@ -76,7 +77,10 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
             if (c != null && available.isNotEmpty()) SheetToolbar(
                 sections = available, current = currentSection?.takeIf { it in available } ?: available.first(), title = title,
                 select = { focus.clearFocus(); requestedSection = it }, busy = state.busy, saved = saved,
-                back = { focus.clearFocus(); model.close() }, save = { focus.clearFocus(); model.save() },
+                back = { focus.clearFocus(); model.close() }, save = {
+                    focus.clearFocus()
+                    if (readOnly) model.export(c.id, ExportMode.Save) else model.save()
+                }, saveLabel = if (readOnly) "Save file" else "Save",
                 xp = { xp(c, !state.busy) },
             )
             LogoHeader()
@@ -91,7 +95,8 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
             when {
                 c != null -> key(c.id) { editor(c, state.busy, requestedSection, { currentSection = it }) { requestedSection = null } }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-                else -> Library(state.rows, model, importCharacter = { importFile.launch(arrayOf("*/*")) }) { about = true }
+                else -> Library(state.rows, model, importCharacter = { importFile.launch(arrayOf("*/*")) },
+                    allowCreation = !readOnly, notice = libraryNotice, about = { about = true })
             }
         }
         SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))

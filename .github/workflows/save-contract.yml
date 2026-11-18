@@ -70,11 +70,17 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - run: android/gradlew -p android :core:test :requiem:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest
+      - run: >-
+          android/gradlew -p android :core:test :requiem:test :forsaken:test
+          :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleDebugAndroidTest
+          :forsakenApp:testDebugUnitTest :forsakenApp:lintDebug :forsakenApp:assembleDebug :forsakenApp:assembleDebugAndroidTest
       - name: Verify declared Android capabilities were exercised
         run: python3 scripts/contract_policy.py --evidence android --reports android/requiem/build/test-results/test/TEST-*.xml android/app/build/test-results/testDebugUnitTest/TEST-*.xml
       - name: Check release packaging without private signing credentials
-        run: android/gradlew -p android :app:lintRelease :app:bundleRelease -PrequiemUnsignedRelease=true
+        run: >-
+          android/gradlew -p android :app:lintRelease :app:bundleRelease
+          :forsakenApp:lintRelease :forsakenApp:bundleRelease
+          -PrequiemUnsignedRelease=true -PforsakenUnsignedRelease=true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -83,6 +89,7 @@ jobs:
             android/*/build/test-results/
             android/*/build/reports/
             android/app/build/outputs/apk/debug/app-debug.apk
+            android/forsakenApp/build/outputs/apk/debug/forsakenApp-debug.apk
 
   exchange:
     needs: policy
@@ -140,7 +147,7 @@ jobs:
           -skip-testing:RequiemCharacterSheetUITests
           -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
           -resultBundlePath ios-test-results.xcresult
-      # Forsaken has no Android port yet, so its rules and save fixtures are tested here alone.
+      # Android's Forsaken preview tests decoding/raw transfer. Rules/canonical exchange remain unenrolled.
       - name: Build and test the Forsaken app
         run: >-
           xcodebuild test -project RequiemCharacterSheet.xcodeproj

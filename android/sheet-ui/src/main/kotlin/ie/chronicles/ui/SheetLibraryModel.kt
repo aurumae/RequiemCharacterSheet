@@ -242,10 +242,15 @@ open class SheetLibraryModel<C : StoredCharacter>(
     }
 
     fun export(id: UUID, mode: ExportMode) {
-        if (screen.busy || screen.character != null || screen.pendingImport != null || screen.exportRequest != null || screen.awaitingDestination) return
+        if (screen.busy || (screen.character != null && screen.character?.id != id) ||
+            screen.pendingImport != null || screen.exportRequest != null || screen.awaitingDestination) return
         screen = screen.copy(busy = true)
         viewModelScope.launch {
             try {
+                // The preview exports from its sheet toolbar. Any open editing session must finish saving first.
+                flush()
+                writer?.join()
+                check(!screen.saveFailed) { "Save the open sheet successfully before exporting it." }
                 val request = withContext(Dispatchers.IO) { transfers.snapshot(files.export(id), mode) }
                 screen = screen.copy(busy = false, exportRequest = request)
             } catch (e: Exception) { transferFailure("Could not export character", e) }

@@ -26,9 +26,12 @@ Android hasn't caught up.
   run's default) claims parity, and the policy unit tests must never assert it of the live manifest.
 - A test named in the manifest can be renamed on iOS, with the manifest updated in the same commit. The PR-base
   comparison rejects a renamed capability test, so do it in a push to `main`.
-- Forsaken is outside the contract until Android has a `:forsaken` module. Its catalogs aren't validated here and its
+- Forsaken is outside the contract until phase 3's canonical writer/rules and coordinated enrollment. Android's
+  phase 2 `:forsaken` module tests decoding and raw transfer only. Its catalogs aren't validated here and its
   fixtures must stay out of `shared/fixtures/`, where every file has to be classified as a Requiem scenario. Its
-  own tests, with the fixtures that pin its save format (`docs/forsaken-save-format.md`), run in the `ios` job.
+  own rules tests, with the fixtures that pin its save format (`docs/forsaken-save-format.md`), run in the `ios` job.
+  Android reads those fixtures in place in its viewer/storage tests. This does not certify Forsaken parity or
+  add it to the Requiem exchange. The `android` job builds, tests, lints and packages both Android applications.
 
 ## Adding an iOS feature before its Android port
 
