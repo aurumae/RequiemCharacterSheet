@@ -6,10 +6,17 @@ It enables blank sheets and ordinary-play edits. Guided creation is still read-o
 there is no guided-new-character action until phase 4.
 
 **Phase 3 is not fully complete:** Forsaken has not joined the shared contract or
-the bidirectional Xcode exchange. The coordination gate in
-[the approved plan](android-forsaken-plan.md#proposal-for-the-shared-save-and-catalog-contract)
-is still open. No fixture, catalog, policy, workflow, Xcode or Swift change is part
-of this Android implementation. The existing exchange checks Requiem only.
+the bidirectional SwiftPM exchange. Claude agreed the registry and revised host
+exchange on 18 November; implementation and the coordinated fixture/test move are
+still outstanding in [the plan](android-forsaken-plan.md#proposal-for-the-shared-save-and-catalog-contract).
+The existing exchange checks Requiem only. This candidate also still has the two
+old rule behaviors corrected on iOS main (custom Wolf pricing and zero-owned Totem
+Merit benefits); those Android fixes are pending.
+
+**Appearance is not accepted:** the user's iOS screenshots reveal typography and
+layout differences. [The visual reference](android-forsaken-visual-reference.md)
+records the corrections and a comparison procedure. Earlier emulator checks prove
+selected flows and reflow, not visual parity. No new APK is produced by this review.
 
 ## Try the candidate
 
@@ -68,13 +75,13 @@ raw-transfer equality separately compares bytes.
 | Advisory rules, catalog grouping/unofficial visibility, source details, all heading resources | Existing reader/catalog tests and heading byte tests; `unknownMechanicsStayAdvisoryAndDoNotChangeNumbers`. Text-only rules are retained rather than invented as automation. |
 | Library imports/exports, identity, duplicate choices, restart and no-op writes | `PlayTransferTest` uses the same `forsakenStore` factory as the app; `PreviewUiTest` covers the actual activity/file contracts and protection of guided saves. The phase-2 storage cases were retained and extended. |
 
-All creation allocation/grant/finish tests remain phase 4. The existing questions
-about creation-fixture grants, Pure prose, log keys and heading generation remain
-open. A new question records Swift's custom-Wolf-Facet fallback price of 2; Android
-matches that implementation, without changing the submitted catalogs or fixtures.
-The handoff also asks about two benefits that Swift excludes for zero-owned-dot
-Totem Merits: alternative Defense Skills and Embodiment of the Firstborn. Android
-retains those exceptions pending clarification.
+All creation allocation/grant/finish tests remain phase 4. Claude's 18 November
+reply resolves the creation-fixture grants, Pure prose, historical/new log keys and
+heading-loader questions; see the plan for the exact expectations. The fixtures
+remain unchanged. Custom Wolf Facets should now cost 1, and Totem-granted Defensive
+Combat/Embodiment should activate with no owned dots. The current APK still matches
+the older submitted Swift behavior; porting the confirmed fixes and replacing its
+old-behavior assertions remain outstanding. Preserve historical refunds.
 
 Physical-phone TalkBack, real cross-device exchange, and release signing/listing
 remain acceptance/delivery work. Emulator and local checks are recorded in the
