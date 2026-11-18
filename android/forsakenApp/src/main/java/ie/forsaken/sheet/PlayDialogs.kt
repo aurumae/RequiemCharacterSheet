@@ -103,11 +103,13 @@ import java.time.format.DateTimeFormatter
             val names=rules.traitSnapshot()
             val formatter=DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm").withZone(ZoneId.systemDefault())
             val lines=c.changeLog.asReversed().map { change ->
-                val title=names[change.trait]?.name ?: change.name
+                val title=rules.changeName(change,names)
                 val event=change.event
                 val detail=if(event!=null) event.name.replaceFirstChar(Char::uppercaseChar)+(change.beats?.let { " · $it Beat" } ?: "")
-                    else "${change.from} → ${change.to} · "+when { change.experiences<0 -> "${experiencesText(-change.experiences)} refunded"
-                        change.experiences>0 -> "${experiencesText(change.experiences)} spent"; else -> "Free" }
+                    else "${change.from} → ${change.to} · "+when { change.duringCreation==true -> "Creation"
+                        change.experiences<0 -> "${experiencesText(-change.experiences)} refunded"
+                        change.experiences>0 -> "${experiencesText(change.experiences)} spent"
+                        change.xpMode -> "No cost"; else -> "Free" }
                 title to (detail+"\n"+formatter.format(Instant.ofEpochMilli(((change.date+978307200)*1000).toLong()))+
                     if(change.duringCreation==true) " · Creation" else if(change.xpMode) " · XP Mode" else "")
             }

@@ -61,6 +61,6 @@ internal data class PlayOption(val id: String, val title: String, val detail: St
 
 @Composable internal fun PlayInformationDialog(title: String, lines: List<Pair<String,String>>, dismiss: () -> Unit) {
     AlertDialog(onDismissRequest=dismiss,title={SheetText(title)},text={
-        LazyColumn { items(lines) { (name,text) -> PlayInfo(name,text) } }
+        LazyColumn(Modifier.testTag("play-information")) { items(lines) { (name,text) -> PlayInfo(name,text) } }
     },confirmButton={TextButton(onClick=dismiss) { SheetText("Done") }})
 }

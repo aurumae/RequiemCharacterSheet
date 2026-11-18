@@ -65,9 +65,7 @@ class ForsakenEdits(val catalog: ForsakenCatalog = ForsakenCatalog.bundled) {
         val entry = catalog.entry(CatalogKind.conditions, condition.source.catalog)
         if (event == ConditionEvent.added && entry != null && !entry.flag("repeatable") && state.conditions.any { it.source == condition.source }) return@change state
         val row = if (event == ConditionEvent.added && entry?.flag("counter") == true && condition.counter == 0) condition.copy(counter = 1) else condition
-        val name = catalog.name(CatalogKind.conditions, row.source)
-        val title = if (entry?.flag("counter") == true && row.counter > 0) "$name −${row.counter}" else name
-        val logName = title + if (row.note.isNotEmpty()) " (${row.note})" else ""
+        val logName = ForsakenRules(state, catalog).conditionLogName(row)
         val hasBeat = (entry?.text("beat") ?: row.customBeat).isNotEmpty()
         val resolve = entry?.fields?.get("beatOnResolve")?.let { (it as? kotlinx.serialization.json.JsonPrimitive)?.content != "false" } ?: true
         val update = state.applyConditionEvent(row, event, logName, hasBeat, resolve, false, at) ?: return@change state

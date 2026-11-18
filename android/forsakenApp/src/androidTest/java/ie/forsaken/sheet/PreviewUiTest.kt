@@ -143,6 +143,13 @@ class PreviewUiTest {
         ui.onNode(hasText("Resolve") and hasAnyAncestor(isDialog())).performClick()
         assertTrue(state().conditions.isEmpty()); assertEquals(1,state().beats)
         assertEquals(listOf(ConditionEvent.added,ConditionEvent.resolved),state().changeLog.map { it.event })
+        section("Experience")
+        sheet.performScrollToNode(hasText("View change log")); ui.onNodeWithText("View change log").performClick()
+        ui.onNodeWithTag("play-information").performScrollToNode(hasText("Added",substring=true))
+        // Both the older Added row and the final Resolved row use the final note.
+        ui.onAllNodesWithText("Siskur-Dah (Blood Talons)").assertCountEquals(2)
+        ui.onNodeWithText("Added",substring=true).assertIsDisplayed()
+        ui.onNodeWithText("Done").performClick()
         back(); libraryClick("Unnamed Character"); ready("character-sheet")
         assertEquals(1,state().beats)
         assertEquals(0,state().merits.single().rating)

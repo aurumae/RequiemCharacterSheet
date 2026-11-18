@@ -45,12 +45,13 @@ import kotlinx.serialization.json.*
     for(key in listOf("benefit","blessing","aspiration","ban","totem","tools")) lodge.text(key)?.let {
         PlayInfo(key.replaceFirstChar(Char::uppercaseChar),it)
     }
-    catalog.all(CatalogKind.conditions).flatMap { it.noteOptions }.firstOrNull { it.group=="lodge" && it.name==lodge.name }?.let {
+    catalog.sacredHunt(lodge)?.let {
         PlayInfo("Sacred Hunt",it.summary)
     }
     for(kind in listOf(CatalogKind.merits,CatalogKind.rites,CatalogKind.fetishes)) lodge.strings(kind.name).forEach { id ->
         catalog.entry(kind,id)?.let { entry -> PlayInfo(entry.name,kind.title) { open("${kind.name}/$id") } }
     }
+    if(lodge.text("ban")!=null) PlayNote("Breaking the ban brings the Ban Condition; breaking it again under that Condition takes the Blessing away while it lasts. Lodge lore costs a werewolf outside the lodge three times the Experiences.")
 }
 
 @Composable internal fun PlayCondition(row: CharacterCondition, rules: ForsakenRules, editable: Boolean, actions: ForsakenActions, navigate: (String)->Unit) {

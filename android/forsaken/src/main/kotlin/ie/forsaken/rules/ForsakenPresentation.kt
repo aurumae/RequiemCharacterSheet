@@ -4,6 +4,9 @@ import ie.chronicles.core.*
 import kotlinx.serialization.json.*
 
 data class ForsakenNoteGroup(val title: String, val options: List<ConditionNoteOption>, val warning: String? = null)
+fun ForsakenCatalog.sacredHunt(lodge: ForsakenEntry): ConditionNoteOption? =
+    entry(CatalogKind.conditions, "siskur-dah")?.noteOptions?.firstOrNull { it.group == "lodge" && it.id == lodge.id }
+
 fun ForsakenRules.noteOptionGroups(entry: ForsakenEntry): List<ForsakenNoteGroup> {
     val choices = entry.noteOptions
     if (choices.isEmpty()) return emptyList()

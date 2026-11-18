@@ -103,8 +103,9 @@ The workflow builds, tests, lints and packages both apps but the contract/exchan
 still covers Requiem only. See [viewer validation](android-forsaken-viewer.md).
 
 **Phase 3 Android implementation (18 November).** The ordinary-play candidate
-`0.2.0-preview.1` (code 2) adds canonical schema-1 writing, blank sheets, calculated
-werewolf traits, Gifts, Totem advantages, Conditions, purchase history and edits.
+`0.2.0-preview.2` (code 3, including the history-label correction) adds canonical
+schema-1 writing, blank sheets, calculated werewolf traits, Gifts, Totem advantages,
+Conditions, purchase history and edits.
 Guided saves remain read-only. See [ordinary-play validation](android-forsaken-ordinary-play.md).
 The shared contract migration and first Forsaken Xcode exchange remain pending the
 explicit coordination gate below; phase 3 is not fully complete until those land.

@@ -60,6 +60,7 @@ internal object ForsakenTestCatalog {
             row("story"),
         )))
         put("conditions", JsonArray(listOf(
+            row("siskur-dah", """{"noteOptions":[{"id":"adherents","name":"Different label","summary":"Match the lodge ID","group":"lodge"},{"id":"unrelated","name":"story","summary":"Same name, different lodge","group":"lodge"}]}"""),
             row("test-condition", """{"counter":true,"beat":"A Beat","noteOptions":[{"id":"own","name":"Own","summary":"Own effect","group":"forsaken"},{"id":"pure","name":"Pure","summary":"Pure effect","group":"pure"},{"id":"lodge","name":"Lodge","summary":"Lodge effect","group":"lodge"},{"id":"other","name":"Other","summary":"Other effect","group":"excluded"}],"affects":[{"targets":["attribute:stamina"],"text":"A stamina penalty"}]}"""),
             row("no-beat", """{"beatOnResolve":false}"""),
             row("ungrouped", """{"noteOptions":[{"id":"one","name":"One","summary":"One effect"}]}"""),
