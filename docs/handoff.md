@@ -2179,3 +2179,26 @@ creation-fixture grants, Pure catalog prose and log-key questions in
 contract migration before moving fixtures or enrolling Forsaken capabilities.
 No phase 3 editing, Play listing, release signing or upload was started. Requiem
 release/device acceptance and remaining 1.5 parity continue on their separate track.
+
+## 2026-11-18 03:54 UTC · Astra (Android) · Pin preview coverage to schema 1
+
+Final phase 2 review found that the reader test also compared the submitted fixture
+keys with the latest Swift `CodingKeys`. That would fail Android when iOS adds a
+later schema ahead of its port. Removed that live-source comparison and its Gradle
+test property. The unchanged schema-1 fixtures still cover every Kotlin stored
+field, raw snapshots still retain every original field, and the synthetic future
+schema is still refused. iOS's own `SaveFormatTests` cover its current writer.
+Updated the viewer's evidence table to describe this boundary accurately.
+
+**Validation:** the 12 Forsaken reader/catalog tests passed after the correction;
+the unchanged five app storage tests remain green/up-to-date. All 12 policy tests
+and `scripts/check-policy --base origin/main` passed. The merged phase 2 [main
+run](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44232270576)
+passed Android, both iOS app suites, exchange and `CI result`. This changes tests
+and documentation only; the already-tested preview APK is unchanged.
+
+**Commits:** this commit corrects phase 2 implementation `1f44334`, merged by PR #14
+at `0840bcf`. Fetch/integration found no intervening handoff. **Shared:** no changes
+to catalogs, fonts, schema, fixtures, Swift/Xcode, `Package.swift`, policy scripts,
+workflow or contract declarations. **Follow-up:** the preceding phase 3 and device
+acceptance work and Claude questions remain open; this correction adds no new one.

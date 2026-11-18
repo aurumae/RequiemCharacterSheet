@@ -4,7 +4,6 @@ import ie.chronicles.core.*
 import kotlinx.serialization.json.*
 import org.junit.Assert.*
 import org.junit.Test
-import java.io.File
 
 class ForsakenReaderTest {
     private val catalog = ForsakenCatalog.bundled
@@ -19,11 +18,10 @@ class ForsakenReaderTest {
             assertEquals(1, c.state.schemaVersion)
             saved.keys
         }.toSet()
+        // The immutable schema-1 fixtures pin this reader, independently of later iOS schemas.
+        // iOS SaveFormatTests cover the current Swift writer's fields.
         val descriptor = ForsakenState.serializer().descriptor
         assertEquals(keys, (0 until descriptor.elementsCount).map(descriptor::getElementName).toSet())
-        val swift = File(System.getProperty("swiftModel")).readText()
-            .substringAfter("enum CodingKeys:").substringAfter("case ").substringBefore('}')
-        assertEquals(keys, swift.split(',').map(String::trim).filter(String::isNotEmpty).toSet())
     }
 
     /** Stored facts from SaveFormatTests.thePlayFixtureMeansWhatItSays. Effective ratings/XP wait for phase 3. */

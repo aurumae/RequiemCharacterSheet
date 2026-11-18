@@ -29,5 +29,4 @@ sourceSets.test { resources.srcDir("../../ForsakenCharacterSheetTests/Fixtures")
 tasks.test {
     systemProperty("forsakenCatalogDir", file("../../ForsakenCharacterSheet/Catalogs").absolutePath)
     systemProperty("headingsDir", file("../../shared/forsaken-headings").absolutePath)
-    systemProperty("swiftModel", file("../../ForsakenCharacterSheet/Models/ForsakenCharacter.swift").absolutePath)
 }

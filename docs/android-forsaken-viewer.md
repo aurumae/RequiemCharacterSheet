@@ -38,7 +38,7 @@ exporting an open sheet after pending writes finish. The Dark Pack splash is sha
 
 | iOS reference | Android evidence in this phase |
 | --- | --- |
-| `SaveFormatTests.theFixturesUseEveryKey` | `ForsakenReaderTest.submittedFixturesCoverEverySchemaOneFieldAndRawSnapshotRetainsThem` checks fixture keys against the Kotlin model and Swift CodingKeys. |
+| `SaveFormatTests.theFixturesUseEveryKey` | `ForsakenReaderTest.submittedFixturesCoverEverySchemaOneFieldAndRawSnapshotRetainsThem` checks the immutable schema-1 fixture keys against the Kotlin reader's fields and retains every raw field. iOS's own tests cover its current writer; future schemas remain refused by this preview. |
 | `thePlayFixtureMeansWhatItSays` | Stored facts are asserted in `thePlayFixtureKeepsAllStoredFactsWithoutApplyingRules`. Effective form ratings, armor, budgets and XP assertions remain phase 3. |
 | `theCreationFixtureMeansWhatItSays` | `theCreationFixtureIsReadWithoutGrantingOrCorrectingAnything` retains the saved Survival/Purity grants pending Claude's existing question. |
 | `aSavedCharacterIsWrittenBackUnchanged` | `PreviewTransferTest.submittedFilesOpenRestartAndExportByteForByte` uses the production store. This proves raw transfer only. A canonical writer test remains phase 3. |
