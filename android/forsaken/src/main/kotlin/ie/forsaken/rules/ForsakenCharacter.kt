@@ -42,18 +42,18 @@ import kotlinx.serialization.json.JsonObject
     val freeSkill: String? = null, val grantedRenown: List<Renown> = emptyList(),
 )
 
-/** Schema-1 saved values. Effective ratings and mutations belong to the ordinary-play rules, not the viewer. */
+/** Schema-1 saved values. Effective ratings and mutations are supplied by ForsakenRules and ForsakenEdits. */
 @Serializable data class ForsakenState(
     val game: String = "forsaken", val schemaVersion: Int = 1,
     val id: SaveId = UUID.randomUUID(), val createdAt: Double = foundationNow(), val modifiedAt: Double = createdAt,
-    val name: String = "", val player: String = "", val chronicle: String = "", val concept: String = "",
+    override val name: String = "", override val player: String = "", override val chronicle: String = "", override val concept: String = "",
     val blood: TraitSource = TraitSource(custom = ""), val bone: TraitSource = TraitSource(custom = ""),
     val auspice: TraitSource = TraitSource(custom = ""), val tribe: TraitSource = TraitSource(custom = ""),
     val lodge: TraitSource = TraitSource(custom = ""), val huntersAspect: String = "",
-    val attributes: List<Attribute> = attributeDefinitions.map { Attribute(it.id) },
-    val skills: List<Skill> = modernSkillDefinitions.map { Skill(it.id) },
-    val merits: List<Merit> = emptyList(), val aspirations: List<Aspiration> = listOf(Aspiration()),
-    val conditions: List<CharacterCondition> = emptyList(),
+    override val attributes: List<Attribute> = attributeDefinitions.map { Attribute(it.id) },
+    override val skills: List<Skill> = modernSkillDefinitions.map { Skill(it.id) },
+    override val merits: List<Merit> = emptyList(), override val aspirations: List<Aspiration> = listOf(Aspiration()),
+    override val conditions: List<CharacterCondition> = emptyList(),
     val renown: Map<String, Int> = emptyMap(), val primalUrge: Int = 1, val essence: Int = 7, val harmony: Int = 7,
     val fleshTouchstone: String = "", val spiritTouchstone: String = "",
     val kuruthTriggerSet: TraitSource = TraitSource(custom = ""), val kuruthTriggers: KuruthTriggers = KuruthTriggers(),
@@ -62,13 +62,13 @@ import kotlinx.serialization.json.JsonObject
     val rites: List<OwnedRite> = emptyList(), val fetishes: List<OwnedFetish> = emptyList(), val totem: Totem = Totem(),
     val size: Int = 5, val armor: Int = 0, val ballisticArmor: Int = 0,
     val renownFacetCredits: Map<String, Int> = emptyMap(), val favoredForm: FavoredForm = FavoredForm(),
-    val healthTrack: List<Damage> = emptyList(), val willpowerTrack: List<WillpowerMark> = emptyList(),
-    val beats: Int = 0, val experiences: Int = 0, val xpMode: Boolean = false, val creation: CreationState? = null,
-    val changeLog: List<TraitChange> = emptyList(), val paidDots: Map<String, Map<Int, Int>> = emptyMap(),
+    override val healthTrack: List<Damage> = emptyList(), override val willpowerTrack: List<WillpowerMark> = emptyList(),
+    override val beats: Int = 0, override val experiences: Int = 0, override val xpMode: Boolean = false, val creation: CreationState? = null,
+    override val changeLog: List<TraitChange> = emptyList(), val paidDots: Map<String, Map<Int, Int>> = emptyMap(),
     val showsUnofficialContent: Boolean = false,
-)
+) : ChroniclesCharacter
 
-/** The original JSON remains separate from decoded values. No preview operation canonically rewrites it. */
+/** The original JSON remains separate from decoded values; only an explicit edit writes canonical schema 1. */
 class ForsakenCharacter internal constructor(val state: ForsakenState, internal val original: JsonObject) : StoredCharacter {
     override val id get() = state.id
     override val name get() = state.name

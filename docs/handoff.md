@@ -2202,3 +2202,93 @@ at `0840bcf`. Fetch/integration found no intervening handoff. **Shared:** no cha
 to catalogs, fonts, schema, fixtures, Swift/Xcode, `Package.swift`, policy scripts,
 workflow or contract declarations. **Follow-up:** the preceding phase 3 and device
 acceptance work and Claude questions remain open; this correction adds no new one.
+
+## 2026-11-18 07:15 UTC · Astra (Android) · Forsaken ordinary-play candidate and canonical schema-1 writer
+
+Implemented the Android ordinary-play part of phase 3 as Forsaken Preview
+`0.2.0-preview.1` (code 2), using the approved application ID. Blank sheets and
+ordinary iOS saves are now editable. The werewolf rules cover all five forms and
+Advantages, Primal Urge/Essence, Harmony/Touchstones/Kuruth, Spirit Rank, Pure
+effective auspice/Moon suppression, Totem budgets/grants/over-limit sources,
+passive/active Gifts and rites, Favored/Fortified Form, Instinctive Defense, armor,
+worked pools and untrained penalties. Gift purchases display their charged prices,
+including affinity/replacement Gifts, first/further Facets, free Renown credits and
+additional Moon Gifts. Lodge lore charges outsiders triple and refunds the original
+price. Shared Conditions, Beats, Specialties and XP history use the same mutation
+path as persistence; view-triggered identity changes, Totem Merit rows and Health
+folding are covered. Unknown mechanics retain advisory text.
+
+The canonical schema-1 writer matches both unchanged submitted fixtures by full
+JSON-object equality, including conditional omission, array nulls, uppercase UUIDs,
+fractional Foundation dates, tracks, active flags, grants, credits, Favored Form,
+unofficial visibility and paid-dot/history keys. Untouched transfers still export
+original bytes. Keep Both changes only identity/name. A shared import correction
+adds only an ID to a file missing identity, preserving all other raw fields instead
+of invoking the new canonical writer during import. Requiem's storage/transfer
+regressions pass with this correction. Guided creation remains read-only at both
+the UI and writer boundary; opening the submitted Pure fixture does not apply or
+correct its Survival/Purity grants. No guided-new-character action is exposed.
+
+Shared UI now separates blank/guided creation availability and supports per-sheet
+read-only mode. The common dot control shows effective dots beyond ten, including
+faded uncounted dots, without extending its legal base-rating menu. Requiem receives
+that display fix and the missing-ID preservation fix; its rules and release work
+are otherwise unchanged. The current candidate, install/test steps and reference
+outcome mapping are in `docs/android-forsaken-ordinary-play.md`.
+
+**Validation:** all 136 JVM tests passed (6 core, 72 Requiem rules, 38 Forsaken
+reader/catalog/rules/save, 13 Requiem storage and 7 Forsaken production-store tests).
+The retained phase-2 storage suite is now `PlayTransferTest`, extended for canonical
+edits/restart/refunds/stale writes and guided-save refusal. All 10 Forsaken
+instrumentation/resource tests passed on API 36.1 at normal and 150% text, including
+blank edits and saved dialog drafts, Renown/free-Facet/refund transactions across
+recreation, Totem grants, Siskur-Dah resolution, byte-preserving file contracts,
+wrong-game/future refusal, Keep Both and all original heading outlines. All 13
+affected Requiem shared-control/transfer/recovery tests passed. Both apps passed
+debug/release lint (zero errors; existing SDK/dependency update warnings), debug
+packaging and unsigned release bundles. All 12 policy tests and Requiem Android
+capability evidence passed. Both packages installed together; visually checked the
+ordinary sheet and calculated Advantages in portrait/landscape at 150% text.
+Physical-phone TalkBack and real iOS/Android exchange are not claimed.
+
+**Commits:** this commit follows phase-2 implementation `1f44334` and schema-1 test
+correction `532024d`, merged by PRs #14/#15 at `0840bcf`/`daa4e56`. Startup and
+pre-publication [main CI](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44234971523)
+passed. Fetch/integration found no intervening handoff entries. **Shared/save
+format:** the Android canonical writer implements existing schema 1; no schema,
+catalog, font, heading, fixture, Swift/Xcode source/test/resource, `Package.swift`,
+policy script, contract manifest or workflow changed. The two fixture SHA-256s
+remain `21767e18dd701730f2ce4c310034ab6b4c63a56113bec93f9019818d84f87a5b`
+(play) and `5dd22093bf972886d19efd0b99a7909b8724c01d11c4c9a8926c9053a540a221`
+(creation). No Flat Earth Scribe or Trade Winds font was added or bundled. No Play
+listing, release signing, upload or rollout was performed.
+
+**Question:** Claude — the approved plan explicitly requires agreement before
+moving fixtures or changing shared policy, workflow, Xcode resources or iOS tests.
+No response was found in the handoff or planning PR, and the user was asked for any
+decision already made. Can we now agree the registry, unchanged Requiem paths,
+byte-preserving Forsaken fixture move and Xcode producer/consumer exchange in
+`docs/android-forsaken-plan.md`? Please coordinate the iOS resources, exchange modes
+and evidence extraction. The Android writer and production-store evidence are now
+available, but Forsaken remains unenrolled. A green existing contract result still
+describes Requiem only; this is not full phase-3 completion or exchange parity.
+
+**Question:** Claude — `ForsakenCharacter.facetCost(_:)` returns
+`FacetPrice.furtherFacet` (2) when a Facet has no catalog Gift, including a custom
+Wolf Facet. Catalog Wolf Facets cost 1. Is the custom fallback intentionally 2?
+Android currently charges/displays/refunds 2 and pins that submitted Swift behavior
+in `customWolfFacetMatchesTheSubmittedSwiftFallbackCost`; it does not substitute
+the catalog-Wolf price or change reference data.
+
+**Question:** Claude — two helpers also inspect owned `merit.rating > 0` rather
+than owned plus granted dots: `alternativeDefenseSkills` and `embodiesFirstborn`.
+A Totem-granted, zero-owned-dot Defensive Combat or Embodiment of the Firstborn
+therefore does not enable that benefit. Android retains and tests these exceptions
+to the general Totem-grant behavior. Are those exceptions intentional?
+
+**Follow-up:** finish phase 3 by agreeing and implementing the coordinated
+multi-game contract/catalog/exchange change, then run both directions with iOS.
+Keep creation behavior pending until phase 4. Earlier questions about creation
+grants, Pure catalog prose, historical/new log keys and heading generation remain
+open; this change preserves their submitted reference behavior. Requiem's remaining
+1.5 parity and separate Play/device acceptance work retain their existing priority.

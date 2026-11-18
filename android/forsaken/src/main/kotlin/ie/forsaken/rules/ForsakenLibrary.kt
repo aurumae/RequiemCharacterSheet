@@ -5,6 +5,20 @@ import java.io.File
 
 const val FORSAKEN_FILE_EXTENSION = "wtfcharacter"
 
+fun forsakenStore(directory: File, catalog: ForsakenCatalog = ForsakenCatalog.bundled) = CharacterStore(
+    directory, ForsakenCodec(catalog), FORSAKEN_FILE_EXTENSION,
+    blank = { guided: Boolean ->
+        check(!guided) { "Guided creation is not available until phase 4." }
+        ForsakenCodec(catalog).character()
+    },
+    summarize = { c ->
+        val rules = ForsakenRules(c.state, catalog)
+        LibraryRow(c.id, c.name, c.modifiedAt, c.state.creation != null,
+            details = listOf(if (rules.isPure) "" else catalog.name(CatalogKind.auspices, c.state.auspice),
+                catalog.name(CatalogKind.tribes, c.state.tribe)).filter(String::isNotBlank).joinToString(" · "))
+    },
+)
+
 fun forsakenPreviewStore(directory: File, catalog: ForsakenCatalog = ForsakenCatalog.bundled) = CharacterStore(
     directory, ForsakenPreviewCodec(catalog), FORSAKEN_FILE_EXTENSION,
     blank = { _: Boolean -> error("Create characters in the iOS app until Android editing is available.") },

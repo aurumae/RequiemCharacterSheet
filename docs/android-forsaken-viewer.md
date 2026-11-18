@@ -1,5 +1,9 @@
 # Android Forsaken phase 2 viewer
 
+This documents the phase-2 milestone. The current candidate is described in
+[Android Forsaken ordinary play](android-forsaken-ordinary-play.md). Its production
+storage tests are now named `PlayTransferTest`, retaining and extending these cases.
+
 Forsaken Preview is a separate Android 16/API 36 app with application ID
 `com.omccolgan.ForsakenCharacterSheet`. Version `0.1.0-preview.1` uses code 1.
 Install the debug APK beside Requiem. No Play listing, upload or release signing

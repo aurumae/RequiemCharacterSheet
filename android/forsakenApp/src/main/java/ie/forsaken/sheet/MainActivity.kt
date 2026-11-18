@@ -32,8 +32,13 @@ class MainActivity : ComponentActivity() {
 class CharacterShareProvider : FileProvider(R.xml.character_share_paths)
 
 class PreviewModel(app: Application, restored: SavedStateHandle) : SheetLibraryModel<ForsakenCharacter>(
-    app, restored, FORSAKEN_FILE_EXTENSION, { forsakenPreviewStore(File(app.filesDir, "characters")) },
-) { val catalog = ForsakenCatalog.bundled }
+    app, restored, FORSAKEN_FILE_EXTENSION, { forsakenStore(File(app.filesDir, "characters")) },
+) {
+    val catalog = ForsakenCatalog.bundled
+    internal val actions = ForsakenActions(catalog) { action ->
+        updateCharacter({ ForsakenRules(it.state, catalog).experiencesAvailable }, action)
+    }
+}
 
 @Composable
 internal fun ForsakenTheme(content: @Composable () -> Unit) = ChroniclesTheme(
@@ -46,7 +51,14 @@ internal fun ForsakenTheme(content: @Composable () -> Unit) = ChroniclesTheme(
 @Composable
 internal fun ForsakenPreview(model: PreviewModel) {
     CharacterLibraryHost(model, MainActivity::class.java, sections = { ForsakenSection.available(it.state, model.catalog) },
-        title = { it.title }, xp = { _, _ -> }, aboutSheet = { AboutSheet(it) }, readOnly = true,
-        libraryNotice = "Forsaken preview · Read only\nImport an iOS .wtfcharacter file to inspect it and save or share it unchanged. Character editing and calculated totals will follow in a later update.",
-    ) { c, _, section, report, handled -> PreviewSheet(c, model.catalog, section, report, handled) }
+        title = { it.title }, xp = { c, interactive ->
+            if (c.state.creation == null) XpBadge(c.state.xpMode, ForsakenRules(c.state, model.catalog).experiencesAvailable, interactive) {
+                model.actions.change { it.copy(xpMode = !it.xpMode) }
+            }
+        }, aboutSheet = { AboutSheet(it) }, allowGuidedCreation = false, characterReadOnly = { it.state.creation != null },
+        libraryNotice = "Forsaken ordinary-play preview\nCreate a blank sheet or import an iOS character. Guided creation saves remain read-only.",
+    ) { c, busy, section, report, handled ->
+        if (c.state.creation != null) PreviewSheet(c, model.catalog, section, report, handled)
+        else ForsakenSheet(c, model.actions, !busy, section, report, handled)
+    }
 }

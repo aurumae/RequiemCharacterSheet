@@ -9,13 +9,49 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.util.UUID
 
-class PreviewTransferTest {
+class PlayTransferTest {
     @get:Rule val temporary = TemporaryFolder()
-    private fun store() = forsakenPreviewStore(temporary.root)
+    private fun store() = forsakenStore(temporary.root)
     private fun fixture(name: String = "play") = javaClass.getResource("/forsaken-v1-$name.json")!!.readBytes()
     private fun fields(bytes: ByteArray) = Json.parseToJsonElement(bytes.decodeToString()).jsonObject
     private fun changed(bytes: ByteArray, change: MutableMap<String, JsonElement>.() -> Unit): ByteArray =
         JsonObject(fields(bytes).toMutableMap().apply(change)).toString().toByteArray()
+
+    @Test fun ordinaryEditsPersistOnceWithHistoricalCostsAndStaleWritesAreRefused() {
+        val repository=store(); val edits=ForsakenEdits()
+        val opened=repository.importCharacter(repository.prepareImport(fixture()))
+        val oldLog=opened.saved.state.changeLog.size
+        val raised=edits.change(opened.saved,at=800086400.125) { state -> state.copy(skills=state.skills.map {
+            if(it.skill=="athletics") it.copy(rating=it.rating+1) else it
+        }) }
+        val saved=repository.persist(opened,raised)
+        assertNotEquals(opened.text,saved.text)
+        val restarted=store().open(saved.saved.id)
+        assertEquals(oldLog+1,restarted.saved.state.changeLog.size)
+        assertEquals(2,restarted.saved.state.changeLog.last().experiences)
+        assertEquals("skill:athletics",restarted.saved.state.changeLog.last().trait)
+        assertEquals(opened.saved.state.facets,restarted.saved.state.facets)
+        assertEquals(opened.saved.state.totem,restarted.saved.state.totem)
+        assertEquals(opened.saved.state.renownFacetCredits,restarted.saved.state.renownFacetCredits)
+        assertSame(restarted,repository.persist(restarted,restarted.saved))
+        assertArrayEquals(saved.file.readBytes(),repository.export(saved.saved.id).bytes)
+        assertThrows(IllegalStateException::class.java) { repository.persist(opened,raised) }
+        val lowered=edits.change(restarted.saved) { state -> state.copy(skills=state.skills.map {
+            if(it.skill=="athletics") it.copy(rating=it.rating-1) else it
+        }) }
+        val refunded=repository.persist(restarted,lowered)
+        assertEquals(-2,refunded.saved.state.changeLog.last().experiences)
+        assertEquals(ForsakenRules(opened.saved.state).experiencesSpent,ForsakenRules(refunded.saved.state).experiencesSpent)
+        assertTrue(temporary.root.listFiles()!!.none { it.name.endsWith(".tmp") })
+    }
+
+    @Test fun creationIsReadOnlyEvenAtTheWriterBoundary() {
+        val repository=store(); val opened=repository.importCharacter(repository.prepareImport(fixture("creation")))
+        val illegal=ForsakenCodec().character(opened.saved.state.copy(name="Changed"))
+        assertThrows(IllegalStateException::class.java) { repository.persist(opened,illegal) }
+        assertThrows(IllegalStateException::class.java) { ForsakenEdits().change(opened.saved) { it.copy(tribe=TraitSource(custom="")) } }
+        assertArrayEquals(fixture("creation"),repository.export(opened.saved.id).bytes)
+    }
 
     @Test fun submittedFilesOpenRestartAndExportByteForByte() {
         for (name in listOf("play", "creation")) {
@@ -104,7 +140,7 @@ class PreviewTransferTest {
         assertEquals(1, repository.library().size)
     }
 
-    @Test fun staleReplacementFailsAndNoPreviewCreationIsAllowed() {
+    @Test fun staleReplacementFailsAndOnlyBlankCreationIsAllowed() {
         val repository = store()
         val opened = repository.importCharacter(repository.prepareImport(fixture()))
         val pending = repository.prepareImport(changed(fixture()) { put("name", JsonPrimitive("Replace")) })
@@ -112,8 +148,10 @@ class PreviewTransferTest {
         opened.file.writeBytes(newer)
         assertThrows(IllegalStateException::class.java) { repository.importCharacter(pending) }
         assertArrayEquals(newer, opened.file.readBytes())
-        assertThrows(IllegalStateException::class.java) { repository.create() }
+        val blank = repository.create()
+        assertEquals("", blank.saved.name)
+        assertNull(blank.saved.state.creation)
         assertThrows(IllegalStateException::class.java) { repository.create(true) }
-        assertEquals(1, repository.library().size)
+        assertEquals(2, repository.library().size)
     }
 }
