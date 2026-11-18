@@ -29,7 +29,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun <S> SheetToolbar(sections: List<S>, current: S, title: (S) -> String, select: (S) -> Unit,
-    busy: Boolean, saved: Boolean, back: () -> Unit, save: () -> Unit, xp: @Composable () -> Unit) {
+    busy: Boolean, saved: Boolean, back: () -> Unit, save: () -> Unit, saveLabel: String = "Save", xp: @Composable () -> Unit) {
     Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = back, enabled = !busy, modifier = Modifier.semantics { contentDescription = "Back" }) {
             SheetIcon(SheetSymbol.Back, SheetColors.ink)
@@ -37,7 +37,7 @@ fun <S> SheetToolbar(sections: List<S>, current: S, title: (S) -> String, select
         // Measure XP and Save at their natural widths, then give the pill the space left.
         Box(Modifier.weight(1f)) { SectionMenu(sections, current, title, select) }
         xp()
-        TextButton(onClick = save, enabled = !busy && !saved) { SheetText(if (saved) "Saved" else "Save", maxLines = 1) }
+        TextButton(onClick = save, enabled = !busy && !saved) { SheetText(if (saved) "Saved" else saveLabel, maxLines = 1) }
     }
 }
 
@@ -62,9 +62,9 @@ private fun <S> SectionMenu(sections: List<S>, current: S, title: (S) -> String,
             verticalAlignment = Alignment.CenterVertically) {
             Row(Modifier.background(SheetColors.accent, CircleShape).padding(horizontal = 10.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically) {
-                val style = LocalSheetType.current.subsection.copy(fontSize = 14.sp, lineHeight = 18.sp, letterSpacing = 0.sp)
+                val style = LocalSheetType.current.control
                 BasicText(title(current), Modifier.weight(1f, fill = false), style = style.copy(color = Color.White),
-                    autoSize = TextAutoSize.StepBased(11.2.sp, 14.sp, .5.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    autoSize = TextAutoSize.StepBased(style.fontSize * .8f, style.fontSize, .5.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 SheetText(if (open) "⌃" else "⌄", Modifier.padding(start = 4.dp), color = Color.White, style = style)
             }
         }

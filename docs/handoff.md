@@ -2112,3 +2112,70 @@ workflow have no changes.
 **Follow-up:** phase 2 adds `:forsaken` and `:forsakenApp` and the read-only
 viewer using the submitted schema-1 fixtures in place. Claude's earlier exchange
 and reference questions stay open. Requiem's release checks continue separately.
+
+## 2026-11-18 03:25 UTC · Astra (Android) · Phase 2 Forsaken preview reads and transfers iOS saves
+
+Added JVM `:forsaken` and the independent `:forsakenApp`, application ID
+`com.omccolgan.ForsakenCharacterSheet`. Forsaken Preview `0.1.0-preview.1` (code 1)
+installs beside Requiem with its own library, import journal and sharing authority.
+It loads the eight Forsaken catalogs and shared CofD core in Swift's precedence
+order, decodes all schema-1 fields, and imports/opens/exports the original bytes.
+Keep Both changes only identity/name. Wrong-game and future files are refused at
+the store and activity boundaries in both apps. Opening guided creation does not
+apply grants or change the submitted Survival/Purity example.
+
+The themed library and sheet expose saved base ratings, tracks, totem advantages,
+Gifts, creation choices, Conditions, free Facets and purchase history. Catalog
+details and book-grouped search retain sources, nested Facet facts and note options.
+Official content is always visible; unofficial browsing follows the saved switch,
+without hiding already-owned entries. Editing, effective ratings, capacities,
+calculated pools and available XP are explicitly unavailable. This is a raw-transfer
+preview, not the canonical writer or a claim of numeric-rule parity. Full phase 2
+instructions and reference-test mapping are in `docs/android-forsaken-viewer.md`.
+
+Shared UI now accepts game-specific label/trait/control typography, an import-only
+library, and export from an open sheet after its pending writes finish. The Dark
+Pack splash moved into `:sheet-ui` with unchanged timing/tap behavior. Forsaken uses
+Werewolf Rust, Comforter, Grechen Fuemen, its existing logo/icon/skull, fixed 7%
+watermark, and the original heading outlines. About uses system text, both complete
+OFL notices and the flattened-heading attribution. No Flat Earth Scribe or Trade
+Winds font has been added or bundled.
+
+**Validation:** 108 JVM tests passed (6 core, 72 Requiem, 12 Forsaken reader/catalog,
+13 Requiem storage, 5 Forsaken storage), plus both apps' debug/release lint,
+debug/instrumentation APKs and unsigned release bundles. All 12 policy tests and
+Requiem Android capability evidence passed. On the API 36.1 emulator, all 6 new
+Forsaken UI/resource tests passed at both normal and 150% text, and 9 affected
+Requiem transfer/recovery/shared-UI tests passed. Coverage includes actual system
+file contracts, snapshot bytes/extension/authority, both refusal directions,
+Keep Both after recreation, search/details, section navigation and every heading.
+Both package IDs were installed together. Visually checked the library, heading,
+watermark and toolbar in portrait and landscape with large text. Physical-phone
+TalkBack and real-device exchange with iOS remain acceptance work.
+
+**Commits:** this commit follows phase 1 implementation `2a4c411` and its PR #13
+merge `f8179b8`. Startup and pre-publish [main CI](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44183462076)
+passed; fetch/integration found no intervening handoff. **Shared:** the workflow
+adds the second Android app's build/test/lint/unsigned packaging and APK artifact;
+`scripts/tests/test_ci_policy.py` adds routing cases, without changing routing or
+contract-policy logic. Catalogs, fonts, save schema, fixtures, Xcode/Swift tests,
+`Package.swift`, contract manifests and the Requiem exchange are unchanged. Both
+Forsaken fixtures remain at their submitted paths. CI documentation now explicitly
+places enrollment in phase 3, after the real writer/rules and coordination.
+
+**Question: Claude — heading generator.** Three original XML `pathData` strings
+exceed AAPT's 32,767-byte limit (Character Creation, Auspice Benefit, Kuruth Triggers).
+Android now packages the unchanged XML as raw resources and constructs Compose
+vectors from its intact paths. Tests compare all 24 packaged XML files byte for
+byte with the originals and parse them, so no shared artwork was edited or font
+embedded. If you next regenerate headings, could the generator emit one complete
+path per glyph to support AAPT directly? Please coordinate any generator change;
+the current rendering works and does not block this preview.
+
+**Follow-up:** phase 3 implements canonical writing and the complete interacting
+ordinary-play rules before enabling edits. The existing contract/Xcode exchange,
+creation-fixture grants, Pure catalog prose and log-key questions in
+`docs/android-forsaken-plan.md` remain open for Claude. Agree the coordinated
+contract migration before moving fixtures or enrolling Forsaken capabilities.
+No phase 3 editing, Play listing, release signing or upload was started. Requiem
+release/device acceptance and remaining 1.5 parity continue on their separate track.

@@ -23,7 +23,9 @@ Beta 3 is version code 11 and its release acceptance is unfinished. Requiem now
 uses the shared Compose controls in `:sheet-ui`.
 The JVM core now owns shared prerequisites, Condition events, XP recording and
 file storage. Requiem supplies its codec, rules and library summary.
-There is no Android Forsaken module or app yet.
+Phase 2 adds JVM `:forsaken` and the separate `:forsakenApp`, a read-only viewer
+with all nine catalog sources and schema-1 saved fields. It imports and exports
+unchanged bytes. The canonical writer and werewolf calculations remain phase 3.
 
 The save contract currently covers **Requiem only**. A green supported-mode run
 does not certify Forsaken parity. Pushes and schedules allow declared pending ports;
@@ -88,6 +90,17 @@ accept per-game costs, refunds and Willpower bonuses. Health folding is availabl
 for Forsaken. Requiem keeps its existing visible-track behavior. The phase 1
 candidate is the Requiem app. Physical-device TalkBack and keyboard acceptance
 remain on the device checklist.
+
+**Phase 2 implementation (18 November).** Forsaken Preview installs beside Requiem
+as `com.omccolgan.ForsakenCharacterSheet`, version `0.1.0-preview.1` (code 1).
+Its library, sheet, catalog browser and details use the submitted assets and fonts.
+Saved ratings, creation choices, active flags, free Facets and purchase history are
+inspectable. Effective ratings, derived capacities, XP balances and editing are
+explicitly unavailable. Opening a creation save does not apply or alter grants.
+Both original fixtures remain in place and unchanged. Both games reject foreign
+files at their actual activity and store boundaries. Keep Both changes only ID/name.
+The workflow builds, tests, lints and packages both apps but the contract/exchange
+still covers Requiem only. See [viewer validation](android-forsaken-viewer.md).
 
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |

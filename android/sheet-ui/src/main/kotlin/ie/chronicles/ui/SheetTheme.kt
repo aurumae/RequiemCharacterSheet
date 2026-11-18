@@ -29,13 +29,24 @@ object SheetColors {
     val rule = Color(0xFFE7E7EA)
     val caution = Color(0xFF8C6408)
 }
-data class SheetType(val display: FontFamily, val smallCaps: FontFamily, private val accent: Color) {
-    val label get() = TextStyle(fontFamily = display, fontSize = 22.sp, lineHeight = 28.sp, color = accent)
-    val trait get() = label.copy(fontSize = 20.sp, lineHeight = 26.sp)
-    val section get() = label.copy(fontSize = 24.sp, lineHeight = 30.sp, color = SheetColors.muted)
-    val subsection get() = TextStyle(fontFamily = smallCaps, fontSize = 20.sp, lineHeight = 25.sp,
-        letterSpacing = 1.5.sp, color = accent)
+data class SheetType(val display: FontFamily, val smallCaps: FontFamily, private val accent: Color,
+    private val labels: FontFamily = display, private val options: SheetTypography = SheetTypography()) {
+    val label get() = TextStyle(fontFamily = labels, fontSize = options.labelSize.sp, lineHeight = (options.labelSize + 6).sp, color = accent)
+    val trait get() = TextStyle(fontFamily = display, fontSize = options.traitSize.sp, lineHeight = (options.traitSize + 6).sp,
+        color = if (options.traitNamesInAccent) accent else SheetColors.ink)
+    val section get() = TextStyle(fontFamily = display, fontSize = 24.sp, lineHeight = 30.sp, color = SheetColors.muted)
+    val subsection get() = TextStyle(fontFamily = smallCaps, fontSize = options.subheadingSize.sp, lineHeight = (options.subheadingSize + 5).sp,
+        letterSpacing = options.subheadingSpacing.sp, color = accent)
+    val control get() = TextStyle(fontFamily = if (options.controlUsesDisplay) display else smallCaps,
+        fontSize = options.controlSize.sp, lineHeight = (options.controlSize + 4).sp, letterSpacing = 0.sp)
+    val libraryAbout get() = if (options.libraryAboutUsesLabel) label else TextStyle.Default
 }
+data class SheetTypography(
+    val labelFont: Int? = null, val labelSize: Int = 22, val traitSize: Int = 20, val subheadingSize: Int = 20,
+    val subheadingSpacing: Float = 1.5f, val traitNamesInAccent: Boolean = true,
+    val controlUsesDisplay: Boolean = false, val controlSize: Int = 14,
+    val libraryAboutUsesLabel: Boolean = false,
+)
 val LocalSheetType = staticCompositionLocalOf<SheetType> { error("The app must supply sheet typography") }
 
 @Composable
@@ -43,7 +54,8 @@ fun ChroniclesTheme(identity: SheetIdentity, content: @Composable () -> Unit) {
     val resources = LocalResources.current
     val type = remember(resources, identity) {
         SheetType(FontFamily(Font(identity.displayFont)),
-            FontFamily(Font(identity.numeralFont, androidx.compose.ui.text.font.FontWeight.Medium)), identity.accent)
+            FontFamily(Font(identity.numeralFont, androidx.compose.ui.text.font.FontWeight.Medium)), identity.accent,
+            FontFamily(Font(identity.typography.labelFont ?: identity.displayFont)), identity.typography)
     }
     CompositionLocalProvider(LocalSheetType provides type, LocalSheetIdentity provides identity) {
         MaterialTheme(colorScheme = lightColorScheme(
@@ -110,6 +122,7 @@ data class SheetIdentity(
     val logoDescription: String,
     val background: Int? = null,
     val watermark: Int? = null,
+    val typography: SheetTypography = SheetTypography(),
 )
 
 internal val LocalSheetIdentity = staticCompositionLocalOf<SheetIdentity> { error("The app must supply its sheet identity") }

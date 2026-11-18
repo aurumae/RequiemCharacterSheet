@@ -170,4 +170,21 @@ class CharacterTransferUiTest {
             assertEquals(before, File(context.filesDir, "Characters").listFiles()?.map { it.name }?.toSet().orEmpty())
         }
     }
+
+    @Test fun forsakenAndUnknownGamesNeverChangeTheRequiemLibrary() {
+        library()
+        val directory = File(context.filesDir, "Characters")
+        val before = directory.listFiles()?.associate { it.name to it.readBytes().toList() }.orEmpty()
+        val foreign = listOf("play", "creation").map { name ->
+            instrumentation.context.assets.open("forsaken-v1-$name.json").use { it.readBytes() }
+        } + listOf("""{"game":"unknown","name":"Other","schemaVersion":999}""".toByteArray())
+        for (bytes in foreign) {
+            receive(bytes)
+            val message = "This character is from another game. Open it in that game's app."
+            ui.waitUntil(10_000) { ui.onAllNodesWithText(message).fetchSemanticsNodes().isNotEmpty() }
+            ui.onNodeWithText("OK").performClick()
+            ready("character-library")
+            assertEquals(before, directory.listFiles()?.associate { it.name to it.readBytes().toList() }.orEmpty())
+        }
+    }
 }
