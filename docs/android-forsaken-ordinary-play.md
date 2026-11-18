@@ -1,6 +1,6 @@
 # Android Forsaken ordinary-play candidate
 
-Version `0.2.0-preview.1` (code 2) is the Android part of phase 3. It installs over
+Version `0.2.0-preview.2` (code 3) is the Android part of phase 3. It installs over
 the phase 2 preview as `com.omccolgan.ForsakenCharacterSheet`, beside Requiem.
 It enables blank sheets and ordinary-play edits. Guided creation is still read-only;
 there is no guided-new-character action until phase 4.
@@ -64,7 +64,7 @@ raw-transfer equality separately compares bytes.
 | `thePriceShownIsThePriceCharged`, Renown free Facets, historical refunds, `aSecondMoonGiftCostsFiveThenTwoAFacet` | `thePriceShownIsThePriceChargedAndRefundsKeepHistoricalCosts`, `aNewDotOfRenownOffersOnlyUnknownFacetsInUnlockedGifts`, `aSecondMoonGiftCostsFiveThenTwoAFacetsAndKeepsInactiveDots`; activity test buys, recreates, deletes and refunds exactly once. |
 | `lodgeLoreCostsOutsidersThreeTimesAsMuch`, era replacement affinities, werewolf prerequisites, human-only Merits | `lodgeLoreCostsOutsidersThreeTimesAsMuchAndRefundsWhatWasPaid`, `eraReplacementAffinityAndWerewolfPrerequisitesAreGameSpecific`. No invented tribe eligibility gate. |
 | Spirit Rank, Harmony and Kuruth triggers; Siskur-Dah groups and ungrouped notes | `spiritRankAndHarmonyBoundariesMatchTheReference`, `siskurDahGroupsExcludeUnsupportedFactionsAndPreservePlainChoices`; activity test chooses a Ritemaster and resolves the Condition. |
-| Shared Conditions/Beats, Specialty-dependent Merits and history | `conditionEventsUseSharedBeatsAndPreserveHistoricalKeys`, `specialtiesRenameTheirDependentMeritAndRefundBothWhenRemoved`; `PlayTransferTest` persists/restarts purchases and refunds. |
+| Shared Conditions/Beats, Specialty-dependent Merits and history | `conditionEventsUseSharedBeatsAndPreserveHistoricalKeys`, `specialtiesRenameTheirDependentMeritAndRefundBothWhenRemoved`, and `ForsakenLogTest` for qualified Merit names, live/final Condition labels and unchanged historical keys; `PlayTransferTest` persists/restarts purchases and refunds. |
 | Advisory rules, catalog grouping/unofficial visibility, source details, all heading resources | Existing reader/catalog tests and heading byte tests; `unknownMechanicsStayAdvisoryAndDoNotChangeNumbers`. Text-only rules are retained rather than invented as automation. |
 | Library imports/exports, identity, duplicate choices, restart and no-op writes | `PlayTransferTest` uses the same `forsakenStore` factory as the app; `PreviewUiTest` covers the actual activity/file contracts and protection of guided saves. The phase-2 storage cases were retained and extended. |
 

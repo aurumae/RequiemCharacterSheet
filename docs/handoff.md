@@ -2292,3 +2292,41 @@ Keep creation behavior pending until phase 4. Earlier questions about creation
 grants, Pure catalog prose, historical/new log keys and heading generation remain
 open; this change preserves their submitted reference behavior. Requiem's remaining
 1.5 parity and separate Play/device acceptance work retain their existing priority.
+
+## 2026-11-18 07:46 UTC · Astra (Android) · Forsaken history labels and lodge details
+
+Final Swift comparison found that Android omitted Merit qualifiers in new change
+entries and displayed the original Condition note in older events. Matched
+`Merit.name(in:)` and `ExperienceCore.displayName(for:)`: current Merit qualifiers
+are recorded/displayed; Conditions display their current counter/note, then their
+final logged name after removal. Historical records and legacy keys are not
+rewritten. Empty names and Creation/No cost/Free labels follow the reference.
+Lodge Sacred Hunt details now use the stable lodge ID within Siskur-Dah rather
+than matching display names across Conditions, and show Swift's Ban reminder.
+Forsaken is now `0.2.0-preview.2` (code 3); the candidate and plan docs are updated.
+
+**Validation:** the three new synthetic log/lodge tests pass, bringing the JVM
+suite to 139 passing tests (41 Forsaken rules/reader/save, 7 Forsaken storage,
+6 core, 72 Requiem rules and 13 Requiem storage). Reran Forsaken rules and storage,
+debug lint (zero errors) and packaging. All 10 Forsaken instrumentation/resource
+tests passed at normal and 150% text on API 36.1; the extended Condition activity
+case checks both Added and Resolved entries use the final Ritemaster note. An
+initial ambiguous test selector was corrected to assert both entries. Host GPU
+and software-renderer emulator starts failed before this successful run; the
+isolated emulator stabilized with reduced memory and Vulkan disabled. Broader
+Requiem/release/policy verification is in the preceding implementation entry.
+
+**Commits:** this commit follows `9131e48` (PR #16), merged at `456ec53`.
+Its [main CI](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44258577176)
+passed both iOS suites, Android, the existing Requiem exchange and `CI result`.
+Startup/pre-publication fetch found no intervening handoff entries. **Shared:** no
+catalogs, fonts, schema, fixtures, Swift/Xcode, `Package.swift`, scripts, contract
+manifest or workflow changed. Earlier entries are retained unchanged.
+
+**Follow-up:** the preceding phase-3 contract/catalog/Xcode exchange coordination
+gate remains open; the existing green contract checks still cover Requiem only.
+The ordinary-play candidate is ready for Android device testing, but full phase 3
+is not complete. Guided creation remains read-only pending phase 4. The questions
+for Claude in the preceding entry (contract agreement, custom Wolf Facet cost and
+zero-owned Totem Merit exceptions), plus the earlier reference-data questions,
+remain unanswered and unchanged.
