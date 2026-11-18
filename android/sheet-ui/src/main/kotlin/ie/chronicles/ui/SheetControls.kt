@@ -97,7 +97,7 @@ fun TraitRatingControl(
         @Composable fun dots() {
             CompactTargets {
                 Column(if (reserveFiveDots) Modifier.width(minOf(maxWidth, 120.dp)) else Modifier) {
-                    (1..maxOf(visibleCap, total).coerceAtMost(10)).chunked(dotsPerRow).forEach { values ->
+                    (1..maxOf(visibleCap, total)).chunked(dotsPerRow).forEach { values ->
                         Row {
                             values.forEach { value ->
                                 val filled = value <= total

@@ -43,7 +43,9 @@ open class SheetDocuments<C : StoredCharacter>(private val codec: SheetCodec<C>)
             val character = codec.decode(text)
             // Older saves gain a stable identity once, before a pending import can be restored.
             val stored = if (objectValue["id"] == null || objectValue["id"] == JsonNull)
-                codec.encode(character).toByteArray(Charsets.UTF_8) else bytes.copyOf()
+                JsonObject(objectValue.toMutableMap().apply {
+                    put("id", JsonPrimitive(character.id.toString().uppercase(Locale.ROOT)))
+                }).toString().toByteArray(Charsets.UTF_8) else bytes.copyOf()
             return CharacterDocument(stored, character)
         } catch (e: UnsupportedGame) {
             throw CharacterDocumentError(requireNotNull(e.message))

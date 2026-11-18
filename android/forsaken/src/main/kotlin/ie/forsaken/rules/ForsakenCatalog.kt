@@ -9,7 +9,7 @@ enum class CatalogKind(val title: String) {
     kuruthTriggers("Kuruth Triggers"), tilts("Tilts"),
 }
 
-/** All fields are retained, including nested effects. Phase 2 presents text, and applies no numeric effects. */
+/** All fields are retained, including nested effects and text-only rules. */
 data class ForsakenEntry(val fields: JsonObject) {
     val id = fields.getValue("id").jsonPrimitive.content
     val name = fields.getValue("name").jsonPrimitive.content

@@ -21,6 +21,7 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
     model: SheetLibraryModel<C>, activity: Class<*>, sections: (C) -> List<S>, title: (S) -> String,
     xp: @Composable (C, Boolean) -> Unit, aboutSheet: @Composable (() -> Unit) -> Unit,
     readOnly: Boolean = false, libraryNotice: String? = null,
+    allowGuidedCreation: Boolean = true, characterReadOnly: (C) -> Boolean = { false },
     editor: @Composable (C, Boolean, S?, (S) -> Unit, () -> Unit) -> Unit,
 ) {
     val state by model.ui.collectAsStateWithLifecycle()
@@ -34,6 +35,7 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
     // A generic MIME type preserves the game extension; document providers append .json for application/json.
     val saveFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream"), model::saveExport)
     val c = state.character
+    val sheetReadOnly = readOnly || c?.let(characterReadOnly) == true
     val available = c?.let(sections).orEmpty()
     var currentSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<S?>(null) }
     var requestedSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<S?>(null) }
@@ -79,9 +81,9 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
                 select = { focus.clearFocus(); requestedSection = it }, busy = state.busy, saved = saved,
                 back = { focus.clearFocus(); model.close() }, save = {
                     focus.clearFocus()
-                    if (readOnly) model.export(c.id, ExportMode.Save) else model.save()
-                }, saveLabel = if (readOnly) "Save file" else "Save",
-                xp = { xp(c, !state.busy) },
+                    if (sheetReadOnly) model.export(c.id, ExportMode.Save) else model.save()
+                }, saveLabel = if (sheetReadOnly) "Save file" else "Save",
+                xp = { xp(c, !state.busy && !sheetReadOnly) },
             )
             LogoHeader()
             state.error?.let {
@@ -96,7 +98,7 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
                 c != null -> key(c.id) { editor(c, state.busy, requestedSection, { currentSection = it }) { requestedSection = null } }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 else -> Library(state.rows, model, importCharacter = { importFile.launch(arrayOf("*/*")) },
-                    allowCreation = !readOnly, notice = libraryNotice, about = { about = true })
+                    allowCreation = !readOnly, allowGuidedCreation = allowGuidedCreation, notice = libraryNotice, about = { about = true })
             }
         }
         SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))

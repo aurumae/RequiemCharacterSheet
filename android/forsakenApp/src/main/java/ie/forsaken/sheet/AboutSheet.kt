@@ -44,7 +44,7 @@ internal fun AboutSheet(dismiss: () -> Unit) {
                     "about" -> {
                         item { SheetText("Forsaken Character Sheet", style = MaterialTheme.typography.titleLarge, color = SheetColors.accent) }
                         item { SheetText("Android preview ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})") }
-                        item { SheetText("Read-only character viewer. Import an iOS character, read its saved traits and catalog rules, and export it unchanged. Editing and calculated totals are not available yet.") }
+                        item { SheetText("Create a blank sheet or import an iOS character for ordinary play. Includes calculated traits, Gifts, Totem advantages, Conditions and XP history. Guided creation saves can be read and exported; creation editing is not available yet.") }
                         item { TextButton(onClick = { page = "Dark Pack" }) { SheetText("Dark Pack · Legal notice") } }
                         item { SheetText("Fonts", style = MaterialTheme.typography.titleMedium, color = SheetColors.accent) }
                         for (name in listOf("Comforter", "Grechen Fuemen")) item {

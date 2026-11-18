@@ -7,10 +7,12 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import ie.forsaken.rules.*
+import ie.chronicles.core.*
 import kotlinx.serialization.json.*
 import org.junit.*
 import org.junit.Assert.*
@@ -54,15 +56,107 @@ class PreviewUiTest {
         ui.onNodeWithTag("character-library").performScrollToNode(hasText(text)); ui.onNodeWithText(text).performClick()
     }
 
-    @Test fun submittedPlaySaveIsReadOnlyAcrossRecreationAndCatalogSearch() {
-        ui.onNodeWithText("New blank sheet").assertDoesNotExist()
+    private fun section(title: String) {
+        ui.onNodeWithTag("section-pill").performClick()
+        ui.onNode(hasText(title) and hasAnyAncestor(isPopup())).performScrollTo().performClick()
+    }
+    private fun state(): ForsakenState = ui.runOnIdle { ViewModelProvider(ui.activity)[PreviewModel::class.java].ui.value.character!!.state }
+
+    @Test fun blankSheetEditsAndDraftSurviveRecreationAndRestart() {
+        libraryClick("New blank sheet"); ready("character-sheet")
+        ui.onNodeWithContentDescription("Character Name").performTextReplacement("Android wolf")
+        ui.onNodeWithContentDescription("Character Name").performImeAction()
+        section("Aspirations")
+        ui.onNodeWithText("Add Aspiration").performClick()
+        ui.onNodeWithTag("play-input-0").performTextInput("Keep the pack together")
+        ui.activityRule.scenario.recreate(); ready("play-input-0")
+        ui.onNodeWithTag("play-input-0").assertTextContains("Keep the pack together")
+        ui.onNode(hasText("Save") and hasAnyAncestor(isDialog())).performClick()
+        val id=state().id
+        back(); libraryClick("Android wolf"); ready("character-sheet")
+        assertEquals("Android wolf",state().name)
+        assertEquals(1,state().aspirations.count { it.text=="Keep the pack together" })
+        assertTrue(state().changeLog.isEmpty())
+        back()
+        assertEquals("Android wolf",forsakenStore(File(context.filesDir,"characters")).open(id).saved.name)
+    }
+
+    @Test fun renownPurchaseFreeFacetAndRefundSurviveRecreationExactlyOnce() {
+        receive(fixture()); ready("character-sheet")
+        val original=state(); val originalLog=original.changeLog.size
+        section("Renown")
+        ui.onNodeWithContentDescription("Cunning").performSemanticsAction(SemanticsActions.SetProgress) { it(2f) }
+        assertEquals(3,state().changeLog.last().experiences)
+        assertEquals(1,state().renownFacetCredits["cunning"])
+        ui.onNodeWithText("Cunning: a free Facet to learn").performClick()
+        ui.onNodeWithTag("play-picker-search").performTextInput("Unchained")
+        ui.onNodeWithTag("play-picker-options").performScrollToNode(hasText("Unchained"))
+        ui.onNode(hasText("Unchained") and hasAnyAncestor(hasTestTag("play-picker-options"))).performClick()
+        assertTrue(state().facets.single { it.source.catalog=="strength-unchained" }.withRenown)
+        assertEquals(0,state().changeLog.last().experiences)
+        ui.activityRule.scenario.recreate(); ready("character-sheet")
+        assertEquals(originalLog+2,state().changeLog.size)
+        section("Shadow Gifts")
+        ui.onNodeWithTag("character-sheet").performScrollToNode(hasContentDescription("Options for Unchained"))
+        ui.onNodeWithContentDescription("Options for Unchained").performClick()
+        ui.onNodeWithText("Delete").performClick()
+        ui.onNode(hasText("Delete") and hasAnyAncestor(isDialog())).performClick()
+        assertEquals(1,state().renownFacetCredits["cunning"])
+        section("Renown")
+        ui.onNodeWithContentDescription("Cunning").performSemanticsAction(SemanticsActions.SetProgress) { it(1f) }
+        assertEquals(-3,state().changeLog.last().experiences)
+        section("Form")
+        ui.onNodeWithText("Choose Form").performClick(); ui.onNodeWithText("Gauru").performClick()
+        assertEquals(10,ForsakenRules(state()).attribute("strength"))
+        back(); libraryClick("Mara Voss"); ready("character-sheet")
+        assertEquals(originalLog+4,state().changeLog.size)
+        assertEquals(10,ForsakenRules(state()).experiencesSpent)
+        assertEquals(Form.gauru,state().form)
+        section("Attributes")
+        ui.onNodeWithTag("character-sheet").performScrollToNode(hasContentDescription("Strength"))
+        ui.onNodeWithContentDescription("Strength").assertIsDisplayed()
+    }
+
+    @Test fun totemGrantAndConditionResolutionUseTheSameStoredSheet() {
+        libraryClick("New blank sheet"); ready("character-sheet")
+        section("Totem")
+        ui.onNodeWithTag("character-sheet").performScrollToNode(hasText("Add Advantage"))
+        ui.onNodeWithText("Add Advantage").performClick()
+        ui.onNodeWithText("Merit").performClick()
+        ui.onNodeWithTag("play-picker-search").performTextInput("Fast Reflexes")
+        ui.onNode(hasText("Fast Reflexes") and hasAnyAncestor(hasTestTag("play-picker-options"))).performClick()
+        assertEquals(0,state().merits.single().rating)
+        assertEquals(1,state().totem.experiencesSpent)
+        assertEquals(3,ForsakenRules(state()).initiative())
+        assertTrue(state().changeLog.isEmpty())
+        section("Conditions")
+        ui.onNodeWithText("Add Condition").performClick()
+        ui.onNodeWithTag("play-picker-search").performTextInput("Siskur")
+        ui.onNode(hasText("Siskur-Dah") and hasAnyAncestor(hasTestTag("play-picker-options"))).performClick()
+        val sheet=ui.onNodeWithTag("character-sheet")
+        sheet.performScrollToNode(hasText("Choose Ritemaster"))
+        ui.onNodeWithText("Choose Ritemaster").performClick()
+        ui.onNodeWithText("Blood Talons").performClick()
+        assertEquals("Blood Talons",state().conditions.single().note)
+        sheet.performScrollToNode(hasText("Resolve Siskur-Dah"))
+        ui.onNodeWithText("Resolve Siskur-Dah").performClick()
+        ui.onNode(hasText("Resolve") and hasAnyAncestor(isDialog())).performClick()
+        assertTrue(state().conditions.isEmpty()); assertEquals(1,state().beats)
+        assertEquals(listOf(ConditionEvent.added,ConditionEvent.resolved),state().changeLog.map { it.event })
+        back(); libraryClick("Unnamed Character"); ready("character-sheet")
+        assertEquals(1,state().beats)
+        assertEquals(0,state().merits.single().rating)
+    }
+
+    @Test fun openingOrdinaryPlayDoesNotRewriteAcrossRecreationAndCatalogSearch() {
+        ui.onNodeWithTag("character-library").performScrollToNode(hasText("New blank sheet"))
+        ui.onNodeWithText("New blank sheet").assertIsDisplayed()
         ui.onNodeWithText("Guided character creation").assertDoesNotExist()
         val bytes = fixture()
         val c = ForsakenPreviewCodec().decode(bytes.decodeToString())
         receive(bytes)
         ready("character-sheet")
-        ui.onNodeWithText("Save file").assertIsDisplayed()
-        ui.onAllNodes(hasSetTextAction()).assertCountEquals(0)
+        ui.onNodeWithText("Save").assertIsDisplayed()
         val sheet = ui.onNodeWithTag("character-sheet")
         sheet.performScrollToNode(hasText("Mara Voss")); ui.onNodeWithText("Mara Voss").assertIsDisplayed()
         ui.activityRule.scenario.recreate()
@@ -74,7 +168,6 @@ class PreviewUiTest {
         ui.onNodeWithTag("catalog-details").performScrollToNode(hasText("Primal Strength"))
         ui.onNode(hasText("Primal Strength") and hasAnyAncestor(hasTestTag("catalog-details"))).assertIsDisplayed()
         ui.onNodeWithText("Done").performClick()
-        ui.onNodeWithText("Cancel").performClick()
         back()
         assertArrayEquals(bytes, stored(c.id).readBytes())
         libraryClick("Mara Voss")
@@ -88,6 +181,8 @@ class PreviewUiTest {
         receive(bytes, view = true)
         ready("character-sheet")
         ui.onNodeWithContentDescription("Character Creation").assertIsDisplayed()
+        ui.onNodeWithText("Save file").assertIsDisplayed()
+        ui.onAllNodes(hasSetTextAction()).assertCountEquals(0)
         ui.onNodeWithTag("character-sheet").performScrollToNode(hasText("Survival"))
         ui.onNodeWithText("Survival").assertIsDisplayed()
         ui.onNodeWithTag("section-pill").performClick()
@@ -119,12 +214,13 @@ class PreviewUiTest {
             val destination = uri(byteArrayOf())
             result = Instrumentation.ActivityResult(Activity.RESULT_OK, Intent().setData(destination))
             captured.set(null)
-            ui.onNodeWithText("Save file").performClick()
+            back()
+            ui.onNodeWithContentDescription("Options for Mara Voss").performClick()
+            ui.onNodeWithText("Save to file").performClick()
             ui.waitUntil(5000) { captured.get()?.action == Intent.ACTION_CREATE_DOCUMENT }
             assertEquals("Mara Voss.wtfcharacter", captured.get().getStringExtra(Intent.EXTRA_TITLE))
             assertEquals("application/octet-stream", captured.get().type)
             ui.waitUntil(5000) { context.contentResolver.openInputStream(destination)!!.use { it.readBytes() }.contentEquals(bytes) }
-            back()
             result = Instrumentation.ActivityResult(Activity.RESULT_CANCELED, null)
             captured.set(null)
             ui.onNodeWithContentDescription("Options for Mara Voss").performClick()
@@ -157,7 +253,7 @@ class PreviewUiTest {
         ui.onNodeWithTag("character-sheet").performScrollToNode(hasText("Mara incoming (1)"))
         ui.onNodeWithText("Mara incoming (1)").assertIsDisplayed()
         assertArrayEquals(bytes, stored(c.id).readBytes())
-        assertEquals(2, forsakenPreviewStore(File(context.filesDir, "characters")).library().size)
+        assertEquals(2, forsakenStore(File(context.filesDir, "characters")).library().size)
     }
 
     @Test fun otherGamesAndFutureOrDamagedFilesAreRefusedByTheActivity() {

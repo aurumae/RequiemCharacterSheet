@@ -102,6 +102,13 @@ files at their actual activity and store boundaries. Keep Both changes only ID/n
 The workflow builds, tests, lints and packages both apps but the contract/exchange
 still covers Requiem only. See [viewer validation](android-forsaken-viewer.md).
 
+**Phase 3 Android implementation (18 November).** The ordinary-play candidate
+`0.2.0-preview.1` (code 2) adds canonical schema-1 writing, blank sheets, calculated
+werewolf traits, Gifts, Totem advantages, Conditions, purchase history and edits.
+Guided saves remain read-only. See [ordinary-play validation](android-forsaken-ordinary-play.md).
+The shared contract migration and first Forsaken Xcode exchange remain pending the
+explicit coordination gate below; phase 3 is not fully complete until those land.
+
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |
 | **0. Protect saves and stabilize tests** | Refuse foreign-game files in Requiem's real import/open boundary before any migration or write. Move rules-outcome tests onto synthetic catalogs, retaining live checks for declared contracts. Add the general tested `advisory-text` fallback and review the Gallows Post test change. | A Requiem candidate that accepts existing files and refuses Forsaken/unknown games without changing the library. Forsaken implementation has not started in this phase. |

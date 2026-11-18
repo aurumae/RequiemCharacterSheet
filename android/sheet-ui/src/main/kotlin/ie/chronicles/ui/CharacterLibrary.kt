@@ -45,7 +45,7 @@ fun <C : StoredCharacter> ImportConflict(pending: PendingImport<C>, busy: Boolea
 
 @Composable
 fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryModel<C>, importCharacter: () -> Unit,
-    allowCreation: Boolean = true, notice: String? = null, about: () -> Unit) {
+    allowCreation: Boolean = true, allowGuidedCreation: Boolean = true, notice: String? = null, about: () -> Unit) {
     var exportPicker by rememberSaveable { mutableStateOf(false) }
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -61,7 +61,7 @@ fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryMod
             SheetText(notice, Modifier.fillMaxWidth().padding(12.dp), color = SheetColors.muted)
         }
         if (rows.isEmpty() && allowCreation) item {
-            SheetText("Start with a blank sheet or follow guided character creation.",
+            SheetText(if (allowGuidedCreation) "Start with a blank sheet or follow guided character creation." else "Start with a blank sheet or import a character.",
                 Modifier.fillMaxWidth().background(Color.White).padding(12.dp), color = SheetColors.muted)
         }
         items(rows, key = { it.id.toString() }) { row ->
@@ -102,7 +102,7 @@ fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryMod
                 SheetText("New blank sheet", style = MaterialTheme.typography.bodyMedium, color = SheetColors.accent)
             }
         }
-        if (allowCreation) item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
+        if (allowCreation && allowGuidedCreation) item { AddSheetRow("Guided character creation", true) { model.create(guided = true) } }
         item { AddSheetRow("Import Character", true, importCharacter) }
         item { AddSheetRow("Export Character", rows.any { it.problem == null }) { exportPicker = true } }
         item { TextButton(onClick = about) { SheetText("About this app", style = LocalSheetType.current.libraryAbout) } }
