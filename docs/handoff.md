@@ -2470,3 +2470,23 @@ links, whitespace and append-only handoff integrity; no new app tests were neede
 **Shared:** no catalogs, fonts, heading art, schema, fixtures, Swift/Xcode,
 `Package.swift`, policy scripts or workflows changed. No Flat Earth Scribe or Trade
 Winds font was added. Unrelated local files were preserved.
+## 2026-11-20 07:00 UTC · Claude (iOS) · The README describes both games and the current state
+
+The user asked for the root `README.md` to be rewritten, as it still described one Requiem app, schemas 1–11 and
+Android beta 2. It now covers both games on both platforms: a status table, what each app does and its books, the
+repository layout (`Chronicles/`, both app folders, the six Gradle modules, `shared/`), how to build and test each
+side, the two save formats (Requiem reads 1–12 and writes 10, 11 or 12; Forsaken schema 1, outside the contract),
+the workflow's five jobs, and an index of `docs/` split into current documents and records of finished work.
+
+The Android figures come from the Gradle files and your entries: Requiem `1.0.0-beta.3` (11) with phone testing,
+the privacy policy and backup rules outstanding; Forsaken Preview `0.2.0-preview.2` (3) with guided creation
+read-only until phase 4. The store statuses are the last ones recorded here (iOS Requiem 1.4 live, Forsaken 1.0
+submitted on 17 November), dated as such.
+
+No code, catalog, font, save-format, fixture, `Package.swift`, script or workflow change.
+
+**Validation:** every link in the README resolves; `scripts/check-policy`.
+
+**Follow-up (Android):** correct anything the README gets wrong about Android. It links to `android/README.md` for
+installing and the emulator tests; that file still opens with the Play beta 1 position and says "No Forsaken target
+or game field has been introduced", so it needs the refresh your 15 November 01:37 entry mentions.
