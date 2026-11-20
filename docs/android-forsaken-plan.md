@@ -5,27 +5,33 @@ Reference: iOS Forsaken 1.0 submitted on 17 November, repository `17f8db8`, and 
 [submission handoff](handoff.md#2026-11-17-1305-utc--claude-ios--forsaken-10-is-submitted-androids-forsaken-can-start).
 This replaces the old ordering that put Requiem's Play acceptance ahead of Forsaken.
 Requiem and Forsaken release independently.
+Current reference update: `6e35686` (18 November) makes Forsaken host-buildable,
+answers the contract/reference questions and fixes two rules for the next iOS update.
+The user's [iOS screenshot review](android-forsaken-visual-reference.md) now guides
+Android's visual corrections; appearance is not yet accepted.
 
 ## What is already built
 
 iOS has the complete first-release Forsaken sheet, guided creation, eight Forsaken
 catalog files plus the shared CofD core catalog, and schema-1 `.wtfcharacter` saves.
-The five model files, three view files, shared `Chronicles/Core` and `Chronicles/UI`,
-74 Forsaken rules tests and `SaveFormatTests.swift` are the implementation reference.
+The game models/views, shared `Chronicles/Core` and `Chronicles/UI`, Forsaken rules
+tests and `SaveFormatTests.swift` are the implementation reference. Forsaken now
+builds in SwiftPM with 82 host tests; artwork/section UI tests remain in Xcode.
 The two fixtures exercise every top-level save key. The newer handoff entries and
 [design decisions](design-decisions.md) supersede earlier sketches and book conflicts.
 Schema 1 is frozen for the submitted build; changes to that format require schema 2
 coordinated with iOS. Raise apparent catalog, fixture or behavior mistakes
 as **Question:** in the handoff; do not change them or add Android workarounds.
 
-Android has JVM `:core` and `:requiem`, with the Requiem Compose app in `:app`.
-Beta 3 is version code 11 and its release acceptance is unfinished. Requiem now
-uses the shared Compose controls in `:sheet-ui`.
-The JVM core now owns shared prerequisites, Condition events, XP recording and
-file storage. Requiem supplies its codec, rules and library summary.
-Phase 2 adds JVM `:forsaken` and the separate `:forsakenApp`, a read-only viewer
-with all nine catalog sources and schema-1 saved fields. It imports and exports
-unchanged bytes. The canonical writer and werewolf calculations remain phase 3.
+Android has JVM `:core`, `:requiem` and `:forsaken`, with Requiem in `:app` and
+Forsaken in `:forsakenApp`, using shared Compose controls in `:sheet-ui`. Requiem
+Beta 3 is version code 11 and its release acceptance is unfinished. The JVM core
+owns shared prerequisites, Condition events, XP recording and file storage.
+Forsaken `0.2.0-preview.3` (code 4) has ordinary-play edits, werewolf calculations
+and a canonical schema-1 writer, while untouched imports retain their bytes.
+Guided creation is read-only. Preview 3 ports Claude's two rule fixes and the
+ordinary-play visual corrections. User/device appearance acceptance and the
+coordinated contract/exchange implementation remain phase-3 work.
 
 The save contract currently covers **Requiem only**. A green supported-mode run
 does not certify Forsaken parity. Pushes and schedules allow declared pending ports;
@@ -107,15 +113,19 @@ still covers Requiem only. See [viewer validation](android-forsaken-viewer.md).
 schema-1 writing, blank sheets, calculated werewolf traits, Gifts, Totem advantages,
 Conditions, purchase history and edits.
 Guided saves remain read-only. See [ordinary-play validation](android-forsaken-ordinary-play.md).
-The shared contract migration and first Forsaken Xcode exchange remain pending the
-explicit coordination gate below; phase 3 is not fully complete until those land.
+The shared contract migration and first Forsaken SwiftPM exchange remain pending
+implementation. Claude answered the coordination questions on 18 November (below);
+existing green contract checks still cover Requiem only. The user's screenshot
+review identified ordinary-play visual corrections before phase 4. Preview 3
+(code 4, 20 November) implements those corrections and the two confirmed rule
+fixes; the visual-reference document records rendered-screen validation.
 
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |
 | **0. Protect saves and stabilize tests** | Refuse foreign-game files in Requiem's real import/open boundary before any migration or write. Move rules-outcome tests onto synthetic catalogs, retaining live checks for declared contracts. Add the general tested `advisory-text` fallback and review the Gallows Post test change. | A Requiem candidate that accepts existing files and refuses Forsaken/unknown games without changing the library. Forsaken implementation has not started in this phase. |
 | **1. Shared rules, storage and interface** | Extract the modules/adapters above. Add watermark, search folding, toolbar/menu layout, counted dots and unique row identities. Add catalog metadata/note-choice support and check splash/accessibility follow-ups. Existing Requiem exchange and storage tests must still pass. | A Requiem candidate with the shared UI improvements; exercise keyboard reveal, scrolling, search, large text, TalkBack, import/Keep Both and restart recovery. |
 | **2. Forsaken foundation and viewer** | Add `:forsaken` and `:forsakenApp`; load all nine catalog sources and all schema-1 fields. Build the themed library, section frame and catalog details. Read the original fixtures in place. Complete decoding and raw transfer tests; do not claim canonical writer/rules parity yet. | Both apps installed together. A clearly identified Forsaken preview can import, inspect and export a character unchanged. Imported saves remain read-only; unavailable calculations are not presented as correct. Test both game-refusal directions and file handling. |
-| **3. Complete ordinary play and enroll the contract** | Finish canonical encoding and the interacting werewolf rules below, then enable ordinary-play editing. Match the play fixture's numbers and all non-creation rule outcomes. Coordinate the multi-game contract migration and first real exchange with Claude. Guided characters remain read-only until phase 4. | A usable Forsaken ordinary-play candidate: create a blank character, edit an iOS play save, shift forms, use Gifts/rites/totem/Conditions, buy and refund traits, restart and return the file to iOS. |
+| **3. Complete ordinary play and enroll the contract** | Finish canonical encoding and the interacting werewolf rules below, then enable ordinary-play editing. Match the play fixture's numbers and all non-creation rule outcomes. Apply the confirmed 18 November rule fixes and [ordinary-play visual corrections](android-forsaken-visual-reference.md). Coordinate the multi-game contract migration and first SwiftPM exchange with Claude. Guided characters remain read-only until phase 4. | A usable Forsaken ordinary-play candidate: create a blank character, edit an iOS play save, shift forms, use Gifts/rites/totem/Conditions, buy and refund traits, restart and return the file to iOS. |
 | **4. Guided creation and full rule parity** | Implement all seven steps, hard limits, grants and finish/leave semantics for Forsaken, Ghost Wolves and Pure. Add creation/action exchange cases; account for every reference rule test and clear pending capabilities only with executed evidence. | Create each of the three character types, resume creation across apps, change tribe/auspice/free Skill, finish with bonus XP and continue ordinary play. The submitted creation fixture remains intact. |
 | **5. Acceptance and delivery** | Verify the complete UI, actual device exchange, accessibility, lifecycle recovery, upgrade/data retention and packaging; complete Forsaken's own listing/privacy/backup/signing decisions. Run strict exchange and both apps' required checks. | A signed Forsaken release candidate, then an internal Play build when the user authorizes upload. Requiem can release separately at any point once its own gates pass. |
 
@@ -158,9 +168,13 @@ without turning that into a paid purchase history.
 
 ## Proposal for the shared save and catalog contract
 
-**Coordination gate:** agree this structure with Claude before moving fixtures or
-changing policy, workflow, Xcode resources or iOS tests. None of those changes is
-part of this planning PR. Phase 2 reads the fixtures at their existing paths.
+**Coordination update, 18 November:** Claude agreed the registry, preserved Requiem
+paths/IDs, game-qualified evidence, ownership checks and byte-preserving fixture
+move. Android accepts his revised SwiftPM exchange: the host-buildable models
+remove the need for an Xcode exchange driver. The original gate is no longer an
+unanswered design question, but implementation and the coordinated fixture/test
+commit are still outstanding. Do not move the fixtures until registry-aware policy
+supports them. This documentation review changes none of those shared inputs.
 
 ### Registry and fixtures
 
@@ -201,8 +215,9 @@ supported consumer merely because it decodes the schema.
 - Port the play fixture's semantic assertions: Mara's Strength 7 in Dalu, 10 in
   Gauru and 5 in Hishu; 10 XP spent and 4 available; the intentionally overspent
   totem; custom and additional Moon Gifts; Conditions and history.
-- Preserve the creation fixture and its incomplete state exactly. Resolve the
-  reference questions below before defining edit/resume expectations.
+- Preserve the creation fixture and its incomplete state exactly. The 18 November
+  `openingASavedCreationLeavesItsGrantsAlone` and `editingAResumedCreationMovesItsGrants`
+  tests now define opening/resuming and subsequent grant-edit expectations (below).
 - Add new, versioned action scenarios for ordinary play, each creation faction,
   grant changes, active effects/Health shrink, buying/refunding Gifts and lodge
   lore, free Facet consumption/removal, and Conditions/Specialties history.
@@ -248,30 +263,41 @@ and make the normal default run all enrolled games. Retain the Requiem SwiftPM
 producer → Kotlin/store → Swift consumer sequence and existing environment overrides.
 Keep artifacts in separate per-game directories with the selected plan and reports.
 
-Forsaken's current character model imports SwiftUI and its catalog uses `Bundle.main`;
-it cannot simply be added to the host Swift package. Proposed first implementation:
-Claude adds producer/consumer modes to the **existing Forsaken Xcode unit-test
-target**, using production model/store code. A macOS driver runs the producer,
-retrieves files from a known test-app container directory, runs Kotlin consumers
-and producers, stages the Kotlin results back into that simulator container, and
-runs the iOS consumer. Use a controlled simulator and explicit test-mode input;
-Claude should confirm the container/test configuration before implementation.
-No UI-test automation is needed for this exchange. A host-buildable Forsaken model
-can be considered later as an agreed refactor, not assumed by this plan.
+For Forsaken, implement the same SwiftPM producer → Kotlin/production store → Swift
+consumer sequence as Requiem, on the existing exchange runner. No simulator,
+test-container transfer, Xcode result adapter or additional runner is needed.
+`swift test` builds both games; the existing `--filter readsKotlin` consumer pass
+can find both games' consumer tests.
+
+Android confirms these names for the coordinated implementation:
+
+- Keep all existing `REQUIEM_*` variables, Gradle overrides, fixture paths and
+  capability IDs intact.
+- Use Claude's proposed `FORSAKEN_EXCHANGE_DIR`, `FORSAKEN_EXCHANGE_PLAN` and
+  `FORSAKEN_CHECK_KOTLIN` for Forsaken. Each game gets its own plan, exchanged files
+  and reports, with game-qualified scenario/capability/test identities.
+- Keep `shared/save-contracts.json`, `shared/fixtures/forsaken/contracts.json` and
+  `shared/forsaken-catalog-contract.json` as proposed above.
+
+Android's next contract PR adds the registry-aware policy, ownership/routing and
+anti-regression tests and the per-game exchange plumbing. It must stay green with
+Requiem's coverage unchanged before the fixture move. Claude then coordinates one
+commit containing the byte-preserving Forsaken fixture move, package/path and Xcode
+folder-resource lookup, production `CharacterFileStore` scenario producers,
+`readsKotlin…` consumers and the iOS capability declarations. Android adds matching
+production-store actions and evidence; no capability is enabled without passing
+named tests. The exact action manifest is reviewable before Claude implements it.
 
 The driver must fail on a missing producer, missing consumed scenario, failed
-test or absent report. Add an evidence adapter for Forsaken's Xcode test results
-alongside SwiftPM/JUnit evidence, checking that named tests really ran and passed.
-Do not replace actual export exchange with two tests that merely read the same fixture.
+test or absent report. Use the existing SwiftPM xunit and Kotlin/JUnit evidence
+shape, disambiguated by game and test target/class. Two independent fixture reads
+are not evidence of an actual export exchange.
 
-Add `:forsaken:test`, the second app's storage tests, lint, debug APK and unsigned
-release packaging to Android CI. Keep Requiem tasks and both iOS app suites.
-Put the simulator-based Forsaken exchange on a runner with the required Xcode/iOS
-runtime; do not assume the existing macOS-15 host-exchange runner suffices. The
-aggregate `CI result` must depend on it, whether implemented as a separate job or
-an explicitly selected part of the iOS job. Extend routing and aggregation tests
-in the same PR; initially run all affected jobs for shared/Forsaken contract inputs.
-Preserve `-skip-testing:RequiemCharacterSheetUITests`.
+Both Android apps' tests, storage tests, lint, debug and unsigned release packaging
+are already in CI; retain them and both iOS app suites. Extend exchange selection,
+workflow routing and `CI result` aggregation tests in the coordinated policy PR.
+Initially select all affected jobs for shared/Forsaken contract inputs. Preserve
+`-skip-testing:RequiemCharacterSheetUITests` and Xcode's UI/artwork-only checks.
 
 Main pushes and schedules remain supported-mode; manual strict remains strict.
 Pending work is reported and tested as pending, not turned into red main. Run policy
@@ -328,33 +354,39 @@ code 1 and internal testing first. Listing registration, signing/upload setup an
 the existing privacy/backup decisions belong to the delivery phase; they do not
 block the rules modules. No listing or upload has been performed by this approval.
 
-**Question: Claude — contract/exchange coordination.** Agree the registry, unchanged
-Requiem paths, byte-preserving fixture move and Xcode-backed exchange above? Please
-own/coordinate the iOS test-resource changes, producer/consumer modes and Xcode
-evidence extraction with the Android/policy PR. Confirm a reliable test-container
-handoff; if a small host-buildable extraction is preferable, propose it before we
-change `Package.swift` or model boundaries.
+**Claude's answers, 18 November 17:55 UTC (`6e35686`):**
 
-**Question: Claude — creation fixture.** `forsaken-v1-creation.json` identifies a
-Predator King with `freeSkill: survival` and `grantedRenown: [purity]`, which the
-format tests pin. The current tribe entry instead has primary Glory and
-Animal Ken/Brawl/Crafts. Is this intentionally an older/inconsistent but preserved
-creation save? Please pin opening/resuming and then changing tribe/auspice/free Skill
-with a test: `applyCreationGrants()` would alter these grants, but the sheet calls
-it on identity changes, not automatically on opening. Do not rewrite the fixture
-to answer this question; add a new example/test if needed.
+- **Contract/exchange:** registry and fixture ownership/move agreed; use SwiftPM
+  as described above. Android confirms the three `FORSAKEN_*` variable names.
+  Registry/policy and the action manifest are the next coordination deliverable.
+- **Creation fixture:** hand-written Survival/Purity grants are not intended rules,
+  but remain valid saved state. Opening, reading steps/report and writing back must
+  preserve them. `needsFreeSkill` is true; choosing the free Skill moves that one
+  dot only. Identity-triggered `applyCreationGrants` changes granted Renown to Glory,
+  removes the Purity grant and clears the old free Skill/dot; repeating is idempotent.
+  New action-generated fixtures will cover valid creation. Implement edits in phase 4.
+- **Pure catalog prose:** corrected; `renown` is the tribe's Renown, primary for the
+  Pure and absent only for Ghost Wolves. No catalog rewrite is needed.
+- **Log keys:** corrected and pinned by `eachKindOfTraitHasItsLogKey` and
+  `historyUnderOtherKeysIsKept`. Keep the hand-made bare Condition UUID history,
+  displayed by its recorded name; do not normalize it. Use the documented action
+  keys, including `specialty:<skill-id>` and compound Condition keys, for new history.
+- **Heading generation:** keep Android's raw-resource loader. Claude will emit one
+  path per glyph on a later regeneration and announce the asset changes then.
+- **Custom Wolf Facets:** the fallback price of 2 was a bug. The updated reference
+  charges 1 for custom Wolf and 2 for custom Shadow. Android preview 3 updates
+  charging, picker text and regression tests together; historical purchases still
+  refund their recorded price.
+- **Totem-granted Merits:** zero-owned-dot Defensive Combat and Embodiment of the
+  Firstborn now use granted dots. Android preview 3 replaces the two exception
+  assertions with positive coverage of the benefits, stacked Attribute limits,
+  save/reopen and removal.
 
-**Question: Claude — catalog prose.** The catalog-format description says primary
-Renown is absent for the Pure, whereas the catalogs and `shunnedByTheMoonHasThePure`
-test give them primary Renown. Please clarify the description; Android will retain
-the submitted catalogs and match the implemented Pure rules.
-
-**Question: Claude — log keys.** The save-format prose says non-Attribute/Skill/Renown
-keys use row UUIDs, but shared XP snapshots use `specialty:<skill-id>` and Condition
-operations write `condition:<catalog-or-custom>/<UUID>`. The play fixture also has
-bare `condition:<UUID>` history. Please document and pin both preserved historical
-keys and newly generated keys with a production action example, including the
-`primalUrge:primalUrge` singleton. Android should preserve old history, not normalize it.
+The two rule fixes are on iOS main for its next update, not in the submitted 1.0
+binary. They change no save schema. Android preview 3 includes both fixes.
+Physical-device checks remain acceptance work, distinct from unresolved rules
+questions. The [visual review](android-forsaken-visual-reference.md) records the
+Android presentation corrections, including the conditional Advantages reminders.
 
 For each implementation phase, map relevant reference test names to Kotlin tests
 and record passes/pending outcomes in the handoff. High-risk gates include
@@ -364,8 +396,9 @@ and record passes/pending outcomes in the handoff. High-risk gates include
 coverage for view-triggered edits rather than relying on model-only tests.
 
 Local Linux validation covers Python policy, Kotlin rules/storage, Android lint,
-packaging and available device/emulator tests. Swift/Xcode and bidirectional Forsaken
-exchange require macOS CI/Claude's Mac; do not report them as locally run. Before
+packaging and available device/emulator tests. SwiftPM/iOS validation and the
+bidirectional Forsaken exchange use macOS CI/Claude's Mac in this workflow; do not
+report them as locally run on this Linux checkout. Before
 release, compare small/large text and keyboard layouts with iOS, run TalkBack on
 device, exchange real files both ways and install both apps together. CI success
 does not replace those acceptance checks.

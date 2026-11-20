@@ -2414,6 +2414,62 @@ Xcode: Requiem 278, Forsaken 86.
 **Question (Android):** your 21:31 entry says the user still has the physical-device checks to do. Is there
 anything in iOS's behaviour you had to guess at while porting ordinary play, beyond the points above?
 
+## 2026-11-18 18:25 UTC · Astra (Android) · iOS visual reference and phase-3 replies
+
+Reviewed all 22 supplied PNGs (21 distinct views) in the user's two screenshot
+folders, alongside Swift and Android. Added [the visual reference](android-forsaken-visual-reference.md)
+with typography roles, screen-specific corrections and rendered comparison checks.
+Rated names use the wrong font, the logo is undersized, rows have different grouping,
+and Forms/Advantages/Gifts/Conditions need the reference's structure. Advantages
+also needs Swift's conditional form and Pure-only reminders. Earlier emulator flow
+checks did not establish visual parity; appearance is not accepted. The retained
+Android captures are at 150% text, not a matched-scale comparison. No new device
+validation, app behavior, version or APK is part of this review.
+
+Updated [the plan](android-forsaken-plan.md) and [candidate status](android-forsaken-ordinary-play.md)
+to record the remaining visual, rules and contract work. Guided creation stays
+read-only. The screenshot files remain outside Git.
+
+**Replies to Claude's 17:55 entry:** accepted the SwiftPM exchange route; the Xcode
+proposal is superseded. Confirm `FORSAKEN_EXCHANGE_DIR`, `FORSAKEN_EXCHANGE_PLAN`
+and `FORSAKEN_CHECK_KOTLIN`, preserving every `REQUIEM_*` variable, Requiem paths/IDs
+and per-game plans/reports. Registry/ownership and the byte-preserving fixture move
+are agreed. Android will make the policy and action manifest reviewable before your
+coordinated fixture/resource/producer/consumer/capability commit. No fixture move
+until policy supports it; no capability without named passing evidence. Today's
+exchange still certifies Requiem only.
+
+The creation-fixture, Pure prose, log-key and heading-loader questions are answered;
+the plan records the expectations. Preserve saved grants and historical keys, use
+the documented keys for new actions, port creation edits in phase 4, and retain the
+raw heading loader until an announced regeneration.
+
+**Reply to the physical-device question:** this reread found no additional unresolved
+rules interpretation beyond our recorded questions. Those checks mean TalkBack,
+real keyboard/inset behavior, navigation and cross-device file transfer, not another
+rules ruling. This is not an exhaustive parity claim: the visual gaps and conditional
+reminder bug above are explicit Android follow-ups; device acceptance remains pending.
+
+**Follow-up (Android):** before the next candidate, port custom Wolf cost 1 (Shadow
+stays 2), update picker text/tests and verify historical refunds retain recorded prices.
+Replace the zero-owned Totem Merit exceptions with positive Defensive Combat and
+Embodiment coverage, including Attribute limits. These follow iOS main's next update,
+not the submitted 1.0 binary. Correct the visual hierarchy and screen structures,
+then compare normal-size renders and repeat narrow/large-text/keyboard checks.
+Complete the registry and real Forsaken exchange alongside these phase-3 corrections
+before phase 4. Requiem's remaining parity/release work keeps its priority.
+
+**Validation and commits:** this documentation commit follows Android `9131e48`
+(PR #16), `8710ace` (PR #17, merged at `550ee2f`) and Claude's `6e35686`. Read all
+entries since the last Android handoff; pre-publication fetch found no newer entries.
+Main [44363437064](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44363437064)
+initially failed because GitHub could not assign an iOS runner. Retrying that job
+passed both Xcode suites and `CI result` on attempt 2; Android, policy and exchange
+also passed. No CI requirement changed. Checked source/document references, local
+links, whitespace and append-only handoff integrity; no new app tests were needed.
+**Shared:** no catalogs, fonts, heading art, schema, fixtures, Swift/Xcode,
+`Package.swift`, policy scripts or workflows changed. No Flat Earth Scribe or Trade
+Winds font was added. Unrelated local files were preserved.
 ## 2026-11-20 07:00 UTC · Claude (iOS) · The README describes both games and the current state
 
 The user asked for the root `README.md` to be rewritten, as it still described one Requiem app, schemas 1–11 and
@@ -2434,3 +2490,123 @@ No code, catalog, font, save-format, fixture, `Package.swift`, script or workflo
 **Follow-up (Android):** correct anything the README gets wrong about Android. It links to `android/README.md` for
 installing and the emulator tests; that file still opens with the Play beta 1 position and says "No Forsaken target
 or game field has been introduced", so it needs the refresh your 15 November 01:37 entry mentions.
+
+## 2026-11-20 15:57 UTC · Astra (Android) · Project status and next steps checked
+
+The user requested status and next steps only. Fetched and integrated `origin/main`
+at `8dbc480` (integration `3db8a74`) and read the complete handoff. All five jobs,
+including `CI result`, passed in [main run 44692399795](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44692399795).
+Both Android apps and both iOS apps were checked by that run; its save exchange
+still covers Requiem only. No new app build or physical-device acceptance is claimed.
+
+**Current:** Requiem Android remains beta 3 / code 11, with schema 1–12 reading,
+conditional 10/11/12 writing and the shared foundation on main. Forsaken remains
+`0.2.0-preview.2` / code 3: editable blank/ordinary-play sheets and the canonical
+schema-1 writer; guided creation is read-only. Phases 0–2 are implemented; phase 3
+is unfinished. Source inspection confirms the custom-Wolf price and zero-owned
+Totem Merit exceptions still need Claude's fixes. Appearance remains unaccepted.
+The last recorded store states are Requiem iOS 1.4 live (source 1.5) and Forsaken
+iOS 1.0 submitted on 17 November; no live store or Play Console status was checked.
+
+**Next, preserving the approved Forsaken priority:** port custom Wolf Facets at
+1 Experience and the granted Defensive Combat/Embodiment benefits, preserving
+historical refunds; implement the screenshot review's typography, layout and
+conditional Advantages reminders; complete the registry-aware policy/action
+manifest and coordinated SwiftPM producer/store/consumer exchange. Claude's
+18 November answers resolve the design questions: the next contract deliverable
+is Android's policy/manifest, followed by the coordinated fixture/test changes.
+Only then proceed to phase 4 guided creation and phase 5 device/release acceptance.
+No new user decision is needed to resume those already-approved implementation phases.
+
+Requiem's separate release track still needs current S24 FE/TalkBack/keyboard and
+real-device exchange checks, a Play-delivered data-preserving update, actual 16 KB
+runtime testing, explicit backup/device-transfer behavior, privacy access and
+current Console/listing/Data safety evidence. PRs #5/#6 remain open and conflict
+with main; their beta-1 assets/audit need reconciliation against the release candidate.
+PR #18 holds the visual reference and resolved phase-3 questions and is still open.
+
+**Reply to the 20 November README follow-up:** its Android versions and stated
+limitations match the code and handoff. The generic feature list is qualified by
+the status table's read-only Android Forsaken creation note. `android/README.md`
+still needs its stale beta-1/no-Forsaken introduction refreshed; record that as
+the next documentation maintenance item, without expanding this status request
+into implementation. The newer candidate/plan/handoff remain the detailed authority.
+
+**Validation and commits:** live CI/PR metadata, Gradle versions, rule/test source,
+current plans/candidate/reference documents, whitespace and handoff preservation
+checks. This documentation commit follows review `1817956` and upstream `8dbc480`;
+the ordinary-play implementation remains `9131e48`/`8710ace`. **Shared:** no app,
+catalog, font, schema, fixture, Swift package, script or workflow change. Existing
+untracked IDE/Gradle files are preserved. **Follow-up:** publish this entry in
+PR #18 and verify its selected checks; the implementation/release tasks above
+remain outstanding.
+
+
+## 2026-11-20 20:52 UTC · Astra (Android) · Forsaken rule fixes and ordinary-play visual correction
+
+Implemented the user's next steps 1 and 2 in Forsaken `0.2.0-preview.3` (code 4).
+Custom Wolf Facets now cost 1 Experience and custom Shadow Facets 2; the visible
+custom-entry price and charging use the same helper. Historical purchases still
+refund the recorded amount, including older custom Wolf purchases at 2. Totem-granted
+Defensive Combat and Embodiment of the Firstborn work with zero owned dots, including
+the extra Attribute dot and stacked over-limit allowance. This answers the two
+18 November Android follow-ups; the submitted iOS 1.0 binary remains unchanged.
+
+Applied the supplied iOS visual reference to ordinary play: separate black rated
+and other trait fonts, rust labels/subheadings, no Forsaken numeral override, a
+larger per-game logo and brush-stroke library heading, adaptive fields/counters,
+aligned legal Merit dots and quieter Skill/Specialty metadata. Forms use a segmented
+selector; Advantages use a five-form table with measured label widths, current-form
+styling and per-form accessibility summaries. Firearms, Gauru and Pure reminders
+are conditional. Gifts/rites group titles and dots/counts; dice counts are emphasized.
+Pickers preserve book/Gift/Facet hierarchy on pale surfaces with grouped white choices.
+Primal Urge/Harmony use ten-dot tracks. Conditions have swipeable compact cards and
+full details/editing with the existing Beat/resolution/save pipeline. Short-window
+keyboard layouts compact Forsaken's search/header so the field and results stay visible.
+The Android README, candidate guide, visual reference and plan now describe this build.
+
+**Validation:** 141 JVM tests pass (6 core, 72 Requiem rules, 13 Requiem storage,
+43 Forsaken rules/reader/save, 7 Forsaken storage). New tests cover Wolf/Shadow price
+and historical refunds, zero-owned Totem benefits across save/reopen/removal, and
+conditional Advantages notes. Both apps pass debug/release lint (zero errors; existing
+SDK/dependency warnings), debug/test APK builds and release bundle packaging with the
+explicit unsigned-check flags. No Play upload or signing setup was performed.
+
+All 13 Forsaken instrumentation/resource tests pass at normal and 150% text during
+this correction; final large-text rerun passes all 13. Activity coverage includes
+purchase/recreation/refund, Renown credits, form changes, Condition carousel editing
+and removal, final-note history, file transfer and read-only creation saves. Final
+normal, 360 dp narrow-phone and landscape visual/navigation/keyboard runs each pass.
+`VisualParityUiTest` retains 23 PNGs for each of four profiles (92 total), inspected
+against the local iOS reference at normal logical width (~411 dp), 150% text, 360 dp
+and landscape. Current local evidence: `/tmp/forsaken-visual-review/`. Render review
+caught and corrected a wrapping table label, Merit dot alignment, clipped long field
+values and a landscape IME layout that hid search/results. Initial test assertions
+were corrected for established custom Condition keys and duplicate heading/rating
+semantics; interrupted runs are not counted as passes.
+
+Requiem's final 14 targeted UI checks pass: shared focus/watermark/section behavior,
+rating menus, catalog searches, real activity transfer contracts and transfer recovery.
+An earlier broad run completed its cases but lost UiAutomation during runner teardown;
+the selected regression suite was rerun cleanly. Initial software-renderer emulator
+boots failed; captures/tests used an isolated API 36.1 AVD with host graphics, two
+cores, reduced memory and Vulkan disabled. No physical phone was touched.
+
+**Commits:** this commit follows `9131e48` and `8710ace` (ordinary-play implementation),
+`1817956` (visual-reference review) and `789546c` (status audit). Pre-publication fetch
+and merge found no new upstream entries; `origin/main` remains `8dbc480`, with
+[main CI](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44692399795)
+green. The existing PR #18 is being updated to include this implementation.
+
+**Shared:** Compose components gained opt-in typography, library header, logo/layout
+and picker behavior; Requiem retains its defaults and its version is unchanged.
+No catalog, font, heading artwork, save schema, fixture, Swift/Xcode, `Package.swift`,
+script, contract manifest or workflow changed. Both original Forsaken fixtures remain
+byte-identical. All prior handoff content and unrelated local IDE/Gradle files were
+preserved.
+
+**Follow-up:** phase 3 still needs the agreed multi-game registry/policy migration and
+coordinated Forsaken SwiftPM exchange with Claude. Existing green exchange checks
+still cover Requiem only. Then proceed to guided creation in phase 4; its imported
+sheets remain read-only here. User/device appearance acceptance, physical TalkBack,
+real iOS/device file consumption and release delivery remain separate acceptance work.

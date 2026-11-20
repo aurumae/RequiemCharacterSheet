@@ -9,8 +9,8 @@ android {
         applicationId = "com.omccolgan.ForsakenCharacterSheet"
         minSdk = 36
         targetSdk = 36
-        versionCode = 3
-        versionName = "0.2.0-preview.2"
+        versionCode = 4
+        versionName = "0.2.0-preview.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true; buildConfig = true }

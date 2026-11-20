@@ -89,7 +89,7 @@ internal fun ForsakenHeading(title: String, art: HeadingArt?) {
 
 /** Chronicles/UI/BrushLine.swift's FNV-1a seed and SplitMix64 stroke in logical points. */
 @Composable
-private fun BrushLine(seed: String, solidTrailing: Boolean, modifier: Modifier) {
+internal fun BrushLine(seed: String, solidTrailing: Boolean, modifier: Modifier) {
     val ink = SheetColors.accent
     Canvas(modifier) {
         val random = StrokeRandom(seed)

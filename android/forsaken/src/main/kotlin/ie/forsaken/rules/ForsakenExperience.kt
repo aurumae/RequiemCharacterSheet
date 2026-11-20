@@ -57,7 +57,7 @@ fun ForsakenRules.experienceCost(key: String, level: Int): Int {
         "facet" -> {
             val owned = state.facets.firstOrNull { it.id.saveKey() == id }
             val gift = owned?.let(::gift)
-            when { owned?.withRenown == true -> 0; gift == null -> 2
+            when { owned?.withRenown == true -> 0; gift == null -> customFacetCost(owned?.customKind ?: GiftKind.shadow)
                 else -> facetCost(gift, state.facets.any { it.id != owned.id && gift(it)?.id == gift.id }) }
         }
         else -> 0

@@ -62,6 +62,55 @@ class PreviewUiTest {
     }
     private fun state(): ForsakenState = ui.runOnIdle { ViewModelProvider(ui.activity)[PreviewModel::class.java].ui.value.character!!.state }
 
+    @Test fun conditionCarouselEditsAndRemovalKeepThePageAndBeatHistoryValid() {
+        receive(fixture()); ready("character-sheet")
+        section("Conditions")
+        ui.onNodeWithTag("condition-position").assertTextContains("1 of 2 · swipe for more")
+        ui.onNodeWithTag("condition-carousel").performTouchInput { swipeLeft() }
+        ui.onNodeWithTag("condition-position").assertTextEquals("2 of 2")
+        val custom = state().conditions.last()
+        ui.onNodeWithTag("condition-card-${custom.id}").performClick()
+        ready("condition-full-card")
+        ui.onNodeWithTag("condition-note").performTextReplacement("Resting her voice")
+        ui.activityRule.scenario.recreate(); ready("condition-full-card")
+        ui.onNodeWithTag("condition-note").assertTextContains("Resting her voice")
+        val beatsBefore=state().beats; val logsBefore=state().changeLog.size
+        ui.onNodeWithTag("condition-full-card").performScrollToNode(hasTestTag("condition-resolve"))
+        ui.onNodeWithTag("condition-resolve").performClick()
+        ui.onNode(hasText("Resolve") and hasAnyAncestor(isDialog())).performClick()
+        ui.onNodeWithTag("condition-position").assertTextEquals("1 of 1")
+        assertEquals(beatsBefore+1,state().beats)
+        assertEquals(logsBefore+1,state().changeLog.size)
+        assertTrue(state().changeLog.last().trait.endsWith(custom.id.toString()))
+        back(); libraryClick("Mara Voss"); ready("character-sheet")
+        assertEquals(beatsBefore+1,state().beats)
+        assertEquals(1,state().conditions.size)
+    }
+
+    @Test fun customWolfFacetShowsChargesAndRefundsOneExperience() {
+        receive(fixture()); ready("character-sheet")
+        val spent=ForsakenRules(state()).experiencesSpent
+        section("Wolf Gifts")
+        ui.onNodeWithTag("character-sheet").performScrollToNode(hasText("Add Wolf Facet"))
+        ui.onNodeWithText("Add Wolf Facet").performClick()
+        ui.onNodeWithTag("play-picker-search").performTextInput("An invented facet")
+        ui.onNodeWithTag("play-picker-options").performScrollToNode(hasText("Custom Wolf Facet"))
+        ui.onNodeWithText("Custom Wolf Facet").performClick()
+        ui.onNodeWithText("Costs 1 Experience.").assertExists()
+        ui.onNodeWithTag("play-input-0").performTextInput("Distant Howl")
+        ui.onNodeWithTag("play-input-1").performTextInput("Gift of Echoes")
+        ui.onNode(hasText("Save") and hasAnyAncestor(isDialog())).performClick()
+        assertEquals(spent+1,ForsakenRules(state()).experiencesSpent)
+        ui.activityRule.scenario.recreate(); ready("character-sheet")
+        section("Wolf Gifts")
+        ui.onNodeWithTag("character-sheet").performScrollToNode(hasContentDescription("Options for Distant Howl"))
+        ui.onNodeWithContentDescription("Options for Distant Howl").performClick()
+        ui.onNodeWithText("Delete").performClick()
+        ui.onNode(hasText("Delete") and hasAnyAncestor(isDialog())).performClick()
+        assertEquals(-1,state().changeLog.last().experiences)
+        assertEquals(spent,ForsakenRules(state()).experiencesSpent)
+    }
+
     @Test fun blankSheetEditsAndDraftSurviveRecreationAndRestart() {
         libraryClick("New blank sheet"); ready("character-sheet")
         ui.onNodeWithContentDescription("Character Name").performTextReplacement("Android wolf")
@@ -106,7 +155,7 @@ class PreviewUiTest {
         ui.onNodeWithContentDescription("Cunning").performSemanticsAction(SemanticsActions.SetProgress) { it(1f) }
         assertEquals(-3,state().changeLog.last().experiences)
         section("Form")
-        ui.onNodeWithText("Choose Form").performClick(); ui.onNodeWithText("Gauru").performClick()
+        ui.onNodeWithContentDescription("Form Gauru").performClick()
         assertEquals(10,ForsakenRules(state()).attribute("strength"))
         back(); libraryClick("Mara Voss"); ready("character-sheet")
         assertEquals(originalLog+4,state().changeLog.size)
@@ -134,17 +183,17 @@ class PreviewUiTest {
         ui.onNodeWithTag("play-picker-search").performTextInput("Siskur")
         ui.onNode(hasText("Siskur-Dah") and hasAnyAncestor(hasTestTag("play-picker-options"))).performClick()
         val sheet=ui.onNodeWithTag("character-sheet")
-        sheet.performScrollToNode(hasText("Choose Ritemaster"))
-        ui.onNodeWithText("Choose Ritemaster").performClick()
+        ready("condition-full-card")
+        ui.onNodeWithContentDescription("Ritemaster").performClick()
         ui.onNodeWithText("Blood Talons").performClick()
         assertEquals("Blood Talons",state().conditions.single().note)
-        sheet.performScrollToNode(hasText("Resolve Siskur-Dah"))
-        ui.onNodeWithText("Resolve Siskur-Dah").performClick()
+        ui.onNodeWithTag("condition-full-card").performScrollToNode(hasTestTag("condition-resolve"))
+        ui.onNodeWithTag("condition-resolve").performClick()
         ui.onNode(hasText("Resolve") and hasAnyAncestor(isDialog())).performClick()
         assertTrue(state().conditions.isEmpty()); assertEquals(1,state().beats)
         assertEquals(listOf(ConditionEvent.added,ConditionEvent.resolved),state().changeLog.map { it.event })
         section("Experience")
-        sheet.performScrollToNode(hasText("View change log")); ui.onNodeWithText("View change log").performClick()
+        sheet.performScrollToNode(hasText("Change Log")); ui.onNodeWithText("Change Log").performClick()
         ui.onNodeWithTag("play-information").performScrollToNode(hasText("Added",substring=true))
         // Both the older Added row and the final Resolved row use the final note.
         ui.onAllNodesWithText("Siskur-Dah (Blood Talons)").assertCountEquals(2)

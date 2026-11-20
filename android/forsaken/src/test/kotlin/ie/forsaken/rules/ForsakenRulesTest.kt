@@ -31,6 +31,16 @@ class ForsakenRulesTest {
         assertEquals(15, r.speed(Form.urhan)); assertEquals(7, r.initiative(Form.urhan))
         assertEquals("+3 in Gauru", rules(s.copy(form = Form.gauru)).attributeNote("strength"))
     }
+    @Test fun advantagesRemindersFollowTheCurrentFormAndTribe() {
+        for (form in Form.entries) {
+            val notes = rules(hunter().state.copy(form = form)).advantagesNotes
+            assertEquals(form in listOf(Form.dalu, Form.gauru, Form.urshul), "Defense applies against Firearms" in notes)
+            if (form in listOf(Form.dalu, Form.gauru, Form.urshul)) assertTrue(notes.contains("in ${form.title}."))
+            assertEquals(form == Form.gauru, "teeth or claws" in notes)
+            assertFalse(notes.contains("silver"))
+            assertTrue(rules(hunter().state.copy(form = form, tribe = source("pure"))).advantagesNotes.contains("Touching silver"))
+        }
+    }
     @Test fun shiftingToASmallerFormKeepsItsWoundsAndTheyDoNotReturn() {
         var c = codec.character(ForsakenState(form = Form.dalu, healthTrack = List(9) { Damage.lethal }).attr("stamina",3))
         assertEquals(10, rules(c.state).health())
@@ -68,14 +78,29 @@ class ForsakenRulesTest {
         c = edits.change(c) { it.copy(merits=it.merits.map { row -> row.copy(rating=1) }) }
         c = edits.change(c) { it.copy(totem=it.totem.copy(advantages=emptyList())) }
         assertEquals(1,c.state.merits.single().rating); assertEquals(1,rules(c.state).experiencesSpent)
-        // These two Swift helpers test owned rating > 0, even when a Totem grants the Merit.
-        // Preserve the submitted behavior while the handoff asks whether that exception is intended.
-        val exceptions=edits.change(codec.character()) { it.copy(totem=Totem(advantages=listOf(
+    }
+    @Test fun meritsTheTotemGrantsDoWhatBoughtOnesDo() {
+        var granted=edits.change(codec.character(ForsakenState(xpMode=true).attr("strength",5).sk("brawl",3))) { it.copy(totem=Totem(advantages=listOf(
             TotemAdvantage(TotemKind.merit,"defensive",detail="Brawl"),
             TotemAdvantage(TotemKind.merit,"embodiment-of-the-firstborn",detail="Strength",dots=5),
+            TotemAdvantage(TotemKind.attribute,"strength",dots=2),
         ))) }
-        assertTrue(rules(exceptions.state).alternativeDefenseSkills.isEmpty())
-        assertEquals(0,rules(exceptions.state).attributeBonus("strength"))
+        assertTrue(granted.state.merits.all { it.rating == 0 })
+        assertTrue(granted.state.changeLog.isEmpty())
+        assertEquals(listOf("brawl"),rules(granted.state).alternativeDefenseSkills)
+        assertEquals(4,rules(granted.state).defense(using="brawl"))
+        assertEquals(3,rules(granted.state).attributeBonus("strength"))
+        assertEquals(2,rules(granted.state).overLimitAllowance("strength"))
+        assertEquals(8,rules(granted.state).totalAttribute("strength"))
+        assertEquals(7,rules(granted.state).attribute("strength"))
+        val reopened=codec.decode(codec.encode(granted))
+        assertEquals(7,rules(reopened.state).attribute("strength"))
+        assertEquals(listOf("brawl"),rules(reopened.state).alternativeDefenseSkills)
+        granted=edits.change(granted) { it.copy(primalUrge=6) }
+        assertEquals(8,rules(granted.state).attribute("strength"))
+        granted=edits.change(granted) { it.copy(totem=Totem()) }
+        assertTrue(rules(granted.state).alternativeDefenseSkills.isEmpty())
+        assertEquals(5,rules(granted.state).attribute("strength"))
     }
     @Test fun passiveAndActivePowersRespectRatingsAndForms() {
         var s=ForsakenState(auspice=source("seer"),renown=mapOf("purity" to 3,"glory" to 2)).attr("strength",5)
@@ -222,14 +247,25 @@ class ForsakenRulesTest {
         assertNull(changed.state.moonGift); assertEquals("",changed.state.huntersAspect); assertEquals(listOf("One"),changed.state.moonFacets)
     }
 
-    @Test fun customWolfFacetMatchesTheSubmittedSwiftFallbackCost() {
-        var c=hunter()
-        val custom=OwnedFacet(TraitSource(custom="Test facet"),customKind=GiftKind.wolf)
-        c=edits.change(c) { it.copy(facets=listOf(custom)) }
-        // Swift facetCost returns furtherFacet (2) when no catalog Gift can be resolved.
-        // Keep this behavior until Claude answers the handoff question; do not infer Wolf's catalog price.
-        assertEquals(2,c.state.changeLog.last().experiences)
-        c=edits.forget(c,custom.id); assertEquals(-2,c.state.changeLog.last().experiences)
+    @Test fun customFacetPricesMatchChargesAndPreserveHistoricalRefunds() {
+        for ((kind, cost) in listOf(GiftKind.wolf to 1, GiftKind.shadow to 2)) {
+            var c=hunter()
+            val custom=OwnedFacet(TraitSource(custom="Test facet"),customKind=kind)
+            assertEquals(cost,rules(c.state).customFacetCost(kind))
+            c=edits.change(c) { it.copy(facets=listOf(custom)) }
+            assertEquals(cost,c.state.changeLog.last().experiences)
+            c=codec.decode(codec.encode(c))
+            c=edits.forget(c,custom.id)
+            assertEquals(-cost,c.state.changeLog.last().experiences)
+        }
+        val old=OwnedFacet(TraitSource(custom="Previously bought"),customKind=GiftKind.wolf)
+        val key="facet:${old.id.saveKey()}"
+        val legacy=codec.character(hunter().state.copy(facets=listOf(old),paidDots=mapOf(key to mapOf(1 to 2))))
+        val reopened=codec.decode(codec.encode(legacy))
+        assertEquals(2,reopened.state.paidDots[key]?.get(1))
+        val refunded=edits.forget(reopened,old.id)
+        assertEquals(-2,refunded.state.changeLog.last().experiences)
+        assertTrue(refunded.state.paidDots[key].isNullOrEmpty())
     }
 
     @Test fun specialtiesRenameTheirDependentMeritAndRefundBothWhenRemoved() {

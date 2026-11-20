@@ -1,15 +1,23 @@
 # Android Forsaken ordinary-play candidate
 
-Version `0.2.0-preview.2` (code 3) is the Android part of phase 3. It installs over
+Version `0.2.0-preview.3` (code 4) is the Android part of phase 3. It installs over
 the phase 2 preview as `com.omccolgan.ForsakenCharacterSheet`, beside Requiem.
 It enables blank sheets and ordinary-play edits. Guided creation is still read-only;
 there is no guided-new-character action until phase 4.
 
 **Phase 3 is not fully complete:** Forsaken has not joined the shared contract or
-the bidirectional Xcode exchange. The coordination gate in
-[the approved plan](android-forsaken-plan.md#proposal-for-the-shared-save-and-catalog-contract)
-is still open. No fixture, catalog, policy, workflow, Xcode or Swift change is part
-of this Android implementation. The existing exchange checks Requiem only.
+the bidirectional SwiftPM exchange. Claude agreed the registry and revised host
+exchange on 18 November; implementation and the coordinated fixture/test move are
+still outstanding in [the plan](android-forsaken-plan.md#proposal-for-the-shared-save-and-catalog-contract).
+The existing exchange checks Requiem only. This candidate includes the two confirmed
+iOS-main rule corrections: custom Wolf Facets cost 1 Experience, and Totem-granted
+Defensive Combat/Embodiment activate with zero owned dots. Historical refunds retain
+the recorded purchase price.
+
+**Visual correction candidate:** preview 3 applies the supplied iOS references to
+fonts, logo, fields/counters, rated rows, Forms/Advantages, Gifts, pickers and Condition
+cards. [The visual reference](android-forsaken-visual-reference.md) records the
+comparison procedure and evidence. User/device appearance acceptance is still open.
 
 ## Try the candidate
 
@@ -28,7 +36,8 @@ of this Android implementation. The existing exchange checks Requiem only.
    paid Renown. Inspect the ledger and refunds. Catalog pickers show first/further
    Facet prices, affinity and Renown credits. Extra Moon Gifts cost 5 then 2 per
    Facet; lodge lore costs outsiders triple and refunds the historical price.
-5. Add or resolve a Condition, take a Beat, and choose Siskur-Dah's Ritemaster from
+5. Swipe between Condition cards and tap one for full details, edits, Beat/End/Resolve
+   actions. Add or resolve a Condition, and choose Siskur-Dah's Ritemaster from
    the faction/lodge groups. Rename a Specialty used by Area of Expertise; the
    qualifier follows. Removing its last matching Specialty removes that Merit too.
 6. Close and reopen, rotate with a dialog draft open, and test 150% text. Export an
@@ -68,13 +77,15 @@ raw-transfer equality separately compares bytes.
 | Advisory rules, catalog grouping/unofficial visibility, source details, all heading resources | Existing reader/catalog tests and heading byte tests; `unknownMechanicsStayAdvisoryAndDoNotChangeNumbers`. Text-only rules are retained rather than invented as automation. |
 | Library imports/exports, identity, duplicate choices, restart and no-op writes | `PlayTransferTest` uses the same `forsakenStore` factory as the app; `PreviewUiTest` covers the actual activity/file contracts and protection of guided saves. The phase-2 storage cases were retained and extended. |
 
-All creation allocation/grant/finish tests remain phase 4. The existing questions
-about creation-fixture grants, Pure prose, log keys and heading generation remain
-open. A new question records Swift's custom-Wolf-Facet fallback price of 2; Android
-matches that implementation, without changing the submitted catalogs or fixtures.
-The handoff also asks about two benefits that Swift excludes for zero-owned-dot
-Totem Merits: alternative Defense Skills and Embodiment of the Firstborn. Android
-retains those exceptions pending clarification.
+All creation allocation/grant/finish tests remain phase 4. Claude's 18 November
+reply resolves the creation-fixture grants, Pure prose, historical/new log keys and
+heading-loader questions; see the plan for the exact expectations. The fixtures
+remain unchanged. `customFacetPricesMatchChargesAndPreserveHistoricalRefunds` covers
+Wolf 1/Shadow 2 and refunding an older Wolf purchase at its recorded cost of 2.
+`meritsTheTotemGrantsDoWhatBoughtOnesDo` covers zero-owned Defensive Combat and
+Embodiment, stacked caps, encode/reopen and removal. `advantagesRemindersFollowTheCurrentFormAndTribe`
+checks the form and Pure-only notes. Activity tests cover the visible custom price,
+purchase/recreation/refund, and Condition carousel editing/removal/Beat history.
 
 Physical-phone TalkBack, real cross-device exchange, and release signing/listing
 remain acceptance/delivery work. Emulator and local checks are recorded in the

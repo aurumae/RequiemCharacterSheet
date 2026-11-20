@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.DpSize
 import ie.chronicles.core.Damage
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 
 enum class SheetSymbol { Back, More, Add, Chevron, Choose }
 @Composable
@@ -80,7 +82,10 @@ fun TraitRatingControl(
     label: String, base: Int, bonus: Int, legal: IntRange, editable: Boolean,
     allowedValues: List<Int> = legal.toList(), reserveFiveDots: Boolean = false,
     onNameClick: (() -> Unit)? = null, visibleCap: Int = legal.last, note: String? = null, onConditions: (() -> Unit)? = null,
-    countedRating: Int = base + bonus, onSelect: (Int) -> Unit,
+    countedRating: Int = base + bonus,
+    nameStyle: TextStyle = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label,
+    showLabel: Boolean = true, maxDotsPerRow: Int = 5, adaptive: Boolean = false,
+    modifier: Modifier = Modifier, onSelect: (Int) -> Unit,
 ) {
     val total = (base + bonus).coerceAtLeast(0)
     val counted = countedRating.coerceIn(0, total)
@@ -91,9 +96,12 @@ fun TraitRatingControl(
         onSelect(next)
         return true
     }
-    BoxWithConstraints(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp)) {
-        val stacked = maxWidth < 230.dp || LocalDensity.current.fontScale > 1.3f
-        val dotsPerRow = (maxWidth / 24.dp).toInt().coerceIn(1, 5)
+    val measurer = rememberTextMeasurer()
+    BoxWithConstraints(modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp)) {
+        val nameWidth = with(LocalDensity.current) { measurer.measure(label, nameStyle).size.width.toDp() }
+        val stacked = if (adaptive) minOf(nameWidth,100.dp * LocalDensity.current.fontScale) + 136.dp + (if(onConditions != null) 48.dp else 0.dp) > maxWidth
+            else maxWidth < 230.dp || LocalDensity.current.fontScale > 1.3f
+        val dotsPerRow = (maxWidth / 24.dp).toInt().coerceIn(1, maxDotsPerRow)
         @Composable fun dots() {
             CompactTargets {
                 Column(if (reserveFiveDots) Modifier.width(minOf(maxWidth, 120.dp)) else Modifier) {
@@ -116,7 +124,7 @@ fun TraitRatingControl(
                 Box(Modifier.weight(1f).heightIn(min = 48.dp).clickable(enabled = editable || onNameClick != null) { if (onNameClick != null) onNameClick() else expanded = true },
                     contentAlignment = Alignment.CenterStart) {
                     Column(Modifier.padding(top = 8.dp, bottom = 8.dp, end = 4.dp)) {
-                        SheetText(label, style = if (onNameClick != null) LocalSheetType.current.trait else LocalSheetType.current.label)
+                        SheetText(label, style = nameStyle)
                         if (note != null) SheetText(note, style = MaterialTheme.typography.bodySmall, color = SheetColors.muted)
                     }
                 }
@@ -146,7 +154,8 @@ fun TraitRatingControl(
                 }
             }
         }) {
-            if (stacked) Column {
+            if (!showLabel) Box(Modifier.fillMaxWidth().padding(vertical = 16.dp), contentAlignment = Alignment.CenterStart) { dots() }
+            else if (stacked) Column {
                 name(Modifier.fillMaxWidth())
                 dots()
             } else Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {

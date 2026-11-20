@@ -103,7 +103,9 @@ class ForsakenRules(val state: ForsakenState, val catalog: ForsakenCatalog = For
     fun meritDots(id: String) = (state.merits.filter { it.source.catalog == id }.maxOfOrNull { it.rating } ?: 0) + meritBonus(id)
     fun prerequisitesApply(merit: Merit) = merit.source.catalog?.let { meritBonus(it) == 0 } ?: true
     fun grantedSpecialties(id: String) = state.totem.advantages.filter { it.kind == TotemKind.specialty && it.target == id && it.detail.isNotEmpty() }.map { it.detail }
-    private fun embodiesFirstborn(id: String) = state.merits.any { it.source.catalog == "embodiment-of-the-firstborn" && it.rating > 0 && it.qualifier.equals(traitTitle(id), true) }
+    private fun embodiesFirstborn(id: String) = meritDots("embodiment-of-the-firstborn") > 0 && state.merits.any {
+        it.source.catalog == "embodiment-of-the-firstborn" && it.qualifier.equals(traitTitle(id), true)
+    }
     fun attributeBonus(id: String) = state.totem.dots(TotemKind.attribute, id) + if (embodiesFirstborn(id)) 1 else 0
     fun overLimitAllowance(id: String) = (if (state.totem.dots(TotemKind.attribute, id) > 0) 1 else 0) + if (embodiesFirstborn(id)) 1 else 0
     fun countedBaseAttribute(id: String): Int {
@@ -171,7 +173,7 @@ class ForsakenRules(val state: ForsakenState, val catalog: ForsakenCatalog = For
         return (if (instinctive) maxOf(dex, wits) else minOf(dex, wits)) + skill(using, form) + meritTotal("defense") + powerTotal("defense", form)
     }
     fun initiative(form: Form = state.form) = attribute("dexterity", form) + attribute("composure", form) + meritTotal("initiative") + powerTotal("initiative", form)
-    val alternativeDefenseSkills get() = state.merits.filter { it.rating > 0 }.mapNotNull { merit ->
+    val alternativeDefenseSkills get() = state.merits.filter { it.rating + (it.source.catalog?.let(::meritBonus) ?: 0) > 0 }.mapNotNull { merit ->
         if (catalog.entry(CatalogKind.merits, merit.source.catalog)?.fields?.objects("effects")?.any { it.text("type") == "defenseSkillFromQualifier" } == true)
             modernSkillDefinitions.firstOrNull { it.name.equals(merit.qualifier, true) }?.id else null
     }
@@ -208,6 +210,7 @@ class ForsakenRules(val state: ForsakenState, val catalog: ForsakenCatalog = For
     fun hasUnlocked(gift: ForsakenEntry) = gift.text("kind") == "wolf" || state.facets.any { gift(it)?.id == gift.id }
     fun canLearnFree(found: CatalogFacet) = state.creation == null && (state.renownFacetCredits[found.facet.text("renown")] ?: 0) > 0 && hasUnlocked(found.gift)
     fun facetCost(gift: ForsakenEntry, unlocked: Boolean) = when { gift.text("kind") == "wolf" -> 1; unlocked -> 2; gift.text("kind") == "shadow" && hasAffinity(gift) -> 3; else -> 5 }
+    fun customFacetCost(kind: GiftKind) = if (kind == GiftKind.wolf) 1 else 2
     fun price(found: CatalogFacet): FacetPrice {
         val renown = Renown.entries.firstOrNull { it.name == found.facet.text("renown") }
         if (canLearnFree(found) && renown != null) return FacetPrice(0, renown)
