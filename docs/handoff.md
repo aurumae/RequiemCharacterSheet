@@ -2490,3 +2490,53 @@ No code, catalog, font, save-format, fixture, `Package.swift`, script or workflo
 **Follow-up (Android):** correct anything the README gets wrong about Android. It links to `android/README.md` for
 installing and the emulator tests; that file still opens with the Play beta 1 position and says "No Forsaken target
 or game field has been introduced", so it needs the refresh your 15 November 01:37 entry mentions.
+
+## 2026-11-20 15:57 UTC · Astra (Android) · Project status and next steps checked
+
+The user requested status and next steps only. Fetched and integrated `origin/main`
+at `8dbc480` (integration `3db8a74`) and read the complete handoff. All five jobs,
+including `CI result`, passed in [main run 44692399795](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44692399795).
+Both Android apps and both iOS apps were checked by that run; its save exchange
+still covers Requiem only. No new app build or physical-device acceptance is claimed.
+
+**Current:** Requiem Android remains beta 3 / code 11, with schema 1–12 reading,
+conditional 10/11/12 writing and the shared foundation on main. Forsaken remains
+`0.2.0-preview.2` / code 3: editable blank/ordinary-play sheets and the canonical
+schema-1 writer; guided creation is read-only. Phases 0–2 are implemented; phase 3
+is unfinished. Source inspection confirms the custom-Wolf price and zero-owned
+Totem Merit exceptions still need Claude's fixes. Appearance remains unaccepted.
+The last recorded store states are Requiem iOS 1.4 live (source 1.5) and Forsaken
+iOS 1.0 submitted on 17 November; no live store or Play Console status was checked.
+
+**Next, preserving the approved Forsaken priority:** port custom Wolf Facets at
+1 Experience and the granted Defensive Combat/Embodiment benefits, preserving
+historical refunds; implement the screenshot review's typography, layout and
+conditional Advantages reminders; complete the registry-aware policy/action
+manifest and coordinated SwiftPM producer/store/consumer exchange. Claude's
+18 November answers resolve the design questions: the next contract deliverable
+is Android's policy/manifest, followed by the coordinated fixture/test changes.
+Only then proceed to phase 4 guided creation and phase 5 device/release acceptance.
+No new user decision is needed to resume those already-approved implementation phases.
+
+Requiem's separate release track still needs current S24 FE/TalkBack/keyboard and
+real-device exchange checks, a Play-delivered data-preserving update, actual 16 KB
+runtime testing, explicit backup/device-transfer behavior, privacy access and
+current Console/listing/Data safety evidence. PRs #5/#6 remain open and conflict
+with main; their beta-1 assets/audit need reconciliation against the release candidate.
+PR #18 holds the visual reference and resolved phase-3 questions and is still open.
+
+**Reply to the 20 November README follow-up:** its Android versions and stated
+limitations match the code and handoff. The generic feature list is qualified by
+the status table's read-only Android Forsaken creation note. `android/README.md`
+still needs its stale beta-1/no-Forsaken introduction refreshed; record that as
+the next documentation maintenance item, without expanding this status request
+into implementation. The newer candidate/plan/handoff remain the detailed authority.
+
+**Validation and commits:** live CI/PR metadata, Gradle versions, rule/test source,
+current plans/candidate/reference documents, whitespace and handoff preservation
+checks. This documentation commit follows review `1817956` and upstream `8dbc480`;
+the ordinary-play implementation remains `9131e48`/`8710ace`. **Shared:** no app,
+catalog, font, schema, fixture, Swift package, script or workflow change. Existing
+untracked IDE/Gradle files are preserved. **Follow-up:** publish this entry in
+PR #18 and verify its selected checks; the implementation/release tasks above
+remain outstanding.
