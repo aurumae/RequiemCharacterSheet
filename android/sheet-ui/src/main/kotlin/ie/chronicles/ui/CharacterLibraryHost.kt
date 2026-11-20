@@ -22,6 +22,8 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
     xp: @Composable (C, Boolean) -> Unit, aboutSheet: @Composable (() -> Unit) -> Unit,
     readOnly: Boolean = false, libraryNotice: String? = null,
     allowGuidedCreation: Boolean = true, characterReadOnly: (C) -> Boolean = { false },
+    libraryHeader: @Composable () -> Unit = { SectionBand("CHARACTERS") },
+    compactWhileTyping: Boolean = false,
     editor: @Composable (C, Boolean, S?, (S) -> Unit, () -> Unit) -> Unit,
 ) {
     val state by model.ui.collectAsStateWithLifecycle()
@@ -40,6 +42,9 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
     var currentSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<S?>(null) }
     var requestedSection by rememberSaveable(c?.id?.toString()) { mutableStateOf<S?>(null) }
     val window = LocalWindowInfo.current.containerSize
+    val density = LocalDensity.current
+    val keyboard = WindowInsets.ime.getBottom(density)
+    val compactTyping = compactWhileTyping && keyboard > 0 && with(density) { (window.height - keyboard).toDp() < 300.dp }
     val sideInset = if (window.width > window.height) with(LocalDensity.current) { (window.width * .08f).toDp() } else 16.dp
     var announced by rememberSaveable(c?.id?.toString()) { mutableIntStateOf(0) }
     var saved by remember(c?.id) { mutableStateOf(false) }
@@ -75,7 +80,8 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
     }
     BackHandler(enabled = c != null) { focus.clearFocus(); model.close() }
     PageBackground {
-        Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = sideInset).padding(top = 20.dp, bottom = 40.dp)) {
+        Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(horizontal = sideInset)
+            .padding(top = if(compactTyping) 4.dp else 20.dp, bottom = if(compactTyping) 8.dp else 40.dp)) {
             if (c != null && available.isNotEmpty()) SheetToolbar(
                 sections = available, current = currentSection?.takeIf { it in available } ?: available.first(), title = title,
                 select = { focus.clearFocus(); requestedSection = it }, busy = state.busy, saved = saved,
@@ -85,7 +91,7 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
                 }, saveLabel = if (sheetReadOnly) "Save file" else "Save",
                 xp = { xp(c, !state.busy && !sheetReadOnly) },
             )
-            LogoHeader()
+            if(!compactTyping) LogoHeader()
             state.error?.let {
                 Surface(color = MaterialTheme.colorScheme.errorContainer) {
                     Column(Modifier.fillMaxWidth().padding(12.dp)) {
@@ -98,7 +104,7 @@ fun <C : StoredCharacter, S : Any> CharacterLibraryHost(
                 c != null -> key(c.id) { editor(c, state.busy, requestedSection, { currentSection = it }) { requestedSection = null } }
                 state.busy -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 else -> Library(state.rows, model, importCharacter = { importFile.launch(arrayOf("*/*")) },
-                    allowCreation = !readOnly, allowGuidedCreation = allowGuidedCreation, notice = libraryNotice, about = { about = true })
+                    allowCreation = !readOnly, allowGuidedCreation = allowGuidedCreation, notice = libraryNotice, header = libraryHeader, about = { about = true })
             }
         }
         SnackbarHost(snack, Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 32.dp))

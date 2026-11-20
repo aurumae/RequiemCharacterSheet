@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.DpSize
 
 // Shared sheet styling. The app injects its fonts, artwork and accessible identity.
 object SheetColors {
@@ -34,6 +35,8 @@ data class SheetType(val display: FontFamily, val smallCaps: FontFamily, private
     val label get() = TextStyle(fontFamily = labels, fontSize = options.labelSize.sp, lineHeight = (options.labelSize + 6).sp, color = accent)
     val trait get() = TextStyle(fontFamily = display, fontSize = options.traitSize.sp, lineHeight = (options.traitSize + 6).sp,
         color = if (options.traitNamesInAccent) accent else SheetColors.ink)
+    val ratedTrait get() = trait.copy(fontSize = options.ratedTraitSize.sp, lineHeight = (options.ratedTraitSize + 6).sp)
+    val replacesNumerals get() = options.replaceNumerals
     val section get() = TextStyle(fontFamily = display, fontSize = 24.sp, lineHeight = 30.sp, color = SheetColors.muted)
     val subsection get() = TextStyle(fontFamily = smallCaps, fontSize = options.subheadingSize.sp, lineHeight = (options.subheadingSize + 5).sp,
         letterSpacing = options.subheadingSpacing.sp, color = accent)
@@ -46,6 +49,7 @@ data class SheetTypography(
     val subheadingSpacing: Float = 1.5f, val traitNamesInAccent: Boolean = true,
     val controlUsesDisplay: Boolean = false, val controlSize: Int = 14,
     val libraryAboutUsesLabel: Boolean = false,
+    val ratedTraitSize: Int = traitSize, val replaceNumerals: Boolean = true,
 )
 val LocalSheetType = staticCompositionLocalOf<SheetType> { error("The app must supply sheet typography") }
 
@@ -90,9 +94,11 @@ fun LogoHeader() {
     val density = LocalDensity.current
     val window = LocalWindowInfo.current.containerSize
     val compact = with(density) { window.height.toDp() < 500.dp }
+    val identity = LocalSheetIdentity.current
+    val size = if (compact) identity.compactLogoSize else identity.logoSize
     Box(Modifier.fillMaxWidth().height(if (compact) 72.dp else 140.dp), contentAlignment = androidx.compose.ui.Alignment.Center) {
         Image(painterResource(LocalSheetIdentity.current.logo), LocalSheetIdentity.current.logoDescription,
-            Modifier.width(if (compact) 110.dp else 184.dp).height(if (compact) 64.dp else 108.dp))
+            Modifier.width(size.width).height(size.height), contentScale = ContentScale.Fit)
     }
 }
 
@@ -123,6 +129,8 @@ data class SheetIdentity(
     val background: Int? = null,
     val watermark: Int? = null,
     val typography: SheetTypography = SheetTypography(),
+    val logoSize: DpSize = DpSize(184.dp, 108.dp),
+    val compactLogoSize: DpSize = DpSize(110.dp, 64.dp),
 )
 
 internal val LocalSheetIdentity = staticCompositionLocalOf<SheetIdentity> { error("The app must supply its sheet identity") }

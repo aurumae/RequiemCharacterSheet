@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import ie.chronicles.core.WillpowerMark
 
 @Composable
@@ -78,7 +80,36 @@ fun WillpowerBoxes(track: List<WillpowerMark>, capacity: Int, editable: Boolean,
 
 @Composable
 fun CounterRow(title: String, value: Int, editable: Boolean, canDecrease: Boolean, canIncrease: Boolean,
-    change: (Int) -> Unit, open: () -> Unit) {
+    change: (Int) -> Unit, open: () -> Unit, valueBetweenButtons: Boolean = false) {
+    if (valueBetweenButtons) {
+        val measurer = rememberTextMeasurer()
+        BoxWithConstraints(Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 8.dp)) {
+            val density = LocalDensity.current
+            val labelWidth = with(density) { measurer.measure("$title:", LocalSheetType.current.label).size.width.toDp() }
+            val valueWidth = maxOf(40.dp, with(density) { measurer.measure(value.toString(), LocalSheetType.current.label).size.width.toDp() } + 16.dp)
+            @Composable fun controls() {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { change(-1) }, enabled = editable && canDecrease,
+                        modifier = Modifier.semantics { contentDescription = "Decrease $title" }) { SheetText("−", style = MaterialTheme.typography.titleLarge) }
+                    Box(Modifier.width(valueWidth).heightIn(min = 48.dp).clickable(enabled = editable, onClick = open)
+                        .semantics { contentDescription = "$title: $value" }, contentAlignment = Alignment.Center) {
+                        SheetText(value.toString(), style = LocalSheetType.current.label, textAlign = TextAlign.Center)
+                    }
+                    IconButton(onClick = { change(1) }, enabled = editable && canIncrease,
+                        modifier = Modifier.semantics { contentDescription = "Increase $title" }) { SheetText("+", style = MaterialTheme.typography.titleLarge) }
+                }
+            }
+            if (labelWidth + valueWidth + 112.dp > maxWidth) Column {
+                SheetText("$title:", Modifier.clickable(enabled = editable, onClick = open).padding(top = 8.dp), style = LocalSheetType.current.label)
+                Box(Modifier.align(Alignment.End)) { controls() }
+            } else Row(Modifier.fillMaxWidth().heightIn(min = 60.dp), verticalAlignment = Alignment.CenterVertically) {
+                SheetText("$title:", Modifier.weight(1f).clickable(enabled = editable, onClick = open), style = LocalSheetType.current.label)
+                controls()
+            }
+        }
+        SheetRule()
+        return
+    }
     @Composable fun buttons() {
         IconButton(onClick = { change(-1) }, enabled = editable && canDecrease,
             modifier = Modifier.semantics { contentDescription = "Decrease $title" }) { SheetText("−", style = MaterialTheme.typography.titleLarge) }

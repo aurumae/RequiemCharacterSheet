@@ -3,6 +3,21 @@ package ie.forsaken.rules
 import ie.chronicles.core.*
 import kotlinx.serialization.json.*
 
+val ForsakenRules.advantagesNotes: String get() = buildList {
+    add("Perception is the bonus to rolls using wolf senses.")
+    if (state.form in listOf(Form.dalu, Form.gauru, Form.urshul)) add("Defense applies against Firearms in ${state.form.title}.")
+    if (state.form == Form.gauru) add("Initiative +3 when attacking with teeth or claws.")
+    if (isPure) add("Touching silver does 1 bashing damage a turn, or 1 lethal on nights of the full moon.")
+}.joinToString(" ")
+
+fun ForsakenRules.renownNote(kind: Renown): String? {
+    val givers = listOfNotNull("Auspice".takeIf { effectiveAuspice?.text("renown") == kind.name },
+        "Tribe".takeIf { tribe?.text("renown") == kind.name })
+    return if (givers.isNotEmpty()) givers.joinToString(" and ") + " Renown"
+        else "Secondary Tribe Renown".takeIf { kind.name in tribe?.strings("secondaryRenown").orEmpty() }
+}
+
+
 data class ForsakenNoteGroup(val title: String, val options: List<ConditionNoteOption>, val warning: String? = null)
 fun ForsakenCatalog.sacredHunt(lodge: ForsakenEntry): ConditionNoteOption? =
     entry(CatalogKind.conditions, "siskur-dah")?.noteOptions?.firstOrNull { it.group == "lodge" && it.id == lodge.id }

@@ -62,7 +62,7 @@ import kotlinx.serialization.json.*
         values[0].isNotBlank() && (type !in listOf("merit","rite","fetish") || values[1].toIntOrNull() in 1..5) &&
             (type!="condition" || values[4].trim().lowercase() in listOf("yes","no"))
     },supportingText=if(c.xpMode && rowId.isEmpty()) when(type) {
-        "shadow","wolf" -> "Costs 2 Experiences."
+        "shadow","wolf" -> "Costs ${experiencesText(rules.customFacetCost(GiftKind.valueOf(type)))}."
         "extraMoon" -> "Costs 5 Experiences with its first Facet, then 2 for each Facet after it."
         "merit","rite" -> "Costs 1 Experience per dot."
         else -> null

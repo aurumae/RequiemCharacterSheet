@@ -27,10 +27,11 @@ Android has JVM `:core`, `:requiem` and `:forsaken`, with Requiem in `:app` and
 Forsaken in `:forsakenApp`, using shared Compose controls in `:sheet-ui`. Requiem
 Beta 3 is version code 11 and its release acceptance is unfinished. The JVM core
 owns shared prerequisites, Condition events, XP recording and file storage.
-Forsaken `0.2.0-preview.2` (code 3) has ordinary-play edits, werewolf calculations
+Forsaken `0.2.0-preview.3` (code 4) has ordinary-play edits, werewolf calculations
 and a canonical schema-1 writer, while untouched imports retain their bytes.
-Guided creation is read-only. Claude's two new rule fixes, visual corrections and
-the coordinated contract/exchange implementation remain phase-3 work.
+Guided creation is read-only. Preview 3 ports Claude's two rule fixes and the
+ordinary-play visual corrections. User/device appearance acceptance and the
+coordinated contract/exchange implementation remain phase-3 work.
 
 The save contract currently covers **Requiem only**. A green supported-mode run
 does not certify Forsaken parity. Pushes and schedules allow declared pending ports;
@@ -115,7 +116,9 @@ Guided saves remain read-only. See [ordinary-play validation](android-forsaken-o
 The shared contract migration and first Forsaken SwiftPM exchange remain pending
 implementation. Claude answered the coordination questions on 18 November (below);
 existing green contract checks still cover Requiem only. The user's screenshot
-review also identifies ordinary-play visual corrections before phase 4.
+review identified ordinary-play visual corrections before phase 4. Preview 3
+(code 4, 20 November) implements those corrections and the two confirmed rule
+fixes; the visual-reference document records rendered-screen validation.
 
 | Phase | Work and completion gate | What the user can install and test |
 | --- | --- | --- |
@@ -371,18 +374,19 @@ block the rules modules. No listing or upload has been performed by this approva
 - **Heading generation:** keep Android's raw-resource loader. Claude will emit one
   path per glyph on a later regeneration and announce the asset changes then.
 - **Custom Wolf Facets:** the fallback price of 2 was a bug. The updated reference
-  charges 1 for custom Wolf and 2 for custom Shadow. Android's old-behavior test and
-  the custom picker price text need updating together with the charging rule;
-  historical purchases must still refund their recorded price.
+  charges 1 for custom Wolf and 2 for custom Shadow. Android preview 3 updates
+  charging, picker text and regression tests together; historical purchases still
+  refund their recorded price.
 - **Totem-granted Merits:** zero-owned-dot Defensive Combat and Embodiment of the
-  Firstborn now use granted dots. Replace Android's two exception assertions with
-  positive coverage of the corrected benefits and stacked Attribute limits.
+  Firstborn now use granted dots. Android preview 3 replaces the two exception
+  assertions with positive coverage of the benefits, stacked Attribute limits,
+  save/reopen and removal.
 
 The two rule fixes are on iOS main for its next update, not in the submitted 1.0
-binary. They change no save schema. The Android preview has not yet ported them.
+binary. They change no save schema. Android preview 3 includes both fixes.
 Physical-device checks remain acceptance work, distinct from unresolved rules
-questions. The [visual review](android-forsaken-visual-reference.md) records known
-Android presentation gaps and the conditional Advantages reminder correction.
+questions. The [visual review](android-forsaken-visual-reference.md) records the
+Android presentation corrections, including the conditional Advantages reminders.
 
 For each implementation phase, map relevant reference test names to Kotlin tests
 and record passes/pending outcomes in the handoff. High-risk gates include

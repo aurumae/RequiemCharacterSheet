@@ -45,7 +45,8 @@ fun <C : StoredCharacter> ImportConflict(pending: PendingImport<C>, busy: Boolea
 
 @Composable
 fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryModel<C>, importCharacter: () -> Unit,
-    allowCreation: Boolean = true, allowGuidedCreation: Boolean = true, notice: String? = null, about: () -> Unit) {
+    allowCreation: Boolean = true, allowGuidedCreation: Boolean = true, notice: String? = null,
+    header: @Composable () -> Unit = { SectionBand("CHARACTERS") }, about: () -> Unit) {
     var exportPicker by rememberSaveable { mutableStateOf(false) }
     var confirmId by rememberSaveable { mutableStateOf<String?>(null) }
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -56,7 +57,7 @@ fun <C : StoredCharacter> Library(rows: List<LibraryRow>, model: SheetLibraryMod
         }
     }
     LazyColumn(Modifier.fillMaxSize().pageEdges().testTag("character-library"), contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)) {
-        item { SectionBand("CHARACTERS") }
+        item { header() }
         if (notice != null) item {
             SheetText(notice, Modifier.fillMaxWidth().padding(12.dp), color = SheetColors.muted)
         }

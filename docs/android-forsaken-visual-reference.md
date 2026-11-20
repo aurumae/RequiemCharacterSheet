@@ -3,8 +3,9 @@
 The user supplied the iOS 1.0 screenshots on 18 November 2026 because the Android
 preview does not yet look right. They are the visual reference for subsequent
 Android work, alongside the Swift views and [standing design decisions](design-decisions.md).
-The ordinary-play preview has functional coverage; its appearance is not accepted.
-This review does not change application code or claim visual parity.
+The original review below records preview 2's differences. Preview 3 (20 November)
+implements these corrections; see the implementation record at the end. User/device
+appearance acceptance remains open.
 
 ## Sources and comparison limits
 
@@ -61,9 +62,9 @@ Comforter for digits in Grechen Fuemen text. Preserve Requiem's own typography.
 Never bundle Flat Earth Scribe or Trade Winds. Do not regenerate heading artwork
 for this correction; Claude has accepted the current raw-resource loader.
 
-## Specific corrections identified
+## Corrections identified in preview 2
 
-| Reference screenshots | Current Android difference | Required direction |
+| Reference screenshots | Preview 2 difference | Required direction |
 | --- | --- | --- |
 | `00-characters`, `02-sheet` | `LogoHeader` constrains every logo to 184 × 108 dp; the wide Werewolf artwork is visibly undersized. Library uses shared `SectionBand("CHARACTERS")`. | Give each game appropriate logo sizing. Swift fits the logo at 100 pt high. Add a game-supplied library header: the screenshot's Characters heading is Grechen Fuemen with brush strokes. Keep rust character names, black summaries, grey edited times and the About label. |
 | `02-sheet`, extras `totem`, `harmony`, `experience` | `PlayChoice` always puts a Choose button beside the label, then the value below. Text fields and counters stack whenever text scale exceeds 1.3. Character puts Concept before Blood/Bone. | Restore label-left/value-right rows with a small selection affordance, and the Swift field order. Make reflow depend on available space and content. Preserve readable large-text editing and keyboard reveal. Counter layout should read label, decrease, value, increase. |
@@ -109,3 +110,47 @@ question or permission to alter the reference.
 See [the port plan](android-forsaken-plan.md) for phase dependencies and the revised
 SwiftPM contract/exchange coordination. This visual review is not a claim that the
 ordinary-play UI already matches iOS or that phase 3 is complete.
+
+## Preview 3 implementation (20 November 2026)
+
+`0.2.0-preview.3` (code 4) implements the correction list above. Forsaken now supplies
+separate rated/other trait fonts, disables numeral replacement, sizes its own logo,
+and draws the library's Characters heading between the existing brush strokes.
+Fields/counters respond to available width; long field values wrap. Rated names are
+black, legal Merit dots keep their column, and Skill penalties/Specialty actions use
+muted system text. Requiem retains its existing shared-component defaults.
+
+Forms use a five-part selector. Advantages are a five-form table with measured label
+widths, current-form styling and per-form accessibility summaries; the table scrolls
+horizontally when enlarged text needs more room. Its Firearms/Gauru/Pure reminders
+follow the current form and tribe. Moon/Gift/rite rows group names, counts/dots and
+metadata; worked dice counts stand out in rust. Primal Urge/Harmony use ten-dot tracks.
+The picker preserves book → Gift → Facet hierarchy on grouped white cards, with clear
+costs and native search/keyboard behavior. In short windows with the keyboard open,
+the search field shares one row with Cancel and the sheet hides its logo to keep the
+focused field visible; both restore when typing ends. Conditions use equal-height swipeable
+cards and a full details/editor sheet; removing the last page clamps to a valid page.
+
+The correction also ports the two confirmed rules changes. Custom Wolf Facets cost
+1 Experience and custom Shadow Facets 2, using the same helper for price text and
+charging. Earlier purchases refund their recorded price. Totem-granted Defensive
+Combat and Embodiment work with zero owned dots, including stacked Attribute caps.
+
+`VisualParityUiTest` creates a synthetic example from a copy of the unchanged play
+fixture, visits 23 representative screens, and checks navigation, Condition paging,
+picker search and keyboard editing. Run the test with `visualProfile` set to `normal`,
+`large`, `narrow` or `landscape`; configure emulator font scale/density separately.
+Its PNGs are local artifacts under the app's external-files `visual-parity/<profile>`
+directory. Retrieve them before Gradle uninstalls test packages, or run the installed
+test APK directly with `adb shell am instrument`.
+
+No fonts, outline artwork, catalogs or fixtures were regenerated. The contract/exchange
+and guided-creation gates remain in the port plan. Physical-phone TalkBack, iOS/device
+file consumption and user appearance acceptance remain separate checks.
+
+Validation for this candidate: 141 JVM tests, 13 Forsaken instrumentation/resource
+cases at normal and 150% text, and 14 targeted Requiem UI checks passed. Both apps'
+debug/release lint and packaging passed. The four final visual profiles contain 23
+captures each, retained locally at `/tmp/forsaken-visual-review/`; they were inspected
+against the named iOS references. The full details and interrupted-run distinctions
+are recorded in the 20 November implementation handoff.

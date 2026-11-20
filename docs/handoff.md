@@ -2540,3 +2540,73 @@ catalog, font, schema, fixture, Swift package, script or workflow change. Existi
 untracked IDE/Gradle files are preserved. **Follow-up:** publish this entry in
 PR #18 and verify its selected checks; the implementation/release tasks above
 remain outstanding.
+
+
+## 2026-11-20 20:52 UTC · Astra (Android) · Forsaken rule fixes and ordinary-play visual correction
+
+Implemented the user's next steps 1 and 2 in Forsaken `0.2.0-preview.3` (code 4).
+Custom Wolf Facets now cost 1 Experience and custom Shadow Facets 2; the visible
+custom-entry price and charging use the same helper. Historical purchases still
+refund the recorded amount, including older custom Wolf purchases at 2. Totem-granted
+Defensive Combat and Embodiment of the Firstborn work with zero owned dots, including
+the extra Attribute dot and stacked over-limit allowance. This answers the two
+18 November Android follow-ups; the submitted iOS 1.0 binary remains unchanged.
+
+Applied the supplied iOS visual reference to ordinary play: separate black rated
+and other trait fonts, rust labels/subheadings, no Forsaken numeral override, a
+larger per-game logo and brush-stroke library heading, adaptive fields/counters,
+aligned legal Merit dots and quieter Skill/Specialty metadata. Forms use a segmented
+selector; Advantages use a five-form table with measured label widths, current-form
+styling and per-form accessibility summaries. Firearms, Gauru and Pure reminders
+are conditional. Gifts/rites group titles and dots/counts; dice counts are emphasized.
+Pickers preserve book/Gift/Facet hierarchy on pale surfaces with grouped white choices.
+Primal Urge/Harmony use ten-dot tracks. Conditions have swipeable compact cards and
+full details/editing with the existing Beat/resolution/save pipeline. Short-window
+keyboard layouts compact Forsaken's search/header so the field and results stay visible.
+The Android README, candidate guide, visual reference and plan now describe this build.
+
+**Validation:** 141 JVM tests pass (6 core, 72 Requiem rules, 13 Requiem storage,
+43 Forsaken rules/reader/save, 7 Forsaken storage). New tests cover Wolf/Shadow price
+and historical refunds, zero-owned Totem benefits across save/reopen/removal, and
+conditional Advantages notes. Both apps pass debug/release lint (zero errors; existing
+SDK/dependency warnings), debug/test APK builds and release bundle packaging with the
+explicit unsigned-check flags. No Play upload or signing setup was performed.
+
+All 13 Forsaken instrumentation/resource tests pass at normal and 150% text during
+this correction; final large-text rerun passes all 13. Activity coverage includes
+purchase/recreation/refund, Renown credits, form changes, Condition carousel editing
+and removal, final-note history, file transfer and read-only creation saves. Final
+normal, 360 dp narrow-phone and landscape visual/navigation/keyboard runs each pass.
+`VisualParityUiTest` retains 23 PNGs for each of four profiles (92 total), inspected
+against the local iOS reference at normal logical width (~411 dp), 150% text, 360 dp
+and landscape. Current local evidence: `/tmp/forsaken-visual-review/`. Render review
+caught and corrected a wrapping table label, Merit dot alignment, clipped long field
+values and a landscape IME layout that hid search/results. Initial test assertions
+were corrected for established custom Condition keys and duplicate heading/rating
+semantics; interrupted runs are not counted as passes.
+
+Requiem's final 14 targeted UI checks pass: shared focus/watermark/section behavior,
+rating menus, catalog searches, real activity transfer contracts and transfer recovery.
+An earlier broad run completed its cases but lost UiAutomation during runner teardown;
+the selected regression suite was rerun cleanly. Initial software-renderer emulator
+boots failed; captures/tests used an isolated API 36.1 AVD with host graphics, two
+cores, reduced memory and Vulkan disabled. No physical phone was touched.
+
+**Commits:** this commit follows `9131e48` and `8710ace` (ordinary-play implementation),
+`1817956` (visual-reference review) and `789546c` (status audit). Pre-publication fetch
+and merge found no new upstream entries; `origin/main` remains `8dbc480`, with
+[main CI](https://github.com/aurumae/RequiemCharacterSheet/actions/runs/44692399795)
+green. The existing PR #18 is being updated to include this implementation.
+
+**Shared:** Compose components gained opt-in typography, library header, logo/layout
+and picker behavior; Requiem retains its defaults and its version is unchanged.
+No catalog, font, heading artwork, save schema, fixture, Swift/Xcode, `Package.swift`,
+script, contract manifest or workflow changed. Both original Forsaken fixtures remain
+byte-identical. All prior handoff content and unrelated local IDE/Gradle files were
+preserved.
+
+**Follow-up:** phase 3 still needs the agreed multi-game registry/policy migration and
+coordinated Forsaken SwiftPM exchange with Claude. Existing green exchange checks
+still cover Requiem only. Then proceed to guided creation in phase 4; its imported
+sheets remain read-only here. User/device appearance acceptance, physical TalkBack,
+real iOS/device file consumption and release delivery remain separate acceptance work.

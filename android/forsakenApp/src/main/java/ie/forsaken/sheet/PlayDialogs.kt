@@ -16,10 +16,14 @@ import java.time.format.DateTimeFormatter
     when(parts[0]) {
         "browse" -> CatalogBrowser(catalog,c.showsUnofficialContent,{navigate("details|$it")},dismiss)
         "details" -> catalog.resolve(type)?.let { CatalogDetails(it,catalog,dismiss) }
+        "condition" -> c.conditions.firstOrNull { it.id.toString()==type }?.let { PlayConditionCard(it,rules,actions,navigate) }
         "pick" -> PlayCatalogPicker(type,rules,Renown.entries.firstOrNull { it.name==key },choose={ choice ->
             val entry=choice.entry
             if(type in listOf("merit","totemMerit") && entry.objectValue("qualifier")!=null) navigate("qualifier|$type|${entry.id}|new")
-            else { selectCatalog(type,choice,rules,actions); dismiss() }
+            else if(type=="condition") {
+                val row=CharacterCondition(TraitSource(catalog=entry.id))
+                actions.condition(row,ConditionEvent.added); navigate("condition|${row.id}")
+            } else { selectCatalog(type,choice,rules,actions); dismiss() }
         },custom={navigate("custom|$type")},clear=if(type in listOf("blood","bone","auspice","tribe","lodge","kuruth","moon")) ({
             actions.change { identity(it,type,if(type=="moon") null else TraitSource(custom="")) }; dismiss()
         }) else null,dismiss=dismiss)
@@ -86,7 +90,7 @@ import java.time.format.DateTimeFormatter
             }
         }
         "conditionCounter" -> c.conditions.firstOrNull { it.id.toString()==type }?.let { row ->
-            DraftDialog("Counter",listOf(DraftField("Counter (0–99)",row.counter.toString(),numeric=true)),dismiss,
+            DraftDialog("Counter",listOf(DraftField("Counter (0–99)",row.counter.toString(),numeric=true)),{navigate("condition|${row.id}")},
                 valid={it[0].toIntOrNull() in 0..99}) { input -> actions.change { s -> s.copy(conditions=s.conditions.map { if(it.id==row.id) it.copy(counter=input[0].toInt()) else it }) } }
         }
         "endCondition","resolveCondition" -> c.conditions.firstOrNull { it.id.toString()==type }?.let { row ->

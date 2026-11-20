@@ -15,40 +15,47 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SheetFieldRow(rowId: String, label: String, spokenLabel: String, value: String, editable: Boolean, onEdit: (String) -> Unit) {
+fun SheetFieldRow(rowId: String, label: String, spokenLabel: String, value: String, editable: Boolean,
+    adaptive: Boolean = false, onEdit: (String) -> Unit) {
     var draft by rememberSaveable(rowId) { mutableStateOf(value) }
     var focused by remember { mutableStateOf(false) }
     // Keep the player's spelling/cursor while typing. The saved source may resolve to a
     // book entry immediately; show its canonical name once editing ends.
     LaunchedEffect(value, focused) { if (!focused) draft = value }
     val focus = LocalFocusManager.current
-    val stacked = LocalDensity.current.fontScale > 1.3f
-    @Composable fun input(modifier: Modifier) {
-        BasicTextField(value = draft, onValueChange = { draft = it; onEdit(it) },
-            readOnly = !editable, singleLine = true,
-            textStyle = MaterialTheme.typography.bodyMedium.copy(color = SheetColors.ink, textAlign = if (stacked) TextAlign.Start else TextAlign.End),
-            cursorBrush = SolidColor(SheetColors.accent),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
-            modifier = modifier.heightIn(min = 48.dp).onFocusChanged { focused = it.isFocused }
-                .semantics { contentDescription = spokenLabel },
-            decorationBox = { text ->
-                Box(Modifier.fillMaxWidth(), contentAlignment = if (stacked) Alignment.CenterStart else Alignment.CenterEnd) {
-                    if (draft.isBlank()) SheetText("Tap to edit", style = MaterialTheme.typography.bodyMedium, color = SheetColors.muted)
-                    text()
-                }
-            })
-    }
-    val row = Modifier.fillMaxWidth().revealWhileEditing(draft).focusGroup()
-    if (stacked) Column(row.background(Color.White).padding(horizontal = 8.dp, vertical = 8.dp)) {
-        SheetText("$label:", style = LocalSheetType.current.label)
-        Row(verticalAlignment = Alignment.CenterVertically) { input(Modifier.weight(1f)) }
-    } else Row(row.background(Color.White).heightIn(min = 60.dp).padding(horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        SheetText("$label:", style = LocalSheetType.current.label)
-        input(Modifier.weight(1f))
+    val measurer = rememberTextMeasurer()
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val labelWidth = with(LocalDensity.current) { measurer.measure("$label:", LocalSheetType.current.label).size.width.toDp() }
+        val stacked = if (adaptive) labelWidth + 120.dp * LocalDensity.current.fontScale + 24.dp > maxWidth
+            else LocalDensity.current.fontScale > 1.3f
+        @Composable fun input(modifier: Modifier) {
+            BasicTextField(value = draft, onValueChange = { draft = it; onEdit(it) },
+                readOnly = !editable, singleLine = !adaptive,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = SheetColors.ink, textAlign = if (stacked) TextAlign.Start else TextAlign.End),
+                cursorBrush = SolidColor(SheetColors.accent),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
+                modifier = modifier.heightIn(min = 48.dp).onFocusChanged { focused = it.isFocused }
+                    .semantics { contentDescription = spokenLabel },
+                decorationBox = { text ->
+                    Box(Modifier.fillMaxWidth(), contentAlignment = if (stacked) Alignment.CenterStart else Alignment.CenterEnd) {
+                        if (draft.isBlank()) SheetText("Tap to edit", style = MaterialTheme.typography.bodyMedium, color = SheetColors.muted)
+                        text()
+                    }
+                })
+        }
+        val row = Modifier.fillMaxWidth().revealWhileEditing(draft).focusGroup()
+        if (stacked) Column(row.background(Color.White).padding(horizontal = 8.dp, vertical = 8.dp)) {
+            SheetText("$label:", style = LocalSheetType.current.label)
+            Row(verticalAlignment = Alignment.CenterVertically) { input(Modifier.weight(1f)) }
+        } else Row(row.background(Color.White).heightIn(min = 60.dp).padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            SheetText("$label:", style = LocalSheetType.current.label)
+            input(Modifier.weight(1f))
+        }
     }
 }

@@ -10,6 +10,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.DpSize
 import androidx.core.content.FileProvider
 import androidx.lifecycle.SavedStateHandle
 import ie.chronicles.ui.*
@@ -44,9 +46,10 @@ class PreviewModel(app: Application, restored: SavedStateHandle) : SheetLibraryM
 internal fun ForsakenTheme(content: @Composable () -> Unit) = ChroniclesTheme(
     SheetIdentity(Color(0xFF855A4A), Color(0xFFF1DDD4), R.font.grechen_fuemen, R.font.comforter,
         R.drawable.forsaken_logo, "Werewolf The Forsaken Second Edition", watermark = R.drawable.sheet_watermark,
-        typography = SheetTypography(labelFont = R.font.comforter, labelSize = 30, traitSize = 23, subheadingSize = 32,
+        logoSize = DpSize(330.dp, 100.dp), compactLogoSize = DpSize(210.dp, 64.dp),
+        typography = SheetTypography(labelFont = R.font.comforter, labelSize = 30, traitSize = 21, subheadingSize = 32,
             subheadingSpacing = 0f, traitNamesInAccent = false, controlUsesDisplay = true, controlSize = 21,
-            libraryAboutUsesLabel = true)), content)
+            libraryAboutUsesLabel = true, ratedTraitSize = 23, replaceNumerals = false)), content)
 
 @Composable
 internal fun ForsakenPreview(model: PreviewModel) {
@@ -56,7 +59,9 @@ internal fun ForsakenPreview(model: PreviewModel) {
                 model.actions.change { it.copy(xpMode = !it.xpMode) }
             }
         }, aboutSheet = { AboutSheet(it) }, allowGuidedCreation = false, characterReadOnly = { it.state.creation != null },
-        libraryNotice = "Forsaken ordinary-play preview\nCreate a blank sheet or import an iOS character. Guided creation saves remain read-only.",
+        libraryHeader = { ForsakenLibraryHeading() },
+        compactWhileTyping = true,
+        libraryNotice = "Guided creation is coming later. Imported creation sheets are read-only.",
     ) { c, busy, section, report, handled ->
         if (c.state.creation != null) PreviewSheet(c, model.catalog, section, report, handled)
         else ForsakenSheet(c, model.actions, !busy, section, report, handled)

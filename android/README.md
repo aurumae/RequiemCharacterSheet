@@ -1,14 +1,36 @@
 # Android character sheet
 
-Open this directory in Android Studio and run the **app** configuration. The Kotlin/Compose app supports Android 16 and later (minimum API 36). It stores characters on the device and works offline. The Galaxy S24 FE on Android 17 is the first physical test device.
+Open this directory in Android Studio. Run **app** for Requiem or **forsakenApp**
+for Forsaken. Both native Kotlin/Compose apps support Android 16 and later (API 36),
+keep separate on-device libraries and work offline.
 
-Current priority is the approved [Forsaken Android port](../docs/android-forsaken-plan.md).
-Phase 0 protects Requiem files before the second app is introduced: a file tagged
-for Forsaken or another game is refused with “This character is from another game.
-Open it in that game's app.” The library stays unchanged. Missing/null `game` and
-explicit `requiem` remain readable; canonical Requiem saves still omit `game`.
+The current Requiem candidate is **1.0.0-beta.3 (code 11)**. Its Play/device acceptance
+is still open; see the [beta 3 record](../docs/android-beta3-validation.md) and
+[release guide](../docs/play-store-release-guide.md).
 
-The first Play beta is **1.0.0-beta.1 (version code 9)**, packaging the accepted alpha 8 functionality as a non-debuggable release. The user completed all alpha 8 manual checks on the S24 FE running Android 17 and verified real character transfers in both directions between Android and iOS. See the [signing and first-upload guide](../docs/android-signing.md) for the signed bundle, local key configuration and internal testing steps. The [full Play release guide](../docs/play-store-release-guide.md) covers the remaining privacy, backup, closed-testing and publication work. Export valuable alpha characters before changing to Play signing; the Play build cannot directly update the debug-signed installation.
+The current Forsaken candidate is **0.2.0-preview.3 (code 4)**, package
+`com.omccolgan.ForsakenCharacterSheet`. It supports blank sheets, ordinary-play edits,
+`.wtfcharacter` imports/exports, the confirmed Wolf/Totem rule fixes and the revised
+iOS-reference appearance. Guided creation remains read-only, and Forsaken has not yet
+joined the bidirectional save-contract exchange. See the [candidate guide](../docs/android-forsaken-ordinary-play.md)
+and [approved port plan](../docs/android-forsaken-plan.md).
+
+Build/install Forsaken from the repository root:
+
+```sh
+android/gradlew -p android :forsakenApp:assembleDebug
+adb install -r android/forsakenApp/build/outputs/apk/debug/forsakenApp-debug.apk
+```
+
+Both apps reject the other game's files before changing the library. Requiem also
+accepts missing/null `game` and explicit `requiem`; its canonical saves omit `game`.
+Forsaken saves identify `game: forsaken` and retain frozen schema 1.
+
+The Requiem instructions below include historical acceptance context. The user
+completed alpha 8 checks on the S24 FE running Android 17 and real iOS transfers;
+those results do not establish acceptance of either current candidate. Export valuable
+characters before changing from debug signing to Play signing. See the
+[signing guide](../docs/android-signing.md).
 
 Alpha 7 added schema 10, Morbus/Cachexy, searchable identity pickers, IM Fell English/Cinzel fonts, offline licences in About and readability improvements. See the [parity implementation and acceptance record](../docs/ios-1.3-parity-plan.md). An in-place emulator upgrade preserved three unchanged legacy saves byte for byte. Back up valuable characters before testing: the first real edit writes schema 10, which alpha 6 cannot read.
 
@@ -25,7 +47,7 @@ android/gradlew -p android :app:assembleDebug
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-The current alpha supports guided character creation and the complete ordinary-play sheet: character details, Attributes and Skills, Disciplines, Merits, Aspirations, Banes, all play trackers, Humanity and Touchstones, Rituals, Devotions, Mysteries, Coils and Scales. Use **Sections** to navigate the sheet. Clan, Bloodline and Covenant open searchable catalog pickers with descriptions and book references; Custom opens an inline field. Mask and Dirge also offer catalog choices and custom text. Each edit is saved to app-private storage. Save waits for pending writes and confirms in place; Back waits and returns to the library. Guided sheets can be resumed, edited, finished or left as ordinary sheets. Unreadable and newer saves stay in the library with an explanation.
+Requiem supports guided character creation and the complete ordinary-play sheet: character details, Attributes and Skills, Disciplines, Merits, Aspirations, Banes, all play trackers, Humanity and Touchstones, Rituals, Devotions, Mysteries, Coils and Scales. Use **Sections** to navigate the sheet. Clan, Bloodline and Covenant open searchable catalog pickers with descriptions and book references; Custom opens an inline field. Mask and Dirge also offer catalog choices and custom text. Each edit is saved to app-private storage. Save waits for pending writes and confirms in place; Back waits and returns to the library. Guided sheets can be resumed, edited, finished or left as ordinary sheets. Unreadable and newer saves stay in the library with an explanation.
 
 The app follows the iOS release’s paper frame, fonts, colors and section bands. Edit Stamina by tapping a dot and tap each Health box to cycle damage. Dots and Health boxes use the iOS spacing: 20 dp marks on a 24 dp pitch. Tap an attribute’s name to open a dropdown with full-sized rows. During ordinary play it offers attributes from 1 and skills from 0 through max(5, Blood Potency), up to 10; creation also applies the starting-dot budgets. All Attributes and Skills use this shared control. Tap a filled first Skill dot again, or choose 0 from its name menu, to clear the rating. Black dots show Attribute and roll bonuses separately from the red base rating; roll-only bonuses do not inflate Health, Speed or Defense. Rows wrap or stack at large text sizes. The Change Log opens as a native bottom sheet. Install with `adb install -r` to update the first alpha while retaining characters.
 
@@ -70,7 +92,7 @@ The script has the production Swift encoder write three current characters into 
 
 The JVM jar packages the JSON book files directly from the iOS catalog directory. `CharacterCodec` reads save versions 1–12 and writes v10, v11 or v12 according to the character's saved state. Keep the initially decoded character and pass it to `encodeEdit` with the edited copy. A null result means no file write or timestamp change is needed. Unchanged imports retain their original bytes, including an explicit Requiem game tag; Keep Both changes only ID/name.
 
-The examples in [shared/fixtures/characters](../shared/fixtures/characters) are synthetic characters with no player data. The unversioned example comes from the existing iOS decoder test. The complete v6, v7 and v8 fixtures use the Swift writers at `a51e9af`, `3d7f2c7` and `334f516`. The v9 fixtures retain the writers at `3a8630a` (before priorities) and `506ea78`. The three current v10 fixtures cover advanced, guided and Morbus characters. The v11 example is intentionally unsupported.
+The examples in [shared/fixtures/characters](../shared/fixtures/characters) are synthetic characters with no player data. The unversioned example comes from the existing iOS decoder test. The complete v6, v7 and v8 fixtures use the Swift writers at `a51e9af`, `3d7f2c7` and `334f516`. The v9 fixtures retain the writers at `3a8630a` (before priorities) and `506ea78`. The three current v10 fixtures cover advanced, guided and Morbus characters. The v11/v12 fixtures cover Conditions/history and the elder-bane switch.
 
 ## Beta 2 parity
 
@@ -85,10 +107,10 @@ It has no Android, Compose or Requiem dependency. `:requiem` owns the Requiem co
 catalog resources and game rules; type aliases preserve its existing public API.
 `:app` is the same Requiem app and storage/package identity.
 
-Reusable Compose text, theme, background, dots, health boxes and editing layout live
-in `ie.chronicles.ui` inside the app for now. `RequiemIdentity.kt` supplies font and
-artwork resources and the logo description. Game-aware screens and adapters remain
-in `ie.requiem.sheet`. No Forsaken target or game field has been introduced.
+Reusable Compose text, theme, library, dots, trackers and editing layout live
+in `:sheet-ui` under `ie.chronicles.ui`. Each app supplies its identity, typography,
+artwork and game rules. `:forsaken` contains the werewolf models, codec and rules;
+`:forsakenApp` supplies its Android screens and file integration.
 
 `android/gradlew -p android :core:test` verifies the compiled JVM boundary independently.
 Run `scripts/check-save-contract --strict` for full declared parity, or omit strict
